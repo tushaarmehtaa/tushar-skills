@@ -12,7 +12,7 @@ export function SkillDetail({
     <article className="mx-auto max-w-3xl">
       {/* Title */}
       <div className="mb-10 animate-hero">
-        <h1 className="mb-3 font-[family-name:var(--font-display)] text-4xl font-extrabold tracking-tight sm:text-5xl">
+        <h1 className="mb-3 pixel-title text-4xl font-extrabold tracking-tight sm:text-5xl">
           <span className="gradient-text">/{skill.name}</span>
         </h1>
         <p className="text-lg text-[var(--color-text)] leading-relaxed">

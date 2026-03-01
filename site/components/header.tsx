@@ -10,7 +10,7 @@ export function Header() {
               /
             </span>
           </div>
-          <span className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-heading)] tracking-tight">
+          <span className="font-[family-name:var(--font-sans)] text-lg font-bold text-[var(--color-heading)] tracking-tight">
             slashskills
           </span>
         </Link>

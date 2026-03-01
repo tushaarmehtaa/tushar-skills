@@ -18,7 +18,7 @@ export default function Home() {
               open source
             </span>
           </div>
-          <h1 className="animate-hero font-[family-name:var(--font-display)] text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl">
+          <h1 className="animate-hero pixel-title text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl">
             <span className="gradient-text">/slashskills</span>
           </h1>
           <p className="animate-hero-delayed mt-5 max-w-xl text-lg text-[var(--color-text)] leading-relaxed sm:text-xl">
@@ -41,21 +41,21 @@ export default function Home() {
           {/* Stats row */}
           <div className="animate-fade-up delay-4 mt-10 flex items-center gap-8">
             <div>
-              <div className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-heading)]">
+              <div className="font-[family-name:var(--font-mono)] text-2xl font-bold text-[var(--color-heading)]">
                 {skills.length}
               </div>
               <div className="text-xs text-[var(--color-muted)]">skills</div>
             </div>
             <div className="h-8 w-px bg-[var(--color-border)]" />
             <div>
-              <div className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-heading)]">
+              <div className="font-[family-name:var(--font-mono)] text-2xl font-bold text-[var(--color-heading)]">
                 1-line
               </div>
               <div className="text-xs text-[var(--color-muted)]">install</div>
             </div>
             <div className="h-8 w-px bg-[var(--color-border)]" />
             <div>
-              <div className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-heading)]">
+              <div className="font-[family-name:var(--font-mono)] text-2xl font-bold text-[var(--color-heading)]">
                 0 config
               </div>
               <div className="text-xs text-[var(--color-muted)]">needed</div>

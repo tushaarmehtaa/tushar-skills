@@ -10,7 +10,7 @@ export function Footer() {
                 /
               </span>
             </div>
-            <span className="font-[family-name:var(--font-display)] text-sm font-semibold text-[var(--color-heading)]">
+            <span className="font-[family-name:var(--font-sans)] text-sm font-semibold text-[var(--color-heading)]">
               slashskills
             </span>
           </div>
