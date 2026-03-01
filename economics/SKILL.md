@@ -1,6 +1,9 @@
 ---
 name: economics
 description: Calculate unit economics for your AI product. Revenue per action, API cost per action, gross margin, and free tier damage. Run when model pricing changes or you're rethinking your credit pricing.
+category: ai
+tags: [economics, pricing, margins, ai, cost]
+author: tushaarmehtaa
 ---
 
 Calculate the current unit economics for your AI product.

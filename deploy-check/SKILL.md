@@ -1,6 +1,9 @@
 ---
 name: deploy-check
 description: Pre-flight check before pushing to production. Catches TypeScript errors, accidentally staged secrets, pending migrations, and hygiene gaps before they hit live users.
+category: devops
+tags: [deploy, ci, typescript, secrets, migrations]
+author: tushaarmehtaa
 ---
 
 Run a pre-flight check before pushing to production. Works with any stack.
