@@ -28,22 +28,18 @@ Think of them as slash commands you write yourself.
 
 ## Install
 
-### One skill (recommended)
+### All skills at once (recommended)
+
+```bash
+npx skills add tushaarmehtaa/tushar-skills
+```
+
+### One skill
 
 ```bash
 # Replace "deploy-check" with the skill you want
 curl -sL https://raw.githubusercontent.com/tushaarmehtaa/tushar-skills/main/deploy-check/SKILL.md \
   -o ~/.claude/skills/deploy-check/SKILL.md --create-dirs
-```
-
-### All skills
-
-```bash
-git clone https://github.com/tushaarmehtaa/tushar-skills.git
-cp -r tushar-skills/deploy-check ~/.claude/skills/
-cp -r tushar-skills/model-audit ~/.claude/skills/
-cp -r tushar-skills/economics ~/.claude/skills/
-cp -r tushar-skills/changelog ~/.claude/skills/
 ```
 
 Then in any Claude Code session:
@@ -53,6 +49,7 @@ Then in any Claude Code session:
 /model-audit
 /economics
 /changelog
+/cold-email
 ```
 
 ---

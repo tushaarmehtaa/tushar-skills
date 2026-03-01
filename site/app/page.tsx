@@ -30,12 +30,15 @@ export default function Home() {
           </p>
 
           {/* Quick install hint */}
-          <div className="animate-fade-up delay-3 mt-8 inline-flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/60 px-5 py-3 font-[family-name:var(--font-mono)] text-sm backdrop-blur-sm">
-            <span className="text-[var(--color-accent)] font-semibold">$</span>
-            <span className="text-[var(--color-muted)]">
-              curl -sL <span className="text-[var(--color-heading)]">...skill/SKILL.md</span> -o ~/.claude/skills/
-            </span>
-            <span className="cursor-blink text-[var(--color-accent)]" />
+          <div className="animate-fade-up delay-3 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="inline-flex items-center gap-3 rounded-xl border border-[var(--color-accent-dim)] bg-[var(--color-accent-glow)] px-5 py-3 font-[family-name:var(--font-mono)] text-sm">
+              <span className="text-[var(--color-accent)] font-semibold">$</span>
+              <span className="text-[var(--color-heading)]">
+                npx skills add tushaarmehtaa/tushar-skills
+              </span>
+              <span className="cursor-blink text-[var(--color-accent)]" />
+            </div>
+            <span className="text-xs text-[var(--color-muted)]">or copy individual install commands below</span>
           </div>
 
           {/* Stats row */}
