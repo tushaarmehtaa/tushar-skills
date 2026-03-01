@@ -22,6 +22,7 @@ Think of them as slash commands you write yourself.
 | [`/model-audit`](./model-audit/SKILL.md) | AI | Full AI model routing table. Every AI call, what model it uses, cost per call. |
 | [`/economics`](./economics/SKILL.md) | AI | Unit economics calculator. Revenue per action, API cost, gross margin, free tier damage. |
 | [`/changelog`](./changelog/SKILL.md) | Workflow | Weekly changelog card for Twitter/X. Reads git log, distills into 6 punchy items. |
+| [`/cold-email`](./cold-email/SKILL.md) | Workflow | Write cold emails that actually get replies. 2-4 sentence formula with real examples from Evan Spiegel, Mark Cuban, Elon Musk. |
 
 ---
 
