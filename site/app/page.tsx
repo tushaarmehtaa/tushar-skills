@@ -1,78 +1,179 @@
+import Link from "next/link";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { SkillsGrid } from "@/components/skills-grid";
-import { getAllSkills } from "@/lib/skills";
+import { CopyButton } from "@/components/copy-button";
+import { getAllSkills, type Skill } from "@/lib/skills";
+
+const SKILL_ORDER = [
+  "deploy-check",
+  "seo-ready",
+  "ship-credits",
+  "model-audit",
+  "economics",
+  "changelog",
+  "cold-email",
+];
+
+const TAGLINES: Record<string, string> = {
+  "deploy-check": 'the "did i just push .env to prod" prevention',
+  "seo-ready": "your project is invisible to search. this fixes that.",
+  "ship-credits": "you built the app. now figure out how to charge for it.",
+  "model-audit": "which AI call is quietly burning through your budget",
+  "economics": "the unit economics spreadsheet you keep saying you'll make",
+  "changelog": "a week of git, distilled into something you can post",
+  "cold-email": "3 sentences. they reply or they don't.",
+};
 
 export default function Home() {
-  const skills = getAllSkills();
+  const allSkills = getAllSkills();
+
+  const orderedSlugs = new Set(SKILL_ORDER);
+  const ordered = SKILL_ORDER.map((slug) =>
+    allSkills.find((s) => s.slug === slug)
+  ).filter((s): s is Skill => !!s);
+  const remaining = allSkills.filter((s) => !orderedSlugs.has(s.slug));
+  const skills = [...ordered, ...remaining];
 
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
 
-      {/* Hero */}
-      <section className="px-6 pt-20 pb-16 sm:pt-28 sm:pb-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="animate-hero mb-4">
-            <span className="inline-block rounded-full border border-[var(--color-accent-dim)] bg-[var(--color-accent-glow)] px-3 py-1 font-[family-name:var(--font-mono)] text-xs font-medium text-[var(--color-accent)]">
-              open source
-            </span>
-          </div>
-          <h1 className="animate-hero pixel-title text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl">
-            <span className="gradient-text">/slashskills</span>
-          </h1>
-          <p className="animate-hero-delayed mt-5 max-w-xl text-lg text-[var(--color-text)] leading-relaxed sm:text-xl">
-            Claude Code skills that actually work.
-            <br />
-            <span className="text-[var(--color-muted)]">
-              Drop them in, invoke with a slash command, ship faster.
-            </span>
-          </p>
-
-          {/* Quick install hint */}
-          <div className="animate-fade-up delay-3 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="inline-flex items-center gap-3 rounded-xl border border-[var(--color-accent-dim)] bg-[var(--color-accent-glow)] px-5 py-3 font-[family-name:var(--font-mono)] text-sm">
-              <span className="text-[var(--color-accent)] font-semibold">$</span>
-              <span className="text-[var(--color-heading)]">
-                npx skills add tushaarmehtaa/tushar-skills
-              </span>
-              <span className="cursor-blink text-[var(--color-accent)]" />
+      <main className="flex-1 px-6">
+        <div className="mx-auto max-w-3xl">
+          {/* Hero */}
+          <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
+            <h1 className="animate-hero text-4xl font-bold tracking-tight leading-[1.15] text-[var(--color-heading)] sm:text-5xl">
+              same problems.
+              <br />
+              every product.
+            </h1>
+            <div className="animate-hero-delayed mt-8 space-y-4 text-base leading-relaxed sm:text-lg">
+              <p>
+                seo i never set up. credits i wired from scratch.
+                <br className="hidden sm:inline" />
+                {" "}deploys i pushed without checking. changelogs i never wrote.
+              </p>
+              <p className="text-[var(--color-heading)]">
+                solved them across three products.
+                <br />
+                turned them into skills so i never solve them again.
+              </p>
             </div>
-            <span className="text-xs text-[var(--color-muted)]">or copy individual install commands below</span>
-          </div>
+          </section>
 
-          {/* Stats row */}
-          <div className="animate-fade-up delay-4 mt-10 flex items-center gap-8">
-            <div>
-              <div className="font-[family-name:var(--font-mono)] text-2xl font-bold text-[var(--color-heading)]">
-                {skills.length}
+          {/* Install */}
+          <section className="animate-fade-up delay-2 mb-16">
+            <div className="install-box flex flex-col gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3 font-[family-name:var(--font-mono)] text-sm">
+                <span className="text-[var(--color-accent)]">$</span>
+                <code className="text-[var(--color-heading)]">
+                  npx skills add tushaarmehtaa/tushar-skills
+                </code>
+                <span className="cursor-blink" />
               </div>
-              <div className="text-xs text-[var(--color-muted)]">skills</div>
+              <CopyButton text="npx skills add tushaarmehtaa/tushar-skills" />
             </div>
-            <div className="h-8 w-px bg-[var(--color-border)]" />
-            <div>
-              <div className="font-[family-name:var(--font-mono)] text-2xl font-bold text-[var(--color-heading)]">
-                1-line
-              </div>
-              <div className="text-xs text-[var(--color-muted)]">install</div>
-            </div>
-            <div className="h-8 w-px bg-[var(--color-border)]" />
-            <div>
-              <div className="font-[family-name:var(--font-mono)] text-2xl font-bold text-[var(--color-heading)]">
-                0 config
-              </div>
-              <div className="text-xs text-[var(--color-muted)]">needed</div>
-            </div>
-          </div>
-        </div>
-      </section>
+            <p className="mt-3 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
+              installs all {skills.length} skills. or click any below to install individually.
+            </p>
+          </section>
 
-      <div className="gradient-line mx-6" />
+          <div className="divider mb-12" />
 
-      {/* Skills directory */}
-      <main className="flex-1 px-6 py-16">
-        <div className="mx-auto max-w-6xl">
-          <SkillsGrid skills={skills} />
+          {/* Skills */}
+          <section className="pb-16">
+            <h2 className="animate-fade-up delay-3 mb-8 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-muted)]">
+              skills
+            </h2>
+            <div>
+              {skills.map((skill, i) => (
+                <Link
+                  key={skill.slug}
+                  href={`/${skill.slug}`}
+                  className="skill-row animate-fade-up group flex items-start gap-5 rounded-lg border-b border-[var(--color-border)] px-3 py-5 sm:items-baseline"
+                  style={{ animationDelay: `${(i + 4) * 60}ms` }}
+                >
+                  <span className="w-6 shrink-0 pt-px font-[family-name:var(--font-mono)] text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-accent)]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-[family-name:var(--font-mono)] font-semibold text-[var(--color-heading)] transition-colors group-hover:text-[var(--color-accent)]">
+                        /{skill.name}
+                      </span>
+                      <span className="hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)] opacity-0 transition-opacity group-hover:opacity-100 sm:inline">
+                        {skill.category}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
+                      {TAGLINES[skill.slug] || skill.description}
+                    </p>
+                  </div>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="mt-1 shrink-0 text-[var(--color-border)] transition-all group-hover:translate-x-0.5 group-hover:text-[var(--color-accent)]"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <div className="divider mb-16" />
+
+          {/* How it works */}
+          <section className="animate-fade-up pb-20">
+            <h2 className="mb-10 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-muted)]">
+              how it works
+            </h2>
+            <div className="space-y-8">
+              <div className="step flex items-start gap-4">
+                <div className="step-number">1</div>
+                <div>
+                  <p className="font-semibold text-[var(--color-heading)]">install</p>
+                  <p className="mt-1 text-sm text-[var(--color-text)]">
+                    run the install command. skills land in{" "}
+                    <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
+                      ~/.claude/skills/
+                    </code>
+                  </p>
+                </div>
+              </div>
+              <div className="step flex items-start gap-4">
+                <div className="step-number">2</div>
+                <div>
+                  <p className="font-semibold text-[var(--color-heading)]">invoke</p>
+                  <p className="mt-1 text-sm text-[var(--color-text)]">
+                    type{" "}
+                    <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
+                      /skill-name
+                    </code>{" "}
+                    in any Claude Code session. it reads your project and runs.
+                  </p>
+                </div>
+              </div>
+              <div className="step flex items-start gap-4">
+                <div className="step-number">3</div>
+                <div>
+                  <p className="font-semibold text-[var(--color-heading)]">done</p>
+                  <p className="mt-1 text-sm text-[var(--color-text)]">
+                    skills adapt to your codebase. no config, no setup, no re-explaining.
+                    <br />
+                    <span className="text-[var(--color-muted)]">
+                      they read your stack and do the right thing.
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
 

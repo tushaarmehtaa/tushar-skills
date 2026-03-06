@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { GeistPixelSquare } from "geist/font/pixel";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "slashskills — Claude Code skills that actually work",
+  title: "slashskills",
   description:
-    "Open-source Claude Code skills for deployment checks, AI model audits, unit economics, and changelog generation. Drop them in, invoke with a slash command.",
+    "Claude Code skills extracted from real products. Install once, never solve them again.",
   openGraph: {
     title: "slashskills",
-    description: "Claude Code skills that actually work",
+    description:
+      "Claude Code skills extracted from real products. Install once, never solve them again.",
     type: "website",
   },
 };
@@ -21,17 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`dark ${GeistSans.variable} ${GeistMono.variable} ${GeistPixelSquare.variable}`}
-    >
-      <body className="min-h-screen antialiased">
-        <div className="dot-grid" />
-        <div className="noise-overlay" />
-        <div className="glow-orb glow-orb-1" />
-        <div className="glow-orb glow-orb-2" />
-        <div className="scan-line" />
-        <div className="relative z-10">{children}</div>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className="grain min-h-screen antialiased">
+        <div className="stage-light" aria-hidden="true" />
+        <div className="relative">{children}</div>
       </body>
     </html>
   );

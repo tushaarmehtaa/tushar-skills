@@ -1,33 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --font-pixel: var(--font-geist-pixel-square), ui-monospace, monospace;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
 
-  --color-bg: #050505;
-  --color-surface: #0a0a0a;
+  --color-bg: #000000;
+  --color-surface: #080808;
   --color-surface-raised: #111111;
-  --color-border: #1a1a1a;
-  --color-border-hover: #2a2a2a;
+  --color-border: #191919;
+  --color-border-hover: #333333;
   --color-muted: #555555;
-  --color-text: #888888;
-  --color-heading: #ededed;
-  --color-white: #fafafa;
-  --color-accent: #00e87b;
-  --color-accent-dim: #00e87b25;
-  --color-accent-glow: #00e87b12;
-  --color-accent-muted: #00e87b99;
-  --color-purple: #a78bfa;
-  --color-purple-dim: #a78bfa20;
-  --color-orange: #fb923c;
-  --color-blue: #60a5fa;
-  --color-yellow: #fbbf24;
+  --color-text: #999999;
+  --color-heading: #ffffff;
+  --color-white: #ffffff;
+  --color-accent: #d97706;
+  --color-accent-dim: #d9770630;
+  --color-accent-glow: #d9770612;
+  --color-accent-subtle: #d977060a;
 }
 
-/* ═══════════════════════════════════════
-   BASE
-   ═══════════════════════════════════════ */
+/* ═══════ BASE ═══════ */
 
 body {
   background-color: var(--color-bg);
@@ -41,166 +33,41 @@ body {
   color: var(--color-bg);
 }
 
-/* ═══════════════════════════════════════
-   DOT GRID BACKGROUND
-   ═══════════════════════════════════════ */
+/* ═══════ AMBIENT GRAIN — subtle film texture ═══════ */
 
-.dot-grid {
+.grain::after {
+  content: "";
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
-  background-image: radial-gradient(circle, #ffffff05 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* ═══════════════════════════════════════
-   NOISE OVERLAY
-   ═══════════════════════════════════════ */
-
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
 }
 
-/* ═══════════════════════════════════════
-   GLOW ORB — ambient background light
-   ═══════════════════════════════════════ */
+/* ═══════ WARM GLOW — stage light, top right ═══════ */
 
-.glow-orb {
+.stage-light {
   position: fixed;
-  width: 700px;
-  height: 700px;
+  top: -300px;
+  right: -200px;
+  width: 800px;
+  height: 800px;
   border-radius: 50%;
-  filter: blur(180px);
-  opacity: 0.06;
+  background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+  filter: blur(120px);
+  opacity: 0.04;
   pointer-events: none;
   z-index: 0;
-  animation: orb-drift 25s ease-in-out infinite alternate;
 }
 
-.glow-orb-1 {
-  background: var(--color-accent);
-  top: -250px;
-  right: -150px;
-}
-
-.glow-orb-2 {
-  background: var(--color-purple);
-  bottom: -250px;
-  left: -150px;
-  animation-delay: -12s;
-  animation-direction: alternate-reverse;
-}
-
-@keyframes orb-drift {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-50px, 40px) scale(1.05); }
-  66% { transform: translate(30px, -20px) scale(0.97); }
-  100% { transform: translate(-20px, 10px) scale(1.02); }
-}
-
-/* ═══════════════════════════════════════
-   GRADIENT TEXT
-   ═══════════════════════════════════════ */
-
-.gradient-text {
-  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-accent) 40%, var(--color-purple) 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-shift 8s ease-in-out infinite;
-}
-
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* ═══════════════════════════════════════
-   PIXEL TITLE — special Geist Pixel style
-   ═══════════════════════════════════════ */
-
-.pixel-title {
-  font-family: var(--font-pixel);
-  letter-spacing: 0.05em;
-  text-transform: lowercase;
-}
-
-/* ═══════════════════════════════════════
-   BLINKING CURSOR
-   ═══════════════════════════════════════ */
-
-.cursor-blink::after {
-  content: "█";
-  color: var(--color-accent);
-  animation: blink 1.2s step-end infinite;
-  font-size: 0.85em;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* ═══════════════════════════════════════
-   CARD GLOW ON HOVER
-   ═══════════════════════════════════════ */
-
-.card-glow {
-  position: relative;
-  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.card-glow::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, var(--color-accent-dim), transparent 40%, transparent 60%, var(--color-purple-dim));
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: -1;
-}
-
-.card-glow:hover::before {
-  opacity: 1;
-}
-
-.card-glow:hover {
-  transform: translateY(-3px);
-  border-color: var(--color-border-hover);
-  box-shadow:
-    0 0 40px var(--color-accent-glow),
-    0 12px 40px rgba(0, 0, 0, 0.5);
-}
-
-/* ═══════════════════════════════════════
-   STAGGER ENTRANCE ANIMATION
-   ═══════════════════════════════════════ */
+/* ═══════ ENTRANCE ANIMATIONS ═══════ */
 
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-    filter: blur(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-.animate-fade-up {
-  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fade-in {
@@ -208,29 +75,11 @@ body {
   to { opacity: 1; }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.8s ease both;
-}
-
-/* Stagger delays */
-.delay-0 { animation-delay: 0ms; }
-.delay-1 { animation-delay: 100ms; }
-.delay-2 { animation-delay: 200ms; }
-.delay-3 { animation-delay: 300ms; }
-.delay-4 { animation-delay: 400ms; }
-.delay-5 { animation-delay: 500ms; }
-.delay-6 { animation-delay: 600ms; }
-.delay-7 { animation-delay: 700ms; }
-
-/* ═══════════════════════════════════════
-   HERO SLIDE-IN
-   ═══════════════════════════════════════ */
-
-@keyframes hero-reveal {
+@keyframes hero-enter {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.98);
-    filter: blur(10px);
+    transform: translateY(24px) scale(0.98);
+    filter: blur(8px);
   }
   to {
     opacity: 1;
@@ -240,97 +89,131 @@ body {
 }
 
 .animate-hero {
-  animation: hero-reveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: hero-enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-hero-delayed {
-  animation: hero-reveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  animation: hero-enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
 }
 
-.animate-hero-delayed-2 {
-  animation: hero-reveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+.animate-fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.animate-hero-delayed-3 {
-  animation: hero-reveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+.animate-fade-in {
+  animation: fade-in 0.6s ease both;
 }
 
-/* ═══════════════════════════════════════
-   COPY BUTTON PULSE
-   ═══════════════════════════════════════ */
+.delay-0 { animation-delay: 0ms; }
+.delay-1 { animation-delay: 80ms; }
+.delay-2 { animation-delay: 160ms; }
+.delay-3 { animation-delay: 240ms; }
+.delay-4 { animation-delay: 320ms; }
+.delay-5 { animation-delay: 400ms; }
+
+/* ═══════ SKILL ROW — hover state ═══════ */
+
+.skill-row {
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.skill-row::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0;
+  background: var(--color-accent);
+  transition: height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 1px;
+}
+
+.skill-row:hover::before {
+  height: 60%;
+}
+
+.skill-row:hover {
+  background: var(--color-surface);
+  padding-left: 8px;
+}
+
+/* ═══════ COPY FEEDBACK ═══════ */
 
 @keyframes copy-pulse {
   0% { box-shadow: 0 0 0 0 var(--color-accent-dim); }
-  70% { box-shadow: 0 0 0 10px transparent; }
+  70% { box-shadow: 0 0 0 8px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 .copy-success {
-  animation: copy-pulse 0.6s ease;
+  animation: copy-pulse 0.4s ease;
 }
 
-/* ═══════════════════════════════════════
-   CATEGORY PILL GLOW
-   ═══════════════════════════════════════ */
+/* ═══════ BLINKING CURSOR ═══════ */
 
-.pill-active {
-  box-shadow: 0 0 16px var(--color-accent-dim), inset 0 0 16px var(--color-accent-glow);
-}
-
-/* ═══════════════════════════════════════
-   SCAN LINE (very subtle)
-   ═══════════════════════════════════════ */
-
-.scan-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 20%, var(--color-accent-dim) 50%, transparent 80%);
-  z-index: 100;
-  pointer-events: none;
-  animation: scan 10s linear infinite;
-  opacity: 0.4;
-}
-
-@keyframes scan {
-  0% { top: -2px; }
-  100% { top: 100vh; }
-}
-
-/* ═══════════════════════════════════════
-   DIVIDER LINE — animated gradient
-   ═══════════════════════════════════════ */
-
-.gradient-line {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-accent-dim), var(--color-purple-dim), transparent);
-  border: none;
-}
-
-/* ═══════════════════════════════════════
-   TAG HOVER
-   ═══════════════════════════════════════ */
-
-.tag-hover {
-  transition: all 0.25s ease;
-}
-
-.tag-hover:hover {
-  border-color: var(--color-accent-dim);
+.cursor-blink::after {
+  content: "|";
   color: var(--color-accent);
-  background: var(--color-accent-glow);
+  animation: blink 1s step-end infinite;
+  font-weight: 300;
 }
 
-/* ═══════════════════════════════════════
-   PROSE — markdown content styling
-   ═══════════════════════════════════════ */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ═══════ INSTALL BOX ═══════ */
+
+.install-box {
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.install-box:hover {
+  border-color: var(--color-border-hover);
+  box-shadow: 0 0 40px var(--color-accent-subtle);
+}
+
+/* ═══════ HOW IT WORKS — step counter ═══════ */
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.step:hover .step-number {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: 0 0 12px var(--color-accent-glow);
+}
+
+/* ═══════ DIVIDER ═══════ */
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+}
+
+/* ═══════ PROSE — skill detail markdown ═══════ */
 
 .prose {
   color: var(--color-text);
   line-height: 1.8;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .prose h1,
@@ -342,20 +225,20 @@ body {
   font-weight: 700;
   margin-top: 2.5em;
   margin-bottom: 0.75em;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
-.prose h1 { font-size: 1.75rem; }
-.prose h2 { font-size: 1.35rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5em; }
-.prose h3 { font-size: 1.1rem; color: var(--color-accent); }
+.prose h1 { font-size: 1.5rem; }
+.prose h2 { font-size: 1.2rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5em; }
+.prose h3 { font-size: 1rem; color: var(--color-accent); }
 
 .prose p { margin-bottom: 1.25em; }
 
 .prose code {
   background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 6px;
-  padding: 0.2em 0.45em;
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
   font-size: 0.85em;
   font-family: var(--font-mono);
   color: var(--color-accent);
@@ -364,10 +247,10 @@ body {
 .prose pre {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 1.25em;
+  border-radius: 8px;
+  padding: 1em;
   overflow-x: auto;
-  margin-bottom: 1.75em;
+  margin-bottom: 1.5em;
 }
 
 .prose pre code {
@@ -379,7 +262,7 @@ body {
 }
 
 .prose ul, .prose ol { padding-left: 1.5em; margin-bottom: 1.25em; }
-.prose li { margin-bottom: 0.35em; }
+.prose li { margin-bottom: 0.3em; }
 .prose ul li { list-style-type: disc; }
 .prose ol li { list-style-type: decimal; }
 .prose li::marker { color: var(--color-accent); }
@@ -405,6 +288,6 @@ body {
 .prose hr {
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
-  margin: 2.5em 0;
+  background: var(--color-border);
+  margin: 2em 0;
 }

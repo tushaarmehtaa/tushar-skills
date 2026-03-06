@@ -9,22 +9,20 @@ export function SkillDetail({
   contentHtml: string;
 }) {
   return (
-    <article className="mx-auto max-w-3xl">
-      {/* Title */}
-      <div className="mb-10 animate-hero">
-        <h1 className="mb-3 pixel-title text-4xl font-extrabold tracking-tight sm:text-5xl">
-          <span className="gradient-text">/{skill.name}</span>
+    <article>
+      <div className="mb-10 animate-fade-up">
+        <h1 className="mb-3 text-3xl font-bold tracking-tight text-[var(--color-heading)] sm:text-4xl">
+          /{skill.name}
         </h1>
-        <p className="text-lg text-[var(--color-text)] leading-relaxed">
+        <p className="text-base leading-relaxed text-[var(--color-text)]">
           {skill.description}
         </p>
 
-        {/* Tags */}
         <div className="mt-5 flex flex-wrap gap-2">
           {skill.tags.map((tag) => (
             <span
               key={tag}
-              className="tag-hover rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-muted)]"
+              className="rounded border border-[var(--color-border)] px-2 py-0.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-muted)]"
             >
               {tag}
             </span>
@@ -32,48 +30,39 @@ export function SkillDetail({
         </div>
       </div>
 
-      {/* Install block */}
-      <div className="animate-hero-delayed mb-12 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/60 backdrop-blur-sm overflow-hidden">
-        <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-3">
-          <div className="flex items-center gap-2">
-            <div className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent)]/40" />
-            <span className="font-[family-name:var(--font-mono)] text-xs font-medium uppercase tracking-widest text-[var(--color-muted)]">
-              Install
-            </span>
-          </div>
-          <CopyButton text={skill.installCommand} label="Copy command" />
+      {/* Install */}
+      <div className="animate-fade-up delay-1 mb-12 overflow-hidden rounded-lg border border-[var(--color-border)]">
+        <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
+          <span className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider text-[var(--color-muted)]">
+            install
+          </span>
+          <CopyButton text={skill.installCommand} label="copy" />
         </div>
-        <div className="p-5">
+        <div className="p-4">
           <div className="flex items-start gap-3 font-[family-name:var(--font-mono)] text-sm">
-            <span className="select-none text-[var(--color-accent)] font-semibold">$</span>
-            <code className="break-all text-[var(--color-heading)] leading-relaxed">
+            <span className="select-none text-[var(--color-accent)]">$</span>
+            <code className="break-all leading-relaxed text-[var(--color-heading)]">
               {skill.installCommand}
             </code>
           </div>
         </div>
       </div>
 
-      <div className="gradient-line mb-10" />
+      <div className="mb-10 h-px bg-[var(--color-border)]" />
 
-      {/* Markdown content */}
       <div
         className="prose animate-fade-up delay-2"
         dangerouslySetInnerHTML={{ __html: contentHtml }}
       />
 
-      {/* Footer link */}
-      <div className="mt-16 flex items-center justify-between border-t border-[var(--color-border)] pt-8">
+      <div className="mt-16 border-t border-[var(--color-border)] pt-8">
         <a
           href={`https://github.com/tushaarmehtaa/tushar-skills/blob/main/${skill.slug}/SKILL.md`}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-2 text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-accent)]"
+          className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-accent)]"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-          </svg>
-          Edit on GitHub
+          edit on github
         </a>
       </div>
     </article>
