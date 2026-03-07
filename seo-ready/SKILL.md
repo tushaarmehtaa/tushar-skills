@@ -6,7 +6,7 @@ tags: [seo, aeo, meta-tags, structured-data, sitemap, robots-txt, llms-txt, open
 author: tushaarmehtaa
 ---
 
-Make any web project SEO and AEO (Answer Engine Optimization) ready. This skill doesn't just audit — it reads your codebase, scores every signal, reports what's missing, and then fixes it.
+Full SEO and AEO audit that reads the codebase, scores every signal, and applies the fixes. Not just a report — it changes the files.
 
 ## Phase 1: Detect the Stack
 

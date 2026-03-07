@@ -6,7 +6,7 @@ tags: [copy, landing-page, conversion, marketing, headlines]
 author: tushaarmehtaa
 ---
 
-Audit existing copy and rewrite what's weak, or generate a full landing page from scratch. Two modes, one quality bar.
+Audit existing copy and rewrite the weak parts, or generate a full landing page from scratch.
 
 ## Phase 1: Determine Mode
 

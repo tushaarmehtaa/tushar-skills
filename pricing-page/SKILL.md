@@ -6,7 +6,7 @@ tags: [pricing, dodo-payments, feature-gating, subscriptions, monetization]
 author: tushaarmehtaa
 ---
 
-Scaffold a complete pricing system — tier definitions, feature gating logic, Dodo Payments checkout, and a frontend pricing component. This skill reads your project, detects your stack, and builds the full payment layer.
+Scaffold a complete pricing system — tier definitions, feature gating logic, Dodo Payments checkout, and a frontend pricing component. Reads the project first, wires into the existing stack.
 
 ## Phase 1: Understand the Project
 

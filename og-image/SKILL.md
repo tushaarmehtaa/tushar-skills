@@ -6,7 +6,7 @@ tags: [og-image, open-graph, meta-tags, twitter-card, social-preview]
 author: tushaarmehtaa
 ---
 
-Set up dynamic Open Graph image generation so your links look professional everywhere they're shared. Detects your framework and wires the full meta tag stack — one route, all pages covered.
+Dynamic OG image generation and the full meta tag stack — one route, all pages covered. Your links stop looking broken when someone shares them.
 
 ## Phase 1: Detect the Stack
 

@@ -6,7 +6,7 @@ tags: [email, outreach, sales, networking, founders]
 author: tushaarmehtaa
 ---
 
-Write ultra-short, specific, bold cold emails that get responses. Output directly in chat.
+Write cold emails that get responses. Ultra-short, specific, bold. Two to four sentences — everything else is noise.
 
 ## Phase 1: Gather
 

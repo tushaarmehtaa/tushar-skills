@@ -6,7 +6,7 @@ tags: [auth, clerk, nextauth, supabase, rls, session, security]
 author: tushaarmehtaa
 ---
 
-Set up auth end-to-end for any web app. This skill reads your project, detects your stack, and wires authentication from provider to database to frontend — including the parts everyone forgets (RLS, race conditions, token refresh).
+Set up auth end-to-end — provider, database sync, row-level security, frontend hooks, and session management. RLS and race conditions are in here, not left as an exercise.
 
 ## Phase 1: Detect the Stack
 

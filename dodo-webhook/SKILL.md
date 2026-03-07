@@ -6,7 +6,7 @@ tags: [dodo-payments, webhooks, payments, billing, backend]
 author: tushaarmehtaa
 ---
 
-Wire Dodo Payments webhooks properly. Signature verification, idempotent processing, full payment lifecycle, and database sync — built from production usage. This is the part everyone gets wrong.
+Wire Dodo Payments webhooks end-to-end — signature verification, event routing, idempotency, and database sync. Three specific mistakes will silently break this. All three are covered.
 
 ## Why This Exists
 

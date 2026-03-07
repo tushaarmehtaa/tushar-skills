@@ -6,7 +6,7 @@ tags: [email, resend, transactional, campaigns, deliverability]
 author: tushaarmehtaa
 ---
 
-Scaffold complete email infrastructure for any web app. This skill reads your project, detects your stack, and wires Resend into your existing auth, database, and API layer — including templates, segmentation, and an admin send UI.
+Scaffold complete email infrastructure — Resend setup, transactional templates, user segmentation, and an admin send UI. Reads the project first, plugs into existing auth and database.
 
 ## Phase 1: Detect the Project
 

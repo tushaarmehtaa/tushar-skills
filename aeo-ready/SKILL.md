@@ -6,7 +6,7 @@ tags: [aeo, schema, llms-txt, structured-data, ai-search]
 author: tushaarmehtaa
 ---
 
-Full Answer Engine Optimization audit. Traditional SEO gets you on Google page 1. AEO gets you cited inside ChatGPT, Perplexity, and Claude responses. The mechanics are completely different — this skill handles both.
+Full AEO audit. Google crawls your pages and ranks them. AI engines synthesize answers from sources they've already ingested. Getting cited there is a different problem — schema markup, llms.txt, AI crawler access, and content that actually answers questions.
 
 ## The Difference That Matters
 

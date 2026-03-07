@@ -6,7 +6,7 @@ tags: [credits, payments, monetization, saas, billing, tokens, metering, webhook
 author: tushaarmehtaa
 ---
 
-Scaffold a full credits/token system for any web app. This skill doesn't just generate boilerplate — it reads your project, detects your stack, and wires credits into your existing auth, database, and API layer.
+Scaffold a full credits system — database schema, backend middleware, payment webhooks, frontend state, and UI components. Reads the project first, builds on top of what's already there.
 
 ## Phase 1: Understand the Project
 
