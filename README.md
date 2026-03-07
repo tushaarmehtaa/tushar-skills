@@ -21,6 +21,8 @@ Think of them as slash commands you write yourself.
 | [`/deploy-check`](./deploy-check/SKILL.md) | DevOps | Pre-flight checklist before every production push. Catches TypeScript errors, staged secrets, pending migrations. |
 | [`/seo-ready`](./seo-ready/SKILL.md) | SEO | Full SEO + AEO audit that reads your codebase, scores every signal, and fixes what's missing — meta tags, structured data, sitemap, robots.txt, llms.txt, AI crawler rules. |
 | [`/ship-credits`](./ship-credits/SKILL.md) | Monetization | Scaffold a complete credits/token system — database schema, backend middleware, payment webhooks, frontend state, and UI components. |
+| [`/wire-auth`](./wire-auth/SKILL.md) | Auth | Set up auth end-to-end — Clerk/NextAuth/Supabase Auth + database sync + row-level security + frontend hooks + session management. |
+| [`/add-analytics`](./add-analytics/SKILL.md) | DevOps | Wire PostHog analytics, Sentry error tracking, and a health endpoint. Stop flying blind in production. |
 | [`/model-audit`](./model-audit/SKILL.md) | AI | Full AI model routing table. Every AI call, what model it uses, cost per call. |
 | [`/economics`](./economics/SKILL.md) | AI | Unit economics calculator. Revenue per action, API cost, gross margin, free tier damage. |
 | [`/changelog`](./changelog/SKILL.md) | Workflow | Weekly changelog card for Twitter/X. Reads git log, distills into 6 punchy items. |
@@ -50,6 +52,8 @@ Then in any Claude Code session:
 /deploy-check
 /seo-ready
 /ship-credits
+/wire-auth
+/add-analytics
 /model-audit
 /economics
 /changelog
