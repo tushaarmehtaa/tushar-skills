@@ -14,6 +14,16 @@ const SKILL_ORDER = [
   "economics",
   "changelog",
   "cold-email",
+  "ship-email",
+  "aeo-ready",
+  "og-image",
+  "pricing-page",
+  "cold-outreach-sequence",
+  "dodo-webhook",
+  "segment-users",
+  "mvp-spec",
+  "landing-copy",
+  "make-skill",
 ];
 
 const TAGLINES: Record<string, string> = {
@@ -26,6 +36,16 @@ const TAGLINES: Record<string, string> = {
   "economics": "the unit economics spreadsheet you keep saying you'll make",
   "changelog": "a week of git, distilled into something you can post",
   "cold-email": "3 sentences. they reply or they don't.",
+  "ship-email": "welcome emails, campaigns, segmentation. wired in one shot.",
+  "aeo-ready": "google is one thing. chatgpt, perplexity, claude — that's where you're invisible.",
+  "og-image": "your links look broken when shared. this fixes that in 10 minutes.",
+  "pricing-page": "tiers, feature gates, dodo checkout, and the ui. all of it.",
+  "cold-outreach-sequence": "one email gets ignored. five emails, the right way, get replies.",
+  "dodo-webhook": "the dodo webhook part that everyone gets wrong. done right.",
+  "segment-users": "who are your power users? who's about to churn? now you'll know.",
+  "mvp-spec": "the spec you should write before touching any code.",
+  "landing-copy": "your landing page copy isn't converting. here's why and how to fix it.",
+  "make-skill": "package any workflow into a skill so you never explain it again.",
 };
 
 export default function Home() {
