@@ -1,80 +1,84 @@
 ---
 name: aeo-ready
-description: Full Answer Engine Optimization audit — make your project discoverable by AI search engines (ChatGPT, Perplexity, Claude, Google AI Overviews), not just Google. Use when the user wants to improve their site's visibility in AI-powered search, add structured data, create llms.txt, optimize for AI citations, or audit their AEO readiness. Triggers on requests like "AEO audit", "AI search optimization", "make my site visible to AI", "structured data", "schema markup", "llms.txt", "answer engine", "AI discoverability", or any mention of being found by AI search engines or chatbots.
-category: workflow
+description: Full Answer Engine Optimization audit — make your project discoverable by AI search engines (ChatGPT, Perplexity, Claude, Google AI Overviews), not just Google. Use when the user wants to improve their site's visibility in AI-powered search, add structured data, create llms.txt, optimize for AI citations, or audit AEO readiness. Triggers on requests like "AEO audit", "AI search optimization", "make my site visible to AI", "structured data", "schema markup", "llms.txt", "answer engine", "AI discoverability", or any mention of being found by AI search engines or chatbots.
+category: seo
 tags: [aeo, schema, llms-txt, structured-data, ai-search]
 author: tushaarmehtaa
 ---
 
-# AEO Ready
+Full Answer Engine Optimization audit. Traditional SEO gets you on Google page 1. AEO gets you cited inside ChatGPT, Perplexity, and Claude responses. The mechanics are completely different — this skill handles both.
 
-Full Answer Engine Optimization audit. Makes your project discoverable by AI search engines (ChatGPT, Perplexity, Claude, Google AI Overviews) — not just traditional Google.
+## The Difference That Matters
 
-## How AEO Differs From SEO
+Google crawls your pages and ranks them. AI engines don't rank pages — they synthesize answers from sources they've already ingested. To get cited:
 
-| SEO (Google) | AEO (AI Engines) |
-|---|---|
-| Rank on page 1 | Get cited in AI responses |
-| Keywords in content | Q&A-structured content AI can extract |
-| Backlinks for authority | Mentioned in listicles AI synthesizes from |
-| Meta tags | Schema markup (SoftwareApplication, FAQPage, HowTo) |
-| Sitemap for crawling | llms.txt for LLM-readable summary |
-| robots.txt for Googlebot | robots.txt rules for GPTBot, ClaudeBot, PerplexityBot |
+1. Your content must be structured so AI can extract a clear answer
+2. Your site must be in articles that AI engines pull from (listicles, "best X" roundups)
+3. Your technical setup must not block AI crawlers
 
-## What This Generates
+This skill audits and fixes all three.
 
-| Output | Purpose |
-|--------|---------|
-| **Schema Markup** | Structured data so AI engines can parse your content |
-| **FAQ Blocks** | Q&A-structured content optimized for AI extraction |
-| **llms.txt** | Machine-readable site summary for LLM crawlers |
-| **AI Crawler Rules** | robots.txt rules for AI-specific crawlers |
-| **Citation Strategy** | Prioritized list of articles to pitch for inclusion |
-| **Content Gaps** | Missing content AI engines need to cite you |
+## Phase 1: Scan the Codebase
 
-## Phase 1: Scan Codebase
+Before generating anything, read the project:
 
-Detect:
-- Framework (Next.js, Astro, Remix, static HTML, etc.)
-- Existing meta tags and structured data
-- Content pages (blog, docs, landing pages)
-- Existing robots.txt and sitemap.xml
-- Current schema markup (if any)
+- **Framework**: Next.js / Astro / Remix / static HTML?
+- **Existing meta tags**: Check `<head>`, `layout.tsx`, `_document.tsx`, or equivalent
+- **Existing structured data**: Search for `application/ld+json` scripts
+- **Content pages**: Blog, docs, landing page, FAQ sections
+- **robots.txt**: Does it exist? Does it block anything?
+- **sitemap.xml**: Does it exist?
+
+Tell the user what's missing before making changes.
 
 ## Phase 2: Schema Markup
 
-Based on project type, generate appropriate schema:
+Schema markup is how you tell AI engines exactly what your content means. Without it, they have to guess.
+
+### Pick the right schema types for the project
 
 | Project Type | Schema Types |
 |---|---|
-| **SaaS / Web App** | SoftwareApplication, FAQPage, HowTo, Organization |
-| **Blog / Content** | Article, FAQPage, BreadcrumbList, Person |
-| **E-commerce** | Product, Review, FAQPage, Organization |
-| **Documentation** | TechArticle, HowTo, FAQPage |
+| SaaS / web app | SoftwareApplication + FAQPage + HowTo |
+| Blog | Article + FAQPage + Person |
+| Documentation | TechArticle + HowTo + FAQPage |
+| Portfolio | Person + CreativeWork |
 
 ### SoftwareApplication Schema
 
-```json
+Inject in the `<head>` of the main layout:
+
+```html
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "[Project Name]",
-  "description": "[One-line description]",
-  "applicationCategory": "[Category]",
+  "name": "[Product Name]",
+  "description": "[One sentence — what it does and who it's for]",
+  "applicationCategory": "[BusinessApplication / DeveloperApplication / etc.]",
   "operatingSystem": "Web",
+  "url": "[Homepage URL]",
   "offers": {
     "@type": "Offer",
-    "price": "[Price or 0 for free]",
-    "priceCurrency": "USD"
+    "price": "[0 for free tier]",
+    "priceCurrency": "USD",
+    "description": "[Free tier / pricing summary]"
+  },
+  "creator": {
+    "@type": "Person",
+    "name": "[Your Name]",
+    "url": "[Your website]"
   }
 }
+</script>
 ```
 
 ### FAQPage Schema
 
-**Critical:** Each answer must be 40-60 words. Too short = not useful. Too long = gets truncated by AI engines.
+**This is the highest-value schema for AI engines.** AI engines pull from FAQ answers directly to respond to user queries. Each answer must be 40-60 words — the sweet spot for AI extraction. Too short = not useful. Too long = gets cut off.
 
-```json
+```html
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -84,66 +88,88 @@ Based on project type, generate appropriate schema:
       "name": "What is [Product]?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "[40-60 word direct answer]"
+        "text": "[Product] is a [category] tool that helps [target user] [achieve outcome]. [How it works in one sentence]. [What makes it different or what the free tier includes]. [Result users get]."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does [Product] work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "[Product] works in three steps: [step 1], [step 2], and [step 3]. [Timeframe — how fast users get results]. [No manual work / fully automated / etc.]."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is [Product] free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "[Product] has a free tier that includes [what's included]. Paid plans start at [price] and include [key paid features]. No credit card required to get started."
       }
     }
   ]
 }
+</script>
 ```
+
+Read the actual landing page and docs to generate real answers — never fabricate them.
 
 ### HowTo Schema
 
-For any tutorial or getting-started content:
+For any getting-started or tutorial content:
 
-```json
+```html
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "How to [use/set up Product]",
+  "name": "How to [use / set up / get started with] [Product]",
   "step": [
-    {
-      "@type": "HowToStep",
-      "name": "Step 1",
-      "text": "[Instruction]"
-    }
+    { "@type": "HowToStep", "name": "Step 1", "text": "[Instruction]" },
+    { "@type": "HowToStep", "name": "Step 2", "text": "[Instruction]" },
+    { "@type": "HowToStep", "name": "Step 3", "text": "[Instruction]" }
   ]
 }
+</script>
 ```
 
-Inject all schema as `<script type="application/ld+json">` in the page `<head>`.
+For Next.js App Router, inject schema in `generateMetadata` or directly in the page component. For static HTML, inject in the `<head>`.
 
 ## Phase 3: llms.txt
 
-Create `public/llms.txt`:
+Create `public/llms.txt`. This is a direct machine-readable summary for LLM crawlers — think of it as a README for AI engines:
 
 ```
-# [Project Name]
+# [Product Name]
 
-> [One-line description]
+> [One sentence: what it does + who it's for]
 
 ## What it does
-[2-3 sentence explanation]
+[2-3 sentences covering the core use case and mechanism]
 
 ## Key features
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
+- [Feature 1]: [one-line description]
+- [Feature 2]: [one-line description]
+- [Feature 3]: [one-line description]
 
 ## Pricing
-[Free tier details, paid tiers if applicable]
+- Free: [what's included]
+- Paid: [pricing and what's included]
 
 ## Links
 - Homepage: [URL]
-- Documentation: [URL]
 - Getting started: [URL]
+- Documentation: [URL if exists]
 ```
 
-## Phase 4: AI Crawler Rules
+Keep it factual and specific. AI engines use this file when a user asks "what is [product]?" — so the description here matters.
 
-Add to `robots.txt`:
+## Phase 4: AI Crawler Access
+
+Check `robots.txt`. Most projects either don't have one or block crawlers accidentally. Add explicit allow rules for AI crawlers:
 
 ```
-# AI Crawlers — allow indexing
+# AI crawlers — allow indexing
 User-agent: GPTBot
 Allow: /
 
@@ -157,68 +183,78 @@ User-agent: Google-Extended
 Allow: /
 ```
 
-If user wants to block specific crawlers, generate Disallow rules and explain the tradeoff (blocking = not cited by that engine).
+If the user wants to block a specific crawler, generate the Disallow rule and explain the tradeoff: blocking = not cited by that engine.
 
-## Phase 5: Citation Strategy
+## Phase 5: Content Gap Analysis
 
-1. Search "best [your category] tools 2025" — find top 10 ranking articles
-2. For each article: note publication, author, last updated date, accepts submissions?
-3. Generate pitch angle per article (what makes this product different from tools already listed)
+AI engines need direct answers to common questions about the product. Check if the landing page or docs answers each of these. For any that are missing, generate the content block:
 
-Output as a table:
+**"What is [Product]?"**
+Must be answerable in 40-60 words on the landing page. Not just a tagline — an actual explanation.
 
-| Article | Publication | Last Updated | Pitch Angle |
-|---------|------------|-------------|-------------|
+**"How does [Product] work?"**
+Step-by-step with a HowTo schema attached.
 
-## Phase 6: Content Gap Analysis
+**"Is [Product] free?"**
+Clear pricing info. Vague pricing = AI engines skip the citation.
 
-Check for content answering these questions:
+**"[Product] vs [Competitor]?"**
+If this comparison doesn't exist anywhere, AI engines will use competitor sources instead.
 
-| Question | Present? | Schema Added? |
-|----------|----------|--------------|
-| "What is [Product]?" | ❌/✅ | ❌/✅ |
-| "How does [Product] work?" | ❌/✅ | ❌/✅ |
-| "Is [Product] free?" | ❌/✅ | ❌/✅ |
-| "[Product] vs [Competitor]?" | ❌/✅ | ❌/✅ |
-| "How to get started?" | ❌/✅ | ❌/✅ |
+**"How do I get started?"**
+Quick-start guide. If the onboarding is too long, summarize it on the landing page.
 
-For each missing piece, generate the content block with proper schema.
+For each missing piece: generate the copy and the schema together.
 
-## Scoring Output
+## Phase 6: Citation Strategy
 
-Rate each area and output summary:
+AI engines synthesize answers from articles that rank well on Google. Getting cited by AI engines often means getting listed in those articles first.
 
-| Area | Score | Status |
-|------|-------|--------|
-| Schema Markup | 0-10 | ❌/⚠️/✅ |
-| FAQ Content | 0-10 | ❌/⚠️/✅ |
-| llms.txt | 0-10 | ❌/⚠️/✅ |
-| AI Crawler Access | 0-10 | ❌/⚠️/✅ |
-| Citation Readiness | 0-10 | ❌/⚠️/✅ |
-| Content Gaps | 0-10 | ❌/⚠️/✅ |
+1. Search "best [your category] tools 2025" — find the top 10 ranking articles
+2. For each: note publication, whether it's maintained, whether it accepts submissions
+3. Generate a pitch angle per article — what's unique about this product vs tools already listed
 
-## Workflow
+Output a table:
 
-1. Scan codebase — framework, existing meta/schema, content pages
-2. Detect project type (SaaS, blog, e-commerce, etc.)
-3. Generate appropriate schema markup and inject into head/layout
-4. Generate FAQ blocks with 40-60 word answers
-5. Create `public/llms.txt`
-6. Update `robots.txt` with AI crawler rules
-7. Generate citation strategy table
-8. Run content gap analysis and generate missing content blocks
-9. Output audit report with scores
+```
+Article | Publication | Updated | Accepts Submissions | Pitch Angle
+[title] | [pub]       | [date]  | yes/no              | [one sentence]
+```
 
-## Checklist
+Use `/cold-email` to draft the outreach once the table is ready.
 
-- [ ] All appropriate schema types generated and injected
-- [ ] FAQ answers are 40-60 words each
-- [ ] `llms.txt` created in public directory
-- [ ] `robots.txt` updated with AI crawler rules
-- [ ] Citation strategy table generated with pitch angles
-- [ ] Content gaps identified with generated fix content
-- [ ] Audit report with scores outputted
+## Phase 7: Audit Report
 
-## Detailed Reference
+Output a score and status for each area:
 
-For schema examples by industry, advanced llms.txt patterns, and citation outreach email templates, see [references/guide.md](references/guide.md).
+```
+AEO AUDIT — [project name]
+════════════════════════════════════════
+Schema Markup         [score /10]  [❌ missing / ⚠️ partial / ✅ done]
+FAQ Content           [score /10]  [status]
+llms.txt              [score /10]  [status]
+AI Crawler Access     [score /10]  [status]
+Content Gaps          [score /10]  [status]
+Citation Readiness    [score /10]  [status]
+────────────────────────────────────────
+Overall               [score /60]
+════════════════════════════════════════
+```
+
+Then list the 3 highest-impact fixes in order.
+
+## Verify
+
+```
+[ ] SoftwareApplication schema injected in <head> of main layout
+[ ] FAQPage schema present with at least 3 questions
+[ ] Every FAQ answer is 40-60 words
+[ ] HowTo schema on getting-started content
+[ ] llms.txt exists at /llms.txt (publicly accessible)
+[ ] robots.txt allows GPTBot, ClaudeBot, PerplexityBot
+[ ] Content gap analysis completed — missing answers generated
+[ ] Citation strategy table output
+[ ] Audit report with scores output
+```
+
+See [references/guide.md](references/guide.md) for schema examples by industry, advanced llms.txt patterns, and citation outreach templates.

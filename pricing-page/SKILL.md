@@ -1,59 +1,89 @@
 ---
 name: pricing-page
-description: Scaffold a complete pricing page with tier structure, feature gating, Dodo Payments integration, and the frontend component. Use when the user wants to add pricing, create a pricing page, set up payment tiers, integrate Dodo Payments, or implement feature gating based on subscription plans. Triggers on requests like "pricing page", "add pricing", "subscription tiers", "Dodo Payments integration", "payment plans", "feature gating", "freemium model", "monetize my app", "charge users", or any mention of pricing, billing, or subscription management.
-category: workflow
+description: Scaffold a complete pricing system — tier definitions, feature gating, Dodo Payments integration, and a polished frontend component. Use when the user wants to add pricing, create a pricing page, set up payment tiers, integrate Dodo Payments, or implement feature gating. Triggers on requests like "pricing page", "add pricing", "subscription tiers", "Dodo Payments", "payment plans", "feature gating", "freemium model", "monetize my app", "charge users", or any mention of pricing, billing, or subscription management.
+category: monetization
 tags: [pricing, dodo-payments, feature-gating, subscriptions, monetization]
 author: tushaarmehtaa
 ---
 
-# Pricing Page
+Scaffold a complete pricing system — tier definitions, feature gating logic, Dodo Payments checkout, and a frontend pricing component. This skill reads your project, detects your stack, and builds the full payment layer.
 
-Scaffold a complete pricing system — tier definitions, feature gating logic, Dodo Payments integration, and a polished frontend component. Reads your codebase and adapts to your stack.
+## Phase 1: Understand the Project
 
-## What This Builds
+Before writing anything, read the codebase:
 
-| Component | What It Does |
-|-----------|-------------|
-| **Tier Definitions** | Data structure for pricing tiers (Free, Pro, Enterprise) |
-| **Feature Gate** | Utility to check user's plan before allowing features |
-| **Dodo Integration** | Checkout creation + webhook handling |
-| **Pricing UI** | Frontend component with tier cards, CTA buttons |
-| **Billing Portal** | Link to Dodo customer portal for managing subscription |
+### 1.1 Stack Detection
+- **Framework**: Next.js / other?
+- **Database**: What ORM/client? What does the users table look like?
+- **Auth**: How is the current user identified in API routes?
+- **Existing payments**: Any Dodo SDK or payment routes already?
 
-## Required Information
+### 1.2 Ask the User
 
-1. **Stack** — Framework, database, existing auth method
-2. **Tiers** — How many tiers? What's in each? (skill will suggest if undefined)
-3. **Pricing model** — Flat rate, per-seat, usage-based, or credits
-4. **Billing frequency** — Monthly, annual, or both
+```
+I'll scaffold pricing for your [framework] app.
 
-## Tier Structure (suggest if not defined)
+Quick decisions:
 
-Default suggestion for SaaS:
+1. How many tiers? (e.g., Free + Pro, or Free + Pro + Enterprise)
+2. What's the pricing model? (flat rate / credits / per-seat / usage-based)
+3. Monthly billing, annual, or both?
+4. What features are gated behind paid? (or let me suggest based on the codebase)
 
-| | Free | Pro | Enterprise |
-|---|---|---|---|
-| **Price** | $0 | $X/mo | Custom |
-| **Core feature** | Limited | Full | Full |
-| **API access** | No | Yes | Yes + higher limits |
-| **Support** | Community | Email | Priority |
-| **CTA** | "Get Started" | "Upgrade" | "Contact Us" |
+I'll handle Dodo Payments integration.
+```
 
-For credits-based (AI apps):
+## Phase 2: Tier Definitions
 
-| | Free | Pro | Enterprise |
-|---|---|---|---|
-| **Credits** | 50 | 500/mo | Unlimited |
-| **Price** | $0 | $X/mo | Custom |
-| **Rollover** | No | No | Yes |
+Create a single source of truth for tiers. Adapt based on the user's answers:
 
-## Feature Gating
+```typescript
+// config/pricing.ts
+
+export type Plan = 'free' | 'pro' | 'enterprise';
+
+export const PLANS = {
+  free: {
+    name: 'Free',
+    price: 0,
+    description: 'Get started',
+    features: ['[Feature 1]', '[Feature 2]'],
+    limits: {
+      // Fill based on codebase — e.g., creditsPerMonth: 50
+    },
+    cta: 'Get Started',
+    ctaHref: '/signup',
+  },
+  pro: {
+    name: 'Pro',
+    priceMonthly: 0, // fill from user
+    priceAnnual: 0,  // fill from user
+    description: 'For serious users',
+    features: ['Everything in Free', '[Pro Feature 1]', '[Pro Feature 2]'],
+    limits: {
+      // creditsPerMonth: 500, etc.
+    },
+    cta: 'Upgrade to Pro',
+    highlighted: true,
+    badge: 'Most Popular',
+  },
+} as const;
+```
+
+For a credits-based app, add credit pack definitions alongside plan definitions.
+
+## Phase 3: Feature Gating
+
+Create a utility that checks access before any gated feature runs. This is the enforcement layer — everything else is display:
 
 ```typescript
 // lib/feature-gate.ts
+
 type Plan = 'free' | 'pro' | 'enterprise';
 
-const FEATURES: Record<string, Plan[]> = {
+// Define which plans can access which features
+// Populate based on what actually exists in the codebase
+const FEATURE_ACCESS: Record<string, Plan[]> = {
   'api-access': ['pro', 'enterprise'],
   'export-data': ['pro', 'enterprise'],
   'custom-domain': ['enterprise'],
@@ -61,32 +91,60 @@ const FEATURES: Record<string, Plan[]> = {
 };
 
 export function canAccess(userPlan: Plan, feature: string): boolean {
-  return FEATURES[feature]?.includes(userPlan) ?? false;
+  return FEATURE_ACCESS[feature]?.includes(userPlan) ?? false;
 }
+```
 
-// Usage in API routes
-export function requirePlan(userPlan: Plan, feature: string) {
-  if (!canAccess(userPlan, feature)) {
-    throw new Response(
-      JSON.stringify({ error: 'Upgrade required', upgradeUrl: '/pricing' }),
+In API routes, check before any expensive work:
+
+```typescript
+export async function POST(req: Request) {
+  const user = await getAuthUser(req);
+
+  if (!canAccess(user.plan, 'api-access')) {
+    return Response.json(
+      { error: 'This feature requires Pro.', upgradeUrl: '/pricing' },
       { status: 403 }
     );
   }
+
+  // ... rest of handler
 }
 ```
 
-## Dodo Payments Integration
+In UI, show the locked state rather than hiding the feature. Users need to know the feature exists:
+
+```tsx
+function ExportButton({ userPlan }: { userPlan: Plan }) {
+  if (!canAccess(userPlan, 'export-data')) {
+    return (
+      <button
+        onClick={() => router.push('/pricing')}
+        className="opacity-60"
+        title="Upgrade to Pro to export"
+      >
+        🔒 Export — Pro only
+      </button>
+    );
+  }
+  return <button onClick={handleExport}>Export</button>;
+}
+```
+
+## Phase 4: Dodo Payments Integration
 
 ### Environment Variables
 
-```bash
+```
 DODO_API_KEY=          # From Dodo dashboard
 DODO_WEBHOOK_SECRET=   # whsec_... format — see /dodo-webhook skill
-DODO_PRODUCT_ID=       # Product ID from Dodo dashboard
-APP_URL=               # Your frontend URL for checkout redirect
+DODO_PRODUCT_ID=       # Product ID for Pro plan
+APP_URL=               # Frontend URL for checkout redirect
 ```
 
-### Checkout Creation
+Install: `npm install @dodopayments/sdk`
+
+### Checkout Creation Endpoint
 
 ```typescript
 // app/api/payments/create-checkout/route.ts
@@ -95,108 +153,156 @@ import DodoPayments from '@dodopayments/sdk';
 const dodo = new DodoPayments({ bearerToken: process.env.DODO_API_KEY });
 
 export async function POST(req: Request) {
-  const { userId, email, planId } = await req.json();
+  const user = await getAuthUser(req);
+  const { planId } = await req.json();
 
   const checkout = await dodo.payments.create({
     payment_link: true,
-    customer: { email },
+    customer: { email: user.email },
     product_cart: [{ product_id: process.env.DODO_PRODUCT_ID!, quantity: 1 }],
-    metadata: { userId, planId },  // CRITICAL: attach userId so webhook can find the user
-    return_url: `${process.env.APP_URL}/checkout/success`,
+    metadata: {
+      userId: user.id,   // REQUIRED — webhook uses this
+      planId,            // which plan they're buying
+    },
+    return_url: `${process.env.APP_URL}/checkout/success?plan=${planId}`,
   });
 
   return Response.json({ checkout_url: checkout.payment_link });
 }
 ```
 
-**Critical:** Always attach `userId` in metadata. The webhook uses it to find the user and update their plan.
-
-### Webhook Handler
-
-Wire the webhook using the `/dodo-webhook` skill — it handles signature verification, idempotency, and database sync for subscription lifecycle events.
+**The metadata is how your webhook finds the user.** If `userId` isn't in metadata, the webhook can't update the right account. Use the `/dodo-webhook` skill to wire the webhook handler.
 
 ### Customer Portal
 
+Link users to Dodo's hosted billing portal for plan management, cancellation, and invoice history:
+
 ```typescript
-// Link to Dodo's hosted billing portal
+// app/api/billing/portal/route.ts
 export async function GET(req: Request) {
-  const { userId } = await getAuthUser(req);
-  const user = await db.user.findUnique({ where: { id: userId } });
+  const user = await getAuthUser(req);
 
   const portal = await dodo.customerPortal.create({
     customer_id: user.dodoCustomerId,
-    return_url: `${process.env.APP_URL}/settings`,
+    return_url: `${process.env.APP_URL}/settings/billing`,
   });
 
   return Response.json({ portal_url: portal.url });
 }
 ```
 
-## Pricing UI Component
+Add a "Manage billing" link in user settings that hits this endpoint.
 
-Generate a responsive pricing component with:
+### Checkout Success Page
 
-- **Tier cards** — Side by side on desktop, stacked on mobile
-- **Feature checklist** — Per tier with check/cross marks
-- **CTA buttons** — Different style for recommended tier
-- **Current plan indicator** — Highlight user's current plan if logged in
-- **"Most Popular" badge** — On the recommended tier
+Create `/checkout/success` — this is the page Dodo redirects to after payment. The webhook may arrive a few seconds after the redirect, so poll for the updated plan:
 
-### Design Principles
+```typescript
+// app/checkout/success/page.tsx
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-- One tier must be visually emphasized (larger, different border, badge)
-- Free tier CTA: "Get Started" (not "Sign Up for Free")
-- Pro tier CTA: "Upgrade" or "Start Free Trial"
-- Enterprise CTA: "Contact Us" (opens email)
-- Annual pricing shown as monthly equivalent with total in small text
+export default function CheckoutSuccess() {
+  const [plan, setPlan] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Poll until plan updates (webhook may lag by a few seconds)
+    let attempts = 0;
+    const interval = setInterval(async () => {
+      const res = await fetch('/api/auth/me');
+      const user = await res.json();
+      if (user.plan !== 'free' || attempts > 10) {
+        setPlan(user.plan);
+        clearInterval(interval);
+      }
+      attempts++;
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!plan) return <p>Confirming your upgrade...</p>;
+
+  return (
+    <div>
+      <h1>You're on {plan}.</h1>
+      <p>Your account has been upgraded.</p>
+      <a href="/dashboard">Go to dashboard →</a>
+    </div>
+  );
+}
+```
+
+## Phase 5: Pricing UI Component
+
+Generate a responsive pricing component. The design must emphasize one tier — users who see three equal-weight tiers often leave without deciding:
 
 ```tsx
 // components/pricing-cards.tsx
-export function PricingCards({ currentPlan }: { currentPlan?: string }) {
-  const tiers = [
-    {
-      name: 'Free',
-      price: '$0',
-      features: ['[Feature 1]', '[Feature 2]'],
-      cta: 'Get Started',
-      href: '/signup',
-      highlighted: false,
-    },
-    {
-      name: 'Pro',
-      price: '$[X]/mo',
-      features: ['Everything in Free', '[Pro Feature 1]', '[Pro Feature 2]'],
-      cta: 'Upgrade',
-      href: '/api/payments/create-checkout',
-      highlighted: true,
-      badge: 'Most Popular',
-    },
-  ];
+'use client';
+
+import { PLANS } from '@/config/pricing';
+
+interface PricingCardsProps {
+  currentPlan?: string;
+  onUpgrade?: (planId: string) => void;
+}
+
+export function PricingCards({ currentPlan, onUpgrade }: PricingCardsProps) {
+  const handleUpgrade = async (planId: string) => {
+    const res = await fetch('/api/payments/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ planId }),
+    });
+    const { checkout_url } = await res.json();
+    window.location.href = checkout_url;
+  };
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {tiers.map((tier) => (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {Object.entries(PLANS).map(([planId, plan]) => (
         <div
-          key={tier.name}
-          className={`rounded-xl border p-6 ${tier.highlighted ? 'border-black shadow-lg' : 'border-gray-200'}`}
+          key={planId}
+          className={`rounded-xl border p-6 ${
+            'highlighted' in plan && plan.highlighted
+              ? 'border-black shadow-xl'
+              : 'border-gray-200'
+          }`}
         >
-          {tier.badge && <span className="text-xs font-bold uppercase">{tier.badge}</span>}
-          <h3 className="text-lg font-bold">{tier.name}</h3>
-          <p className="text-3xl font-bold">{tier.price}</p>
+          {'badge' in plan && plan.badge && (
+            <span className="text-xs font-bold uppercase tracking-widest text-black">
+              {plan.badge}
+            </span>
+          )}
+          <h3 className="mt-2 text-xl font-bold">{plan.name}</h3>
+          <p className="mt-1 text-3xl font-bold">
+            {'price' in plan ? (plan.price === 0 ? 'Free' : `$${plan.price}/mo`) : `$${plan.priceMonthly}/mo`}
+          </p>
           <ul className="mt-4 space-y-2">
-            {tier.features.map((f) => (
-              <li key={f} className="flex items-center gap-2 text-sm">
-                <span>✓</span> {f}
+            {plan.features.map((f) => (
+              <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
+                <span className="text-green-500">✓</span> {f}
               </li>
             ))}
           </ul>
-          {currentPlan === tier.name.toLowerCase() ? (
-            <div className="mt-6 text-center text-sm text-gray-500">Current plan</div>
-          ) : (
-            <a href={tier.href} className="mt-6 block w-full rounded-lg bg-black py-2 text-center text-sm text-white">
-              {tier.cta}
-            </a>
-          )}
+          <div className="mt-6">
+            {currentPlan === planId ? (
+              <div className="py-2 text-center text-sm text-gray-400">Current plan</div>
+            ) : (
+              <button
+                onClick={() => handleUpgrade(planId)}
+                className={`w-full rounded-lg py-2 text-sm font-medium ${
+                  'highlighted' in plan && plan.highlighted
+                    ? 'bg-black text-white'
+                    : 'border border-gray-300 text-gray-700 hover:border-black'
+                }`}
+              >
+                {plan.cta}
+              </button>
+            )}
+          </div>
         </div>
       ))}
     </div>
@@ -204,32 +310,34 @@ export function PricingCards({ currentPlan }: { currentPlan?: string }) {
 }
 ```
 
-## Workflow
+## Phase 6: Verify
 
-1. Detect stack (framework, database, existing auth)
-2. Prompt for missing info (tiers, pricing model)
-3. Generate tier definition data structure
-4. Create feature gating utility
-5. Set up Dodo checkout creation endpoint
-6. Point to `/dodo-webhook` skill for webhook handling
-7. Generate pricing UI component
-8. Add billing portal link to user settings
-9. Add env vars to .env.example
-10. Output setup instructions (Dodo dashboard steps)
+```
+Flow 1: Feature Gating
+[ ] Free user hits gated endpoint → 403 with upgradeUrl
+[ ] Pro user hits same endpoint → proceeds normally
+[ ] Gated UI shows locked state, links to /pricing
 
-## Checklist
+Flow 2: Checkout
+[ ] "Upgrade" button creates checkout session
+[ ] Redirects to Dodo-hosted checkout page
+[ ] userId is in checkout metadata
+[ ] After payment, redirects to /checkout/success
 
-- [ ] Tier definitions created with feature lists
-- [ ] Feature gating utility covers all defined features
-- [ ] Dodo SDK installed (`@dodopayments/sdk`)
-- [ ] Checkout creation endpoint returns `checkout_url`
-- [ ] `userId` attached in checkout metadata
-- [ ] Webhook wired (use `/dodo-webhook` skill)
-- [ ] Pricing UI responsive with recommended tier emphasized
-- [ ] Current plan indicated for logged-in users
-- [ ] Billing portal link accessible from settings
-- [ ] Env vars documented in .env.example
+Flow 3: Webhook (handled by /dodo-webhook skill)
+[ ] Webhook verified and processed
+[ ] User plan updated in database
+[ ] Success page reflects new plan after polling
 
-## Detailed Reference
+Flow 4: Billing Portal
+[ ] "Manage billing" link accessible in settings
+[ ] Opens Dodo customer portal
+[ ] Returns to app after portal actions
 
-For pricing psychology, A/B test ideas, and advanced feature gating patterns, see [references/guide.md](references/guide.md).
+Flow 5: Edge Cases
+[ ] Users without dodoCustomerId don't crash portal link
+[ ] Checkout success polling stops after plan updates
+[ ] Env vars in .env.example, not hardcoded
+```
+
+See [references/guide.md](references/guide.md) for pricing psychology, A/B test ideas, and advanced feature gating patterns.

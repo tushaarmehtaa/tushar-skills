@@ -1,57 +1,48 @@
 ---
 name: dodo-webhook
-description: Wire Dodo Payments webhooks properly — signature verification using Standard Webhooks spec, idempotency, subscription lifecycle handling, and database sync. Use when the user needs to handle Dodo payment events, set up webhook endpoints, process payments, manage subscription status changes, or sync billing data with their database. Triggers on requests like "Dodo webhook", "Dodo Payments webhook", "payment webhook", "handle Dodo events", "payment lifecycle", "billing sync", or any mention of processing Dodo Payments events.
-category: devops
+description: Wire Dodo Payments webhooks end-to-end — signature verification using the Standard Webhooks spec, idempotent processing, subscription lifecycle handling, and database sync. Use when the user needs to handle Dodo payment events, set up webhook endpoints, process payments, or sync billing data with their database. Triggers on requests like "Dodo webhook", "Dodo Payments webhook", "payment webhook", "handle Dodo events", "payment lifecycle", "billing sync", or any mention of processing Dodo Payments events.
+category: payments
 tags: [dodo-payments, webhooks, payments, billing, backend]
 author: tushaarmehtaa
 ---
 
-# Dodo Webhook
-
-Wire Dodo Payments webhooks end-to-end. Signature verification, idempotent processing, full payment lifecycle, database sync. Built from real production usage.
+Wire Dodo Payments webhooks properly. Signature verification, idempotent processing, full payment lifecycle, and database sync — built from production usage. This is the part everyone gets wrong.
 
 ## Why This Exists
 
-Dodo webhooks are easy to get wrong:
-- Uses Standard Webhooks spec — NOT the same as raw HMAC verification
-- Webhook secret has a `whsec_` prefix that must be stripped and base64-decoded before use
-- Using the raw secret string will fail silently in log-only mode — you'll think it works until it doesn't
-- Raw body must be forwarded — never let a framework parse it first
-- Events can be delivered multiple times — must handle idempotency
+Dodo uses the Standard Webhooks spec. This is different from Stripe. The mistakes that will burn you:
 
-## Environment Variables
+1. Using the raw `DODO_WEBHOOK_SECRET` string for verification — it won't work. The secret comes in `whsec_xxxxx` format. You must strip the `whsec_` prefix and base64-decode the rest before using it. This fails silently in log-only mode, so you'll think verification works until you test strictly.
+2. Letting any middleware parse the body as JSON before you verify. Signature verification happens over the raw body bytes. Once it's parsed and re-serialized, the bytes change and verification fails.
+3. Returning non-200 on processing errors. Dodo retries any non-200. If your handler throws and returns 500, you'll process the same payment event over and over.
+
+## Phase 1: Detect the Stack
+
+Check the codebase:
+- **Framework**: Next.js App Router / Pages Router / FastAPI / Express?
+- **Database ORM**: Prisma / Drizzle / Supabase / Mongoose / raw SQL?
+- **User model**: What field stores plan/credits? How is `userId` stored?
+- **Existing webhook routes**: Any `/api/webhooks/` directory already?
+
+## Phase 2: Install Dependencies
 
 ```bash
-DODO_API_KEY=           # Your Dodo API key
-DODO_WEBHOOK_SECRET=    # whsec_... format from Dodo dashboard
-DODO_PRODUCT_ID=        # Product ID for credit/subscription purchases
-APP_URL=                # Your frontend URL
+# Node / Next.js
+npm install standardwebhooks
+
+# Python / FastAPI
+pip install standardwebhooks
 ```
 
-## Signature Verification (Critical)
-
-Dodo uses the Standard Webhooks spec. Three headers come with every event:
-- `webhook-id` — unique event ID (use for idempotency)
-- `webhook-timestamp` — Unix timestamp of when event was sent
-- `webhook-signature` — HMAC-SHA256 signature
-
-**The secret gotcha:** `DODO_WEBHOOK_SECRET` is in `whsec_xxxxx` format. You must:
-1. Strip the `whsec_` prefix
-2. Base64-decode the remainder
-3. Use the raw bytes for HMAC verification
-
-```typescript
-import { Webhook } from 'standardwebhooks';
-
-function getWebhookVerifier() {
-  const secret = process.env.DODO_WEBHOOK_SECRET!;
-  // Strip whsec_ prefix — this is the part everyone misses
-  const base64Secret = secret.startsWith('whsec_') ? secret.slice(6) : secret;
-  return new Webhook(base64Secret);
-}
+Add to `.env.example`:
+```
+DODO_API_KEY=
+DODO_WEBHOOK_SECRET=        # whsec_... format from Dodo dashboard
+DODO_PRODUCT_ID=            # Product ID for the thing users are buying
+APP_URL=                    # Frontend URL for checkout redirect
 ```
 
-## Full Webhook Handler
+## Phase 3: Webhook Endpoint
 
 ### Next.js App Router
 
@@ -60,17 +51,22 @@ function getWebhookVerifier() {
 import { Webhook } from 'standardwebhooks';
 
 export async function POST(req: Request) {
-  // CRITICAL: raw body, never parsed JSON
+  // CRITICAL: raw body — never req.json() here
   const body = await req.text();
 
-  const webhookId = req.headers.get('webhook-id')!;
-  const webhookTimestamp = req.headers.get('webhook-timestamp')!;
-  const webhookSignature = req.headers.get('webhook-signature')!;
+  const webhookId = req.headers.get('webhook-id');
+  const webhookTimestamp = req.headers.get('webhook-timestamp');
+  const webhookSignature = req.headers.get('webhook-signature');
+
+  if (!webhookId || !webhookTimestamp || !webhookSignature) {
+    return new Response('Missing webhook headers', { status: 400 });
+  }
 
   // Verify signature
-  let event: any;
+  let event: Record<string, any>;
   try {
     const secret = process.env.DODO_WEBHOOK_SECRET!;
+    // Strip whsec_ prefix — this is the step everyone misses
     const base64Secret = secret.startsWith('whsec_') ? secret.slice(6) : secret;
     const wh = new Webhook(base64Secret);
 
@@ -78,49 +74,50 @@ export async function POST(req: Request) {
       'webhook-id': webhookId,
       'webhook-timestamp': webhookTimestamp,
       'webhook-signature': webhookSignature,
-    });
+    }) as Record<string, any>;
   } catch (err) {
     console.error('Dodo webhook signature verification failed:', err);
     return new Response('Invalid signature', { status: 400 });
   }
 
-  // Idempotency — check if already processed
+  // Idempotency — skip already-processed events
   const alreadyProcessed = await checkEventProcessed(webhookId);
   if (alreadyProcessed) {
     return new Response('Already processed', { status: 200 });
   }
 
-  // Process
   try {
     await handleEvent(event);
     await markEventProcessed(webhookId);
   } catch (err) {
+    // Log but still return 200 — otherwise Dodo retries endlessly
     console.error(`Error processing Dodo event ${event.type}:`, err);
-    // Always return 200 — otherwise Dodo retries endlessly
   }
 
   return new Response('OK', { status: 200 });
 }
 ```
 
-Install: `npm install standardwebhooks`
-
-### Python / FastAPI
+### FastAPI / Python
 
 ```python
+from fastapi import Request, HTTPException
 from standardwebhooks import Webhook
-import base64
+import os
 
 @app.post("/api/webhooks/dodo")
 async def dodo_webhook(request: Request):
-    body = await request.body()
+    body = await request.body()  # raw bytes
 
     webhook_id = request.headers.get("webhook-id")
     webhook_timestamp = request.headers.get("webhook-timestamp")
     webhook_signature = request.headers.get("webhook-signature")
 
-    # Strip whsec_ prefix and base64-decode
+    if not all([webhook_id, webhook_timestamp, webhook_signature]):
+        raise HTTPException(status_code=400, detail="Missing headers")
+
     raw_secret = os.environ["DODO_WEBHOOK_SECRET"]
+    # Strip whsec_ prefix
     base64_secret = raw_secret[6:] if raw_secret.startswith("whsec_") else raw_secret
 
     try:
@@ -133,7 +130,6 @@ async def dodo_webhook(request: Request):
     except Exception as e:
         raise HTTPException(status_code=400, detail="Invalid signature")
 
-    # Idempotency check
     if await event_already_processed(webhook_id):
         return {"received": True}
 
@@ -147,53 +143,71 @@ async def dodo_webhook(request: Request):
     return {"received": True}
 ```
 
-Install: `pip install standardwebhooks`
+### Next.js Proxy Pattern
 
-## Event Router
+If the frontend proxies to a separate backend, the Next.js route must forward the raw body and all three Standard Webhooks headers. Do not let Next.js parse the body:
 
 ```typescript
-async function handleEvent(event: any) {
-  const { type, data } = event;
+// app/api/webhooks/dodo/route.ts (proxy version)
+export async function POST(request: Request) {
+  const body = await request.text();
 
-  switch (type) {
-    case 'payment.succeeded':
-      return handlePaymentSucceeded(data);
-    case 'payment.failed':
-      return handlePaymentFailed(data);
-    case 'subscription.active':
-      return handleSubscriptionActivated(data);
-    case 'subscription.cancelled':
-      return handleSubscriptionCancelled(data);
-    case 'subscription.on_hold':
-      return handleSubscriptionOnHold(data);
-    default:
-      console.log(`Unhandled Dodo event: ${type}`);
+  const headersToForward: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  for (const h of ['webhook-id', 'webhook-timestamp', 'webhook-signature']) {
+    const v = request.headers.get(h);
+    if (v) headersToForward[h] = v;
+  }
+
+  try {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/webhooks/dodo`, {
+      method: 'POST',
+      headers: headersToForward,
+      body,
+    });
+    return new Response(await response.text(), { status: response.status });
+  } catch {
+    // Always return 200 to Dodo even if backend is unreachable
+    return new Response(JSON.stringify({ received: true }), { status: 200 });
   }
 }
 ```
 
-## Event Handlers
-
-| Event | What to Do |
-|-------|-----------|
-| `payment.succeeded` | Find user by `metadata.userId`, add credits or activate plan, clear any payment-failed flags |
-| `payment.failed` | Flag account, optionally send payment-failed email |
-| `subscription.active` | Set user plan to subscribed tier, store Dodo customer ID |
-| `subscription.cancelled` | Downgrade to free tier, keep data |
-| `subscription.on_hold` | Flag account as on-hold, restrict access to paid features |
-
-### payment.succeeded Handler
+## Phase 4: Event Router and Handlers
 
 ```typescript
-async function handlePaymentSucceeded(data: any) {
+async function handleEvent(event: Record<string, any>) {
+  switch (event.type) {
+    case 'payment.succeeded':
+      return handlePaymentSucceeded(event.data);
+    case 'payment.failed':
+      return handlePaymentFailed(event.data);
+    case 'subscription.active':
+      return handleSubscriptionActivated(event.data);
+    case 'subscription.cancelled':
+      return handleSubscriptionCancelled(event.data);
+    case 'subscription.on_hold':
+      return handleSubscriptionOnHold(event.data);
+    default:
+      console.log(`Unhandled Dodo event type: ${event.type}`);
+  }
+}
+```
+
+Generate handlers that match the actual user model in the codebase:
+
+```typescript
+async function handlePaymentSucceeded(data: Record<string, any>) {
   const userId = data.metadata?.userId;
   if (!userId) {
-    console.error('No userId in payment metadata — cannot update user');
+    console.error('No userId in Dodo payment metadata — cannot update user. Check checkout creation.');
     return;
   }
 
   const creditsToAdd = parseInt(data.metadata?.credits || '100');
 
+  // Adapt this to match the detected ORM and user schema
   await db.user.update({
     where: { id: userId },
     data: {
@@ -202,86 +216,117 @@ async function handlePaymentSucceeded(data: any) {
     },
   });
 }
+
+async function handleSubscriptionCancelled(data: Record<string, any>) {
+  const userId = data.metadata?.userId;
+  if (!userId) return;
+
+  await db.user.update({
+    where: { id: userId },
+    data: { plan: 'free' },
+  });
+}
 ```
 
-## Idempotency Layer
+**The userId comes from metadata you attach at checkout creation.** If checkout is created without `metadata: { userId }`, the webhook has no way to find the user. Always verify this is set.
+
+## Phase 5: Idempotency Layer
+
+Dodo retries events on non-200 responses and occasionally delivers duplicates. Process each event exactly once.
+
+```sql
+-- Add this table to your database
+CREATE TABLE processed_webhooks (
+  webhook_id TEXT PRIMARY KEY,
+  processed_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
 
 ```typescript
-// Store processed webhook IDs to prevent duplicate processing
-// Table: processed_webhooks (webhook_id TEXT PRIMARY KEY, processed_at TIMESTAMP)
-
 async function checkEventProcessed(webhookId: string): Promise<boolean> {
-  const existing = await db.processedWebhook.findUnique({
-    where: { webhookId }
-  });
+  const existing = await db.processedWebhook.findUnique({ where: { webhookId } });
   return !!existing;
 }
 
 async function markEventProcessed(webhookId: string): Promise<void> {
-  await db.processedWebhook.create({
-    data: { webhookId, processedAt: new Date() }
-  });
+  await db.processedWebhook.create({ data: { webhookId } });
 }
 ```
 
-## Next.js Proxy Pattern
+For Supabase without an ORM:
+```typescript
+async function checkEventProcessed(webhookId: string) {
+  const { data } = await supabase
+    .from('processed_webhooks')
+    .select('webhook_id')
+    .eq('webhook_id', webhookId)
+    .maybeSingle();
+  return !!data;
+}
+```
 
-If your Next.js frontend proxies to a separate backend (like tweetbuzz), the Next.js route should forward raw body and all three webhook headers:
+## Phase 6: Checkout Creation (the other half)
+
+The webhook only works if checkout was created correctly. Check the checkout creation endpoint and ensure `userId` is in metadata:
 
 ```typescript
-// app/api/webhooks/dodo/route.ts (proxy version)
-export async function POST(request: Request) {
-  const body = await request.text(); // raw — never parse
+// api/payments/create-checkout/route.ts
+const checkout = await dodo.payments.create({
+  payment_link: true,
+  customer: { email: user.email },
+  product_cart: [{ product_id: process.env.DODO_PRODUCT_ID!, quantity: 1 }],
+  metadata: {
+    userId: user.id,        // REQUIRED — webhook uses this to find the user
+    credits: '100',         // how many credits to add on success
+  },
+  return_url: `${process.env.APP_URL}/checkout/success`,
+});
 
-  const headersToForward: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-  for (const header of ['webhook-id', 'webhook-timestamp', 'webhook-signature']) {
-    const value = request.headers.get(header);
-    if (value) headersToForward[header] = value;
-  }
-
-  const response = await fetch(`${process.env.BACKEND_URL}/api/webhooks/dodo`, {
-    method: 'POST',
-    headers: headersToForward,
-    body,
-  });
-
-  return new Response(await response.text(), { status: response.status });
-}
+return Response.json({ checkout_url: checkout.payment_link });
 ```
 
-## Local Testing
+## Phase 7: Local Testing
 
-Use the Dodo dashboard's test mode and manually trigger events, or use ngrok to expose your local server:
+Use ngrok to expose your local server, then add the ngrok URL as a webhook endpoint in the Dodo dashboard (test mode):
 
 ```bash
-# Expose local server
 ngrok http 3000
-
-# Add the ngrok URL as webhook endpoint in Dodo dashboard (test mode)
-# https://your-ngrok-id.ngrok.io/api/webhooks/dodo
+# Add https://your-ngrok-id.ngrok.io/api/webhooks/dodo in Dodo test dashboard
 ```
 
-## Common Mistakes This Prevents
+Trigger test events from the Dodo dashboard to verify the full flow locally before deploying.
 
-| Mistake | How This Skill Handles It |
-|---------|--------------------------|
-| Using raw `whsec_` secret | Strips prefix + base64-decodes |
-| Parsing body as JSON before verification | Uses raw text body throughout |
-| No idempotency — processes duplicates | `processed_webhooks` table |
-| Returning non-200 on errors | Always returns 200, logs separately |
-| Missing `userId` in metadata | Documented as critical in checkout setup |
+## Phase 8: Verify
 
-## Checklist
+```
+Flow 1: Signature Verification
+[ ] whsec_ prefix stripped before use
+[ ] Raw body used — not parsed JSON
+[ ] Invalid signatures return 400
+[ ] Valid signatures proceed to processing
 
-- [ ] `standardwebhooks` package installed
-- [ ] `whsec_` prefix stripped before verification
-- [ ] Raw body used — not parsed JSON
-- [ ] All three Standard Webhooks headers forwarded
-- [ ] Idempotency check before processing
-- [ ] `payment.succeeded` handler updates user in DB
-- [ ] `subscription.cancelled` downgrades to free tier
-- [ ] Always returns 200 (even on processing errors)
-- [ ] `DODO_WEBHOOK_SECRET` in .env.example
-- [ ] `userId` attached in checkout metadata (see `/pricing-page` skill)
+Flow 2: Payment Succeeded
+[ ] userId present in event metadata
+[ ] User credits updated in database
+[ ] dodoCustomerId stored on user
+[ ] Event marked as processed in processed_webhooks
+
+Flow 3: Idempotency
+[ ] Same event sent twice → processed only once
+[ ] No double-credit on duplicate delivery
+
+Flow 4: Error Handling
+[ ] Processing error → logged, 200 returned anyway
+[ ] Missing userId in metadata → logged, no crash
+
+Flow 5: Subscription Events
+[ ] subscription.cancelled → user plan set to free
+[ ] subscription.on_hold → user access restricted
+```
+
+## Important Notes
+
+- **The `whsec_` prefix strip is not optional.** Using the raw string fails silently — you won't get an error, verification just won't work.
+- **Always return 200.** Even on database errors, return 200. Log the error and investigate, but don't let Dodo retry the same payment event.
+- **Idempotency is not optional.** Payment providers retry. Process each event exactly once.
+- **Keep checkout metadata minimal but complete.** `userId` is non-negotiable. Add `credits` or `planId` if relevant to your model.

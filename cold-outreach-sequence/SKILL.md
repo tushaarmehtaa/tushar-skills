@@ -1,104 +1,94 @@
 ---
 name: cold-outreach-sequence
-description: Generate complete multi-touch cold outreach sequences — not just one email, but a full 3-5 email sequence with timing, escalation, and follow-up logic. Use when the user wants to build a sales sequence, drip campaign, follow-up series, multi-touch outreach, or any cold email campaign with more than one touchpoint. Triggers on requests like "outreach sequence", "email sequence", "follow-up series", "drip campaign", "sales cadence", "multi-touch outreach", or when someone needs more than a single cold email.
+description: Generate complete multi-touch cold outreach sequences — not just one email, but a full 3-5 email sequence with timing, escalation logic, and a different angle per touch. Use when the user needs a sales sequence, drip campaign, follow-up series, or any cold outreach with more than one touchpoint. Triggers on requests like "outreach sequence", "email sequence", "follow-up series", "drip campaign", "sales cadence", "multi-touch outreach", or when someone needs more than a single cold email.
 category: workflow
 tags: [cold-email, outreach, sequence, sales, follow-up]
 author: tushaarmehtaa
 ---
 
-# Cold Outreach Sequence
+Generate complete multi-touch cold outreach sequences. Not one email — a full campaign where each touch has a different angle, a specific send day, and a clear job to do. Use `/cold-email` for single emails. Use this when one email isn't enough.
 
-Generate complete multi-touch cold outreach sequences. Not one email — a full campaign with timing, escalation, subject threading, and strategic variation across touches.
+## Before Writing Anything
 
-## How This Differs From /cold-email
+Gather this information — ask for anything missing:
 
-| /cold-email | /cold-outreach-sequence |
-|---|---|
-| Single email | 3-5 email sequence |
-| One shot | Strategic escalation over 7-14 days |
-| Generic follow-up template | Each touch has a different angle |
-| No timing logic | Specific send day for each touch |
+1. **Target** — Role, company type, industry. The more specific, the better the hook.
+2. **Offer** — What you're proposing. One sentence.
+3. **Credibility** — Social proof. Numbers, notable clients, results. Be specific.
+4. **Goal** — Meeting, demo, partnership, intro, advice?
+5. **Unique asset** — Demo link, one-pager, case study, free tool? (goes in Email 3)
+6. **Sequence length** — 3 touches (light, 7 days) or 5 touches (standard, 12 days)?
 
-## Required Information
+If the user says "make it for [target] offering [thing]", extract the rest from context before asking.
 
-1. **Target** — Who you're reaching (role, company, industry)
-2. **Your product/offer** — What you're selling or proposing
-3. **Your credibility** — Social proof, numbers, notable clients
-4. **Goal** — Meeting, demo, partnership, advice, etc.
-5. **Sequence length** — 3-touch (light) or 5-touch (standard)
-6. **Unique asset** (optional) — Demo link, one-pager, case study, free tool
+## The Two Sequence Structures
 
-## Sequence Structures
+### 5-Touch Standard (12 days)
 
-### 5-Touch Standard (10-14 days)
-
-| Touch | Day | Strategy | Length |
-|-------|-----|----------|--------|
-| **Email 1** | Day 1 | Problem + Credibility + Ask | 3-4 sentences |
-| **Email 2** | Day 3 | Gentle nudge, same thread | 1-2 sentences |
-| **Email 3** | Day 5 | Value-add (share asset, insight, or demo) | 2-3 sentences |
-| **Email 4** | Day 8 | Social proof (name-drop client or result) | 2-3 sentences |
-| **Email 5** | Day 12 | Breakup email (last note, leave door open) | 2 sentences |
+| Touch | Day | Job | Max Length |
+|-------|-----|-----|-----------|
+| Email 1 | 1 | Problem + Credibility + Ask | 4 sentences |
+| Email 2 | 3 | Bump — low pressure | 2 sentences |
+| Email 3 | 5 | Give value, ask nothing | 3 sentences |
+| Email 4 | 8 | Social proof — name-drop a real result | 3 sentences |
+| Email 5 | 12 | Breakup — clean exit | 2 sentences |
 
 ### 3-Touch Light (7 days)
 
-| Touch | Day | Strategy | Length |
-|-------|-----|----------|--------|
-| **Email 1** | Day 1 | Problem + Credibility + Ask | 3-4 sentences |
-| **Email 2** | Day 3 | Value-add with asset | 2-3 sentences |
-| **Email 3** | Day 7 | Breakup | 2 sentences |
+| Touch | Day | Job | Max Length |
+|-------|-----|-----|-----------|
+| Email 1 | 1 | Problem + Credibility + Ask | 4 sentences |
+| Email 2 | 3 | Value-add with asset | 3 sentences |
+| Email 3 | 7 | Breakup | 2 sentences |
 
-## Email Rules (every touch)
+## The Rules That Don't Move
 
-### Subject Lines
+**Subject lines:**
+- Email 1: Short, specific. References something real about them.
+- Emails 2-5: Always "Re: [original subject]" — stay in the same thread. Do not break the thread.
+- Never use: "Following up", "Checking in", "Touching base", "Just wanted to"
 
-- Email 1: Short, specific, no tricks
-- Emails 2-5: "Re: [original subject]" — stay in same thread
-- Never: "Following up", "Checking in", "Touching base", "Per my last email"
+**Length:**
+- No email exceeds 60 words in the body
+- Emails 2 and 5 should be under 30 words
+- If you can remove a word, remove it
 
-### Length
-
-- No email exceeds 60 words in body
-- Most emails: 30-45 words
-- If you can cut a word, cut it
-
-### Tone Escalation
+**Tone escalation:**
 
 | Touch | Tone |
 |-------|------|
 | 1 | Confident, direct, problem-aware |
-| 2 | Casual, brief, low-pressure |
-| 3 | Generous, value-leading |
-| 4 | Social proof, momentum |
-| 5 | Respectful close, door open |
+| 2 | Casual, brief, zero pressure |
+| 3 | Generous — give something, ask nothing |
+| 4 | Social proof — "others are doing this" |
+| 5 | Clean exit — door stays open |
 
-### What Each Touch Must NOT Do
+**What each touch must NOT do:**
+- Email 1: Must not be generic. If you removed the recipient's name, it should fall apart.
+- Email 2: Must not re-pitch. Just nudge.
+- Email 3: Must not ask for a call, meeting, or response. Only give.
+- Email 4: Must not fabricate social proof. Real clients or skip this touch entirely.
+- Email 5: Must not guilt-trip. Clean, warm, final.
 
-- Email 1: Don't be generic. Must reference something specific about the recipient.
-- Email 2: Don't restate Email 1. Just nudge.
-- Email 3: Don't ask for anything. Just give value.
-- Email 4: Don't fabricate social proof. Real clients or skip this touch.
-- Email 5: Don't guilt trip. Clean exit.
+## The Templates
 
-## Templates
-
-### Email 1 — Problem + Credibility + Ask
+### Email 1
 
 ```
-Subject: [specific observation about their business or recent activity]
+Subject: [specific observation — recent post, job change, company news, product launch]
 
 Hey [Name],
 
-[One sentence: specific observation or hook about them — recent post, company news, product launch].
+[One sentence: something specific you noticed about them. This sentence must be about them, not you.]
 
-[One sentence: your credibility — what you do + proof point].
+[One sentence: what you do + your strongest proof point.]
 
-[One sentence: clear ask with specific time — "15 minutes this week?"].
+[One sentence: specific ask with a time — "15 minutes this week?"]
 
 [Your name]
 ```
 
-### Email 2 — Gentle Nudge
+### Email 2
 
 ```
 Subject: Re: [original subject]
@@ -110,35 +100,35 @@ Bumping this in case it got buried.
 [Your name]
 ```
 
-### Email 3 — Value-Add
+### Email 3
 
 ```
 Subject: Re: [original subject]
 
 Hey [Name],
 
-[One sentence: share something genuinely useful — demo link, relevant insight, case study].
+[One sentence: share something genuinely useful — demo, relevant case study, insight about their industry, or a tool they'd care about.]
 
 No pressure on a call — thought this might be relevant.
 
 [Your name]
 ```
 
-### Email 4 — Social Proof
+### Email 4
 
 ```
 Subject: Re: [original subject]
 
 Hey [Name],
 
-[One sentence: name-drop a real client or result]. [One sentence: why that's relevant to their situation].
+[One sentence: name a real client or result — be specific.] [One sentence: why that's relevant to their situation.]
 
 Happy to show you how — [specific time ask].
 
 [Your name]
 ```
 
-### Email 5 — Breakup
+### Email 5
 
 ```
 Subject: Re: [original subject]
@@ -150,27 +140,39 @@ Last note on this. If the timing's off, completely understand — happy to revis
 [Your name]
 ```
 
+## Research First
+
+Before drafting Email 1, find a hook. A generic opener makes the whole sequence waste of time. Spend 3 minutes looking at:
+
+- Their LinkedIn: recent post, new role, company milestone
+- Their Twitter/X: recent tweet about a problem your offer solves
+- Their company: recent funding, launch, press mention
+- Job postings: what they're hiring tells you what they're building
+
+The hook in Email 1 must be recent (last 30-60 days) and specific. "I love your work" is not a hook.
+
 ## Workflow
 
-1. Gather target info, offer, credibility, goal
-2. Select sequence length (3 or 5 touch)
-3. Research recipient for specific hooks (recent post, company news, product launch)
-4. Draft Email 1 with specific hook + credibility
-5. Draft remaining touches following escalation strategy
-6. Verify each email against length and tone rules
-7. Output complete sequence with send dates
+1. Gather target, offer, credibility, goal, asset, sequence length
+2. Research one specific hook for Email 1
+3. Draft all emails in sequence order
+4. Check: is every email under 60 words?
+5. Check: does Email 1 only work if you know who the recipient is?
+6. Check: does each touch have a distinct job (no "following up" repeats)?
+7. Output complete sequence with send days labeled
 
-## Checklist
+## Verify
 
-- [ ] Every email under 60 words
-- [ ] Email 1 has specific, researched hook about recipient
-- [ ] Emails 2-5 thread on same subject line with "Re:"
-- [ ] Each touch has a distinct strategy (not just "following up" 4x)
-- [ ] Email 3 gives value without asking for anything
-- [ ] Breakup email is clean — no guilt
-- [ ] Send timing uses business days, not weekends
-- [ ] If asset exists, it's in Email 3
+```
+[ ] Every email under 60 words
+[ ] Email 1 has a specific, researched hook — not generic
+[ ] Emails 2-5 thread on same subject line with "Re:"
+[ ] Each touch has a different angle — no repeated pitch
+[ ] Email 3 gives value with no ask
+[ ] Email 4 uses real social proof — or touch is skipped
+[ ] Email 5 is clean — no guilt, door stays open
+[ ] Send days use business days (no weekends)
+[ ] Asset (if exists) is in Email 3, not Email 1
+```
 
-## Detailed Reference
-
-For industry-specific sequence examples, A/B subject line variations, and send time data, see [references/guide.md](references/guide.md).
+See [references/guide.md](references/guide.md) for full sequence examples across industries and subject line variations.

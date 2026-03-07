@@ -1,126 +1,153 @@
 ---
 name: landing-copy
-description: Review and improve landing page copy with conversion-focused feedback. Use when the user wants to write, audit, or improve landing page copy — headlines, subheadlines, CTAs, value propositions, feature sections, social proof, or FAQ sections. Triggers on requests like "review my landing page", "improve this copy", "write landing page copy", "headline feedback", "CTA review", "conversion copy", "value proposition", "landing page audit", or any mention of landing page text, marketing copy, or website copy optimization.
-category: workflow
+description: Audit existing landing page copy and rewrite weak sections, or generate complete landing page copy from a product description. Use when the user wants to write, audit, or improve landing page copy — headlines, subheadlines, value props, feature sections, CTAs, social proof, or FAQ. Triggers on requests like "review my landing page", "improve this copy", "write landing page copy", "my landing page isn't converting", "headline feedback", "CTA review", "value proposition", "audit my copy", "rewrite my hero section", or any mention of landing page text, marketing copy, or website copy optimization.
+category: marketing
 tags: [copy, landing-page, conversion, marketing, headlines]
 author: tushaarmehtaa
 ---
 
-# Landing Copy
+Audit existing copy and rewrite what's weak, or generate a full landing page from scratch. Two modes, one quality bar.
 
-Review and improve landing page copy for conversion. Works on existing copy (audit mode) or generates new copy from a product description.
+## Phase 1: Determine Mode
 
-## Two Modes
+**Audit mode** — user provides existing copy. Score 7 dimensions, rewrite the bottom 3.
 
-### Audit Mode
-User provides existing landing page copy. Score and rewrite across 7 dimensions.
+**Generate mode** — user provides a product description. Build the full page from scratch.
 
-### Generate Mode
-User provides product description. Create complete landing page copy from scratch.
+If the user sends a URL, fetch it and read the copy. If they paste text, use that. If they describe the product without providing copy, use generate mode.
 
-## 7 Scoring Dimensions
+Gather anything missing before writing:
 
-| Dimension | What to Check | Weight |
-|-----------|--------------|--------|
-| **Headline** | Clear benefit, specific, under 10 words | 20% |
-| **Subheadline** | Expands headline, addresses "how" | 10% |
-| **Value Proposition** | Why this over alternatives, in one sentence | 20% |
-| **Social Proof** | Numbers, specificity, real names | 15% |
-| **CTA** | Action-oriented, specific, not generic | 15% |
-| **Feature Copy** | Benefit-first, not feature-first | 10% |
-| **Objection Handling** | Addresses top reasons not to buy | 10% |
+- What does the product do? (one sentence)
+- Who is the target user? (specific, not "developers" or "businesses")
+- What's the key differentiator?
+- Any social proof — numbers, testimonials, logos?
 
-Score each 1-10. Output overall score with specific rewrites for weak areas.
+## Phase 2: The 7 Dimensions
 
-## Copy Frameworks
+Score each 1–10 in audit mode. Use as a writing checklist in generate mode.
 
-| Framework | Structure | Best For |
-|-----------|-----------|----------|
-| **PAS** | Problem → Agitate → Solve | Pain-driven products |
-| **AIDA** | Attention → Interest → Desire → Action | Broad appeal |
-| **BAB** | Before → After → Bridge | Transformation products |
-| **4Ps** | Promise → Picture → Proof → Push | Premium products |
+**Headline (20%)** — Under 10 words. Clear benefit. Specific beats clever. No jargon the user wouldn't say themselves.
 
-Pick one and apply it consistently across the page.
+**Subheadline (10%)** — Expands the headline. Answers "how." One sentence.
 
-## Headline Formulas
+**Value proposition (20%)** — Why this over alternatives. One sentence. Not a feature list.
+
+**Social proof (15%)** — Numbers, real names, specific results. "847 builders use this" beats "trusted by thousands."
+
+**CTA (15%)** — Action verb + specific outcome. Passes the "I want to ___" test.
+
+**Feature copy (10%)** — Benefit first, feature name second. "Write in your voice" not "AI-Powered Writing Engine."
+
+**Objection handling (10%)** — Addresses the 3–5 real reasons someone doesn't buy. Pricing, trust, limitations, competitors.
+
+## Phase 3: Headline Rules
+
+The headline is worth more than all other copy combined.
+
+**Formulas that work:**
 
 - "[Achieve outcome] without [pain point]"
-- "[Specific number] [people/companies] use [product] to [outcome]"
-- "The [category] that [unexpected benefit]"
 - "Stop [painful activity]. Start [desired activity]."
 - "[Product]: [outcome] in [timeframe]"
+- "[Specific number] [people] use [product] to [outcome]"
+- "The [category] that [unexpected benefit]"
 
 **Rules:**
+
 - Under 10 words
 - Specific beats clever every time
-- Benefit over feature
-- No jargon the reader wouldn't use themselves
+- Benefit over feature — always
+- No word the target user wouldn't say themselves
+- Never: "revolutionary", "next-generation", "powerful", "seamless", "robust"
 
-## CTA Rules
+## Phase 4: CTA Rules
 
-| Good CTA | Bad CTA |
-|----------|---------|
-| "Start generating tweets" | "Sign Up" |
-| "Get your first report free" | "Learn More" |
-| "See it in action" | "Submit" |
-| "Start free — no card required" | "Get Started" |
+Good CTAs describe what happens when you click, not what you're doing.
 
-**The CTA test:** finish the sentence "I want to ___." If the CTA doesn't fit in that sentence naturally, rewrite it.
+```
+"Start generating tweets"          ← good: describes the outcome
+"Get your first report free"       ← good: value + no risk
+"See it in action"                 ← good: low commitment
+"Sign Up"                          ← bad: says nothing
+"Learn More"                       ← bad: goes nowhere
+"Get Started"                      ← bad: started with what?
+"Submit"                           ← bad: you're not submitting anything
+```
 
-## Section-by-Section Guide
+**The test:** finish "I want to ___." If the CTA fits that sentence, it works.
 
-### Hero Section
-- Headline: clear benefit, under 10 words
-- Subheadline: how it works in one sentence
-- CTA: specific action
-- Optional: one social proof number ("Trusted by 500+ builders")
+## Phase 5: Section-by-Section
+
+### Hero
+
+```
+[Headline — benefit, under 10 words]
+[Subheadline — how it works, one sentence]
+[CTA]
+[Optional: one social proof number — "Used by 500+ builders"]
+```
 
 ### Feature Sections
-- Lead with benefit, not feature name
-- "Generate tweets in your voice" not "AI-Powered Tweet Generation"
-- One feature per section
-- Each section answers "so what?"
+
+Lead with the benefit. Put the feature name second or not at all.
+
+"Generate tweets that sound like you wrote them" → correct
+"AI-Powered Tweet Generation Feature" → wrong
+
+One feature per section. Each section must answer "so what?" from the reader's perspective.
 
 ### Social Proof
-- Specific numbers over vague claims ("847 users" not "hundreds")
-- Real names + roles on testimonials
-- Screenshots of real results when possible
-- Logos of recognizable users or clients
+
+Specific numbers over vague claims. Real names + roles on testimonials. Screenshots of real results when you have them. Logos of recognizable companies if they exist. Never make up numbers.
 
 ### FAQ / Objection Handling
-- Address the top 3-5 reasons people don't buy
-- Use the actual language your target audience uses
-- Be direct — don't dodge the hard questions (pricing, limitations, competitors)
 
-## Workflow
+These are the reasons people leave without buying. Address them directly:
 
-### Audit Mode
-1. Read existing landing page copy
-2. Score each of 7 dimensions (1-10)
-3. Identify the 3 weakest areas
-4. Rewrite those sections with specific improvements
-5. Output: scores, rewrites, overall recommendations
+- Is this free? What does it actually cost?
+- How is this different from [competitor]?
+- What happens to my data?
+- Does this work for [specific use case]?
+- What if I want to cancel?
 
-### Generate Mode
-1. Gather product info (what it does, who it's for, key differentiator, social proof)
-2. Select best copy framework (PAS, AIDA, BAB, 4Ps)
-3. Write hero section (headline, subheadline, CTA)
-4. Write 3-4 feature sections (benefit-first)
-5. Write social proof section
-6. Write FAQ (3-5 real objections)
-7. Write final CTA section
-8. Output complete copy
+Don't dodge the hard questions. Direct answers build trust faster than polished deflections.
 
-## Checklist
+## Phase 6: Audit Output Format
 
-- [ ] Headline under 10 words with clear benefit
-- [ ] Subheadline explains "how" in one sentence
-- [ ] Value proposition differentiates from alternatives
-- [ ] CTA is specific action (not "Sign Up" or "Learn More")
-- [ ] Features written benefit-first
-- [ ] Social proof uses specific numbers and real names
-- [ ] FAQ addresses real objections, not softballs
-- [ ] No jargon the target audience wouldn't use
-- [ ] One copy framework used consistently throughout
-- [ ] Every section answers "so what?" from the reader's perspective
+```
+LANDING COPY AUDIT — [product]
+════════════════════════════════════
+Headline             [X/10]  [one-line note]
+Subheadline          [X/10]  [one-line note]
+Value Proposition    [X/10]  [one-line note]
+Social Proof         [X/10]  [one-line note]
+CTA                  [X/10]  [one-line note]
+Feature Copy         [X/10]  [one-line note]
+Objection Handling   [X/10]  [one-line note]
+────────────────────────────────────
+Overall              [X/70]
+════════════════════════════════════
+
+TOP 3 REWRITES:
+
+[Section]: [original text]
+→ [rewritten version]
+```
+
+## Verify
+
+```
+[ ] Headline under 10 words with specific benefit
+[ ] No "powerful", "seamless", "revolutionary", "next-generation", "robust"
+[ ] Subheadline explains "how" in one sentence
+[ ] Value prop differentiates from alternatives — not just a feature list
+[ ] CTA passes the "I want to ___" test
+[ ] Every feature section leads with benefit, not feature name
+[ ] Social proof uses specific numbers and real names
+[ ] FAQ addresses real objections — not softballs
+[ ] No jargon the target audience wouldn't use themselves
+[ ] Each section answers "so what?" from the reader's perspective
+```
+
+See [references/guide.md](references/guide.md) for copy frameworks (PAS, AIDA, BAB, 4Ps), headline split-test patterns, and full before/after rewrites by product type.

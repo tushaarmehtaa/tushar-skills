@@ -1,26 +1,25 @@
 ---
 name: og-image
-description: Auto-generate Open Graph images and meta tags for every page in your project. Use when the user wants their links to look good when shared on Twitter/X, LinkedIn, Slack, or any platform that renders link previews. Triggers on requests like "OG image", "open graph", "social preview", "link preview", "Twitter card", "meta tags for sharing", "my links look broken when I share them", or any mention of how links appear when shared on social media.
-category: workflow
+description: Set up dynamic Open Graph image generation and all required meta tags so links look professional when shared on Twitter/X, LinkedIn, Slack, or anywhere that renders link previews. Triggers on requests like "OG image", "open graph", "social preview", "link preview", "Twitter card", "meta tags for sharing", "my links look broken when I share them", or any mention of how links appear when shared on social media.
+category: marketing
 tags: [og-image, open-graph, meta-tags, twitter-card, social-preview]
 author: tushaarmehtaa
 ---
 
-# OG Image
+Set up dynamic Open Graph image generation so your links look professional everywhere they're shared. Detects your framework and wires the full meta tag stack — one route, all pages covered.
 
-Set up dynamic Open Graph image generation so your links look professional when shared anywhere. Detects your framework and wires everything.
+## Phase 1: Detect the Stack
 
-## What This Does
+Check the codebase:
+- **Framework**: Next.js App Router / Pages Router / Astro / Remix / static HTML?
+- **Existing meta tags**: Search for `og:image`, `twitter:card` in layout files
+- **Dynamic pages**: Blog posts, product pages, skill pages — anything that needs per-page OG?
 
-1. Detects your framework (Next.js, Astro, Remix, static HTML)
-2. Creates a dynamic OG image generation route
-3. Generates a default template using your project name and description
-4. Adds all required meta tags to layout/head
-5. Handles per-page dynamic OG for content sites
+If meta tags already exist, audit them before changing anything.
 
-## Framework Detection & Setup
+## Phase 2: Framework-Specific Setup
 
-### Next.js App Router
+### Next.js App Router (recommended path)
 
 Create `app/api/og/route.tsx`:
 
@@ -46,14 +45,30 @@ export async function GET(request: Request) {
           justifyContent: 'center',
           backgroundColor: '#09090b',
           color: '#fafafa',
-          fontFamily: 'system-ui',
+          fontFamily: 'system-ui, sans-serif',
           padding: '60px',
         }}
       >
-        <div style={{ fontSize: 64, fontWeight: 'bold', marginBottom: 24, textAlign: 'center' }}>
+        <div
+          style={{
+            fontSize: 64,
+            fontWeight: 'bold',
+            marginBottom: 24,
+            textAlign: 'center',
+            lineHeight: 1.1,
+          }}
+        >
           {title}
         </div>
-        <div style={{ fontSize: 28, opacity: 0.6, textAlign: 'center', maxWidth: '80%' }}>
+        <div
+          style={{
+            fontSize: 28,
+            opacity: 0.55,
+            textAlign: 'center',
+            maxWidth: '80%',
+            lineHeight: 1.4,
+          }}
+        >
           {description}
         </div>
       </div>
@@ -63,20 +78,25 @@ export async function GET(request: Request) {
 }
 ```
 
-Add to `app/layout.tsx` metadata:
+Add to `app/layout.tsx` — read the actual project name and description from package.json, README, or landing page copy:
 
 ```typescript
 export const metadata: Metadata = {
-  metadataBase: new URL('https://yourdomain.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://yourdomain.com'),
   openGraph: {
     title: '[Project Name]',
-    description: '[Description]',
-    images: ['/api/og?title=[Project Name]&description=[Description]'],
+    description: '[One-line description]',
+    images: [{
+      url: '/api/og?title=[Project Name]&description=[Description]',
+      width: 1200,
+      height: 630,
+    }],
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: '[Project Name]',
-    description: '[Description]',
+    description: '[One-line description]',
     images: ['/api/og?title=[Project Name]&description=[Description]'],
   },
 };
@@ -86,11 +106,25 @@ For dynamic pages (blog posts, skill pages, product pages), override per page:
 
 ```typescript
 // app/[slug]/page.tsx
-export async function generateMetadata({ params }) {
-  const item = getItem(params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const item = getItem(slug);
+  if (!item) return {};
+
+  const ogUrl = `/api/og?title=${encodeURIComponent(item.title)}&description=${encodeURIComponent(item.description)}`;
+
   return {
+    title: `${item.title} — [Site Name]`,
+    description: item.description,
     openGraph: {
-      images: [`/api/og?title=${encodeURIComponent(item.title)}&description=${encodeURIComponent(item.description)}`],
+      images: [{ url: ogUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      images: [ogUrl],
     },
   };
 }
@@ -98,77 +132,84 @@ export async function generateMetadata({ params }) {
 
 ### Next.js Pages Router
 
-Create `pages/api/og.tsx` with the same `ImageResponse` logic above.
-Add meta tags via `next/head` in `_app.tsx` or per-page.
+Create `pages/api/og.tsx` with the same `ImageResponse` logic.
+Add meta tags via `next/head` in `_app.tsx` or per-page with `<Head>`.
 
 ### Astro
 
 Install: `npm install satori @resvg/resvg-js`
 
-Create `src/pages/og/[...slug].png.ts` as an API endpoint returning a PNG buffer generated by satori.
-Add meta tags in `src/layouts/Layout.astro` head section.
+Create `src/pages/og/[...slug].png.ts` as an endpoint that uses satori to generate a PNG buffer and returns it with `Content-Type: image/png`.
+
+Add meta tags in `src/layouts/Layout.astro` in the `<head>` section.
 
 ### Static HTML
 
-Generate a static OG image (1200×630px PNG) and reference it:
+Generate a static `og-image.png` (1200×630) once, and reference it:
 
 ```html
 <meta property="og:image" content="https://yourdomain.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 ```
 
-## Required Meta Tags (all frameworks)
+For static sites with many pages, consider generating per-page OG images at build time.
+
+## Phase 3: Required Meta Tags
+
+Every page needs these. Inject them in the base layout:
 
 ```html
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content="[Page URL]" />
-<meta property="og:title" content="[Title]" />
-<meta property="og:description" content="[Description]" />
-<meta property="og:image" content="[OG Image URL]" />
+<meta property="og:url" content="[Canonical page URL]" />
+<meta property="og:title" content="[Page title]" />
+<meta property="og:description" content="[Page description — 1-2 sentences]" />
+<meta property="og:image" content="[OG image URL — absolute, not relative]" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
-<!-- Twitter -->
+<!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="[Title]" />
-<meta name="twitter:description" content="[Description]" />
-<meta name="twitter:image" content="[OG Image URL]" />
+<meta name="twitter:title" content="[Page title]" />
+<meta name="twitter:description" content="[Page description]" />
+<meta name="twitter:image" content="[OG image URL — must match og:image]" />
 ```
 
-## Design Rules
+**Common mistakes that break previews:**
+- Using relative URLs for `og:image` — must be absolute (`https://...`)
+- Setting `og:image` but not `twitter:image` — Twitter ignores `og:image`
+- Missing `og:image:width` and `:height` — causes slow rendering and sometimes no preview
+- Not setting `metadataBase` in Next.js — all relative URLs become broken
 
-- **Size:** Always 1200×630px
-- **Background:** Dark preferred — stands out in feeds
-- **Title text:** 48-64px, bold
-- **Description text:** 24-32px, lower opacity
-- **Safe zone:** Keep all text within center 80% — platforms crop edges
-- **Readability:** Must be legible at 300px thumbnail width
-- **Contrast:** Minimum 4.5:1 ratio
+## Phase 4: Design Rules
 
-## Verification
+The image renders at 1200×630 on desktop and gets thumbnail-cropped on mobile. Design for both:
 
-After setup, paste your URL into:
+- **Text must be readable at 300px wide** — that's how it looks in a Slack/Twitter feed
+- **Keep all content within center 80%** — platforms crop the edges unpredictably
+- **Dark background preferred** — stands out in light-mode feeds
+- **Title: 48-64px bold** — readable at thumbnail size
+- **Description/subtitle: 24-32px, lower opacity** — supporting context
+- **Minimum 4.5:1 contrast ratio** — both light and dark mode platforms
+
+## Phase 5: Verify
+
+Paste your URL into these tools after deploying. Don't skip this — meta tags look correct in code but break in practice more often than you'd expect:
+
 - Twitter Card Validator: cards-dev.twitter.com/validator
 - LinkedIn Post Inspector: linkedin.com/post-inspector/
-- Or just drop URL in any Slack channel
+- Facebook Debugger: developers.facebook.com/tools/debug/ (also works for WhatsApp)
+- Quick check: paste URL in any Slack channel
 
-## Workflow
-
-1. Detect framework from package.json / project structure
-2. Read project name and description from package.json, README, or landing page copy
-3. Create OG image route (or static image for static sites)
-4. Generate default template with project branding
-5. Add all required meta tags to layout/head
-6. For dynamic pages, generate per-page OG params pattern
-7. Output verification instructions
-
-## Checklist
-
-- [ ] OG image route or static image created at 1200×630
-- [ ] `og:title`, `og:description`, `og:image` set in layout
-- [ ] `twitter:card` set to `summary_large_image`
-- [ ] `twitter:image` matches `og:image`
-- [ ] `og:image:width` and `og:image:height` set
-- [ ] Image readable at thumbnail size
-- [ ] Dynamic pages have per-page OG params
-- [ ] Verification instructions provided
+```
+[ ] OG image route returns valid image at /api/og (or equivalent)
+[ ] og:title, og:description, og:image all set in base layout
+[ ] og:image:width and og:image:height set
+[ ] twitter:card set to summary_large_image
+[ ] twitter:image set (separate from og:image — both required)
+[ ] og:image URL is absolute, not relative
+[ ] Dynamic pages have per-page og:image with correct title param
+[ ] Image readable at 300px thumbnail width
+[ ] Verified in Twitter Card Validator or LinkedIn Inspector
+```

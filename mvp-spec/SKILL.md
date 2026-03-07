@@ -1,140 +1,163 @@
 ---
 name: mvp-spec
-description: Turn a rough product idea into a structured MVP specification — user personas, data model, API routes, page list, tech stack recommendation, and a prioritized feature list split into "launch" and "later". Use when the user has a product idea and wants to scope it before building, needs a PRD, wants to plan an MVP, or needs to think through what to build first. Triggers on requests like "MVP spec", "spec this out", "plan this product", "what should I build first", "scope this idea", "product spec", "PRD", "feature list", "data model for...", "write a PRD", "product requirements", or any request to structure a product idea before coding.
-category: workflow
-tags: [mvp, spec, planning, prd, product]
+description: Turn a rough product idea into a structured MVP spec — problem statement, personas, core loop, feature split, data model, API routes, page list, and tech stack recommendation. Write this before touching any code. Triggers on requests like "spec this out", "MVP spec", "plan this product", "what should I build first", "scope this idea", "PRD", "product spec", "write a spec for...", "help me plan this", "what do I build in v1", "product requirements", or any request to structure a product idea before writing code.
+category: planning
+tags: [mvp, spec, planning, product, prd]
 author: tushaarmehtaa
 ---
 
-# MVP Spec
+The spec you write before touching any code. Turns a rough idea into a buildable v1 with a clean feature cut, data model, and stack recommendation.
 
-Turn a rough product idea into a structured, buildable MVP specification. The thinking skill — before you touch code.
+## Phase 1: Capture the Idea
 
-## What This Outputs
+Ask for anything missing:
 
-| Section | Purpose |
-|---------|---------|
-| **Problem Statement** | One sentence: who has what problem |
-| **User Personas** | 2-3 types of users with their specific pain |
-| **Core Value Prop** | What makes this worth using (one sentence) |
-| **Feature List** | Split into LAUNCH (week 1) and LATER (month 2+) |
-| **Data Model** | Database tables with fields |
-| **API Routes** | Endpoint list with methods |
-| **Page List** | Every screen the user will see |
-| **Tech Stack** | Recommended stack with reasoning |
-| **Scope Cut List** | What v1 explicitly does NOT build |
+1. **The idea** — What does it do? One sentence.
+2. **Who is it for?** — Target user. "Developers" is too vague. "Solo SaaS founders building with Next.js" is specific.
+3. **Monetization** — Free, freemium, paid, credits? Skip for now if unclear.
+4. **Tech preferences** — Any stack constraints? Or let the skill recommend.
 
-## Required Information
+If the user gives you a paragraph, extract these from it and confirm before continuing. Don't ask for what you already have.
 
-1. **The idea** — What does it do? (even a rough sentence)
-2. **Who is it for?** — Target user (skill will suggest if not specified)
-3. **Monetization** (optional) — Free, freemium, paid, credits?
-4. **Tech preferences** (optional) — Any framework or DB preferences?
+## Phase 2: The One-Build Rule
 
-## The One-Build Rule
+Before writing anything, validate the scope:
 
-Before speccing, validate:
-- Is this ONE product, not three ideas stitched together?
-- Can v1 be built and shipped in 1-2 weeks?
-- Is there one clear action the user takes?
+- Is this ONE product, or three ideas stapled together?
+- Can v1 be built and shipped in 1–2 weeks by one person?
+- Is there one clear action the user takes to get value?
 
-If the idea is too broad, narrow it to one core loop before continuing.
+If the idea is too broad, cut it. This spec covers v1 only — not the vision, not the roadmap.
 
-## Feature Prioritization
+**The narrowing question:** "If you could only ship ONE feature this week and it had to deliver real value — what would it be?" That's the core loop. Build the spec around that.
 
-### LAUNCH (must ship in v1)
+## Phase 3: Feature Split
+
+List every feature that came up. Then sort ruthlessly.
+
+### LAUNCH (ships in v1)
 
 Only features that complete the core loop:
+
 - User can sign up
-- User can do THE ONE THING
+- User can do the one thing
 - User gets value from doing it
-- You can see usage data
+- You can see that they got value
 
 ### LATER (month 2+)
 
-Everything else:
-- Settings and preferences
-- Notifications
-- Team / collaboration features
-- Advanced analytics
-- Integrations
-- Mobile optimization
+Everything else. Default everything here unless it's provably required for launch:
+
+- Settings, preferences, notifications
+- Team features, collaboration, multi-user
 - Admin dashboard
+- Analytics dashboards
+- Mobile optimization
+- Integrations, webhooks, API access
 
-### The Test
+**The test:** "If I remove this, can a user still get value from v1?" Yes → LATER.
 
-For each feature: "If I remove this, can a user still get value from v1?"
-- Yes → LATER
-- No → LAUNCH
+## Phase 4: Data Model
 
-## Data Model Template
+Design only for LAUNCH features. Don't model LATER features — the schema will change anyway.
 
 ```
-[Table Name]
-├── id (primary key, uuid or auto-increment)
+users
+├── id (uuid)
+├── email
+├── [plan | credits — if monetized in v1]
+├── created_at
+└── updated_at
+
+[core resource]
+├── id (uuid)
+├── user_id → users.id
 ├── [core fields]
 ├── created_at
 └── updated_at
 
 Relationships:
-- [Table A] has many [Table B]
-- [Table B] belongs to [Table A]
+- users has many [resources]
+- [resource] belongs to user
 ```
 
-## API Routes Template
+One table per entity. No join tables unless collaboration is in v1 (it almost never is).
+
+## Phase 5: API Routes
+
+Only routes LAUNCH features actually need.
 
 ```
-Auth:
+Auth
 POST   /api/auth/signup
 POST   /api/auth/login
 GET    /api/auth/me
 
-[Resource]:
-GET    /api/[resource]        — List
-POST   /api/[resource]        — Create
-GET    /api/[resource]/:id    — Get one
-PUT    /api/[resource]/:id    — Update
-DELETE /api/[resource]/:id    — Delete
+[Resource]
+GET    /api/[resource]           — list (current user only)
+POST   /api/[resource]           — create
+GET    /api/[resource]/:id       — get one
+DELETE /api/[resource]/:id       — delete
 ```
 
-Only spec routes that LAUNCH features actually need.
+No PUT/PATCH unless editing is core to the loop in v1.
 
-## Tech Stack Recommendation Logic
+## Phase 6: Pages
 
-| If the user wants... | Recommend |
-|---------------------|-----------|
-| Ship fastest, solo builder | Next.js + Supabase + Vercel |
-| Full control, custom backend | Next.js + Postgres + Prisma + Railway |
-| AI-heavy app | Next.js + Vercel AI SDK + Supabase |
-| Simple static + API | Astro + Supabase |
-| Backend-heavy, Python | FastAPI + Postgres + Supabase + Vercel |
+Every screen the user sees in v1.
 
-Always explain WHY — match to their stated constraints (speed, control, cost, familiarity).
+```
+/                  — Landing page
+/login             — Auth
+/signup            — Auth
+/dashboard         — Main view after login
+/[resource]/:id    — Detail view (if needed)
+/settings          — Only if required for launch
+```
 
-## Workflow
+## Phase 7: Tech Stack
 
-1. Gather idea, target user, and any tech preferences
-2. Apply the one-build rule — narrow if needed
-3. Write problem statement (one sentence)
-4. Define 2-3 user personas with specific pain points
-5. State core value prop (one sentence)
-6. List ALL features, then split into LAUNCH and LATER
-7. Design data model based on LAUNCH features only
-8. Generate API routes for LAUNCH features only
-9. List all pages and screens
-10. Recommend tech stack with reasoning
-11. Write explicit scope cut list
-12. Output complete spec
+Match the recommendation to the user's stated constraints.
 
-## Checklist
+| Priority | Stack |
+|----------|-------|
+| Ship fastest, solo | Next.js + Supabase + Vercel |
+| Full backend control | Next.js + Postgres + Prisma + Railway |
+| AI-heavy | Next.js + Vercel AI SDK + Supabase |
+| Python backend | FastAPI + Postgres + Supabase Auth |
 
-- [ ] Problem statement is one clear sentence
-- [ ] 2-3 user personas with specific pain (not vague demographics)
-- [ ] Feature list split into LAUNCH and LATER
-- [ ] LAUNCH features complete exactly ONE core loop
-- [ ] Data model covers LAUNCH features only
-- [ ] API routes listed with HTTP methods
-- [ ] All pages and screens listed
-- [ ] Tech stack recommended with reasoning tied to user's constraints
-- [ ] Scope cut list is explicit about what v1 does NOT do
-- [ ] Entire spec could realistically be built in 1-2 weeks
+Always explain why — one sentence per choice. "Supabase: auth + postgres in one service, no separate backend needed for v1."
+
+## Phase 8: Scope Cut List
+
+The most important section. Explicitly list what v1 does NOT build.
+
+```
+v1 does NOT include:
+- Team workspaces or multi-user support
+- Email notifications
+- API access for external integrations
+- Mobile app
+- Custom domains
+- [anything that came up but got cut]
+```
+
+This prevents scope creep during the build. Reference it every time someone says "just one more thing."
+
+## Verify
+
+```
+[ ] Problem statement is one sentence
+[ ] 2-3 user personas with specific pain — not demographic labels
+[ ] Core loop identified — one action, one value delivered
+[ ] Feature list split into LAUNCH and LATER
+[ ] LAUNCH features cover exactly one core loop, nothing else
+[ ] Data model covers LAUNCH features only — no speculative tables
+[ ] API routes listed with HTTP methods
+[ ] All pages listed — no screens without a route
+[ ] Tech stack recommended with one-sentence reasoning per choice
+[ ] Scope cut list explicitly names what v1 does NOT build
+[ ] Entire spec is buildable in 1-2 weeks by one person
+```
+
+See [references/guide.md](references/guide.md) for full example specs, the one-build rule applied to real product ideas, and data model patterns by product type.
