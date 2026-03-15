@@ -24,6 +24,7 @@ const SKILL_ORDER = [
   "mvp-spec",
   "landing-copy",
   "make-skill",
+  "remotion-video",
 ];
 
 const TAGLINES: Record<string, string> = {
@@ -46,6 +47,7 @@ const TAGLINES: Record<string, string> = {
   "mvp-spec": "the spec you should write before touching any code.",
   "landing-copy": "your landing page copy isn't converting. here's why and how to fix it.",
   "make-skill": "package any workflow into a skill so you never explain it again.",
+  "remotion-video": "25 seconds, 3 formats, beat-synced audio. scaffolded, not hand-wired.",
 };
 
 export default function Home() {

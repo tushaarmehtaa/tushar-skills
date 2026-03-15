@@ -32,6 +32,7 @@ Think of them as slash commands you write yourself.
 | [`/mvp-spec`](./mvp-spec/SKILL.md) | Workflow | Turn a rough idea into a full MVP spec — personas, data model, API routes, page list, and LAUNCH vs LATER feature split. |
 | [`/og-image`](./og-image/SKILL.md) | Workflow | Set up dynamic Open Graph image generation and all required meta tags so links look great when shared anywhere. |
 | [`/pricing-page`](./pricing-page/SKILL.md) | Workflow | Scaffold a complete pricing system — tiers, feature gating, Dodo Payments checkout, and a polished pricing UI component. |
+| [`/remotion-video`](./remotion-video/SKILL.md) | Workflow | Scaffold a Remotion video project — multi-format compositions, spring animations, beat-synced audio, scene primitives. Ready to preview immediately. |
 | [`/segment-users`](./segment-users/SKILL.md) | AI | Generate behavioral user segments from your DB schema — SQL queries, ORM queries, current counts, and action plans per segment. |
 | [`/seo-ready`](./seo-ready/SKILL.md) | Workflow | Full SEO + AEO audit that reads your codebase, scores every signal, and fixes what's missing — meta tags, structured data, sitemap, robots.txt, llms.txt, AI crawler rules. |
 | [`/ship-credits`](./ship-credits/SKILL.md) | Workflow | Scaffold a complete credits/token system — database schema, backend middleware, payment webhooks, frontend state, and UI components. |
