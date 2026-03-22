@@ -24,6 +24,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="grain min-h-screen antialiased">
         <div className="stage-light" aria-hidden="true" />
+        <div className="stage-light-secondary" aria-hidden="true" />
         <div className="relative">{children}</div>
       </body>
     </html>

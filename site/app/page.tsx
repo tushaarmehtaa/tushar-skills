@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CopyButton } from "@/components/copy-button";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { getAllSkills, type Skill } from "@/lib/skills";
 
 const SKILL_ORDER = [
@@ -78,7 +79,7 @@ export default function Home() {
         <div className="mx-auto max-w-3xl">
           {/* Hero */}
           <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
-            <h1 className="animate-hero text-4xl font-bold tracking-tight leading-[1.15] text-[var(--color-heading)] sm:text-5xl">
+            <h1 className="animate-hero hero-gradient text-4xl font-bold tracking-tight leading-[1.15] sm:text-5xl">
               same problems.
               <br />
               every product.
@@ -99,7 +100,7 @@ export default function Home() {
 
           {/* Install */}
           <section className="animate-fade-up delay-2 mb-16">
-            <div className="install-box flex flex-col gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="install-box gradient-border flex flex-col gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3 font-[family-name:var(--font-mono)] text-sm">
                 <span className="text-[var(--color-accent)]">$</span>
                 <code className="text-[var(--color-heading)]">
@@ -110,7 +111,7 @@ export default function Home() {
               <CopyButton text="npx skills add tushaarmehtaa/tushar-skills" />
             </div>
             <p className="mt-3 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
-              installs all {skills.length} skills. or click any below to install individually.
+              installs all <span className="skill-count">{skills.length}</span> skills. or click any below to install individually.
             </p>
           </section>
 
@@ -123,41 +124,41 @@ export default function Home() {
             </h2>
             <div>
               {skills.map((skill, i) => (
-                <Link
-                  key={skill.slug}
-                  href={`/${skill.slug}`}
-                  className="skill-row animate-fade-up group flex items-start gap-5 rounded-lg border-b border-[var(--color-border)] px-3 py-5 sm:items-baseline"
-                  style={{ animationDelay: `${(i + 4) * 60}ms` }}
-                >
-                  <span className="w-6 shrink-0 pt-px font-[family-name:var(--font-mono)] text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-accent)]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div className="flex-1">
-                    <div className="flex items-baseline gap-3">
-                      <span className="font-[family-name:var(--font-mono)] font-semibold text-[var(--color-heading)] transition-colors group-hover:text-[var(--color-accent)]">
-                        /{skill.name}
-                      </span>
-                      <span className="hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)] opacity-0 transition-opacity group-hover:opacity-100 sm:inline">
-                        {skill.category}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
-                      {TAGLINES[skill.slug] || skill.description}
-                    </p>
-                  </div>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="mt-1 shrink-0 text-[var(--color-border)] transition-all group-hover:translate-x-0.5 group-hover:text-[var(--color-accent)]"
+                <ScrollReveal key={skill.slug} delay={i * 40}>
+                  <Link
+                    href={`/${skill.slug}`}
+                    className="skill-row group flex items-start gap-5 border-b border-[var(--color-border)] px-3 py-5 sm:items-baseline"
                   >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </Link>
+                    <span className="w-6 shrink-0 pt-px font-[family-name:var(--font-mono)] text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-accent)]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-baseline gap-3">
+                        <span className="font-[family-name:var(--font-mono)] font-semibold text-[var(--color-heading)] transition-colors group-hover:text-[var(--color-accent)]">
+                          /{skill.name}
+                        </span>
+                        <span className="hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)] opacity-0 transition-opacity group-hover:opacity-100 sm:inline">
+                          {skill.category}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
+                        {TAGLINES[skill.slug] || skill.description}
+                      </p>
+                    </div>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="mt-1 shrink-0 text-[var(--color-border)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </Link>
+                </ScrollReveal>
               ))}
             </div>
           </section>
@@ -165,49 +166,57 @@ export default function Home() {
           <div className="divider mb-16" />
 
           {/* How it works */}
-          <section className="animate-fade-up pb-20">
-            <h2 className="mb-10 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-muted)]">
-              how it works
-            </h2>
+          <section className="pb-20">
+            <ScrollReveal>
+              <h2 className="mb-10 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-muted)]">
+                how it works
+              </h2>
+            </ScrollReveal>
             <div className="space-y-8">
-              <div className="step flex items-start gap-4">
-                <div className="step-number">1</div>
-                <div>
-                  <p className="font-semibold text-[var(--color-heading)]">install</p>
-                  <p className="mt-1 text-sm text-[var(--color-text)]">
-                    run the install command. skills land in{" "}
-                    <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
-                      ~/.claude/skills/
-                    </code>
-                  </p>
+              <ScrollReveal delay={0}>
+                <div className="step flex items-start gap-4">
+                  <div className="step-number">1</div>
+                  <div>
+                    <p className="font-semibold text-[var(--color-heading)]">install</p>
+                    <p className="mt-1 text-sm text-[var(--color-text)]">
+                      run the install command. skills land in{" "}
+                      <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
+                        ~/.claude/skills/
+                      </code>
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="step flex items-start gap-4">
-                <div className="step-number">2</div>
-                <div>
-                  <p className="font-semibold text-[var(--color-heading)]">invoke</p>
-                  <p className="mt-1 text-sm text-[var(--color-text)]">
-                    type{" "}
-                    <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
-                      /skill-name
-                    </code>{" "}
-                    in any Claude Code session. it reads your project and runs.
-                  </p>
+              </ScrollReveal>
+              <ScrollReveal delay={80}>
+                <div className="step flex items-start gap-4">
+                  <div className="step-number">2</div>
+                  <div>
+                    <p className="font-semibold text-[var(--color-heading)]">invoke</p>
+                    <p className="mt-1 text-sm text-[var(--color-text)]">
+                      type{" "}
+                      <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
+                        /skill-name
+                      </code>{" "}
+                      in any Claude Code session. it reads your project and runs.
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="step flex items-start gap-4">
-                <div className="step-number">3</div>
-                <div>
-                  <p className="font-semibold text-[var(--color-heading)]">done</p>
-                  <p className="mt-1 text-sm text-[var(--color-text)]">
-                    skills adapt to your codebase. no config, no setup, no re-explaining.
-                    <br />
-                    <span className="text-[var(--color-muted)]">
-                      they read your stack and do the right thing.
-                    </span>
-                  </p>
+              </ScrollReveal>
+              <ScrollReveal delay={160}>
+                <div className="step flex items-start gap-4">
+                  <div className="step-number">3</div>
+                  <div>
+                    <p className="font-semibold text-[var(--color-heading)]">done</p>
+                    <p className="mt-1 text-sm text-[var(--color-text)]">
+                      skills adapt to your codebase. no config, no setup, no re-explaining.
+                      <br />
+                      <span className="text-[var(--color-muted)]">
+                        they read your stack and do the right thing.
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
           </section>
         </div>

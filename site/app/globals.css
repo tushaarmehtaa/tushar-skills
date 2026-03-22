@@ -15,7 +15,7 @@
   --color-white: #ffffff;
   --color-accent: #d97706;
   --color-accent-dim: #d9770630;
-  --color-accent-glow: #d9770612;
+  --color-accent-glow: #d9770618;
   --color-accent-subtle: #d977060a;
 }
 
@@ -47,7 +47,7 @@ body {
   background-size: 256px 256px;
 }
 
-/* ═══════ WARM GLOW — stage light, top right ═══════ */
+/* ═══════ AMBIENT LIGHTING — dual stage lights ═══════ */
 
 .stage-light {
   position: fixed;
@@ -58,15 +58,41 @@ body {
   border-radius: 50%;
   background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
   filter: blur(120px);
-  opacity: 0.04;
+  opacity: 0.05;
   pointer-events: none;
   z-index: 0;
+  animation: glow-drift 12s ease-in-out infinite alternate;
+}
+
+.stage-light-secondary {
+  position: fixed;
+  bottom: -400px;
+  left: -300px;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #d97706 0%, transparent 70%);
+  filter: blur(150px);
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 0;
+  animation: glow-drift-reverse 15s ease-in-out infinite alternate;
+}
+
+@keyframes glow-drift {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-30px, 20px); }
+}
+
+@keyframes glow-drift-reverse {
+  from { transform: translate(0, 0); }
+  to { transform: translate(20px, -30px); }
 }
 
 /* ═══════ ENTRANCE ANIMATIONS ═══════ */
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -78,8 +104,8 @@ body {
 @keyframes hero-enter {
   from {
     opacity: 0;
-    transform: translateY(24px) scale(0.98);
-    filter: blur(8px);
+    transform: translateY(32px) scale(0.97);
+    filter: blur(12px);
   }
   to {
     opacity: 1;
@@ -89,15 +115,15 @@ body {
 }
 
 .animate-hero {
-  animation: hero-enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: hero-enter 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-hero-delayed {
-  animation: hero-enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+  animation: hero-enter 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
 }
 
 .animate-fade-up {
-  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-fade-in {
@@ -111,11 +137,42 @@ body {
 .delay-4 { animation-delay: 320ms; }
 .delay-5 { animation-delay: 400ms; }
 
+/* ═══════ SCROLL-TRIGGERED REVEAL ═══════ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════ HERO GRADIENT TEXT ═══════ */
+
+.hero-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #d97706 50%, #ffffff 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 /* ═══════ SKILL ROW — hover state ═══════ */
 
 .skill-row {
   position: relative;
-  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 8px;
 }
 
 .skill-row::before {
@@ -127,8 +184,9 @@ body {
   width: 2px;
   height: 0;
   background: var(--color-accent);
-  transition: height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   border-radius: 1px;
+  box-shadow: 0 0 8px var(--color-accent-dim);
 }
 
 .skill-row:hover::before {
@@ -136,20 +194,21 @@ body {
 }
 
 .skill-row:hover {
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent-subtle) 100%);
   padding-left: 8px;
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--color-border);
 }
 
 /* ═══════ COPY FEEDBACK ═══════ */
 
 @keyframes copy-pulse {
   0% { box-shadow: 0 0 0 0 var(--color-accent-dim); }
-  70% { box-shadow: 0 0 0 8px transparent; }
+  70% { box-shadow: 0 0 0 10px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 .copy-success {
-  animation: copy-pulse 0.4s ease;
+  animation: copy-pulse 0.5s ease;
 }
 
 /* ═══════ BLINKING CURSOR ═══════ */
@@ -170,12 +229,41 @@ body {
 
 .install-box {
   position: relative;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
 }
 
 .install-box:hover {
   border-color: var(--color-border-hover);
-  box-shadow: 0 0 40px var(--color-accent-subtle);
+  box-shadow: 0 0 60px var(--color-accent-subtle), 0 0 0 1px var(--color-border-hover);
+  transform: translateY(-1px);
+}
+
+/* ═══════ GRADIENT BORDER — animated shimmer ═══════ */
+
+.gradient-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--color-border), var(--color-accent-dim), var(--color-border));
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-shimmer 4s ease infinite;
+  pointer-events: none;
+}
+
+@keyframes border-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 /* ═══════ HOW IT WORKS — step counter ═══════ */
@@ -191,21 +279,75 @@ body {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--color-muted);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   flex-shrink: 0;
+}
+
+.step {
+  transition: transform 0.3s ease;
+}
+
+.step:hover {
+  transform: translateX(4px);
 }
 
 .step:hover .step-number {
   border-color: var(--color-accent);
   color: var(--color-accent);
-  box-shadow: 0 0 12px var(--color-accent-glow);
+  box-shadow: 0 0 16px var(--color-accent-glow), 0 0 4px var(--color-accent-dim);
+  transform: scale(1.05);
 }
 
 /* ═══════ DIVIDER ═══════ */
 
 .divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  background: linear-gradient(90deg, transparent, var(--color-border) 20%, var(--color-accent-dim) 50%, var(--color-border) 80%, transparent);
+}
+
+/* ═══════ SKILL COUNT — accent highlight ═══════ */
+
+.skill-count {
+  color: var(--color-accent);
+  font-weight: 600;
+  position: relative;
+}
+
+.skill-count::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.3;
+}
+
+/* ═══════ TAG — interactive on detail page ═══════ */
+
+.tag {
+  transition: all 0.25s ease;
+}
+
+.tag:hover {
+  border-color: var(--color-accent-dim);
+  color: var(--color-accent);
+  background: var(--color-accent-subtle);
+}
+
+/* ═══════ BACK LINK — smooth slide ═══════ */
+
+.back-link {
+  transition: all 0.25s ease;
+}
+
+.back-link:hover {
+  transform: translateX(-4px);
+}
+
+.back-link:hover svg {
+  transform: translateX(-2px);
 }
 
 /* ═══════ PROSE — skill detail markdown ═══════ */

@@ -42,9 +42,9 @@ export default async function SkillPage({
         <div className="mx-auto max-w-3xl">
           <Link
             href="/"
-            className="mb-10 inline-flex items-center gap-2 rounded-lg px-3 py-2 -ml-3 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)] hover:bg-[var(--color-surface)]"
+            className="back-link mb-10 inline-flex items-center gap-2 rounded-lg px-3 py-2 -ml-3 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)] hover:bg-[var(--color-surface)]"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform group-hover:-translate-x-0.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />
             </svg>
