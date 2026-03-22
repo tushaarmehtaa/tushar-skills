@@ -18,11 +18,13 @@ Think of them as slash commands you write yourself.
 
 | Skill | Category | What it does |
 |-------|----------|-------------|
-| [`/aeo-ready`](./aeo-ready/SKILL.md) | Workflow | Full AEO audit — schema markup, llms.txt, AI crawler rules, and citation strategy to get cited by ChatGPT, Perplexity, and Claude. |
 | [`/add-analytics`](./add-analytics/SKILL.md) | DevOps | Wire PostHog analytics, Sentry error tracking, and a health endpoint. Stop flying blind in production. |
+| [`/aeo-ready`](./aeo-ready/SKILL.md) | Workflow | Full AEO audit — schema markup, llms.txt, AI crawler rules, and citation strategy to get cited by ChatGPT, Perplexity, and Claude. |
+| [`/app-copy`](./app-copy/SKILL.md) | Workflow | Audit or generate all UI microcopy — empty states, error messages, buttons, onboarding, tooltips, confirmations. One pass to make your app feel polished. |
 | [`/changelog`](./changelog/SKILL.md) | Workflow | Weekly changelog card for Twitter/X. Reads git log, distills into 6 punchy items. |
 | [`/cold-email`](./cold-email/SKILL.md) | Workflow | Write cold emails that actually get replies. 2-4 sentence formula with real examples from Evan Spiegel, Mark Cuban, Elon Musk. |
 | [`/cold-outreach-sequence`](./cold-outreach-sequence/SKILL.md) | Workflow | Generate complete 3-5 email outreach sequences with timing, escalation, and a different angle per touch. |
+| [`/decision-doc`](./decision-doc/SKILL.md) | Planning | Stuck between two approaches? Lay out options, tradeoffs, constraints, and pick one. Prevents the "I'll just try both" spiral. |
 | [`/deploy-check`](./deploy-check/SKILL.md) | DevOps | Pre-flight checklist before every production push. Catches TypeScript errors, staged secrets, pending migrations. |
 | [`/dodo-webhook`](./dodo-webhook/SKILL.md) | DevOps | Wire Dodo Payments webhooks — signature verification, idempotency, subscription lifecycle, database sync. |
 | [`/economics`](./economics/SKILL.md) | AI | Unit economics calculator. Revenue per action, API cost, gross margin, free tier damage. |
@@ -32,11 +34,14 @@ Think of them as slash commands you write yourself.
 | [`/mvp-spec`](./mvp-spec/SKILL.md) | Workflow | Turn a rough idea into a full MVP spec — personas, data model, API routes, page list, and LAUNCH vs LATER feature split. |
 | [`/og-image`](./og-image/SKILL.md) | Workflow | Set up dynamic Open Graph image generation and all required meta tags so links look great when shared anywhere. |
 | [`/pricing-page`](./pricing-page/SKILL.md) | Workflow | Scaffold a complete pricing system — tiers, feature gating, Dodo Payments checkout, and a polished pricing UI component. |
+| [`/product-brief`](./product-brief/SKILL.md) | Planning | One-page product brief before any code. What it is, who it's for, what v1 does and doesn't do. Forces clarity. |
+| [`/readme`](./readme/SKILL.md) | Workflow | Audit or generate a GitHub README. Scores structure, clarity, install instructions, and visual appeal. Makes your repo look professional. |
 | [`/remotion-video`](./remotion-video/SKILL.md) | Workflow | Scaffold a Remotion video project — multi-format compositions, spring animations, beat-synced audio, scene primitives. Ready to preview immediately. |
 | [`/segment-users`](./segment-users/SKILL.md) | AI | Generate behavioral user segments from your DB schema — SQL queries, ORM queries, current counts, and action plans per segment. |
 | [`/seo-ready`](./seo-ready/SKILL.md) | Workflow | Full SEO + AEO audit that reads your codebase, scores every signal, and fixes what's missing — meta tags, structured data, sitemap, robots.txt, llms.txt, AI crawler rules. |
 | [`/ship-credits`](./ship-credits/SKILL.md) | Workflow | Scaffold a complete credits/token system — database schema, backend middleware, payment webhooks, frontend state, and UI components. |
 | [`/ship-email`](./ship-email/SKILL.md) | Workflow | Wire transactional and campaign email infrastructure — Resend setup, templates, user segmentation, and admin campaign UI. |
+| [`/teardown`](./teardown/SKILL.md) | Workflow | Pick apart an existing product or landing page. What's working, what's not, what to steal for your own project. |
 | [`/wire-auth`](./wire-auth/SKILL.md) | DevOps | Set up auth end-to-end — Clerk/NextAuth/Supabase Auth + database sync + row-level security + frontend hooks + session management. |
 
 ---
@@ -65,10 +70,11 @@ Then in any Claude Code session:
 /ship-credits
 /wire-auth
 /add-analytics
-/model-audit
-/economics
-/changelog
-/cold-email
+/app-copy
+/readme
+/product-brief
+/teardown
+/decision-doc
 ```
 
 ---

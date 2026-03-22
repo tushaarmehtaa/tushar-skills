@@ -43,7 +43,7 @@ Score each 1–10 in audit mode. Use as a writing checklist in generate mode.
 
 ## Phase 3: Headline Rules
 
-The headline is worth more than all other copy combined.
+The headline is worth more than all other copy combined. You earn $100 for every word you eliminate from it.
 
 **Formulas that work:**
 
@@ -52,6 +52,9 @@ The headline is worth more than all other copy combined.
 - "[Product]: [outcome] in [timeframe]"
 - "[Specific number] [people] use [product] to [outcome]"
 - "The [category] that [unexpected benefit]"
+- Explain what you do (when genuinely unique, simplicity wins)
+- Hook on the pain (address the customer's primary concern head-on)
+- Own the niche (declare yourself THE solution for a specific segment)
 
 **Rules:**
 
@@ -59,7 +62,11 @@ The headline is worth more than all other copy combined.
 - Specific beats clever every time
 - Benefit over feature — always
 - No word the target user wouldn't say themselves
+- A caveman should glance at it and grunt back what you offer
 - Never: "revolutionary", "next-generation", "powerful", "seamless", "robust"
+
+**Banned landing page words** — words that sound like marketing, not humans:
+unlock, unleash, enhance, exceed, empower, supercharge, elevate, leverage, optimize, cutting-edge, best-in-class, turnkey, holistic, synergy, paradigm. If a normal person wouldn't say it at a dinner table, cut it.
 
 ## Phase 4: CTA Rules
 
@@ -77,33 +84,33 @@ Good CTAs describe what happens when you click, not what you're doing.
 
 **The test:** finish "I want to ___." If the CTA fits that sentence, it works.
 
-## Phase 5: Section-by-Section
+## Phase 5: Above the Fold (the 5-second test)
+
+In five seconds visitors decide if you can help them. Clarity over creativity. A caveman should understand what you offer.
 
 ### Hero
 
 ```
 [Headline — benefit, under 10 words]
-[Subheadline — how it works, one sentence]
-[CTA]
-[Optional: one social proof number — "Used by 500+ builders"]
+[Subheadline — explains the mechanism, one sentence]
+[CTA — value-driven, not generic]
+[Social proof — one number above the fold: "18,000+ reviews" or "Used by 500+ builders"]
 ```
 
-### Feature Sections
+**Visual:** Show the product in use. Not a decorative illustration — the actual product, or the actual result. Action shots > stock art.
 
-Lead with the benefit. Put the feature name second or not at all.
+### Below the Fold (the rest of the page)
+
+**Feature sections** — Lead with the benefit. Put the feature name second or not at all. Each section directly supports the promise made above the fold.
 
 "Generate tweets that sound like you wrote them" → correct
 "AI-Powered Tweet Generation Feature" → wrong
 
-One feature per section. Each section must answer "so what?" from the reader's perspective.
+One feature per section. Each section must answer "so what?" from the reader's perspective. Handle objections inline — if a feature raises a concern, address it right there.
 
-### Social Proof
+**Social proof (lower section)** — Above-the-fold proof builds credibility. Below-the-fold proof inspires action. Use customer testimonials that bring the promised value to life through real outcomes: savings, transformations, specific numbers. Real names + roles. Screenshots of real results when you have them.
 
-Specific numbers over vague claims. Real names + roles on testimonials. Screenshots of real results when you have them. Logos of recognizable companies if they exist. Never make up numbers.
-
-### FAQ / Objection Handling
-
-These are the reasons people leave without buying. Address them directly:
+**FAQ / Objection handling** — These are the reasons people leave without buying. Talk to real users to find them. Address directly:
 
 - Is this free? What does it actually cost?
 - How is this different from [competitor]?
@@ -112,6 +119,24 @@ These are the reasons people leave without buying. Address them directly:
 - What if I want to cancel?
 
 Don't dodge the hard questions. Direct answers build trust faster than polished deflections.
+
+**Second CTA** — Your second button has context the first one didn't. Pair it with a reminder of the value. Not just another "Sign Up" — reinforce why.
+
+**Founder's note (optional but powerful)** — A personal narrative: you had the same problem, you built the solution, here's what changed. "People buy from people." If this section makes the reader think "I want that too," it's working.
+
+## Phase 5.5: Conversational Copy Rules
+
+Copy should read like a conversation, not a press release.
+
+- **Write how you talk.** Read it aloud. If your partner would cringe, rewrite it.
+- **Use contractions.** "You're" not "You are." "We've" not "We have."
+- **Start sentences with "And" or "But."** It creates flow.
+- **Use "you" and "we."** Direct address beats third person.
+- **Don't persuade.** Let readers reach their own conclusions. Heavy-handed tactics feel desperate.
+- **Use your customers' words.** Mine testimonials, support tickets, and reviews for the language real users use. That's your copy.
+- **More periods, fewer commas.** Short sentences. Better pacing. Long comma-spliced sentences exhaust readers.
+- **Kill adverbs and adjectives.** They're vague. Strong nouns and verbs do the work.
+- **Stories beat facts.** A customer story sticks. A feature list doesn't.
 
 ## Phase 6: Audit Output Format
 
@@ -148,6 +173,26 @@ TOP 3 REWRITES:
 [ ] FAQ addresses real objections — not softballs
 [ ] No jargon the target audience wouldn't use themselves
 [ ] Each section answers "so what?" from the reader's perspective
+```
+
+## The Landing Page Checklist (10 Steps)
+
+Your landing page is your sales pitch. Examine each element and ask: would this help me sell if I met the customer in person? Remove anything that wouldn't survive a face-to-face conversation.
+
+```
+ABOVE THE FOLD
+1. Explain the value          (title)
+2. Explain the mechanism      (subtitle)
+3. Enable visualization       (visual — real product, not stock)
+4. Establish credibility      (social proof — specific number)
+5. Enable action              (CTA — value-driven)
+
+BELOW THE FOLD
+6. Concretize the value       (features + inline objection handling)
+7. Motivate through proof     (testimonials with real outcomes)
+8. Answer remaining questions (FAQ — real objections, not softballs)
+9. Reinforce action           (second CTA with context)
+10. Build connection          (founder's note — optional)
 ```
 
 See [references/guide.md](references/guide.md) for copy frameworks (PAS, AIDA, BAB, 4Ps), headline split-test patterns, and full before/after rewrites by product type.

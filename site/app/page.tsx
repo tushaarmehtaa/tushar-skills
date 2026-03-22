@@ -23,6 +23,11 @@ const SKILL_ORDER = [
   "segment-users",
   "mvp-spec",
   "landing-copy",
+  "app-copy",
+  "readme",
+  "product-brief",
+  "teardown",
+  "decision-doc",
   "make-skill",
   "remotion-video",
 ];
@@ -46,6 +51,11 @@ const TAGLINES: Record<string, string> = {
   "segment-users": "who are your power users? who's about to churn? now you'll know.",
   "mvp-spec": "the spec you should write before touching any code.",
   "landing-copy": "your landing page copy isn't converting. here's why and how to fix it.",
+  "app-copy": "empty states, error messages, buttons — all the copy you left as placeholder.",
+  "readme": "your repo has no README. or worse, a bad one. fixed in one pass.",
+  "product-brief": "one page. what you're building, who it's for, what v1 doesn't do.",
+  "teardown": "pick apart a product. what works, what doesn't, what to steal.",
+  "decision-doc": "stuck between two approaches. this picks one and kills the other.",
   "make-skill": "package any workflow into a skill so you never explain it again.",
   "remotion-video": "25 seconds, 3 formats, beat-synced audio. scaffolded, not hand-wired.",
 };
