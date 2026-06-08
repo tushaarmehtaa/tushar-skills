@@ -1,6 +1,6 @@
 ---
 name: mvp-spec
-description: Turn a rough product idea into a structured MVP spec — problem statement, personas, core loop, feature split, data model, API routes, page list, and tech stack recommendation. Write this before touching any code. Triggers on requests like "spec this out", "MVP spec", "plan this product", "what should I build first", "scope this idea", "PRD", "product spec", "write a spec for...", "help me plan this", "what do I build in v1", "product requirements", or any request to structure a product idea before writing code.
+description: Turn a rough idea into a structured MVP spec. Problem statement, personas, core loop, feature split, data model, API routes, pages, tech stack. Write before coding.
 category: planning
 tags: [mvp, spec, planning, product, prd]
 author: tushaarmehtaa

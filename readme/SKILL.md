@@ -1,6 +1,6 @@
 ---
 name: readme
-description: Audit an existing GitHub README or generate one from scratch. Scores structure, clarity, install instructions, and visual appeal. Use when the user wants to write a README, improve their README, add badges, fix documentation, or make their open source project look professional. Triggers on requests like "write a README", "improve my README", "audit my docs", "my README sucks", "add badges", "make my repo look good", "documentation", "README template", or any mention of GitHub documentation or project README files.
+description: Audit an existing README or generate one from scratch. Scores structure, clarity, install instructions, visual appeal. Makes open source projects professional.
 category: workflow
 tags: [readme, documentation, github, open-source, developer-experience]
 author: tushaarmehtaa

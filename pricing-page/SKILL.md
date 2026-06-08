@@ -1,6 +1,6 @@
 ---
 name: pricing-page
-description: Scaffold a complete pricing system — tier definitions, feature gating, Dodo Payments integration, and a polished frontend component. Use when the user wants to add pricing, create a pricing page, set up payment tiers, integrate Dodo Payments, or implement feature gating. Triggers on requests like "pricing page", "add pricing", "subscription tiers", "Dodo Payments", "payment plans", "feature gating", "freemium model", "monetize my app", "charge users", or any mention of pricing, billing, or subscription management.
+description: Scaffold a complete pricing system. Tier definitions, feature gating, Dodo Payments integration, polished component. Monetize immediately.
 category: monetization
 tags: [pricing, dodo-payments, feature-gating, subscriptions, monetization]
 author: tushaarmehtaa

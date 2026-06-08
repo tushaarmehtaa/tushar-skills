@@ -1,6 +1,6 @@
 ---
 name: dodo-webhook
-description: Wire Dodo Payments webhooks end-to-end — signature verification using the Standard Webhooks spec, idempotent processing, subscription lifecycle handling, and database sync. Use when the user needs to handle Dodo payment events, set up webhook endpoints, process payments, or sync billing data with their database. Triggers on requests like "Dodo webhook", "Dodo Payments webhook", "payment webhook", "handle Dodo events", "payment lifecycle", "billing sync", or any mention of processing Dodo Payments events.
+description: Wire Dodo Payments webhooks end-to-end. Standard Webhooks spec signature verification, idempotent processing, subscription lifecycle handling, and database sync.
 category: payments
 tags: [dodo-payments, webhooks, payments, billing, backend]
 author: tushaarmehtaa

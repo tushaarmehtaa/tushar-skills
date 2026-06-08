@@ -1,6 +1,6 @@
 ---
 name: aeo-ready
-description: Full Answer Engine Optimization audit — make your project discoverable by AI search engines (ChatGPT, Perplexity, Claude, Google AI Overviews), not just Google. Use when the user wants to improve their site's visibility in AI-powered search, add structured data, create llms.txt, optimize for AI citations, or audit AEO readiness. Triggers on requests like "AEO audit", "AI search optimization", "make my site visible to AI", "structured data", "schema markup", "llms.txt", "answer engine", "AI discoverability", or any mention of being found by AI search engines or chatbots.
+description: Audit Answer Engine Optimization (AEO) for AI search engines — ChatGPT, Perplexity, Claude, Google AI Overviews. Generates structured data, llms.txt, and AI crawler rules to make your project discoverable beyond Google.
 category: seo
 tags: [aeo, schema, llms-txt, structured-data, ai-search]
 author: tushaarmehtaa

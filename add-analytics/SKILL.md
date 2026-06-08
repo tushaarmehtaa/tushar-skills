@@ -1,6 +1,6 @@
 ---
 name: add-analytics
-description: Wire PostHog analytics, Sentry error tracking, and a health endpoint into any web project. Reads your stack, installs the right packages, and instruments your app so you stop flying blind in production.
+description: Wire PostHog analytics, Sentry error tracking, and a health endpoint into any web project. Detects your stack, installs packages, instruments your app.
 category: devops
 tags: [analytics, posthog, sentry, monitoring, error-tracking, observability, health-check]
 author: tushaarmehtaa

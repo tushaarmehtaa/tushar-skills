@@ -1,6 +1,6 @@
 ---
 name: app-copy
-description: Audit or generate all UI microcopy for an app — empty states, error messages, loading states, onboarding flows, tooltips, button labels, confirmation dialogs, and success messages. Use when the user wants to write UI copy, fix empty states, improve error messages, audit UX writing, make their app feel polished, or replace placeholder text. Triggers on requests like "write app copy", "fix my empty states", "error messages", "UI copy", "microcopy", "UX writing", "my app feels robotic", "placeholder text", "button labels", "onboarding copy", "toast messages", or any mention of in-app text, UI writing, or product copy.
+description: Audit or generate all UI microcopy — empty states, errors, buttons, onboarding, tooltips, dialogs, loading states, success messages. Replaces placeholder text and makes apps feel polished.
 category: workflow
 tags: [microcopy, ux-writing, ui-copy, empty-states, onboarding]
 author: tushaarmehtaa

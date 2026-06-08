@@ -1,6 +1,6 @@
 ---
 name: cold-outreach-sequence
-description: Generate complete multi-touch cold outreach sequences — not just one email, but a full 3-5 email sequence with timing, escalation logic, and a different angle per touch. Use when the user needs a sales sequence, drip campaign, follow-up series, or any cold outreach with more than one touchpoint. Triggers on requests like "outreach sequence", "email sequence", "follow-up series", "drip campaign", "sales cadence", "multi-touch outreach", or when someone needs more than a single cold email.
+description: Generate multi-touch cold outreach sequences — 3-5 emails with timing, escalation logic, and a different angle per touch. Full drip campaign from first contact to close.
 category: workflow
 tags: [cold-email, outreach, sequence, sales, follow-up]
 author: tushaarmehtaa

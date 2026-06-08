@@ -1,6 +1,6 @@
 ---
 name: make-skill
-description: Turn any workflow into a properly structured Claude Code skill — YAML frontmatter, phase-based instructions, real code blocks, and a verify checklist. Use when the user wants to package a repeated workflow, create a new skill, turn a process into a slash command, or publish to the skills directory. Triggers on requests like "make a skill", "create a skill", "turn this into a skill", "new skill for...", "package this as a skill", "build a skill", "I want to publish a skill", "help me write a skill", or any request to create a reusable Claude Code skill.
+description: Turn any workflow into a Claude Code skill. YAML frontmatter, phase-based instructions, code blocks, verify checklist. Package and publish reusable automation.
 category: meta
 tags: [skills, automation, workflow, meta, claude-code]
 author: tushaarmehtaa

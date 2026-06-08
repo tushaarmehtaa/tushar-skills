@@ -1,6 +1,6 @@
 ---
 name: teardown
-description: Pick apart an existing product, landing page, or app and analyze what's working, what's not, and what to steal for your own project. Use when the user wants to analyze a competitor, study a product, understand why something converts, review a landing page, or learn from an existing app. Triggers on requests like "teardown", "analyze this product", "review this landing page", "what makes this work", "study this app", "competitor analysis", "what can I steal from this", "break down this site", "why does this convert", or any request to critically analyze an existing product or page.
+description: Analyze an existing product, landing page, or app. What works, what doesn't, what to steal. Competitive intelligence and design patterns in one pass.
 category: workflow
 tags: [teardown, analysis, competitor, landing-page, product-thinking]
 author: tushaarmehtaa

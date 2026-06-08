@@ -1,6 +1,6 @@
 ---
 name: segment-users
-description: Read your database schema, generate behavioral user segments with exact queries, and recommend targeted actions per segment. Use when the user wants to understand their user base, find power users, identify churn risk, build email cohorts, or understand usage patterns. Triggers on requests like "segment users", "who are my power users", "find churned users", "user cohorts", "churn analysis", "inactive users", "behavioral segmentation", "who's about to leave", or any mention of grouping users by activity, usage, or lifecycle.
+description: Read your database schema, generate behavioral user segments with SQL, recommend actions per segment. Find power users, churn risk, inactive users, email cohorts.
 category: analytics
 tags: [segmentation, users, cohorts, churn, analytics]
 author: tushaarmehtaa

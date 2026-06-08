@@ -1,6 +1,6 @@
 ---
 name: seo-ready
-description: Full SEO and AEO (Answer Engine Optimization) audit that reads your codebase, scores every signal, and fixes what's missing — meta tags, structured data, sitemap, robots.txt, llms.txt, and AI crawler rules. One command to make any web project discoverable by Google and AI search.
+description: Full SEO and AEO audit. Scores every signal, fixes missing meta tags, structured data, sitemap, robots.txt, llms.txt, AI crawler rules. One command to be discoverable by Google and AI.
 category: seo
 tags: [seo, aeo, meta-tags, structured-data, sitemap, robots-txt, llms-txt, open-graph, schema, ai-search]
 author: tushaarmehtaa

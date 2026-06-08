@@ -1,6 +1,6 @@
 ---
 name: model-audit
-description: Print the complete AI model routing table for your product. Every AI call, what model it actually uses, and the cost per call. Run whenever you touch models or pricing.
+description: Print the complete AI model routing table. Every AI call, which model runs, cost per call. Run whenever you change models or pricing.
 category: ai
 tags: [ai, models, cost, routing, audit]
 author: tushaarmehtaa

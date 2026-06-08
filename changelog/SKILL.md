@@ -1,6 +1,6 @@
 ---
 name: changelog
-description: Generate a weekly changelog card for Twitter/X. Reads git log, distills the work into 6 punchy items, fills an HTML template, and opens it in the browser ready to screenshot.
+description: Generate a weekly changelog card for Twitter/X. Parses git log, distills to 6 items, fills HTML template, opens in browser ready to screenshot.
 category: workflow
 tags: [changelog, twitter, marketing, git]
 author: tushaarmehtaa

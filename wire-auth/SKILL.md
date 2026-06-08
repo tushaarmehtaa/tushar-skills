@@ -1,6 +1,6 @@
 ---
 name: wire-auth
-description: Set up authentication end-to-end — auth provider, database sync, row-level security, frontend hooks, and session management. Reads your stack and wires Clerk, NextAuth, or Supabase Auth into your existing project.
+description: Wire authentication end-to-end. Auth provider, database sync, row-level security, frontend hooks, session management. Detects your stack, integrates Clerk, NextAuth, or Supabase Auth.
 category: auth
 tags: [auth, clerk, nextauth, supabase, rls, session, security]
 author: tushaarmehtaa

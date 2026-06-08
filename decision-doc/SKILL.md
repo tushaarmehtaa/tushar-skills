@@ -1,6 +1,6 @@
 ---
 name: decision-doc
-description: Write a structured decision document when stuck between two or more approaches. Lays out options, tradeoffs, constraints, and picks one. Use when the user is debating architecture, choosing between tools, weighing tradeoffs, or stuck in analysis paralysis. Triggers on requests like "decision doc", "should I use X or Y", "help me decide", "which approach", "tradeoff analysis", "I'm stuck between", "pros and cons", "compare these options", "what should I pick", "architecture decision", or any request to choose between multiple approaches, tools, or implementations.
+description: Write a structured decision document. Lays out options, tradeoffs, constraints, and picks one. Ends analysis paralysis.
 category: planning
 tags: [decision, tradeoffs, architecture, planning, analysis]
 author: tushaarmehtaa

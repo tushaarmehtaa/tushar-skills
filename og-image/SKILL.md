@@ -1,6 +1,6 @@
 ---
 name: og-image
-description: Set up dynamic Open Graph image generation and all required meta tags so links look professional when shared on Twitter/X, LinkedIn, Slack, or anywhere that renders link previews. Triggers on requests like "OG image", "open graph", "social preview", "link preview", "Twitter card", "meta tags for sharing", "my links look broken when I share them", or any mention of how links appear when shared on social media.
+description: Wire dynamic Open Graph image generation and meta tags. Links look professional on Twitter/X, LinkedIn, Slack, and all link-preview surfaces.
 category: marketing
 tags: [og-image, open-graph, meta-tags, twitter-card, social-preview]
 author: tushaarmehtaa

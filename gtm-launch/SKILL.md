@@ -1,6 +1,6 @@
 ---
 name: gtm-launch
-description: Plan a product launch end to end with research, positioning, distribution, launch assets, and post-launch analysis. Use for GTM plans, Product Hunt launches, X/Reddit/HN/community launches, launch events, or post-launch reviews.
+description: Plan a product launch end-to-end. Research, positioning, distribution, launch assets, post-launch analysis. Covers Product Hunt, X, Reddit, HN, community channels.
 category: marketing
 tags: [gtm, launch, product-hunt, positioning, distribution]
 author: tushaarmehtaa

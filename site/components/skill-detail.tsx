@@ -72,19 +72,33 @@ export function SkillDetail({
       <div className="animate-fade-up delay-1 mb-12 overflow-hidden terminal-panel">
         <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
           <span className="terminal-caption">
-            Claude app zip
+            Claude app (web, desktop, mobile)
           </span>
-          <CopyButton text={skill.claudeAppCommand} label="copy" />
         </div>
         <div className="p-4">
-          <div className="grid min-w-0 grid-cols-[auto_1fr] items-start gap-3 font-[family-name:var(--font-mono)] text-xs sm:text-sm">
-            <span className="select-none text-[var(--color-accent)]">$</span>
-            <code className="block min-w-0 whitespace-normal break-all leading-relaxed text-[var(--color-heading)]">
-              {skill.claudeAppCommand}
-            </code>
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
-            Upload the generated zip in Claude under Customize &gt; Skills.
+          <p className="mb-4 text-sm leading-relaxed text-[var(--color-text)]">
+            Download the skill as a zip file, then upload it in Claude.
+          </p>
+          <button
+            onClick={() => {
+              const link = document.createElement("a");
+              link.href = `/api/download-skill?skill=${skill.slug}`;
+              link.download = `${skill.slug}.zip`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+            className="inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs font-medium text-[var(--color-accent)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] active:opacity-80"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            download zip
+          </button>
+          <p className="mt-4 text-xs leading-relaxed text-[var(--color-muted)]">
+            Then open Claude, go to <span className="font-semibold">Customize &gt; Skills</span>, upload the zip, and enable it.
           </p>
         </div>
       </div>

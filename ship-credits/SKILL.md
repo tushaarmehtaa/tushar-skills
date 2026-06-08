@@ -1,6 +1,6 @@
 ---
 name: ship-credits
-description: Scaffold a complete credits/token metering system for any app — database schema, backend middleware, payment webhooks, frontend state, and UI components. Goes from zero to "users can buy and spend credits" in one session.
+description: Scaffold a complete credits/token metering system. Database schema, backend middleware, payment webhooks, frontend state, UI components. Zero to "buy and spend credits" in one session.
 category: monetization
 tags: [credits, payments, monetization, saas, billing, tokens, metering, webhooks]
 author: tushaarmehtaa

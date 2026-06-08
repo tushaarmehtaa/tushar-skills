@@ -1,6 +1,6 @@
 ---
 name: cold-email
-description: Write cold emails that actually get responses. Covers investors, employers, mentors, partners — anyone you don't know yet. Strict 2-4 sentence formula with real examples that got replies from Evan Spiegel, Mark Cuban, and Elon Musk. Triggers on requests like "cold email", "write an email to...", "reach out to...", "email this investor", "email this founder", "outreach email", "networking email", or any request to contact someone you don't have a relationship with yet.
+description: Write cold emails that get replies. 2-4 sentence formula with proven examples from Evan Spiegel, Mark Cuban, Elon Musk. Covers investors, employers, mentors, partners.
 category: marketing
 tags: [email, outreach, sales, networking, founders]
 author: tushaarmehtaa

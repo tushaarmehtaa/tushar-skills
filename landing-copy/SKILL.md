@@ -1,6 +1,6 @@
 ---
 name: landing-copy
-description: Audit existing landing page copy and rewrite weak sections, or generate complete landing page copy from a product description. Use when the user wants to write, audit, or improve landing page copy — headlines, subheadlines, value props, feature sections, CTAs, social proof, or FAQ. Triggers on requests like "review my landing page", "improve this copy", "write landing page copy", "my landing page isn't converting", "headline feedback", "CTA review", "value proposition", "audit my copy", "rewrite my hero section", or any mention of landing page text, marketing copy, or website copy optimization.
+description: Audit or rewrite landing page copy. Headlines, subheadlines, value props, CTAs, social proof, FAQ. Converts weak sections into high-performing copy.
 category: marketing
 tags: [copy, landing-page, conversion, marketing, headlines]
 author: tushaarmehtaa

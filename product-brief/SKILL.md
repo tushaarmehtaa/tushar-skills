@@ -1,6 +1,6 @@
 ---
 name: product-brief
-description: Write a one-page product brief before touching any code. Lighter than a full spec — just enough to know what you're building, who it's for, and what v1 does NOT include. Use when the user has a product idea, wants to scope a project, needs to clarify what they're building, or is about to start coding without a plan. Triggers on requests like "product brief", "what am I building", "scope this", "one-pager", "project brief", "clarify this idea", "before I start coding", "what should v1 look like", "help me think through this", or any mention of scoping, planning, or clarifying a product idea before implementation.
+description: Write a one-page product brief before coding. What you're building, who it's for, what v1 doesn't include. Lighter than a full spec.
 category: planning
 tags: [product, brief, planning, scope, v1]
 author: tushaarmehtaa

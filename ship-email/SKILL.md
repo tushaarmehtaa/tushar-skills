@@ -1,6 +1,6 @@
 ---
 name: ship-email
-description: Scaffold transactional and campaign email infrastructure end-to-end — provider setup, templates, user segmentation, and admin send UI. Use when the user wants to add email to their app — welcome emails, notifications, re-engagement, or bulk campaigns. Triggers on requests like "add email", "set up Resend", "email campaigns", "transactional email", "send emails to users", "welcome email", "notification emails", or any mention of email sending in an app context.
+description: Scaffold email infrastructure end-to-end. Provider setup, templates, user segmentation, admin send UI. Transactional and campaign emails.
 category: infrastructure
 tags: [email, resend, transactional, campaigns, deliverability]
 author: tushaarmehtaa

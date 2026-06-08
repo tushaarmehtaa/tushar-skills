@@ -1,6 +1,6 @@
 ---
 name: remotion-video
-description: Scaffold a complete Remotion video project — multi-format compositions, scene architecture, spring animations, beat-synced audio, and responsive sizing. All primitives included. Use when the user wants to create a product demo video, promo video, social media video, or any programmatic video with Remotion. Triggers on requests like "make a video", "create a demo video", "remotion project", "product demo", "scaffold a video", "new video", "promo video", "social video", or any mention of building a video with code.
+description: Scaffold a complete Remotion project. Multi-format compositions, scene architecture, spring animations, beat-synced audio, responsive sizing. Demo, promo, social videos.
 category: workflow
 tags: [remotion, video, animation, demo, product-video]
 author: tushaarmehtaa
