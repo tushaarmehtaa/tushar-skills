@@ -68,46 +68,13 @@ const EXTERNAL_SKILLS = [
     name: "frontend-design",
     source: "external",
     note: "high-taste frontend direction and implementation",
+    url: "https://claude.ai/skills/frontend-design",
   },
   {
     name: "emil-design-eng",
     source: "Emil Kowalski",
     note: "UI polish, interaction timing, and motion judgment",
-  },
-  {
-    name: "migrate-to-shoehorn",
-    source: "Matt Pocock / Total TypeScript",
-    note: "replace unsafe test assertions with @total-typescript/shoehorn",
-  },
-  {
-    name: "minimalist-review",
-    source: "Sahil Lavingia",
-    note: "review business decisions through a minimalist entrepreneur lens",
-  },
-  {
-    name: "validate-idea",
-    source: "Sahil Lavingia",
-    note: "validate a business idea before building",
-  },
-  {
-    name: "mvp",
-    source: "Sahil Lavingia",
-    note: "scope a manual-first MVP",
-  },
-  {
-    name: "pricing",
-    source: "Sahil Lavingia",
-    note: "set pricing from costs, value, and customer behavior",
-  },
-  {
-    name: "first-customers",
-    source: "Sahil Lavingia",
-    note: "find and sell to the first real customers",
-  },
-  {
-    name: "marketing-plan",
-    source: "Sahil Lavingia",
-    note: "content-led marketing after there is traction",
+    url: "https://claude.ai/skills/emil-design-eng",
   },
 ];
 
@@ -272,7 +239,12 @@ export default function Home() {
             <div className="terminal-panel p-1">
               {EXTERNAL_SKILLS.map((skill, i) => (
                 <ScrollReveal key={skill.name} delay={i * 35}>
-                  <div className="skill-row grid gap-2 border-b border-[var(--color-border)] px-3 py-4 font-[family-name:var(--font-mono)] last:border-b-0 sm:grid-cols-[3rem_minmax(11rem,1fr)_10rem_minmax(16rem,1.5fr)] sm:items-baseline sm:gap-4">
+                  <a
+                    href={skill.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="skill-row grid gap-2 border-b border-[var(--color-border)] px-3 py-4 font-[family-name:var(--font-mono)] last:border-b-0 transition-colors hover:bg-[var(--color-accent)]/5 sm:grid-cols-[3rem_minmax(11rem,1fr)_10rem_minmax(16rem,1.5fr)] sm:items-baseline sm:gap-4"
+                  >
                     <span className="relative z-10 text-xs text-[var(--color-muted)] sm:text-sm">
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -285,7 +257,7 @@ export default function Home() {
                     <p className="relative z-10 text-sm leading-relaxed text-[var(--color-muted)]">
                       {skill.note}
                     </p>
-                  </div>
+                  </a>
                 </ScrollReveal>
               ))}
             </div>

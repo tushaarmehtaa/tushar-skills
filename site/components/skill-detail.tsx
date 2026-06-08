@@ -1,3 +1,5 @@
+"use client";
+
 import { CopyButton } from "./copy-button";
 import type { Skill } from "@/lib/skills";
 
