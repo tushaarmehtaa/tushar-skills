@@ -9,51 +9,103 @@ export function SkillDetail({
   contentHtml: string;
 }) {
   return (
-    <article>
-      <div className="mb-10 animate-fade-up">
-        <h1 className="mb-3 text-3xl font-bold tracking-tight text-[var(--color-heading)] sm:text-4xl">
-          <span className="text-[var(--color-accent)]">/</span>{skill.name}
+    <article className="min-w-0">
+      <div className="mb-10 animate-fade-up terminal-panel p-5 sm:p-6">
+        <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span className="terminal-meta">manual page</span>
+          <span className="terminal-caption terminal-status">
+            {skill.category}
+          </span>
+        </div>
+
+        <h1 className="terminal-heading mb-4 text-3xl font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
+          <span className="text-[var(--color-accent)]">man </span>/{skill.name}
         </h1>
-        <p className="text-base leading-relaxed text-[var(--color-text)]">
+        <p className="max-w-3xl text-base leading-relaxed text-[var(--color-text)]">
           {skill.description}
         </p>
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          {skill.tags.map((tag) => (
-            <span
-              key={tag}
-              className="tag rounded border border-[var(--color-border)] px-2 py-0.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-muted)]"
-            >
-              {tag}
-            </span>
-          ))}
+        <div className="mt-6 grid gap-3 border-t border-[var(--color-border)] pt-5 font-[family-name:var(--font-mono)] text-xs sm:grid-cols-[8rem_1fr]">
+          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">
+            command
+          </span>
+          <span className="text-[var(--color-heading)]">/{skill.name}</span>
+          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">
+            category
+          </span>
+          <span className="text-[var(--color-info)]">{skill.category}</span>
+          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">
+            tags
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {skill.tags.map((tag) => (
+              <span
+                key={tag}
+                className="tag border border-[var(--color-border)] px-2 py-0.5 text-[11px] text-[var(--color-muted)]"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Install */}
-      <div className="animate-fade-up delay-1 mb-12 overflow-hidden rounded-lg border border-[var(--color-border)] gradient-border">
+      <div className="animate-fade-up delay-1 mb-6 overflow-hidden terminal-panel">
         <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
-          <span className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider text-[var(--color-muted)]">
-            install
+          <span className="terminal-caption">
+            Claude Code install
           </span>
           <CopyButton text={skill.installCommand} label="copy" />
         </div>
         <div className="p-4">
-          <div className="flex items-start gap-3 font-[family-name:var(--font-mono)] text-sm">
+          <div className="grid min-w-0 grid-cols-[auto_1fr_auto] items-start gap-3 font-[family-name:var(--font-mono)] text-xs sm:text-sm">
             <span className="select-none text-[var(--color-accent)]">$</span>
-            <code className="break-all leading-relaxed text-[var(--color-heading)]">
+            <code className="block min-w-0 whitespace-normal break-all leading-relaxed text-[var(--color-heading)]">
               {skill.installCommand}
             </code>
+            <span className="cursor-blink hidden sm:inline" />
           </div>
+        </div>
+      </div>
+
+      <div className="animate-fade-up delay-1 mb-12 overflow-hidden terminal-panel">
+        <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
+          <span className="terminal-caption">
+            Claude app zip
+          </span>
+          <CopyButton text={skill.claudeAppCommand} label="copy" />
+        </div>
+        <div className="p-4">
+          <div className="grid min-w-0 grid-cols-[auto_1fr] items-start gap-3 font-[family-name:var(--font-mono)] text-xs sm:text-sm">
+            <span className="select-none text-[var(--color-accent)]">$</span>
+            <code className="block min-w-0 whitespace-normal break-all leading-relaxed text-[var(--color-heading)]">
+              {skill.claudeAppCommand}
+            </code>
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
+            Upload the generated zip in Claude under Customize &gt; Skills.
+          </p>
         </div>
       </div>
 
       <div className="divider mb-10" />
 
-      <div
-        className="prose animate-fade-up delay-2"
-        dangerouslySetInnerHTML={{ __html: contentHtml }}
-      />
+      <div className="animate-fade-up delay-2">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="terminal-caption text-[var(--color-heading)]">
+            skill instructions
+          </h2>
+          <span className="terminal-caption">
+            source: skill.md
+          </span>
+        </div>
+
+        <div
+          className="prose"
+          dangerouslySetInnerHTML={{ __html: contentHtml }}
+        />
+      </div>
 
       <div className="mt-16 border-t border-[var(--color-border)] pt-8">
         <a

@@ -1,9 +1,9 @@
 export function Footer() {
   return (
     <footer className="px-6 py-10">
-      <div className="mx-auto max-w-3xl border-t border-[var(--color-border)] pt-8">
+      <div className="mx-auto max-w-5xl border-t border-[var(--color-border)] pt-8">
         <div className="flex items-center justify-between">
-          <p className="text-xs text-[var(--color-muted)]">
+          <p className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
             built by{" "}
             <a
               href="https://twitter.com/tushaarmehtaa"

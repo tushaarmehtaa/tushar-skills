@@ -6,6 +6,7 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 import { getAllSkills, type Skill } from "@/lib/skills";
 
 const SKILL_ORDER = [
+  "gtm-launch",
   "deploy-check",
   "seo-ready",
   "ship-credits",
@@ -34,32 +35,81 @@ const SKILL_ORDER = [
 ];
 
 const TAGLINES: Record<string, string> = {
-  "deploy-check": 'the "did i just push .env to prod" prevention',
-  "seo-ready": "your project is invisible to search. this fixes that.",
-  "ship-credits": "you built the app. now figure out how to charge for it.",
-  "wire-auth": "you spent 3 days on auth instead of building your product.",
-  "add-analytics": "it broke in prod and you had no idea.",
-  "model-audit": "which AI call is quietly burning through your budget",
-  "economics": "the unit economics spreadsheet you keep saying you'll make",
-  "changelog": "a week of git, distilled into something you can post",
-  "cold-email": "3 sentences. they reply or they don't.",
-  "ship-email": "welcome emails, campaigns, segmentation. wired in one shot.",
-  "aeo-ready": "google is one thing. chatgpt, perplexity, claude — that's where you're invisible.",
-  "og-image": "your links look broken when shared. this fixes that in 10 minutes.",
-  "pricing-page": "tiers, feature gates, dodo checkout, and the ui. all of it.",
-  "cold-outreach-sequence": "one email gets ignored. five emails, the right way, get replies.",
-  "dodo-webhook": "the dodo webhook part that everyone gets wrong. done right.",
-  "segment-users": "who are your power users? who's about to churn? now you'll know.",
-  "mvp-spec": "the spec you should write before touching any code.",
-  "landing-copy": "your landing page copy isn't converting. here's why and how to fix it.",
-  "app-copy": "empty states, error messages, buttons — all the copy you left as placeholder.",
-  "readme": "your repo has no README. or worse, a bad one. fixed in one pass.",
-  "product-brief": "one page. what you're building, who it's for, what v1 doesn't do.",
-  "teardown": "pick apart a product. what works, what doesn't, what to steal.",
-  "decision-doc": "stuck between two approaches. this picks one and kills the other.",
-  "make-skill": "package any workflow into a skill so you never explain it again.",
-  "remotion-video": "25 seconds, 3 formats, beat-synced audio. scaffolded, not hand-wired.",
+  "gtm-launch": "research, positioning, launch plan, assets, and post-launch review",
+  "deploy-check": "pre-flight checks before production deploys",
+  "seo-ready": "SEO and AEO audit for web projects",
+  "ship-credits": "credits, metering, payments, and usage state",
+  "wire-auth": "auth provider, database sync, sessions, and security checks",
+  "add-analytics": "PostHog, Sentry, and health checks for production apps",
+  "model-audit": "AI model routing, usage, and cost map",
+  "economics": "unit economics for AI products",
+  "changelog": "weekly changelog card from git history",
+  "cold-email": "short cold emails for specific people",
+  "ship-email": "transactional email, campaigns, templates, and cohorts",
+  "aeo-ready": "schema, llms.txt, crawler rules, and citation readiness",
+  "og-image": "dynamic Open Graph images and social preview metadata",
+  "pricing-page": "tiers, feature gates, checkout, and pricing UI",
+  "cold-outreach-sequence": "multi-touch outreach sequences with follow-ups",
+  "dodo-webhook": "Dodo payment events, signatures, idempotency, and sync",
+  "segment-users": "behavioral cohorts from your database schema",
+  "mvp-spec": "MVP scope, data model, routes, pages, and launch/later split",
+  "landing-copy": "landing page copy audit and rewrite",
+  "app-copy": "empty states, errors, buttons, onboarding, and UI copy",
+  "readme": "README audit or rewrite for open source projects",
+  "product-brief": "one-page product brief before implementation",
+  "teardown": "product or landing page teardown",
+  "decision-doc": "structured tradeoff analysis and recommendation",
+  "make-skill": "turn a repeated workflow into a reusable skill",
+  "remotion-video": "Remotion video project scaffold and animation primitives",
 };
+
+const EXTERNAL_SKILLS = [
+  {
+    name: "frontend-design",
+    source: "external",
+    note: "high-taste frontend direction and implementation",
+  },
+  {
+    name: "emil-design-eng",
+    source: "Emil Kowalski",
+    note: "UI polish, interaction timing, and motion judgment",
+  },
+  {
+    name: "migrate-to-shoehorn",
+    source: "Matt Pocock / Total TypeScript",
+    note: "replace unsafe test assertions with @total-typescript/shoehorn",
+  },
+  {
+    name: "minimalist-review",
+    source: "Sahil Lavingia",
+    note: "review business decisions through a minimalist entrepreneur lens",
+  },
+  {
+    name: "validate-idea",
+    source: "Sahil Lavingia",
+    note: "validate a business idea before building",
+  },
+  {
+    name: "mvp",
+    source: "Sahil Lavingia",
+    note: "scope a manual-first MVP",
+  },
+  {
+    name: "pricing",
+    source: "Sahil Lavingia",
+    note: "set pricing from costs, value, and customer behavior",
+  },
+  {
+    name: "first-customers",
+    source: "Sahil Lavingia",
+    note: "find and sell to the first real customers",
+  },
+  {
+    name: "marketing-plan",
+    source: "Sahil Lavingia",
+    note: "content-led marketing after there is traction",
+  },
+];
 
 export default function Home() {
   const allSkills = getAllSkills();
@@ -76,87 +126,123 @@ export default function Home() {
       <Header />
 
       <main className="flex-1 px-6">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           {/* Hero */}
-          <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
-            <h1 className="animate-hero hero-gradient text-4xl font-bold tracking-tight leading-[1.15] sm:text-5xl">
-              same problems.
-              <br />
-              every product.
+          <section className="pt-20 pb-10 sm:pt-28 sm:pb-14">
+            <div className="animate-fade-up mb-8 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <span className="terminal-meta">slashskills</span>
+              <span className="terminal-caption">
+                {skills.length} skills
+              </span>
+              <span className="terminal-caption terminal-status">
+                Claude Code + Claude app
+              </span>
+            </div>
+
+            <h1 className="animate-hero terminal-heading hero-gradient max-w-4xl text-[2rem] font-semibold leading-[1.15] sm:text-6xl sm:leading-[1.12]">
+              <span className="terminal-line">workflows</span>
+              <span className="terminal-line">saved as</span>
+              <span className="terminal-line terminal-line-desktop">terminal skills.</span>
+              <span className="terminal-line terminal-line-mobile">terminal</span>
+              <span className="terminal-line terminal-line-mobile">skills.</span>
             </h1>
-            <div className="animate-hero-delayed mt-8 space-y-4 text-base leading-relaxed sm:text-lg">
+
+            <div className="animate-hero-delayed mt-8 max-w-2xl space-y-4 text-base leading-relaxed sm:text-lg">
               <p>
-                seo i never set up. credits i wired from scratch.
-                <br className="hidden sm:inline" />
-                {" "}deploys i pushed without checking. changelogs i never wrote.
+                each folder is a <code className="font-[family-name:var(--font-mono)] text-[var(--color-heading)]">SKILL.md</code>: when to use it, what context to read, what steps to run, and what output to produce.
               </p>
               <p className="text-[var(--color-heading)]">
-                solved them across three products.
-                <br />
-                turned them into skills so i never solve them again.
+                install them in Claude Code, or zip an individual skill folder and upload it in Claude.
               </p>
             </div>
           </section>
 
           {/* Install */}
-          <section className="animate-fade-up delay-2 mb-16">
-            <div className="install-box gradient-border flex flex-col gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3 font-[family-name:var(--font-mono)] text-sm">
-                <span className="text-[var(--color-accent)]">$</span>
-                <code className="text-[var(--color-heading)]">
+          <section className="animate-fade-up delay-2 mb-12 grid gap-4 lg:grid-cols-2">
+            <div className="terminal-panel install-box flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 max-w-full items-center gap-3 overflow-hidden font-[family-name:var(--font-mono)] text-xs sm:text-sm">
+                <span className="select-none text-[var(--color-accent)]">$</span>
+                <code className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[var(--color-heading)]">
                   npx skills add tushaarmehtaa/tushar-skills
                 </code>
                 <span className="cursor-blink" />
               </div>
-              <CopyButton text="npx skills add tushaarmehtaa/tushar-skills" />
+              <CopyButton
+                text="npx skills add tushaarmehtaa/tushar-skills"
+                className="shrink-0"
+              />
             </div>
-            <p className="mt-3 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
-              installs all <span className="skill-count">{skills.length}</span> skills. or click any below to install individually.
-            </p>
+            <div className="terminal-panel install-box flex flex-col gap-3 p-4">
+              <div className="terminal-caption text-[var(--color-heading)]">
+                Claude app
+              </div>
+              <p className="text-sm leading-relaxed text-[var(--color-text)]">
+                Zip one skill folder, then upload it in{" "}
+                <span className="font-[family-name:var(--font-mono)] text-[var(--color-heading)]">
+                  Customize &gt; Skills
+                </span>
+                .
+              </p>
+              <a
+                href="#use"
+                className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-accent)]"
+              >
+                read guide
+              </a>
+            </div>
           </section>
+          <p className="mb-16 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
+            install all <span className="skill-count">{skills.length}</span> repo skills, or open a skill page to copy the one-skill command.
+          </p>
 
           <div className="divider mb-12" />
 
           {/* Skills */}
           <section className="pb-16">
-            <h2 className="animate-fade-up delay-3 mb-8 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-muted)]">
-              skills
-            </h2>
-            <div>
+            <div className="animate-fade-up delay-3 mb-5 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="terminal-caption text-[var(--color-heading)]">
+                  skill index
+                </h2>
+                <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
+                  name / category / what it does
+                </p>
+              </div>
+              <p className="terminal-caption hidden sm:block">
+                included in this repo
+              </p>
+            </div>
+
+            <div className="terminal-rule mb-3 hidden grid-cols-[3rem_minmax(11rem,1fr)_8rem_minmax(16rem,1.5fr)_5rem] gap-4 px-3 pt-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-[var(--color-muted)] sm:grid">
+              <span>id</span>
+              <span>command</span>
+              <span>class</span>
+              <span>output</span>
+              <span className="text-right">run</span>
+            </div>
+
+            <div className="terminal-panel p-1">
               {skills.map((skill, i) => (
                 <ScrollReveal key={skill.slug} delay={i * 40}>
                   <Link
                     href={`/${skill.slug}`}
-                    className="skill-row group flex items-start gap-5 border-b border-[var(--color-border)] px-3 py-5 sm:items-baseline"
+                    className="skill-row group grid gap-2 border-b border-[var(--color-border)] px-3 py-4 font-[family-name:var(--font-mono)] last:border-b-0 sm:grid-cols-[3rem_minmax(11rem,1fr)_8rem_minmax(16rem,1.5fr)_5rem] sm:items-baseline sm:gap-4"
                   >
-                    <span className="w-6 shrink-0 pt-px font-[family-name:var(--font-mono)] text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-accent)]">
+                    <span className="relative z-10 text-xs text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-accent)] sm:text-sm">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <div className="flex-1">
-                      <div className="flex items-baseline gap-3">
-                        <span className="font-[family-name:var(--font-mono)] font-semibold text-[var(--color-heading)] transition-colors group-hover:text-[var(--color-accent)]">
-                          /{skill.name}
-                        </span>
-                        <span className="hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)] opacity-0 transition-opacity group-hover:opacity-100 sm:inline">
-                          {skill.category}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
-                        {TAGLINES[skill.slug] || skill.description}
-                      </p>
-                    </div>
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      className="mt-1 shrink-0 text-[var(--color-border)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
-                    >
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                      <polyline points="12 5 19 12 12 19" />
-                    </svg>
+                    <span className="skill-row-command relative z-10 text-sm font-semibold text-[var(--color-heading)] transition-colors sm:text-base">
+                      /{skill.name}
+                    </span>
+                    <span className="relative z-10 w-fit border border-[var(--color-border)] px-1.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors group-hover:border-[var(--color-accent-dim)] group-hover:text-[var(--color-info)]">
+                      {skill.category}
+                    </span>
+                    <p className="relative z-10 text-sm leading-relaxed text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
+                      {TAGLINES[skill.slug] || skill.description}
+                    </p>
+                    <span className="skill-row-action relative z-10 text-left text-xs uppercase tracking-[0.12em] text-[var(--color-accent)] sm:text-right">
+                      exec
+                    </span>
                   </Link>
                 </ScrollReveal>
               ))}
@@ -165,19 +251,66 @@ export default function Home() {
 
           <div className="divider mb-16" />
 
-          {/* How it works */}
-          <section className="pb-20">
+          {/* External */}
+          <section className="pb-16">
             <ScrollReveal>
-              <h2 className="mb-10 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[var(--color-muted)]">
-                how it works
-              </h2>
+              <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <h2 className="terminal-caption text-[var(--color-heading)]">
+                    external skills i use
+                  </h2>
+                  <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
+                    listed for discovery; not bundled by the install command
+                  </p>
+                </div>
+                <p className="terminal-caption hidden sm:block">
+                  external
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <div className="terminal-panel p-1">
+              {EXTERNAL_SKILLS.map((skill, i) => (
+                <ScrollReveal key={skill.name} delay={i * 35}>
+                  <div className="skill-row grid gap-2 border-b border-[var(--color-border)] px-3 py-4 font-[family-name:var(--font-mono)] last:border-b-0 sm:grid-cols-[3rem_minmax(11rem,1fr)_10rem_minmax(16rem,1.5fr)] sm:items-baseline sm:gap-4">
+                    <span className="relative z-10 text-xs text-[var(--color-muted)] sm:text-sm">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="relative z-10 text-sm font-semibold text-[var(--color-heading)] sm:text-base">
+                      /{skill.name}
+                    </span>
+                    <span className="relative z-10 w-fit border border-[var(--color-border)] px-1.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[var(--color-info)]">
+                      {skill.source}
+                    </span>
+                    <p className="relative z-10 text-sm leading-relaxed text-[var(--color-muted)]">
+                      {skill.note}
+                    </p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </section>
+
+          <div className="divider mb-16" />
+
+          {/* How it works */}
+          <section id="use" className="pb-20">
+            <ScrollReveal>
+              <div className="mb-10">
+                <h2 className="terminal-caption text-[var(--color-heading)]">
+                  how to use
+                </h2>
+                <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
+                  Claude Code uses folders. Claude app uses zipped skill folders.
+                </p>
+              </div>
             </ScrollReveal>
             <div className="space-y-8">
               <ScrollReveal delay={0}>
                 <div className="step flex items-start gap-4">
                   <div className="step-number">1</div>
                   <div>
-                    <p className="font-semibold text-[var(--color-heading)]">install</p>
+                    <p className="font-semibold text-[var(--color-heading)]">Claude Code</p>
                     <p className="mt-1 text-sm text-[var(--color-text)]">
                       run the install command. skills land in{" "}
                       <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
@@ -191,13 +324,13 @@ export default function Home() {
                 <div className="step flex items-start gap-4">
                   <div className="step-number">2</div>
                   <div>
-                    <p className="font-semibold text-[var(--color-heading)]">invoke</p>
+                    <p className="font-semibold text-[var(--color-heading)]">Claude app</p>
                     <p className="mt-1 text-sm text-[var(--color-text)]">
-                      type{" "}
+                      zip a skill folder, upload the zip in{" "}
                       <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
-                        /skill-name
+                        Customize &gt; Skills
                       </code>{" "}
-                      in any Claude Code session. it reads your project and runs.
+                      and toggle it on.
                     </p>
                   </div>
                 </div>
@@ -206,14 +339,22 @@ export default function Home() {
                 <div className="step flex items-start gap-4">
                   <div className="step-number">3</div>
                   <div>
-                    <p className="font-semibold text-[var(--color-heading)]">done</p>
+                    <p className="font-semibold text-[var(--color-heading)]">Use it</p>
                     <p className="mt-1 text-sm text-[var(--color-text)]">
-                      skills adapt to your codebase. no config, no setup, no re-explaining.
+                      ask normally. Claude loads a skill when its description matches the task.
                       <br />
                       <span className="text-[var(--color-muted)]">
-                        they read your stack and do the right thing.
+                        for codebase work, Claude Code is still the natural home for these.
                       </span>
                     </p>
+                    <a
+                      href="https://support.claude.com/en/articles/12512180-use-skills-in-claude"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-accent)]"
+                    >
+                      official Claude skills docs
+                    </a>
                   </div>
                 </div>
               </ScrollReveal>

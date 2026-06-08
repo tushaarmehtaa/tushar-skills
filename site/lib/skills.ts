@@ -11,6 +11,7 @@ export interface Skill {
   author: string;
   content: string;
   installCommand: string;
+  claudeAppCommand: string;
 }
 
 const REPO_ROOT = path.join(process.cwd(), "..");
@@ -37,6 +38,7 @@ export function getAllSkills(): Skill[] {
         author: data.author || "tushaarmehtaa",
         content,
         installCommand: `curl -sL https://raw.githubusercontent.com/tushaarmehtaa/tushar-skills/main/${e.name}/SKILL.md -o ~/.claude/skills/${e.name}/SKILL.md --create-dirs`,
+        claudeAppCommand: `git clone https://github.com/tushaarmehtaa/tushar-skills.git && cd tushar-skills && zip -r ../${e.name}.zip ${e.name}`,
       } satisfies Skill;
     })
     .filter((s): s is Skill => s !== null)

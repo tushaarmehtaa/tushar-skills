@@ -28,6 +28,7 @@ Think of them as slash commands you write yourself.
 | [`/deploy-check`](./deploy-check/SKILL.md) | DevOps | Pre-flight checklist before every production push. Catches TypeScript errors, staged secrets, pending migrations. |
 | [`/dodo-webhook`](./dodo-webhook/SKILL.md) | DevOps | Wire Dodo Payments webhooks — signature verification, idempotency, subscription lifecycle, database sync. |
 | [`/economics`](./economics/SKILL.md) | AI | Unit economics calculator. Revenue per action, API cost, gross margin, free tier damage. |
+| [`/gtm-launch`](./gtm-launch/SKILL.md) | Marketing | End-to-end GTM research, positioning, launch planning, assets, distribution, and post-launch review. |
 | [`/landing-copy`](./landing-copy/SKILL.md) | Workflow | Audit or generate conversion-focused landing page copy across 7 dimensions — headlines, CTAs, social proof, objection handling. |
 | [`/make-skill`](./make-skill/SKILL.md) | Workflow | Create new Claude Code skills from workflow descriptions. The meta-skill that builds more skills. |
 | [`/model-audit`](./model-audit/SKILL.md) | AI | Full AI model routing table. Every AI call, what model it uses, cost per call. |
@@ -48,13 +49,13 @@ Think of them as slash commands you write yourself.
 
 ## Install
 
-### All skills at once (recommended)
+### Claude Code: all skills at once
 
 ```bash
 npx skills add tushaarmehtaa/tushar-skills
 ```
 
-### One skill
+### Claude Code: one skill
 
 ```bash
 # Replace "deploy-check" with the skill you want
@@ -62,10 +63,25 @@ curl -sL https://raw.githubusercontent.com/tushaarmehtaa/tushar-skills/main/depl
   -o ~/.claude/skills/deploy-check/SKILL.md --create-dirs
 ```
 
+### Claude app
+
+Claude app custom skills are uploaded as zip files.
+
+```bash
+git clone https://github.com/tushaarmehtaa/tushar-skills.git
+cd tushar-skills
+zip -r ../deploy-check.zip deploy-check
+```
+
+Then open Claude, go to `Customize > Skills`, upload the zip, and enable it.
+
+Official docs: https://support.claude.com/en/articles/12512180-use-skills-in-claude
+
 Then in any Claude Code session:
 
 ```
 /deploy-check
+/gtm-launch
 /seo-ready
 /ship-credits
 /wire-auth

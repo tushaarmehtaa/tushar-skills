@@ -3,13 +3,13 @@ import Link from "next/link";
 export function Header() {
   return (
     <header className="animate-fade-in px-6 py-5">
-      <div className="mx-auto flex max-w-3xl items-center justify-between">
+      <div className="mx-auto flex max-w-5xl items-center justify-between">
         <Link
           href="/"
           className="group flex items-center gap-2"
         >
           <span className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-accent)]">/</span>
-          <span className="font-[family-name:var(--font-sans)] text-sm font-semibold tracking-tight text-[var(--color-heading)] transition-colors group-hover:text-[var(--color-accent)]">
+          <span className="font-[family-name:var(--font-mono)] text-sm font-semibold tracking-tight text-[var(--color-heading)] transition-colors group-hover:text-[var(--color-accent)]">
             slashskills
           </span>
         </Link>
