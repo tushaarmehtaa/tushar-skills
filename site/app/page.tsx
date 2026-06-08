@@ -68,13 +68,13 @@ const EXTERNAL_SKILLS = [
     name: "frontend-design",
     source: "external",
     note: "high-taste frontend direction and implementation",
-    url: "https://claude.ai/skills/frontend-design",
+    url: "https://github.com/Ilm-Alan/frontend-design",
   },
   {
     name: "emil-design-eng",
     source: "Emil Kowalski",
     note: "UI polish, interaction timing, and motion judgment",
-    url: "https://claude.ai/skills/emil-design-eng",
+    url: "https://emilkowal.ski/skill",
   },
 ];
 

@@ -17,23 +17,33 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const repoRoot = path.join(process.cwd(), "..", "..");
+    const repoRoot = path.resolve(process.cwd(), "..", "..");
     const skillPath = path.join(repoRoot, skillName);
 
     if (!fs.existsSync(skillPath)) {
       return NextResponse.json(
-        { error: "Skill not found" },
+        { error: `Skill not found at ${skillPath}` },
         { status: 404 }
       );
     }
 
-    const tempDir = "/tmp";
+    const tempDir = fs.mkdtempSync(path.join("/tmp", "skill-zip-"));
     const zipPath = path.join(tempDir, `${skillName}.zip`);
 
-    await execAsync(`cd "${repoRoot}" && zip -r "${zipPath}" "${skillName}" -x "*/node_modules/*"`, { maxBuffer: 10 * 1024 * 1024 });
+    const { stdout, stderr } = await execAsync(
+      `cd "${repoRoot}" && zip -r "${zipPath}" "${skillName}" -x "*/node_modules/*" "*/.*"`,
+      { maxBuffer: 50 * 1024 * 1024 }
+    );
+
+    if (!fs.existsSync(zipPath)) {
+      return NextResponse.json(
+        { error: "Failed to create zip file", stderr },
+        { status: 500 }
+      );
+    }
 
     const zipBuffer = fs.readFileSync(zipPath);
-    fs.unlinkSync(zipPath);
+    fs.rmSync(tempDir, { recursive: true });
 
     return new NextResponse(zipBuffer, {
       headers: {
@@ -44,7 +54,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Zip generation error:", error);
     return NextResponse.json(
-      { error: "Failed to generate zip" },
+      { error: "Failed to generate zip", details: String(error) },
       { status: 500 }
     );
   }
