@@ -3,6 +3,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CopyButton } from "@/components/copy-button";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { SkillLogo } from "@/components/skill-logo";
 import { getAllSkills, type Skill } from "@/lib/skills";
 
 const SKILL_ORDER = [
@@ -32,6 +33,10 @@ const SKILL_ORDER = [
   "decision-doc",
   "make-skill",
   "remotion-video",
+  "debug-perf",
+  "supabase",
+  "init-claude-md",
+  "remove-ai-slop",
 ];
 
 const TAGLINES: Record<string, string> = {
@@ -61,18 +66,28 @@ const TAGLINES: Record<string, string> = {
   "decision-doc": "structured tradeoff analysis and recommendation",
   "make-skill": "turn a repeated workflow into a reusable skill",
   "remotion-video": "Remotion video project scaffold and animation primitives",
+  "debug-perf": "hot reload loops, CPU spikes, bundle bloat, and missing caches",
+  "supabase": "schema, RLS policies, migrations, and TypeScript types",
+  "init-claude-md": "read the codebase, write a complete CLAUDE.md",
+  "remove-ai-slop": "audit and remove AI slop tells in design and copy",
 };
 
 const EXTERNAL_SKILLS = [
   {
     name: "frontend-design",
-    source: "external",
+    source: "Ilm-Alan",
+    logoSlug: "init-claude-md",
+    avatar: null,
+    round: false,
     note: "high-taste frontend direction and implementation",
     url: "https://github.com/Ilm-Alan/frontend-design",
   },
   {
     name: "emil-design-eng",
     source: "Emil Kowalski",
+    logoSlug: null,
+    avatar: "https://github.com/emilkowalski.png",
+    round: true,
     note: "UI polish, interaction timing, and motion judgment",
     url: "https://emilkowal.ski/skill",
   },
@@ -96,48 +111,57 @@ export default function Home() {
         <div className="mx-auto max-w-5xl">
           {/* Hero */}
           <section className="pt-20 pb-10 sm:pt-28 sm:pb-14">
-            <div className="animate-fade-up mb-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <span className="terminal-meta">slashskills</span>
-              <span className="terminal-caption">
-                {skills.length} skills
-              </span>
-              <span className="terminal-caption terminal-status">
-                Claude Code + Claude app
-              </span>
-            </div>
-
-            <h1 className="animate-hero terminal-heading hero-gradient max-w-4xl text-[2rem] font-semibold leading-[1.15] sm:text-6xl sm:leading-[1.12]">
-              <span className="terminal-line">workflows</span>
-              <span className="terminal-line">saved as</span>
-              <span className="terminal-line terminal-line-desktop">terminal skills.</span>
-              <span className="terminal-line terminal-line-mobile">terminal</span>
-              <span className="terminal-line terminal-line-mobile">skills.</span>
+            <h1 className="animate-fade-up delay-1 terminal-heading max-w-4xl text-[2rem] font-semibold leading-[1.15] text-[var(--color-heading)] sm:text-6xl sm:leading-[1.12]">
+              <span className="block">workflows</span>
+              <span className="block">saved as</span>
+              <span className="hidden sm:block">terminal skills.</span>
+              <span className="block sm:hidden">terminal</span>
+              <span className="block sm:hidden">skills.</span>
             </h1>
 
-            <div className="animate-hero-delayed mt-8 max-w-2xl space-y-4 text-base leading-relaxed sm:text-lg">
+            <div className="animate-fade-up delay-2 mt-8 max-w-2xl space-y-4 text-base leading-relaxed sm:text-lg">
               <p>
-                each folder is a <code className="font-[family-name:var(--font-mono)] text-[var(--color-heading)]">SKILL.md</code>: when to use it, what context to read, what steps to run, and what output to produce.
+                these came from workflows I kept repeating. each one ran on a real project before it became a command.
               </p>
-              <p className="text-[var(--color-heading)]">
-                install them in Claude Code, or zip an individual skill folder and upload it in Claude.
+              <p>
+                each folder is a <code className="font-[family-name:var(--font-mono)] text-[var(--color-heading)]">SKILL.md</code>: when to trigger, what to read, what to run, what to produce. install in Claude Code or zip a folder and upload it to the Claude app.
               </p>
             </div>
           </section>
 
           {/* Install */}
-          <section className="animate-fade-up delay-2 mb-12 grid gap-4 lg:grid-cols-2">
-            <div className="terminal-panel install-box flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <section className="animate-fade-up delay-3 mb-12 grid gap-4 lg:grid-cols-2">
+            <div className="terminal-panel install-box flex flex-col gap-3 p-4">
+              <div className="terminal-caption text-[var(--color-heading)]">
+                Claude Code
+              </div>
+              <p className="text-sm leading-relaxed text-[var(--color-text)]">
+                Run the command. All{" "}
+                <span className="text-[var(--color-heading)]">{skills.length} skills</span>{" "}
+                land in{" "}
+                <span className="font-[family-name:var(--font-mono)] text-[var(--color-heading)]">
+                  ~/.claude/skills/
+                </span>{" "}
+                and activate automatically.
+              </p>
               <div className="flex min-w-0 max-w-full items-center gap-3 overflow-hidden font-[family-name:var(--font-mono)] text-xs sm:text-sm">
                 <span className="select-none text-[var(--color-accent)]">$</span>
                 <code className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[var(--color-heading)]">
                   npx skills add tushaarmehtaa/tushar-skills
                 </code>
-                <span className="cursor-blink" />
               </div>
-              <CopyButton
-                text="npx skills add tushaarmehtaa/tushar-skills"
-                className="shrink-0"
-              />
+              <div className="flex items-center justify-between">
+                <a
+                  href="#use"
+                  className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-accent)]"
+                >
+                  read guide
+                </a>
+                <CopyButton
+                  text="npx skills add tushaarmehtaa/tushar-skills"
+                  className="shrink-0"
+                />
+              </div>
             </div>
             <div className="terminal-panel install-box flex flex-col gap-3 p-4">
               <div className="terminal-caption text-[var(--color-heading)]">
@@ -166,26 +190,17 @@ export default function Home() {
 
           {/* Skills */}
           <section className="pb-16">
-            <div className="animate-fade-up delay-3 mb-5 flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <h2 className="terminal-caption text-[var(--color-heading)]">
-                  skill index
-                </h2>
-                <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
-                  name / category / what it does
-                </p>
-              </div>
-              <p className="terminal-caption hidden sm:block">
-                included in this repo
-              </p>
+            <div className="animate-fade-up delay-3 mb-5 flex items-center justify-between">
+              <h2 className="terminal-caption text-[var(--color-heading)]">skill index</h2>
+              <p className="terminal-caption hidden sm:block">included in this repo</p>
             </div>
 
-            <div className="terminal-rule mb-3 hidden grid-cols-[3rem_minmax(11rem,1fr)_8rem_minmax(16rem,1.5fr)_5rem] gap-4 px-3 pt-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-[var(--color-muted)] sm:grid">
+            <div className="terminal-rule mb-3 hidden grid-cols-[3rem_minmax(11rem,1fr)_8rem_minmax(16rem,1.5fr)_3rem] gap-4 px-3 pt-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-[var(--color-muted)] sm:grid">
               <span>id</span>
               <span>command</span>
               <span>class</span>
               <span>output</span>
-              <span className="text-right">run</span>
+              <span className="text-right">tools</span>
             </div>
 
             <div className="terminal-panel p-1">
@@ -193,7 +208,7 @@ export default function Home() {
                 <ScrollReveal key={skill.slug} delay={i * 40}>
                   <Link
                     href={`/${skill.slug}`}
-                    className="skill-row group grid gap-2 border-b border-[var(--color-border)] px-3 py-4 font-[family-name:var(--font-mono)] last:border-b-0 sm:grid-cols-[3rem_minmax(11rem,1fr)_8rem_minmax(16rem,1.5fr)_5rem] sm:items-baseline sm:gap-4"
+                    className="skill-row group grid gap-2 border-b border-[var(--color-border)] px-3 py-4 font-[family-name:var(--font-mono)] last:border-b-0 sm:grid-cols-[3rem_minmax(11rem,1fr)_8rem_minmax(16rem,1.5fr)_3rem] sm:items-center sm:gap-4"
                   >
                     <span className="relative z-10 text-xs text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-accent)] sm:text-sm">
                       {String(i + 1).padStart(2, "0")}
@@ -201,14 +216,14 @@ export default function Home() {
                     <span className="skill-row-command relative z-10 text-sm font-semibold text-[var(--color-heading)] transition-colors sm:text-base">
                       /{skill.name}
                     </span>
-                    <span className="relative z-10 w-fit border border-[var(--color-border)] px-1.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors group-hover:border-[var(--color-accent-dim)] group-hover:text-[var(--color-info)]">
+                    <span className="relative z-10 w-fit border border-[var(--color-border)] px-1.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors group-hover:border-[var(--color-accent-dim)] group-hover:text-[var(--color-text)]">
                       {skill.category}
                     </span>
                     <p className="relative z-10 text-sm leading-relaxed text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
                       {TAGLINES[skill.slug] || skill.description}
                     </p>
-                    <span className="skill-row-action relative z-10 text-left text-xs uppercase tracking-[0.12em] text-[var(--color-accent)] sm:text-right">
-                      exec
+                    <span className="relative z-10 flex items-center justify-end">
+                      <SkillLogo slug={skill.slug} className="h-4 w-4 opacity-30 transition-opacity group-hover:opacity-70" />
                     </span>
                   </Link>
                 </ScrollReveal>
@@ -251,9 +266,20 @@ export default function Home() {
                     <span className="relative z-10 text-sm font-semibold text-[var(--color-heading)] sm:text-base">
                       /{skill.name}
                     </span>
-                    <span className="relative z-10 w-fit border border-[var(--color-border)] px-1.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[var(--color-info)]">
-                      {skill.source}
-                    </span>
+                    {skill.logoSlug ? (
+                      <span className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-raised)]">
+                        <SkillLogo slug={skill.logoSlug} className="h-4 w-4 opacity-70" />
+                      </span>
+                    ) : skill.avatar ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={skill.avatar}
+                        alt={skill.source}
+                        width={28}
+                        height={28}
+                        className={`relative z-10 h-7 w-7 shrink-0 object-cover opacity-80 transition-opacity hover:opacity-100 ${skill.round ? "rounded-full" : "rounded-sm"}`}
+                      />
+                    ) : null}
                     <p className="relative z-10 text-sm leading-relaxed text-[var(--color-muted)]">
                       {skill.note}
                     </p>
@@ -272,62 +298,85 @@ export default function Home() {
                 <h2 className="terminal-caption text-[var(--color-heading)]">
                   how to use
                 </h2>
-                <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
-                  Claude Code uses folders. Claude app uses zipped skill folders.
-                </p>
               </div>
             </ScrollReveal>
-            <div className="space-y-8">
+            <div className="grid gap-6 lg:grid-cols-2">
               <ScrollReveal delay={0}>
-                <div className="step flex items-start gap-4">
-                  <div className="step-number">1</div>
-                  <div>
-                    <p className="font-semibold text-[var(--color-heading)]">Claude Code</p>
-                    <p className="mt-1 text-sm text-[var(--color-text)]">
-                      run the install command. skills land in{" "}
-                      <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
-                        ~/.claude/skills/
-                      </code>
-                    </p>
+                <div className="terminal-panel flex h-full flex-col gap-6 p-6">
+                  <div className="terminal-caption text-[var(--color-heading)]">Claude Code</div>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="mb-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                        install
+                      </p>
+                      <div className="flex items-center gap-3 overflow-hidden rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs">
+                        <span className="select-none text-[var(--color-accent)]">$</span>
+                        <code className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-[var(--color-heading)]">
+                          npx skills add tushaarmehtaa/tushar-skills
+                        </code>
+                        <CopyButton text="npx skills add tushaarmehtaa/tushar-skills" className="shrink-0" />
+                      </div>
+                      <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
+                        skills land in ~/.claude/skills/
+                      </p>
+                    </div>
+                    <div>
+                      <p className="mb-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                        trigger
+                      </p>
+                      <p className="text-sm leading-relaxed text-[var(--color-text)]">
+                        type{" "}
+                        <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
+                          /skill-name
+                        </code>{" "}
+                        or just describe the task. Claude reads the SKILL.md and runs the workflow.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </ScrollReveal>
+
               <ScrollReveal delay={80}>
-                <div className="step flex items-start gap-4">
-                  <div className="step-number">2</div>
-                  <div>
-                    <p className="font-semibold text-[var(--color-heading)]">Claude app</p>
-                    <p className="mt-1 text-sm text-[var(--color-text)]">
-                      zip a skill folder, upload the zip in{" "}
-                      <code className="rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">
-                        Customize &gt; Skills
-                      </code>{" "}
-                      and toggle it on.
-                    </p>
+                <div className="terminal-panel flex h-full flex-col gap-6 p-6">
+                  <div className="terminal-caption text-[var(--color-heading)]">Claude app</div>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="mb-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                        get the skill
+                      </p>
+                      <p className="text-sm leading-relaxed text-[var(--color-text)]">
+                        open a skill page and download the zip.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="mb-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                        upload
+                      </p>
+                      <p className="text-sm leading-relaxed text-[var(--color-text)]">
+                        go to{" "}
+                        <span className="font-[family-name:var(--font-mono)] text-[var(--color-heading)]">
+                          Customize &gt; Skills
+                        </span>
+                        . upload the zip. toggle it on.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="mb-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                        use it
+                      </p>
+                      <p className="text-sm leading-relaxed text-[var(--color-text)]">
+                        ask Claude normally. it reads the description and triggers when the task matches.
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </ScrollReveal>
-              <ScrollReveal delay={160}>
-                <div className="step flex items-start gap-4">
-                  <div className="step-number">3</div>
-                  <div>
-                    <p className="font-semibold text-[var(--color-heading)]">Use it</p>
-                    <p className="mt-1 text-sm text-[var(--color-text)]">
-                      ask normally. Claude loads a skill when its description matches the task.
-                      <br />
-                      <span className="text-[var(--color-muted)]">
-                        for codebase work, Claude Code is still the natural home for these.
-                      </span>
-                    </p>
-                    <a
-                      href="https://support.claude.com/en/articles/12512180-use-skills-in-claude"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-accent)]"
-                    >
-                      official Claude skills docs
-                    </a>
-                  </div>
+                  <a
+                    href="https://support.claude.com/en/articles/12512180-use-skills-in-claude"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.12em] text-[var(--color-accent)]"
+                  >
+                    official skills docs
+                  </a>
                 </div>
               </ScrollReveal>
             </div>

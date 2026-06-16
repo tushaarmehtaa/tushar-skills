@@ -36,6 +36,7 @@ const LOGOS: Record<string, { icon: IconDef; color?: string }> = {
   "product-brief":           { icon: siAnthropic },
   "make-skill":              { icon: siAnthropic },
   "economics":               { icon: siAnthropic },
+  "remove-ai-slop":          { icon: siAnthropic },
 };
 
 const FAVICON_LOGOS: Record<string, string> = {
