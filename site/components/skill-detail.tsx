@@ -12,33 +12,24 @@ export function SkillDetail({
 }) {
   return (
     <article className="min-w-0">
-      <div className="mb-10 animate-fade-up terminal-panel p-5 sm:p-6">
-        <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-          <span className="terminal-meta">manual page</span>
-          <span className="terminal-caption terminal-status">
-            {skill.category}
-          </span>
+      {/* Header */}
+      <div className="animate-fade-up mb-10">
+        <div className="mb-1 flex items-center gap-3">
+          <span className="terminal-caption">{skill.category}</span>
         </div>
-
         <h1 className="terminal-heading mb-4 text-3xl font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
-          <span className="text-[var(--color-accent)]">man </span>/{skill.name}
+          /{skill.name}
         </h1>
         <p className="max-w-3xl text-base leading-relaxed text-[var(--color-text)]">
           {skill.description}
         </p>
 
         <div className="mt-6 grid gap-3 border-t border-[var(--color-border)] pt-5 font-[family-name:var(--font-mono)] text-xs sm:grid-cols-[8rem_1fr]">
-          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">
-            command
-          </span>
+          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">command</span>
           <span className="text-[var(--color-heading)]">/{skill.name}</span>
-          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">
-            category
-          </span>
-          <span className="text-[var(--color-info)]">{skill.category}</span>
-          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">
-            tags
-          </span>
+          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">category</span>
+          <span className="text-[var(--color-text)]">{skill.category}</span>
+          <span className="uppercase tracking-[0.14em] text-[var(--color-muted)]">tags</span>
           <div className="flex flex-wrap gap-2">
             {skill.tags.map((tag) => (
               <span
@@ -52,30 +43,26 @@ export function SkillDetail({
         </div>
       </div>
 
-      {/* Install */}
+      {/* Claude Code install */}
       <div className="animate-fade-up delay-1 mb-6 overflow-hidden terminal-panel">
         <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
-          <span className="terminal-caption">
-            Claude Code install
-          </span>
+          <span className="terminal-caption">Claude Code install</span>
           <CopyButton text={skill.installCommand} label="copy" />
         </div>
         <div className="p-4">
-          <div className="grid min-w-0 grid-cols-[auto_1fr_auto] items-start gap-3 font-[family-name:var(--font-mono)] text-xs sm:text-sm">
+          <div className="grid min-w-0 grid-cols-[auto_1fr] items-start gap-3 font-[family-name:var(--font-mono)] text-xs sm:text-sm">
             <span className="select-none text-[var(--color-accent)]">$</span>
             <code className="block min-w-0 whitespace-normal break-all leading-relaxed text-[var(--color-heading)]">
               {skill.installCommand}
             </code>
-            <span className="cursor-blink hidden sm:inline" />
           </div>
         </div>
       </div>
 
+      {/* Claude app */}
       <div className="animate-fade-up delay-1 mb-12 overflow-hidden terminal-panel">
         <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
-          <span className="terminal-caption">
-            Claude app (web, desktop, mobile)
-          </span>
+          <span className="terminal-caption">Claude app (web, desktop, mobile)</span>
         </div>
         <div className="p-4">
           <p className="mb-4 text-sm leading-relaxed text-[var(--color-text)]">
@@ -84,13 +71,13 @@ export function SkillDetail({
           <button
             onClick={() => {
               const link = document.createElement("a");
-              link.href = `/api/download-skill?skill=${skill.slug}`;
+              link.href = `/zips/${skill.slug}.zip`;
               link.download = `${skill.slug}.zip`;
               document.body.appendChild(link);
               link.click();
               document.body.removeChild(link);
             }}
-            className="inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs font-medium text-[var(--color-accent)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] active:opacity-80"
+            className="inline-flex items-center gap-2 rounded border border-[var(--color-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)] transition-colors hover:border-[var(--color-accent)] hover:bg-[var(--color-surface-raised)]"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -100,23 +87,19 @@ export function SkillDetail({
             download zip
           </button>
           <p className="mt-4 text-xs leading-relaxed text-[var(--color-muted)]">
-            Then open Claude, go to <span className="font-semibold">Customize &gt; Skills</span>, upload the zip, and enable it.
+            Then open Claude, go to <span className="font-semibold text-[var(--color-text)]">Customize &gt; Skills</span>, upload the zip, and enable it.
           </p>
         </div>
       </div>
 
       <div className="divider mb-10" />
 
+      {/* Skill content */}
       <div className="animate-fade-up delay-2">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="terminal-caption text-[var(--color-heading)]">
-            skill instructions
-          </h2>
-          <span className="terminal-caption">
-            source: skill.md
-          </span>
+          <h2 className="terminal-caption text-[var(--color-heading)]">skill instructions</h2>
+          <span className="terminal-caption">source: skill.md</span>
         </div>
-
         <div
           className="prose"
           dangerouslySetInnerHTML={{ __html: contentHtml }}

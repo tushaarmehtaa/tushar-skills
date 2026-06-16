@@ -17,10 +17,14 @@ export interface Skill {
 const REPO_ROOT = path.join(process.cwd(), "..");
 const EXCLUDED = new Set(["site", "node_modules", ".git", ".github", ".next"]);
 
+let skillsCache: Skill[] | null = null;
+
 export function getAllSkills(): Skill[] {
+  if (skillsCache) return skillsCache;
+
   const entries = fs.readdirSync(REPO_ROOT, { withFileTypes: true });
 
-  return entries
+  skillsCache = entries
     .filter((e) => e.isDirectory() && !EXCLUDED.has(e.name))
     .map((e) => {
       const skillPath = path.join(REPO_ROOT, e.name, "SKILL.md");
@@ -43,6 +47,8 @@ export function getAllSkills(): Skill[] {
     })
     .filter((s): s is Skill => s !== null)
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  return skillsCache;
 }
 
 export function getSkill(slug: string): Skill | undefined {

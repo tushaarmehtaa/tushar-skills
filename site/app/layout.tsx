@@ -1,16 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+const GeistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
+const GeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
   title: "slashskills",
   description:
-    "Claude Code skills extracted from real products. Install once, never solve them again.",
+    "30 skills from real projects. install in Claude Code or upload a zip to the Claude app.",
   openGraph: {
     title: "slashskills",
     description:
-      "Claude Code skills extracted from real products. Install once, never solve them again.",
+      "30 skills from real projects. install in Claude Code or upload a zip to the Claude app.",
     type: "website",
   },
 };
@@ -27,10 +29,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="grain min-h-screen antialiased">
-        <div className="stage-light" aria-hidden="true" />
-        <div className="stage-light-secondary" aria-hidden="true" />
-        <div className="relative">{children}</div>
+      <body className="min-h-screen antialiased">
+        {children}
       </body>
     </html>
   );
