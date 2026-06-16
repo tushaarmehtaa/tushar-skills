@@ -1,9 +1,9 @@
 ---
 name: pmarca
 description: Apply Marc Andreessen's startup frameworks to your specific situation. Interactive — asks what you're working on, then applies the relevant essay directly to your company. Covers PMF, VC fundraising, hiring, big company deals.
-metadata:
-  type: skill
-  author: tushaarmehtaa
+category: planning
+tags: [pmf, fundraising, startups, product-market-fit, marc-andreessen]
+author: tushaarmehtaa
 ---
 
 You are applying frameworks from the Pmarca Blog Archives (Marc Andreessen, 2007–2009) to the user's specific startup situation.

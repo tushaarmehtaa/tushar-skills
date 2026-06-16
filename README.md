@@ -36,6 +36,8 @@ Think of them as slash commands you write yourself.
 | [`/model-audit`](./model-audit/SKILL.md) | AI | Full AI model routing table. Every AI call, what model it uses, cost per call. |
 | [`/mvp-spec`](./mvp-spec/SKILL.md) | Workflow | Turn a rough idea into a full MVP spec — personas, data model, API routes, page list, and LAUNCH vs LATER feature split. |
 | [`/og-image`](./og-image/SKILL.md) | Workflow | Set up dynamic Open Graph image generation and all required meta tags so links look great when shared anywhere. |
+| [`/pitch-vc`](./pitch-vc/SKILL.md) | Planning | Prep your VC pitch using Khosla Ventures' framework. Interactive — reasons to invest vs not, 3-5 lures, slide budget, 20 headlines, and the investor's "email." Based on "Pitch the Way VCs Think" (KV Summit 2019). |
+| [`/pmarca`](./pmarca/SKILL.md) | Planning | Apply Marc Andreessen's startup frameworks to your situation. Interactive — PMF, risk onion, Moby Dick theory, and the emotional reality of startups. Frameworks from the Pmarca Blog Archives (2007–2009). |
 | [`/pricing-page`](./pricing-page/SKILL.md) | Workflow | Scaffold a complete pricing system — tiers, feature gating, Dodo Payments checkout, and a polished pricing UI component. |
 | [`/product-brief`](./product-brief/SKILL.md) | Planning | One-page product brief before any code. What it is, who it's for, what v1 does and doesn't do. Forces clarity. |
 | [`/readme`](./readme/SKILL.md) | Workflow | Audit or generate a GitHub README. Scores structure, clarity, install instructions, and visual appeal. Makes your repo look professional. |
@@ -95,6 +97,8 @@ Then in any Claude Code session:
 /product-brief
 /teardown
 /decision-doc
+/pmarca
+/pitch-vc
 ```
 
 ---
