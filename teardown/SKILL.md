@@ -8,6 +8,18 @@ author: tushaarmehtaa
 
 Pick apart a product, landing page, or app. Find what works, what doesn't, and what's worth stealing for your own project.
 
+## How to start
+
+Ask TWO questions before doing anything else. Ask them together.
+
+> "What's the product you want to tear down? And what are you building — so I know what to focus the 'steal this' section on?"
+
+Wait for both answers. If they give you a product but no context on what they're building, ask before analyzing. A teardown without a target is just criticism.
+
+If they haven't told you what specifically they want to learn — positioning, copy, UX, social proof, onboarding — ask that too. It sharpens the analysis.
+
+---
+
 ## Phase 1: Get the Target
 
 The user provides one of:

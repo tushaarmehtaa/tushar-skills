@@ -8,6 +8,21 @@ author: tushaarmehtaa
 
 Turn a product idea, repo, or rough positioning into a launch plan. Research first, separate facts from opinions, find the warm distribution loops, build the assets, feed the roadmap with what the launch needs.
 
+## How to start
+
+Ask TWO questions before any research or planning.
+
+> "What's your one-line positioning? And who are your first 100 users specifically — not a demographic, actual people or a specific community?"
+
+Wait for both answers. Challenge weak ones:
+
+- If positioning is vague ("AI tool for productivity") — push: "Who specifically is this NOT for? What makes it different from the 50 other tools in this space?"
+- If the first 100 users is generic ("developers", "founders") — push: "Where do these people actually hang out? Name a specific subreddit, Slack, Discord, newsletter, or person."
+
+Do not start research until positioning is specific and the first 100 users are identified. A launch plan built on vague positioning is a waste. Lock these first, then build the plan around them.
+
+---
+
 ## Principles
 
 - Think first, research deeply, plan second.

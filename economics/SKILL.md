@@ -8,6 +8,18 @@ author: tushaarmehtaa
 
 Calculate the current unit economics for your AI product.
 
+## How to start
+
+Before reading any code, ask:
+
+> "What do you think your gross margin is on each action? Take a guess."
+
+Wait for the answer. Write it down. Then run the actual calculation. The gap between what they guessed and what the numbers say is usually where the conversation gets useful.
+
+If they say "I have no idea" — that's fine, proceed to the calculation. But if they have a guess, get it first. Founders are often wrong in a specific direction (almost always overestimating margin). Showing them the real number after they've committed to a guess lands harder.
+
+---
+
 ## Steps
 
 ### 1. Get pricing from the codebase

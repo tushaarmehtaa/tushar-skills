@@ -8,6 +8,22 @@ author: tushaarmehtaa
 
 Write a decision doc when you're stuck between approaches. Forces a pick instead of endless deliberation.
 
+## How to start
+
+Ask ONE question. Do not explain the process or list what you'll need.
+
+> "What's the decision? One sentence."
+
+Wait for the answer. If it's vague ("we're thinking about our auth setup"), push back: "What specifically are you deciding between? Name the options." Do not move on until you have a one-sentence decision and at least two named options.
+
+If the user gives "let's do both" at any point — stop immediately. "Doing both means you're not deciding. Which one first? That's the decision."
+
+If the user says "it depends" — push back. "On what specifically? Name the variable."
+
+Ask one question at a time through the phases below. Don't list all the questions upfront.
+
+---
+
 ## Phase 1: Frame the Decision
 
 Get these from the user or extract from conversation:

@@ -8,6 +8,22 @@ author: tushaarmehtaa
 
 Write a one-page product brief before any code gets written. Lighter than `/mvp-spec`. One page. Forces clarity.
 
+## How to start
+
+Ask ONE question first.
+
+> "What are you building? One sentence."
+
+Wait for the answer. Then interrogate it before writing anything:
+
+- If the WHO is vague ("developers", "small businesses") — push: "Who specifically? Name one real person."
+- If the WHAT is broad ("an AI tool for X") — push: "What's the one thing it must do well?"
+- If they can't say what people do today instead — push: "What's the current workaround? If nothing, the problem might not be real."
+
+**Do not write the brief until the pressure-test questions below are answered.** The brief is the output of the interrogation, not a first draft to revise.
+
+---
+
 ## Phase 1: Extract the Idea
 
 Ask for anything you can't infer:
@@ -75,15 +91,17 @@ The V1 DOES NOT section is the whole point of this skill. Vibe coders skip this 
 
 The brief is not done until the DOES NOT list is at least half as long as the DOES list.
 
-## Phase 4: Pressure-Test Questions
+## Phase 4: Pressure-Test (before writing, not after)
 
-After writing the brief, ask these. If the user can't answer them, the idea isn't clear enough yet.
+Ask these before writing the brief. If the user can't answer them, the idea isn't ready for a brief yet.
 
-1. **Can you explain this to a friend in one sentence?** — If not, the WHAT section needs rewriting.
-2. **Can you name one real person who would use this?** — Not a persona. A real human. If not, the WHO section is too vague.
-3. **What do people use today instead?** — If "nothing," either the problem isn't real or you haven't found the workaround yet.
-4. **What would make someone switch from the current solution?** — This is your differentiator. If you can't answer it, you don't have one.
-5. **What's the first thing a user does after signing up?** — If this isn't obvious, your onboarding will fail.
+1. **Can you explain this to a friend in one sentence?** — If not, the WHAT section isn't clear yet.
+2. **Name one real person — not a persona — who would use this.** — If they can't, the WHO is too vague.
+3. **What do people use today instead?** — If "nothing," either the problem isn't real or they haven't found the workaround yet. Push harder.
+4. **What would make someone switch from the current solution?** — This is the differentiator. If they can't answer it, they don't have one yet.
+5. **What's the first thing a user does after signing up?** — If this isn't obvious, the core loop isn't defined yet.
+
+Once all five have real answers, write the brief. If any answer is still vague after one push, note it in the brief as an open question — don't paper over it.
 
 ## Phase 5: Output
 

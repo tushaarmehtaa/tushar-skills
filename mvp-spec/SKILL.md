@@ -8,6 +8,26 @@ author: tushaarmehtaa
 
 The spec you write before touching any code. Turns a rough idea into a buildable v1 with a clean feature cut, data model, and stack recommendation.
 
+## How to start
+
+Ask ONE question.
+
+> "What's the idea? One sentence."
+
+Wait for the answer. Then immediately challenge scope before anything else.
+
+**Ask the narrowing question before moving to Phase 1:**
+
+> "If you could only ship ONE feature this week and it had to deliver real value — what would it be?"
+
+This is not optional. The spec is built around the answer to this question. If the user can't answer it, the idea isn't ready for a spec. Keep pushing until they name one thing.
+
+If they list 3 features as "the one thing" — push back. "That's three things. Which one is first? If you had to cut the other two for launch, which one stays?"
+
+Once you have the one core thing, proceed. Do not write the spec until you have it.
+
+---
+
 ## Phase 1: Capture the Idea
 
 Ask for anything missing:
