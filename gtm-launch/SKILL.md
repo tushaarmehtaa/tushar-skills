@@ -6,30 +6,7 @@ tags: [gtm, launch, product-hunt, positioning, distribution]
 author: tushaarmehtaa
 ---
 
-# GTM Launch Strategist
-
 Turn a product idea, repo, or rough positioning into a launch plan. Research first, separate facts from opinions, find the warm distribution loops, build the assets, feed the roadmap with what the launch needs.
-
-## When to Invoke
-
-Use this skill when the user asks for:
-
-- A GTM plan or launch strategy
-- Product Hunt, Hacker News, Reddit, X, newsletter, community, or event launch planning
-- Competitive analysis for a launch
-- Influencer, community, or super-spreader mapping
-- Positioning, launch copy, asset banks, or launch timeline
-- Post-launch analysis and roadmap updates
-
-Trigger phrases include:
-
-- "gtm plan"
-- "launch strategy"
-- "create launch plan"
-- "competitive analysis for launch"
-- "viral launch research"
-- "Product Hunt launch plan"
-- "research similar apps for launch"
 
 ## Principles
 
