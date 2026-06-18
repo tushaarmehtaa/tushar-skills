@@ -7,6 +7,7 @@ import { SkillLogo } from "@/components/skill-logo";
 import { getAllSkills, type Skill } from "@/lib/skills";
 
 const SKILL_ORDER = [
+  "remove-ai-slop",
   "gtm-launch",
   "deploy-check",
   "seo-ready",
@@ -36,7 +37,6 @@ const SKILL_ORDER = [
   "debug-perf",
   "supabase",
   "init-claude-md",
-  "remove-ai-slop",
 ];
 
 const TAGLINES: Record<string, string> = {
