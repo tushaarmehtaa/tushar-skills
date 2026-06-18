@@ -18,6 +18,7 @@ Think of them as slash commands you write yourself.
 
 | Skill | Category | What it does |
 |-------|----------|-------------|
+| [`/remove-ai-slop`](./remove-ai-slop/SKILL.md) | Workflow | Audit and remove AI slop tells from design and copy — gradient heroes, empty adjectives, shimmer effects, banned phrases. |
 | [`/add-analytics`](./add-analytics/SKILL.md) | DevOps | Wire PostHog analytics, Sentry error tracking, and a health endpoint. Stop flying blind in production. |
 | [`/aeo-ready`](./aeo-ready/SKILL.md) | Workflow | Full AEO audit — schema markup, llms.txt, AI crawler rules, and citation strategy to get cited by ChatGPT, Perplexity, and Claude. |
 | [`/app-copy`](./app-copy/SKILL.md) | Workflow | Audit or generate all UI microcopy — empty states, error messages, buttons, onboarding, tooltips, confirmations. One pass to make your app feel polished. |
@@ -41,7 +42,6 @@ Think of them as slash commands you write yourself.
 | [`/pricing-page`](./pricing-page/SKILL.md) | Workflow | Scaffold a complete pricing system — tiers, feature gating, Dodo Payments checkout, and a polished pricing UI component. |
 | [`/product-brief`](./product-brief/SKILL.md) | Planning | One-page product brief before any code. What it is, who it's for, what v1 does and doesn't do. Forces clarity. |
 | [`/readme`](./readme/SKILL.md) | Workflow | Audit or generate a GitHub README. Scores structure, clarity, install instructions, and visual appeal. Makes your repo look professional. |
-| [`/remove-ai-slop`](./remove-ai-slop/SKILL.md) | Workflow | Audit and remove AI slop tells from design and copy — gradient heroes, empty adjectives, shimmer effects, banned phrases. |
 | [`/remotion-video`](./remotion-video/SKILL.md) | Workflow | Scaffold a Remotion video project — multi-format compositions, spring animations, beat-synced audio, scene primitives. Ready to preview immediately. |
 | [`/segment-users`](./segment-users/SKILL.md) | AI | Generate behavioral user segments from your DB schema — SQL queries, ORM queries, current counts, and action plans per segment. |
 | [`/seo-ready`](./seo-ready/SKILL.md) | Workflow | Full SEO + AEO audit that reads your codebase, scores every signal, and fixes what's missing — meta tags, structured data, sitemap, robots.txt, llms.txt, AI crawler rules. |
