@@ -65,7 +65,7 @@ export function SkillCard({
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            className="transition-transform group-hover/link:translate-x-0.5"
+            className="transition-transform [@media(hover:hover)_and_(pointer:fine)]:group-hover/link:translate-x-0.5"
           >
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />

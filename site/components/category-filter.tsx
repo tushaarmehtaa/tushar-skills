@@ -30,7 +30,7 @@ export function CategoryFilter({
           <button
             key={cat.value}
             onClick={() => onChange(cat.value)}
-            className={`relative rounded-full border px-4 py-1.5 font-[family-name:var(--font-mono)] text-xs font-medium tracking-wide transition-all duration-300 ${
+            className={`relative rounded-full border px-4 py-1.5 font-[family-name:var(--font-mono)] text-xs font-medium tracking-wide transition-[border-color,color,background-color] duration-150 ease-out ${
               isActive
                 ? "pill-active border-[var(--color-accent)] bg-[var(--color-accent-glow)] text-[var(--color-accent)]"
                 : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-heading)]"

@@ -44,8 +44,8 @@ body {
   to   { opacity: 1; }
 }
 
-.animate-fade-up  { animation: fade-up  0.5s var(--ease-out) both; }
-.animate-fade-in  { animation: fade-in  0.5s ease both; }
+.animate-fade-up  { animation: fade-up  0.35s var(--ease-out) both; }
+.animate-fade-in  { animation: fade-in  0.35s ease-out both; }
 
 .delay-1 { animation-delay: 80ms; }
 .delay-2 { animation-delay: 160ms; }
@@ -123,12 +123,12 @@ body {
 /* ═══════ COPY BUTTON ═══════ */
 
 @keyframes copy-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3); }
-  70%  { box-shadow: 0 0 0 8px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
+  0%   { opacity: 1; transform: scale(1); }
+  50%  { opacity: 0.7; transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
-.copy-success { animation: copy-pulse 0.4s ease; }
+.copy-success { animation: copy-pulse 0.35s ease-out; }
 
 /* ═══════ DIVIDER ═══════ */
 
@@ -158,10 +158,12 @@ body {
 /* ═══════ BACK LINK ═══════ */
 
 .back-link {
-  transition: color 130ms ease, transform 130ms ease;
+  transition: color 130ms ease-out, transform 130ms ease-out;
 }
 
-.back-link:hover { transform: translateX(-3px); }
+@media (hover: hover) and (pointer: fine) {
+  .back-link:hover { transform: translateX(-3px); }
+}
 
 /* ═══════ PROSE ═══════ */
 
@@ -274,6 +276,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
   *, *::before, *::after {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
+  }
+  .animate-fade-up,
+  .animate-fade-in,
+  .reveal {
+    transform: none !important;
+    transition: opacity 150ms ease-out !important;
   }
 }
