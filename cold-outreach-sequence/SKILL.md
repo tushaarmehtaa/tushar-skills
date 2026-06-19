@@ -1,178 +1,221 @@
 ---
 name: cold-outreach-sequence
-description: Generate multi-touch cold outreach sequences — 3-5 emails with timing, escalation logic, and a different angle per touch. Full drip campaign from first contact to close.
+description: Generate multi-touch cold outreach sequences — email + LinkedIn multichannel, signal-based personalization, widening gap timing. Full campaign where each touch has a distinct job.
 category: workflow
-tags: [cold-email, outreach, sequence, sales, follow-up]
+tags: [cold-email, outreach, sequence, sales, follow-up, linkedin, multichannel]
 author: tushaarmehtaa
 ---
 
-Generate complete multi-touch cold outreach sequences. Not one email — a full campaign where each touch has a different angle, a specific send day, and a clear job to do. Use `/cold-email` for single emails. Use this when one email isn't enough.
+Generate complete multi-touch outreach sequences. Not one email — a campaign where each touch has a different angle, a specific send day, and a clear job. Use `/cold-email` for single emails. Use this when one email isn't enough.
+
+2026 baseline: average cold email reply rate is 3.43%. Signal-based multichannel sequences (email + LinkedIn) hit 15–25%. The gap is personalization and channels.
 
 ## Before Writing Anything
 
-Gather this information — ask for anything missing:
+Gather this — ask for anything missing:
 
-1. **Target** — Role, company type, industry. The more specific, the better the hook.
+1. **Target** — Role, company type, industry. Specific beats general.
 2. **Offer** — What you're proposing. One sentence.
-3. **Credibility** — Social proof. Numbers, notable clients, results. Be specific.
+3. **Credibility** — Numbers, notable clients, specific results.
 4. **Goal** — Meeting, demo, partnership, intro, advice?
-5. **Unique asset** — Demo link, one-pager, case study, free tool? (goes in Email 3)
-6. **Sequence length** — 3 touches (light, 7 days) or 5 touches (standard, 12 days)?
+5. **Asset** — Demo link, one-pager, case study, free tool? (goes in Touch 4)
+6. **Channel** — Email-only or LinkedIn + email? (default: multichannel)
+7. **Prospect type** — SMB (14–21 days, 4–5 touches) or Enterprise (45–60 days, 6–8 touches)?
 
-If the user says "make it for [target] offering [thing]", extract the rest from context before asking.
+## Research Before Drafting
+
+Five minutes of research before writing increases reply rates 3–5x over templates. Find a signal — something real that happened recently.
+
+**Tier 1 signals (18–25% reply rates when referenced):**
+- New job / role change in last 30 days
+- Recent funding round
+- Hiring surge in a relevant function
+- Product launch or major announcement
+
+**Tier 2 signals (8–15% reply rates):**
+- Recent LinkedIn post about a problem your offer solves
+- Company press mention or award
+- Competitor move that creates urgency
+
+**Tier 3 signals (3–5% reply rates — only if nothing else exists):**
+- General industry trend
+- LinkedIn activity (likes, comments)
+
+Stacking two signals pushes reply rates to 25–40%. A Tier 1 + Tier 2 combo is the target.
+
+Where to look:
+- LinkedIn: recent post, new role, company milestone
+- Their company blog or newsroom
+- Crunchbase: recent funding
+- Job postings: what they're hiring tells you what they're building
+- Twitter/X: recent problem they've articulated
+
+---
 
 ## The Two Sequence Structures
 
-### 5-Touch Standard (12 days)
+### Multichannel SMB (5 touches, 14 days)
+
+| Touch | Day | Channel | Job | Max Length |
+|-------|-----|---------|-----|-----------|
+| 1 | 1 | LinkedIn | Connection request — no pitch | 300 chars |
+| 2 | 3 | LinkedIn | Engage — like or comment on a recent post | (no message) |
+| 3 | 4 | Email | Signal-anchored opener + ask | 60 words |
+| 4 | 8 | Email | Give value, ask nothing | 40 words |
+| 5 | 14 | Email | Breakup | 25 words |
+
+### Email-Only (5 touches, 18 days)
 
 | Touch | Day | Job | Max Length |
 |-------|-----|-----|-----------|
-| Email 1 | 1 | Problem + Credibility + Ask | 4 sentences |
-| Email 2 | 3 | Bump — low pressure | 2 sentences |
-| Email 3 | 5 | Give value, ask nothing | 3 sentences |
-| Email 4 | 8 | Social proof — name-drop a real result | 3 sentences |
-| Email 5 | 12 | Breakup — clean exit | 2 sentences |
+| Email 1 | 1 | Signal hook + credibility + ask | 60 words |
+| Email 2 | 3 | Bump — no repitch | 25 words |
+| Email 3 | 7 | Give value, ask nothing | 40 words |
+| Email 4 | 12 | Social proof — specific result | 45 words |
+| Email 5 | 18 | Breakup — clean exit | 25 words |
 
-### 3-Touch Light (7 days)
+**Gap logic:** Widen gaps as the sequence progresses. Day 1 → 3 → 7 → 12 → 18. Fixed-interval sequences look automated.
 
-| Touch | Day | Job | Max Length |
-|-------|-----|-----|-----------|
-| Email 1 | 1 | Problem + Credibility + Ask | 4 sentences |
-| Email 2 | 3 | Value-add with asset | 3 sentences |
-| Email 3 | 7 | Breakup | 2 sentences |
+**Send time:** Tuesday–Thursday, 9–11 AM prospect's timezone. Avoid Monday morning and Friday afternoon.
+
+---
 
 ## The Rules That Don't Move
 
 **Subject lines:**
-- Email 1: Short, specific. References something real about them.
-- Emails 2-5: Always "Re: [original subject]" — stay in the same thread. Do not break the thread.
-- Never use: "Following up", "Checking in", "Touching base", "Just wanted to"
+- Touch 1 email: Short, specific. References the signal.
+- All follow-ups: `Re: [original subject]` — stay in thread. Never break it.
+- Never: "Following up", "Checking in", "Touching base", "Just wanted to"
 
 **Length:**
-- No email exceeds 60 words in the body
-- Emails 2 and 5 should be under 30 words
-- If you can remove a word, remove it
+- 50–75 words is the sweet spot for Email 1 (2026 benchmark data)
+- Follow-ups: 25–40 words
+- Breakup: under 25 words
+- LinkedIn messages: under 300 characters
 
 **Tone escalation:**
 
 | Touch | Tone |
 |-------|------|
-| 1 | Confident, direct, problem-aware |
-| 2 | Casual, brief, zero pressure |
-| 3 | Generous — give something, ask nothing |
-| 4 | Social proof — "others are doing this" |
-| 5 | Clean exit — door stays open |
+| LinkedIn connection | Neutral — just get accepted |
+| Email 1 | Confident, signal-aware, specific ask |
+| Email 2 | Casual, zero pressure |
+| Email 3/4 | Generous — give something, ask nothing |
+| Last email | Clean exit — door stays open |
 
 **What each touch must NOT do:**
-- Email 1: Must not be generic. If you removed the recipient's name, it should fall apart.
+- LinkedIn connection: Must not pitch. One sentence why you're connecting, or blank.
+- Email 1: Must not be generic. Remove the name — does it fall apart? If not, rewrite.
 - Email 2: Must not re-pitch. Just nudge.
-- Email 3: Must not ask for a call, meeting, or response. Only give.
-- Email 4: Must not fabricate social proof. Real clients or skip this touch entirely.
-- Email 5: Must not guilt-trip. Clean, warm, final.
+- Value touch: Must not ask for a call or response. Only give.
+- Social proof touch: Must not fabricate. Real clients and real numbers, or skip it.
+- Breakup: Must not guilt-trip. Clean, warm, final.
+
+---
 
 ## The Templates
+
+### LinkedIn Connection Request (Touch 1)
+
+```
+[Option A — with note]
+Saw your post on [specific topic] — [one genuine reaction]. Thought it worth connecting.
+
+[Option B — blank]
+(No note. Your profile is the pitch.)
+```
 
 ### Email 1
 
 ```
-Subject: [specific observation — recent post, job change, company news, product launch]
+Subject: [signal reference — their company + what happened]
 
 Hey [Name],
 
-[One sentence: something specific you noticed about them. This sentence must be about them, not you.]
+[One sentence: the signal. Recent, specific, about them.]
 
-[One sentence: what you do + your strongest proof point.]
+[One sentence: what you do + strongest proof point.]
 
-[One sentence: specific ask with a time — "15 minutes this week?"]
+[One sentence: specific ask — "15 minutes this week?"]
 
-[Your name]
+[Name]
 ```
 
-### Email 2
+### Email 2 (Day 3)
 
 ```
 Subject: Re: [original subject]
 
 Hey [Name],
 
-Bumping this in case it got buried.
+Bumping this up.
 
-[Your name]
+[Name]
 ```
 
-### Email 3
-
-```
-Subject: Re: [original subject]
-
-Hey [Name],
-
-[One sentence: share something genuinely useful — demo, relevant case study, insight about their industry, or a tool they'd care about.]
-
-No pressure on a call — thought this might be relevant.
-
-[Your name]
-```
-
-### Email 4
+### Email 3 — Value (Day 7)
 
 ```
 Subject: Re: [original subject]
 
 Hey [Name],
 
-[One sentence: name a real client or result — be specific.] [One sentence: why that's relevant to their situation.]
+[One sentence: something genuinely useful for them — a resource, insight, or relevant result. No ask.]
 
-Happy to show you how — [specific time ask].
-
-[Your name]
+[Name]
 ```
 
-### Email 5
+### Email 4 — Social Proof (Day 12)
 
 ```
 Subject: Re: [original subject]
 
 Hey [Name],
 
-Last note on this. If the timing's off, completely understand — happy to revisit whenever it makes sense.
+[One sentence: specific client + specific result.] [One sentence: why that maps to their situation.]
 
-[Your name]
+Worth a quick call — [specific time ask].
+
+[Name]
 ```
 
-## Research First
+### Email 5 — Breakup (Day 18)
 
-Before drafting Email 1, find a hook. A generic opener makes the whole sequence waste of time. Spend 3 minutes looking at:
+```
+Subject: Re: [original subject]
 
-- Their LinkedIn: recent post, new role, company milestone
-- Their Twitter/X: recent tweet about a problem your offer solves
-- Their company: recent funding, launch, press mention
-- Job postings: what they're hiring tells you what they're building
+Hey [Name],
 
-The hook in Email 1 must be recent (last 30-60 days) and specific. "I love your work" is not a hook.
+Last note. Completely understand if the timing's off — happy to revisit whenever it makes sense.
+
+[Name]
+```
+
+---
 
 ## Workflow
 
-1. Gather target, offer, credibility, goal, asset, sequence length
-2. Research one specific hook for Email 1
-3. Draft all emails in sequence order
-4. Check: is every email under 60 words?
-5. Check: does Email 1 only work if you know who the recipient is?
-6. Check: does each touch have a distinct job (no "following up" repeats)?
-7. Output complete sequence with send days labeled
+1. Gather target, offer, credibility, goal, asset, channel, prospect type
+2. Find one Tier 1 or Tier 2 signal — do not draft without it
+3. Choose sequence structure (multichannel or email-only)
+4. Draft all touches in order
+5. Check every email: under 60 words?
+6. Check Email 1: would it fail without the recipient's name?
+7. Check each touch: does it have a distinct job from the others?
+8. Label output with send days and channel
 
 ## Verify
 
 ```
-[ ] Every email under 60 words
-[ ] Email 1 has a specific, researched hook — not generic
-[ ] Emails 2-5 thread on same subject line with "Re:"
-[ ] Each touch has a different angle — no repeated pitch
-[ ] Email 3 gives value with no ask
-[ ] Email 4 uses real social proof — or touch is skipped
-[ ] Email 5 is clean — no guilt, door stays open
-[ ] Send days use business days (no weekends)
-[ ] Asset (if exists) is in Email 3, not Email 1
+[ ] Signal found — Tier 1 or Tier 2, within last 60 days
+[ ] Email 1 references the signal in sentence 1
+[ ] Email 1 under 60 words
+[ ] Follow-ups thread on same subject with "Re:"
+[ ] Each touch has a distinct job — no repeated pitch
+[ ] Value touch gives something, asks nothing
+[ ] Social proof touch uses real numbers or is skipped
+[ ] Breakup is clean — no guilt
+[ ] Send days use widening gaps (not fixed intervals)
+[ ] Send days fall Tue–Thu where possible
+[ ] LinkedIn touches (if multichannel) are channel-appropriate — no pitch in connection request
 ```
-
-See [references/guide.md](references/guide.md) for full sequence examples across industries and subject line variations.
