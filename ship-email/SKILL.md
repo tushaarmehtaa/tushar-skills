@@ -8,6 +8,12 @@ author: tushaarmehtaa
 
 Scaffold complete email infrastructure — Resend setup, transactional templates, user segmentation, and an admin send UI. Reads the project first, plugs into existing auth and database.
 
+## Three things that silently break Resend integrations
+
+1. **Domain not verified before going live.** Resend sends from `@resend.dev` by default. Emails land in spam or get blocked entirely. Verify your domain in the Resend dashboard and confirm the `from` address matches the verified domain before any emails go to real users.
+2. **Throwing on email failure.** If `sendEmail` throws and you don't catch it, a welcome email failure crashes the signup flow. Email is fire-and-forget — always catch, always return `{ success, error }`, never throw.
+3. **Sending from a `noreply` address with no `reply-to`.** Users hit reply when they have questions. If there's no monitored inbox on the other end, you lose them. Set `replyTo` to a real inbox even if `from` is `noreply@`.
+
 ## Phase 1: Detect the Project
 
 Before writing anything, read the codebase:

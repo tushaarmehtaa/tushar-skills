@@ -16,7 +16,13 @@ Before writing anything, read the codebase:
 - **Framework**: Next.js / other?
 - **Database**: What ORM/client? What does the users table look like?
 - **Auth**: How is the current user identified in API routes?
-- **Existing payments**: Any Dodo SDK or payment routes already?
+- **Existing payments**: Check `package.json` for payment provider:
+  - `@dodopayments/sdk` → Dodo Payments (use Phase 4 below)
+  - `stripe` → Stripe (use [references/stripe.md](references/stripe.md))
+  - `@lemonsqueezy/lemonsqueezy.js` → Lemon Squeezy (use [references/lemonsqueezy.md](references/lemonsqueezy.md))
+  - None → ask the user which provider to set up
+
+If the codebase already has a payment provider, wire into it — don't install a second one.
 
 ### 1.2 Ask the User
 
@@ -29,8 +35,8 @@ Quick decisions:
 2. What's the pricing model? (flat rate / credits / per-seat / usage-based)
 3. Monthly billing, annual, or both?
 4. What features are gated behind paid? (or let me suggest based on the codebase)
-
-I'll handle Dodo Payments integration.
+5. Payment provider? (Dodo Payments / Stripe / Lemon Squeezy)
+   Default: Dodo Payments — skip if already detected above.
 ```
 
 ## Phase 2: Tier Definitions

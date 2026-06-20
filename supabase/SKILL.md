@@ -43,23 +43,54 @@ user_id text not null  -- clerk user_id, not uuid ref to auth.users
 
 ### 3. RLS policies
 
-Enable RLS on every table that holds user data:
+Enable RLS on every table that holds user data. **Never leave RLS enabled with no policies — every query will fail silently and return empty results, not an error.**
 
 ```sql
 alter table public.your_table enable row level security;
-
--- for Supabase Auth
-create policy "users read own rows"
-  on public.your_table for select
-  using (user_id = auth.uid()::text);
-
--- for external auth (Clerk/Auth0): use a JWT claim helper
-create policy "users read own rows"
-  on public.your_table for select
-  using (user_id = (auth.jwt() ->> 'sub'));
 ```
 
-Add insert, update, delete policies for each table. Never leave a table with RLS enabled but no policies — all queries will fail silently.
+Three canonical patterns. Pick the one that matches the table:
+
+**Pattern A — User owns row** (most common: posts, files, credits, settings)
+```sql
+-- Supabase Auth
+create policy "select own" on public.your_table for select using (user_id = auth.uid()::text);
+create policy "insert own" on public.your_table for insert with check (user_id = auth.uid()::text);
+create policy "update own" on public.your_table for update using (user_id = auth.uid()::text);
+create policy "delete own" on public.your_table for delete using (user_id = auth.uid()::text);
+
+-- External auth (Clerk / Auth0) — user_id is the JWT sub claim
+create policy "select own" on public.your_table for select using (user_id = (auth.jwt() ->> 'sub'));
+create policy "insert own" on public.your_table for insert with check (user_id = (auth.jwt() ->> 'sub'));
+create policy "update own" on public.your_table for update using (user_id = (auth.jwt() ->> 'sub'));
+create policy "delete own" on public.your_table for delete using (user_id = (auth.jwt() ->> 'sub'));
+```
+
+**Pattern B — Team owns row** (workspaces, shared projects)
+```sql
+-- Users can access rows where their user_id is in the team_members join table
+create policy "select team rows" on public.your_table for select
+  using (
+    team_id in (
+      select team_id from team_members where user_id = (auth.jwt() ->> 'sub')
+    )
+  );
+-- Repeat for insert/update/delete with same team_id check
+```
+
+**Pattern C — Admin bypass** (service role for background jobs, webhooks)
+```sql
+-- Webhooks and cron jobs use the service role key, which bypasses RLS entirely.
+-- Never use the service role key in client-side code.
+-- In Next.js route handlers that need admin access:
+import { createClient } from '@supabase/supabase-js';
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!  // server-side only, never expose
+);
+```
+
+For each new table: generate all 4 CRUD policies (select, insert, update, delete). Don't leave gaps — a table with only a select policy will silently block all inserts.
 
 ### 4. Migrations
 

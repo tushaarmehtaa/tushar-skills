@@ -1,6 +1,6 @@
 ---
 name: mvp-spec
-description: Turn a rough idea into a structured MVP spec. Problem statement, personas, core loop, feature split, data model, API routes, pages, tech stack. Write before coding.
+description: Turn a rough idea into a structured MVP spec. Problem statement, personas, core loop, feature split, data model, API routes, pages, tech stack. Write before coding. Use after `/product-brief` validates the idea — this skill produces the technical spec, not the concept.
 category: planning
 tags: [mvp, spec, planning, product, prd]
 author: tushaarmehtaa
