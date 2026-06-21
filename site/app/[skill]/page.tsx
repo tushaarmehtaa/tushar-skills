@@ -18,9 +18,33 @@ export async function generateMetadata({
   const { skill: slug } = await params;
   const skill = getSkill(slug);
   if (!skill) return {};
+
+  const ogImageUrl = `/api/og?skill=${encodeURIComponent(skill.name)}&description=${encodeURIComponent(skill.description)}`;
+
   return {
-    title: `/${skill.name} — slashskills`,
+    title: `/${skill.name}`,
     description: skill.description,
+    openGraph: {
+      title: `/${skill.name} — slashskills`,
+      description: skill.description,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `/${skill.name} — ${skill.description}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `/${skill.name} — slashskills`,
+      description: skill.description,
+      images: [ogImageUrl],
+    },
+    alternates: {
+      canonical: `/${slug}`,
+    },
   };
 }
 

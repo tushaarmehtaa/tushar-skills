@@ -1,6 +1,6 @@
 ---
 name: tushar-design
-description: Build production-grade frontends in Tushar's personal design system — dark, precise, opinionated. Interactive: asks 4 questions (foundation, accent, typography, motion) before writing any code. Rooted in a real design system derived from real projects, not AI-generated aesthetics. Use when building web components, pages, dashboards, landing pages, or any UI in Tushar's orbit.
+description: "Build production-grade frontends in Tushar's personal design system — dark, precise, opinionated. Interactive: asks 4 questions (foundation, accent, typography, motion) before writing any code. Rooted in a real design system derived from real projects, not AI-generated aesthetics. Use when building web components, pages, dashboards, landing pages, or any UI in Tushar's orbit."
 license: Complete terms in LICENSE.txt
 ---
 
