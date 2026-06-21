@@ -44,12 +44,6 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: ["/api/og"],
   },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/favicon.svg",
-  },
   manifest: "/site.webmanifest",
   alternates: {
     canonical: siteUrl,
