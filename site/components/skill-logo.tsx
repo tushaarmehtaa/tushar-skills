@@ -23,6 +23,7 @@ const LOGOS: Record<string, { icon: IconDef; color?: string }> = {
   "ship-email":              { icon: siResend },
   "readme":                  { icon: siGithub,       color: "#ffffff" },
   "changelog":               { icon: siGithub,       color: "#ffffff" },
+  "frontend-design":         { icon: siAnthropic,    color: "#ffffff" },
   "model-audit":             { icon: siAnthropic },
   "seo-ready":               { icon: siGoogle,       color: "#4285f4" },
   "aeo-ready":               { icon: siGoogle,       color: "#4285f4" },

@@ -76,7 +76,7 @@ const EXTERNAL_SKILLS = [
   {
     name: "frontend-design",
     source: "Ilm-Alan",
-    logoSlug: "init-claude-md",
+    logoSlug: "frontend-design",
     avatar: null,
     round: false,
     note: "high-taste frontend direction and implementation",
