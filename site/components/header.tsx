@@ -17,6 +17,12 @@ export function Header() {
           <span className="hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)] sm:inline">
             claude code skills
           </span>
+          <Link
+            href="/changelog"
+            className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
+          >
+            changelog
+          </Link>
           <a
             href="https://github.com/tushaarmehtaa/tushar-skills"
             target="_blank"
