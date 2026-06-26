@@ -20,7 +20,7 @@ export function ScrollReveal({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setTimeout(() => el.classList.add("visible"), delay);
+          setTimeout(() => el.classList.add("visible"), Math.min(delay, 160));
           observer.unobserve(el);
         }
       },
