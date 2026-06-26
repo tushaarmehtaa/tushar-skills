@@ -16,6 +16,7 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.3.3",
     "@types/react": "^19.2.14",
+    "@vercel/analytics": "^2.0.1",
     "geist": "^1.7.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^1.18.0",
