@@ -69,7 +69,7 @@ const TAGLINES: Record<string, string> = {
   "debug-perf": "hot reload loops, CPU spikes, bundle bloat, and missing caches",
   "supabase": "schema, RLS policies, migrations, and TypeScript types",
   "init-claude-md": "read the codebase, write a complete CLAUDE.md",
-  "remove-ai-slop": "audit and remove AI slop tells in design and copy",
+  "remove-ai-slop": "hard bans, design and copy convergence, and evidence-based fixes",
 };
 
 const EXTERNAL_SKILLS = [

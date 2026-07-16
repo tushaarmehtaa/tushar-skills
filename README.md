@@ -18,7 +18,7 @@ Think of them as slash commands you write yourself.
 
 | Skill | Category | What it does |
 |-------|----------|-------------|
-| [`/remove-ai-slop`](./remove-ai-slop/SKILL.md) | Workflow | Audit and remove AI slop tells from design and copy — gradient heroes, empty adjectives, shimmer effects, banned phrases. |
+| [`/remove-ai-slop`](./remove-ai-slop/SKILL.md) | Workflow | Remove unmistakable design and copy slop, detect repeated templates across routes, and preview evidence-based fixes before applying them. |
 | [`/add-analytics`](./add-analytics/SKILL.md) | DevOps | Wire PostHog analytics, Sentry error tracking, and a health endpoint. Stop flying blind in production. |
 | [`/aeo-ready`](./aeo-ready/SKILL.md) | Workflow | Full AEO audit — schema markup, llms.txt, AI crawler rules, and citation strategy to get cited by ChatGPT, Perplexity, and Claude. |
 | [`/app-copy`](./app-copy/SKILL.md) | Workflow | Audit or generate all UI microcopy — empty states, error messages, buttons, onboarding, tooltips, confirmations. One pass to make your app feel polished. |

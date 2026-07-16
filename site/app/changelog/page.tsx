@@ -23,6 +23,14 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-07-16",
+    entries: [
+      { type: "update", text: "rebuilt /remove-ai-slop with hard bans for unmistakable design and copy slop plus evidence-based contextual scoring" },
+      { type: "update", text: "added rendered and cross-route convergence audits, page-role and UI-state checks, copy clustering, and claim provenance" },
+      { type: "fix", text: "blocked or unverified copy can no longer be written into production as a generated replacement" },
+    ],
+  },
+  {
     date: "2026-06-26",
     entries: [
       { type: "update", text: "renamed aeo-ready → search-ready" },
