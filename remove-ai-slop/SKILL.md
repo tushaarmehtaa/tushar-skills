@@ -1,242 +1,460 @@
 ---
 name: remove-ai-slop
-description: Audit a codebase or document for AI slop tells in design and copy. Identifies generic patterns that make AI-built work look AI-built, shows before/after for every fix, then applies only what you approve.
+description: Audit and remove unmistakable AI design and copy slop, then score softer patterns by repetition, product fit, and rendered evidence before applying approved fixes.
 category: workflow
 tags: [design, copy, audit, refactor, quality]
 author: tushaarmehtaa
 ---
 
-AI tools converge on the same patterns. Same gradients, same words, same structure. This skill finds every instance, shows you exactly what changes, and waits for your go-ahead before touching anything.
+Audit the actual interface, not just a list of fashionable motifs. Remove unmistakable defaults forcefully. Judge softer patterns by whether they fit the product, content, and brand or merely repeat a learned template.
 
----
+Never turn the cleanup into another house style. Do not make every interface flat, dark, minimally rounded, or monochrome by default.
 
-## Phase 1: Read what exists
+## Use three verdicts
+
+### HARD BAN
+
+Use this only when the element meets one of the exact definitions below. One confirmed occurrence is enough. Report it directly and recommend removal. Do not write “consider,” “could,” “may,” or “if desired.”
+
+Use this verdict:
+
+> **HARD BAN — [pattern]. [Why it fails]. Remove it. [Repair direction].**
+
+Allow only the narrow semantic exceptions listed with that pattern. “It is a brand choice” is not evidence by itself.
+
+### STRONG PRESUMPTION
+
+Use this for patterns that can work but usually read as defaults when unsupported or repeated. Require a concrete product, content, functional, or documented brand reason to keep one.
+
+Use this verdict:
+
+> **STRONG PRESUMPTION — [pattern] reads as a reused default because [evidence]. Keep it only if [specific purpose]; otherwise [repair].**
+
+### CONTEXTUAL SIGNAL
+
+Use this for neutral design or copy vocabulary that becomes slop only through repetition, mismatch, co-occurrence, or dominance. Do not report an isolated low-confidence motif as a defect.
+
+Keep accessibility, semantics, performance, and factual-integrity defects in a separate `QUALITY DEFECTS` section. They matter, but they are not proof of AI authorship.
+
+## Phase 1: Establish context
+
+Read repository evidence before judging taste:
+
+- Read the README, product brief, design documentation, route structure, existing copy, design tokens, font setup, logo, and first-party assets.
+- Identify the product, audience, primary task, intended tone, and meaningful brand constraints. Mark missing information `unknown`; do not invent a brand story.
+- Assign each route a job such as marketing, pricing, docs, dashboard, settings, onboarding, or account management.
+- Record the primary action and content shape for each route.
+- Separate shared navigation and footer chrome from page-specific composition when comparing routes.
+
+Discover relevant source without truncating the inventory:
 
 ```bash
-# Find files to audit
-find . -name "*.tsx" -o -name "*.css" -o -name "*.scss" -o -name "*.md" -o -name "*.html" | grep -v node_modules | grep -v .next | head -60
+rg --files \
+  -g '*.{tsx,jsx,ts,js,css,scss,sass,less,html,vue,svelte,astro,md,mdx,json,yaml,yml}' \
+  -g '!node_modules/**' -g '!.next/**' -g '!dist/**' -g '!build/**'
 ```
 
-Read the markup, styles, and copy in full. Do not skim. Open every file that could contain design or copy.
+Include theme files, Tailwind configuration, component-library overrides, content files, and asset manifests. Read every relevant file, using dependency and route structure to avoid unrelated application code.
 
----
+## Phase 2: Inspect rendered output
 
-## Phase 2: Audit
+Run the existing application when the repository provides a safe development command. Capture each in-scope route at desktop and mobile widths plus meaningful states such as empty, loading, error, success, and populated views.
 
-Work through every checklist item. For each match, record:
-- The file path and line number
-- The exact offending code or text
-- Which pattern it matches
+For each rendered finding, record:
 
-### Layout tells
-- [ ] Centered hero with a badge/pill/chip floating above the H1
-- [ ] Three-column feature card grid (`grid-cols-3`) with uniform height and rounded corners
-- [ ] Icon + heading + body card repeated 3–6 times
-- [ ] Numbered steps section (1. Install → 2. Configure → 3. Ship) or `01` `02` `03` section labels
-- [ ] Stat banner (3 numbers in a row, no supporting context)
-- [ ] Footer with 4 equal columns
-- [ ] Bento grid with 5+ different accent colors
-- [ ] Nested cards (card-inside-card creating visual noise)
-- [ ] Cards with identical heights forced rather than flowing to content
-- [ ] Hero section occupying full viewport with vague headline
+- Route, viewport, and state
+- Screenshot or precise rendered description
+- Source file and line
+- Computed style or component evidence where useful
 
-### Color tells
-- [ ] Purple-to-blue or indigo-to-pink gradient in the hero, CTA, or background
-- [ ] "VibeCode purple" — lavender/violet as the sole brand accent
-- [ ] Warm amber-and-cream used as "tasteful" default without brand justification
-- [ ] Two competing accent colors (e.g. cyan for info + amber for action)
-- [ ] Gradient text (`background-clip: text`) on hero headings
-- [ ] Low-contrast gray body text on dark backgrounds
-- [ ] Safe emerald green as default "clean" accent
+If rendering is unavailable, label appearance-dependent findings:
 
-### Effect tells
-- [ ] Grain texture overlay (`::before` or `body::after`)
-- [ ] Stage-light / ambient spotlight overlay (radial gradient on body)
-- [ ] Shimmer pseudo-element on cards (`::after` sliding highlight)
-- [ ] Glow on borders, rules, or headings (`box-shadow`, `text-shadow` as decoration)
-- [ ] Animated gradient border
-- [ ] Fake blinking cursor keyframe
-- [ ] Glassmorphism — `backdrop-filter: blur` on cards used decoratively
-- [ ] Repeating-gradient stripes as surface decoration
-- [ ] Dark glowing gradients behind hero cards or CTA buttons
+> **CANDIDATE — render confirmation unavailable.**
 
-### Typography tells
-- [ ] Inter, Geist, Space Grotesk, or Instrument Serif used as the only font (no intentional pairing choice)
-- [ ] Space Grotesk + Instrument Serif combo specifically
-- [ ] Monospace font on body text (not just code blocks)
-- [ ] Oversized hero headline consuming full viewport width
-- [ ] Italic serif on a single hero word as "accent"
-- [ ] `> ` prefix on headings (terminal-line aesthetic)
-- [ ] `MANUAL PAGE` or similar meta-label above the heading
-- [ ] All-caps section labels on every section
-- [ ] Uppercase eyebrow label with decorative dots or trailing lines
-- [ ] Flat type hierarchy — font sizes too close together, no clear jump
+Do not claim visual dominance, hierarchy failure, or poor composition from a class name alone.
 
-### Component tells
-- [ ] Colored left border on every card (left-border-as-accent)
-- [ ] Colored top border on cards
-- [ ] `rounded-2xl` (24px+) applied uniformly to everything
-- [ ] `rounded-full` on non-pill elements
-- [ ] 8px uniform card shadow on every surface
-- [ ] Emoji icons in sidebar navigation or feature lists
-- [ ] shadcn/ui defaults leaking through without customization (default slate colors, default ring styles)
-- [ ] Icon tile (rounded-square container) above every feature card heading
+## Phase 3: Find hard slop
 
-### Animation/motion tells
-- [ ] Bounce or elastic easing on UI elements (`cubic-bezier` with overshoot)
-- [ ] Staggered fade-in entrance on every section (generic `opacity: 0 → 1` with delay)
-- [ ] Load animations on elements that don't need them
-- [ ] Image hover scale or rotate transform
-- [ ] Animating `width`, `height`, `padding`, or `margin` (causes layout thrash)
-- [ ] No `prefers-reduced-motion` fallback anywhere
+### 1. Ornamental bold all-caps eyebrows
 
-### Imagery tells
-- [ ] Abstract 3D blobs or orbs floating in hero section
-- [ ] Brain/neural network as hero illustration (AI product cliché)
-- [ ] Stock photos of diverse teams looking at laptops in well-lit offices
-- [ ] AI illustrations that are "slightly too smooth, slightly too symmetrical"
+Count an eyebrow as a hard ban when a short label immediately above an H1 or H2:
 
----
+- Uses uppercase text or `text-transform: uppercase`
+- Uses weight 600+, high contrast, accent color, wide tracking, a dot, or a decorative rule to manufacture importance
+- Adds no information beyond the heading, route, or surrounding navigation
 
-### Copy tells
+Treat labels such as `FEATURES`, `WHY US`, `OUR PLATFORM`, `MANUAL PAGE`, and `INTRODUCING` as decorative when they merely announce the content below. One ornamental eyebrow is enough.
 
-**Banned words** — remove on sight:
+Allow only real, non-redundant status or operational metadata such as `LIVE`, `ERROR`, `BETA`, a permission state, or a version. Do not flag natural acronyms.
 
-*Empty adjectives:* seamless, robust, comprehensive, powerful, cutting-edge, next-generation, world-class, best-in-class, state-of-the-art, groundbreaking, innovative, revolutionary, stellar, formidable, compelling, engaging, captivating, marvelous, paramount, crucial, fantastic
+Required verdict:
 
-*AI vocab spikes:* delve, leverage, elevate, intricate, meticulously, synergy, empower, tapestry, testament, beacon, realm, symphony, vibrant, nestled, renowned, showcasing, underscore, hone, unveil, unravel, harness, foster, navigate, tackle, catapult, supercharge, unleash, unlock, craft (used as vague verb)
+> **HARD BAN — Ornamental all-caps eyebrow. It adds hierarchy theatre without information. Remove it; move any unique fact into the heading, metadata, or body.**
 
-*Marketing verbs:* exceed, game-changer, boasts, committed to, moves the needle, secret sauce, magic (used in product copy)
+### 2. Incoherent or misused fonts
 
-**Banned phrases** — rewrite or cut:
-- "In today's landscape" / "In today's fast-paced world" / "In a world where"
-- "At the end of the day"
-- "It's worth noting that" / "Worth mentioning"
-- "This doesn't just X — it also Y" (defensive framing)
-- "It's not about X, it's about Y"
-- "No X. No Y. Just Z." (triple-structure marketing cadence)
-- "Chaos into clarity" or any "X into Y" transformation cliché
-- "The part everyone gets wrong" / "What most people miss"
-- "Built from production usage" / "Battle-tested"
-- "Let's dive in" / "Ever wondered" / "Here's the kicker"
-- "Build the future of work" / "Your all-in-one platform" / "Scale without limits"
-- "Drive impact" / "Unlock value" / "Elevate your [noun]"
-- Any sentence starting with "This skill reads your..." / "This tool analyzes your..."
-- "However," / "Furthermore," / "Additionally," / "That being said,"
-- Summary paragraphs that restate what was just said
-- Two-word phrases repeated 2–3 times consecutively for rhythm
+Count typography as a hard ban when any of these is true:
 
-**Structural slop:**
-- [ ] Opener that narrates what's about to be said instead of saying it
-- [ ] Hedge words: arguably, fairly, might want to consider, could potentially, may help you
-- [ ] Em dashes used more than twice per screen of text
-- [ ] Sentences that back away from their own claim ("it's arguably one of the better...")
-- [ ] Feature described by what it IS, not what it DOES
-- [ ] Any headline vague enough to describe 3+ different products
+- Three or more visible type families appear without explicit, stable roles
+- The same semantic role changes family between components or routes
+- A component introduces a one-off font outside the design tokens
+- Serif, italic, mono, script, or display type decorates an isolated word without meaning
+- A novelty, condensed, script, or display face is used for paragraphs, navigation, controls, tables, or dense product UI
 
----
+Allow wordmarks, real code or terminal content, mathematical notation, and language-specific fallbacks when scoped to that content.
 
-## Phase 3: Report findings
+Required verdict:
 
-Stop. Do not make any changes yet.
+> **HARD BAN — Incoherent type system. These font changes have no stable role and make the interface look assembled. Consolidate them into explicit display, body, and code roles.**
 
-Present a numbered list of every issue found:
+Repair with one family or an intentional pair plus optional mono. Define roles as tokens. Do not automatically replace everything with Inter or Geist.
 
+### 3. Generic rounded or pill buttons
+
+Count a button as a hard ban when either condition is true:
+
+- An ordinary text CTA uses capsule geometry such as `rounded-full`, `9999px`, or a computed radius at least half its height
+- An action retains an unmodified starter-library recipe: generic radius, stock padding, solid fill, white label, and default hover/focus treatment, with no meaningful hierarchy or product character
+
+Allow actual chips, tags, filter tokens, segmented controls, toggles, and circular icon-only controls. An ordinary CTA does not become a chip because it is small.
+
+Required verdict:
+
+> **HARD BAN — Generic rounded/pill CTA. This is starter-kit styling with no product character. Remove it and redesign the action hierarchy; do not merely recolor it.**
+
+Repair primary, secondary, destructive, and quiet actions as one system. Choose geometry, typography, borders or fills, icon treatment, focus, hover, pressed, loading, and disabled states from the product’s visual language. Do not replace every pill with the same stock 8px black rectangle.
+
+### 4. Other hard bans
+
+- Fake terminal chrome: blinking cursors or `> ` prefixes on ordinary headings. Allow actual CLI or terminal output.
+- Decorative shimmer or animated-gradient borders on static surfaces. Allow restrained progress or loading feedback tied to real state.
+- Unsupported stat banners: prominent numbers without definition, timeframe, source, or real data.
+- Fake charts: invented data presented as evidence, decorative charts that encode no claim, or misleading axes and scales.
+- Confetti on page load, navigation, routine saves, or ordinary button clicks. Allow it only for a rare, real achievement whose importance justifies celebration.
+- Emoji used as the primary icon system in professional navigation, settings, or repeated feature UI.
+
+Confirm appearance-dependent hard bans in the render. Cite the exact rule that failed; “ugly font” and “boring button” are not findings.
+
+## Phase 4: Find contextual slop
+
+Treat these as strong presumptions when repeated across unrelated page roles or unsupported by repo evidence. Otherwise score them as contextual signals.
+
+### Layout and component signals
+
+- Centered badge or pill → oversized H1 → two CTAs → three equal feature cards
+- Uniform three-column icon, heading, and body cards regardless of content type
+- Numbered `01 / 02 / 03` steps used for content that is not sequential
+- Bento layouts that flatten unrelated ideas into decorative tiles
+- Nested cards and forced equal heights for unequal content
+- Four equal footer columns regardless of information architecture
+- Full-viewport hero with a vague headline and no product evidence
+- Generic offset composition used only to look editorial
+- One card component or data schema forced onto three or more semantic roles
+- `rounded-2xl`, identical borders, or identical shadows applied to nearly every surface
+- Rounded-square icon tiles above every feature heading
+- Default shadcn or starter-kit styling left unmodified
+
+### Color and effect signals
+
+- Purple-to-blue, indigo-to-pink, or similar default gradient dominating the hero or CTA
+- Gradient text on the primary headline
+- Grid or dot backgrounds used as generic technology texture
+- Warm amber and cream, safe emerald, or lavender used without product or brand justification
+- Competing accent colors without semantic roles
+- Grain, ambient spotlights, glow, glass, stripes, and decorative pseudo-elements
+- Three or more decorative effects stacked in one region
+- Low-contrast gray text on dark backgrounds; report this separately as a quality defect when contrast fails
+
+### Typography signals
+
+- Inter, Geist, Space Grotesk, or Instrument Serif chosen by default rather than for product fit
+- Space Grotesk and Instrument Serif paired as a fashionable shortcut
+- Monospace used for ordinary prose
+- Hero type that consumes the viewport without earning that emphasis
+- Italic serif applied to one hero word as decoration
+- All-caps labels repeated across every section
+- Flat hierarchy or too many competing display styles
+
+Do not flag a common font merely for being common. Flag the absence of intentional roles, fit, and hierarchy.
+
+### Motion signals
+
+- Bounce or elastic easing on routine controls
+- Staggered fade-in applied to every section or list
+- Load animation on content that needs no temporal explanation
+- Generic image hover scale or rotation
+- Animation of width, height, padding, or margin
+- Missing `prefers-reduced-motion`; report this as a quality defect
+
+### Imagery and data signals
+
+- Abstract 3D blobs, orbs, brains, or neural networks used as generic AI product imagery
+- Generic team-at-laptop stock photography
+- Smooth, symmetrical AI illustration that does not match the product’s subject
+- The same image reused for unrelated claims or routes
+- Screenshots that hide the actual product behind decorative framing
+- Charts with implausible data, unsuitable chart type, missing axes or units, illegible labels, inaccessible color coding, or no stated takeaway
+
+## Phase 5: Measure convergence and fit
+
+Audit the distribution of decisions across the codebase, not only individual elements.
+
+- Compare route anatomy: landmark order, hero structure, section sequence, component tree, layout primitives, and recurring class bundles.
+- Exclude shared chrome before judging page similarity.
+- Flag high structural similarity between semantically different routes.
+- Count repeated motif combinations, not just individual tokens.
+- Check whether unrelated content is forced through the same `icon + title + description` or card schema.
+- Check whether the same radius, shadow, accent, and type treatment appears on every surface role.
+- Compare asset reuse with the meaning of each page.
+- Preserve cohesion between same-role pages while demanding adaptation between different roles.
+
+Judge page-role fit explicitly:
+
+- Marketing pages need a specific proposition and product evidence.
+- Pricing pages need comparison and decision support.
+- Dashboards need task density, state, and information hierarchy.
+- Documentation needs navigation, sequence, and readable examples.
+- Settings need clarity, consequences, and safe actions.
+
+Score every non-hard design candidate with this transparent heuristic:
+
+- `+2` repeated across three or more distinct contexts
+- `+2` conflicts with the page job, content shape, or documented brand
+- `+2` visually dominates the rendered page
+- `+1` co-occurs with two or more other generic defaults
+- `+1` harms comprehension or action hierarchy
+- `-2` has a concrete functional or brand justification supported by evidence
+
+Use the score as guidance, not fake science:
+
+- `5+`: `HIGH` confidence; recommend removal or redesign
+- `3–4`: `MEDIUM` confidence; report as a strong presumption with the missing justification
+- `≤2`: `LOW` confidence; omit from defects or list only as an observation
+
+Hard bans bypass this score once their exact criteria are confirmed.
+
+## Phase 6: Audit copy
+
+Audit marketing copy and in-product language as a system. Flag usage, not innocent substrings, quotations, product names, code examples, legal text, or necessary technical language.
+
+### Build a copy manifest
+
+Define the in-scope surfaces, channels, flows, routes, locales, and states before extraction. Report anything unavailable instead of implying complete coverage.
+
+Extract user-facing strings from markup, component props, constants, locale files, CMS fixtures, toasts, errors, empty states, loading states, dialogs, forms, emails, and notifications.
+
+Record for each string:
+
+- Surface or channel, flow, optional route, page role, component, and UI state
+- Source file and line
+- Rendered text after interpolation when available
+- Locale, message ID, interpolation variables, plural or select branches, and fallback when applicable
+- Accessible name, alt text, validation role, or other non-visible purpose when applicable
+- Both the unique source decision and every rendered instance created by a shared component
+- Actual action, destination, system state, or claim provenance for consequential copy and material claims; use `N/A` elsewhere
+
+Exclude tests, logs, localization keys without rendered values, quoted or code samples not presented as product communication, and deliberately labelled templates. Keep real documentation prose in scope. Keep shared navigation in the terminology audit but exclude it from cross-route convergence counts.
+
+### Find hard copy slop
+
+Use `HARD BAN` only when the exact definition is satisfied. Phrase shape alone is not proof. Treat a hard copy ban as a mandatory removal verdict, not proof that AI authored the text.
+
+#### 1. User-facing scaffolding
+
+Ban `Lorem ipsum`, `TODO`, `Feature 1`, `Your headline here`, explicitly placeholder or confirmed fictional testimonials, and other scaffolding exposed as finished product copy. Mark testimonials with missing provenance `UNVERIFIED`; do not call them fictional without evidence. Allow clearly labelled demos, templates, and documentation examples.
+
+> **HARD BAN — User-facing placeholder copy. This is scaffolding, not product communication. Remove it; replace it with verified content or omit the block.**
+
+#### 2. Content-free narration or cadence
+
+Ban an opener, transition, or marketing construction when deleting it loses no claim, instruction, scope, navigation, reassurance, safety cue, accessibility purpose, intentional voice, or meaningful contrast. This includes empty uses of:
+
+- “In today’s fast-paced world,” “Let’s dive in,” or “Here’s the kicker”
+- “It’s not about X, it’s about Y” or “This doesn’t just X — it also Y”
+- “No X. No Y. Just Z,” “From X to Y,” or clipped triples such as “Fast. Simple. Powerful.”
+
+Do not ban a construction that communicates concrete facts. “No setup. No credit card. Just paste the URL.” is specific; “No friction. No limits. Just growth.” is not.
+
+> **HARD BAN — Content-free copy. “[quote]” performs rhetoric without adding information. Remove it; begin with the first substantive claim.**
+
+#### 3. Exact semantic duplication
+
+Ban copy visible in the same rendered state when it repeats the same proposition without adding a mechanism, detail, implication, proof, decision, or next action. Do not count responsive alternatives, mutually exclusive states, accessibility-only equivalents, or genuine synthesis in long-form documentation.
+
+> **HARD BAN — Semantic duplicate. “[quote]” repeats [earlier copy] without adding information. Delete it or replace it with the missing detail.**
+
+#### 4. Ambiguous consequential copy
+
+Ban `Submit`, `OK`, `Confirm`, or `Continue` as the sole label for payment, deletion, publication, permission, account, or other consequential actions. Ban “Something went wrong,” “Success!”, or “No data” as the entire message when the user needs the affected object, result, or recovery action.
+
+Allow conventional `Back`, `Close`, `Done`, `Retry`, and `Continue` when the surrounding flow makes their consequence unambiguous and low-risk.
+
+> **HARD BAN — Ambiguous consequential copy. “[quote]” hides what will happen or what just happened. Name the action and object, result, or safe recovery path.**
+
+### Separate claim and state integrity
+
+Report these under `QUALITY DEFECTS`, not as evidence of AI authorship:
+
+- Fabricated or unverified statistics, testimonials, rankings, certifications, logos, or customer counts
+- Unsupported comparative, absolute, security, privacy, reliability, or performance claims
+- Error causes the system does not actually know
+- Progress text that claims measurement the system does not have
+- Success copy displayed before the operation is confirmed
+- Terminology or action labels that contradict actual product behavior
+
+Do not call proof fabricated merely because its source is absent from the repository. Mark it `UNVERIFIED`, request provenance, and remove it only when disproven or left unsupported.
+
+### Find strong presumptions
+
+Treat these as strong presumptions when repo evidence does not supply the missing substance:
+
+- A complete hero message that fails to establish what the product does, for whom, or why it matters
+- “Unlock value,” “elevate your workflow,” “chaos into clarity,” “scale without limits,” or similar abstraction without a named task, mechanism, constraint, or outcome
+- Empty puffery such as world-class, best-in-class, battle-tested, revolutionary, intelligent, or AI-powered
+- Generic CTA text whose destination or result remains unclear in context
+- Rhetorical questions, canned contrasts, transformation headlines, or noun-swapped feature descriptions repeated across unrelated routes
+- A benefit-first formula imposed on every feature while hiding the actual capability
+- A sudden faux-casual, cute, grandiose, or hyper-technical voice unsupported by surrounding copy
+- A recap that adds too little to justify its space but is not an exact duplicate
+
+### Keep contextual signals contextual
+
+Treat individual vocabulary hits, em dashes, fragments, rhetorical questions, contractions, sentence-initial “And” or “But,” passive voice, jargon, humor, emoji, summaries, and benefit-first or feature-first ordering as contextual signals.
+
+Preserve hedges that communicate real uncertainty, probability, scope, capability, risk, legal qualification, or time range. Remove only evasive throat-clearing. Treat seamless, robust, powerful, cutting-edge, innovative, leverage, elevate, empower, unlock, harness, supercharge, craft, delve, tapestry, and synergy as search leads, never automatic defects.
+
+### Measure copy convergence and specificity
+
+Compare copy across routes and components using:
+
+- Exact and near-duplicate wording
+- Repeated sentence skeletons after replacing product nouns, numbers, and names with slots
+- Repeated headline formulas, CTA verbs, contrast structures, fragments, tricolons, em dashes, and rhetorical questions
+- Reused section anatomy such as eyebrow → imperative heading → one-sentence promise → CTA
+- Terminology drift: multiple names or verbs for the same domain object or action
+- Shared marketing voice leaking into dashboards, errors, settings, or destructive flows
+
+Preserve coherence between same-role pages. Flag the same sales template appearing across pricing, documentation, onboarding, settings, and product UI.
+
+Use four tests:
+
+1. **Deletion:** Does removing the text lose meaningful information or action?
+2. **Three-product swap:** Could three unrelated products use it unchanged?
+3. **Proof:** Does each material claim map to a capability, constraint, measurement, source, or verified outcome?
+4. **State:** Does the text match what the system knows, what happened, and what the user can do?
+
+Judge material propositions as message blocks, not isolated sentences. Look for enough concrete anchors among the actor, action, domain object, mechanism, constraint, and observable result. Do not require every label or sentence to contain all of them.
+
+### Judge voice, page role, and UI state
+
+Infer voice from product documentation, customer language, and strong existing examples. Record formality, warmth, directness, technical density, person, contractions, casing, punctuation, and preferred terminology. Preserve coherent voice while allowing tone to become calmer and more precise in high-stakes contexts.
+
+Match copy to its job:
+
+- Marketing: audience, proposition, mechanism, evidence, and next action
+- Pricing: real distinctions, costs, limits, billing terms, and decision support
+- Documentation: prerequisites, outcome, sequence, and accurate examples
+- Dashboard and settings: current state, task, consequence, and save status rather than slogans
+- Onboarding and account flows: next useful action, recovery, and security consequences
+
+Build a state matrix for meaningful flows: initial, first-use empty, filtered-zero, permission-limited, loading, populated, disabled, error, success, and confirmation. State a cause only when known. Name destructive objects and reversibility. Do not force every empty state into “No X yet — create your first X.”
+
+### Score contextual copy
+
+- `+2` repeated across three or more unrelated contexts
+- `+2` conflicts with the page role or UI-state job
+- `+2` fails product specificity at the message-block level
+- `+1` repeats stock syntax or cadence alongside other generic defaults
+- `+1` breaks established voice, terminology, or action clarity
+- `-2` has documented voice, functional, customer-language, or same-role justification
+
+Use `5+` as `HIGH`, `3–4` as `MEDIUM`, and `≤2` as `LOW`. Hard bans and integrity defects bypass this score.
+
+### Repair copy without inventing it
+
+- Delete filler and exact duplication.
+- Replace abstract claims with verified domain nouns, user actions, mechanisms, constraints, or outcomes appropriate to the message block.
+- Narrow or remove unsupported claims. If required facts are missing, mark the proposed fix `BLOCKED — CONTENT REQUIRED` instead of inventing metrics, capabilities, or proof.
+- Name consequential actions and objects. For errors, state impact and recovery; include cause only when known and useful.
+- Distinguish empty-state types and write only the guidance each state needs.
+- Preserve calibrated uncertainty, necessary technical terms, conventional controls, and intentional voice.
+- Check neighboring copy so a local rewrite does not create terminology or tone drift.
+- Avoid replacing AI hype with a uniform terse, blunt, faux-minimal house voice.
+
+## Phase 7: Report findings and fixes
+
+Stop before editing. Report these sections when applicable:
+
+```text
+COPY MANIFEST COVERAGE
+Scope: [surfaces, routes, channels, locales, states]
+Unavailable: [anything not inspected]
+Unique source decisions: [count]  Rendered instances: [count]
+Baseline: [hard bans, unverified claims, convergence clusters]
+
+HARD SLOP — REMOVE
+H1. [route, file:line] — [pattern]
+    Before: [exact original]
+    After: [verified replacement, deletion, or BLOCKED — CONTENT REQUIRED]
+    Evidence: [exact code plus rendered evidence]
+    Why it fails: [specific diagnosis]
+    Verdict: Remove it.
+
+CONTEXTUAL SLOP
+C1. [route, file:line] — [pattern, score, HIGH or MEDIUM confidence]
+    Verdict: [STRONG PRESUMPTION, CONTEXTUAL SIGNAL, or CANDIDATE]
+    Before: [exact original]
+    After: [product-specific repair or BLOCKED — CONTENT REQUIRED]
+    Evidence: [repetition, mismatch, co-occurrence, render or copy manifest]
+
+COPY CONVERGENCE
+CC1. [convergence type and normalized pattern or term, score, confidence]
+     Instances: [routes, states, files, and exact excerpts]
+     Impact: [how unrelated jobs were flattened or terminology drifted]
+     Repair: [which source decisions change and which terminology stays]
+     Why it fails: [unrelated jobs forced through one voice or template]
+
+QUALITY DEFECTS
+Q1. [route, file:line] — [accessibility, semantics, performance, claim, or state-integrity issue]
+    Evidence: [code, behavior, source, or contradiction]
+    Impact: [user, trust, task, or compliance consequence]
+    Provenance: [verified, unverified, contradicted, or not applicable]
+    Recommendation: [repair, provenance request, or blocked status]
+
+DECISIONS TO PRESERVE
+P1. [element] — [why it is intentional, specific, and effective]
 ```
-Found X issues:
 
-DESIGN
-1. [file:line] — [pattern name]: [exact code snippet]
-2. [file:line] — [pattern name]: [exact code snippet]
-...
+Critique the artifact, not its author. Be blunt about hard slop: write “This is starter-kit styling. Remove it,” not “You may want to consider refining it.”
 
-COPY
-7. [file:line] — [pattern name]: "[exact offending text]"
-8. [file:line] — [pattern name]: "[exact offending text]"
-...
-```
+For every actionable fix, show the exact before and after. Use real product copy and existing tokens rather than placeholders. Ground rewritten claims in cited repository evidence. Treat `UNVERIFIED` and `BLOCKED — CONTENT REQUIRED` as report-only statuses; never write them into user-facing copy. When rendering is available, compare the same route, viewport, state, data, and animation setting.
 
-Be specific. Show the actual code or text, not a description of it.
+Do not use canonical replacements such as flat black, one accent, 8px radii, a two-column list, uniformly terse prose, or default casual voice unless the product evidence supports them. State the intended design or copy job first, then propose the smallest repair that performs it.
 
----
+## Phase 8: Confirm and apply
 
-## Phase 4: Before/after preview
-
-For each issue, show exactly what would change:
-
-```
-Fix 1 — globals.css:14
-BEFORE: background: linear-gradient(135deg, #6366f1, #8b5cf6);
-AFTER:  background: #1a1a1a;
-Reason: purple gradient is the single most recognizable AI design tell
-
-Fix 7 — hero.tsx:23
-BEFORE: "Seamlessly integrate your workflow and unlock unprecedented productivity"
-AFTER:  "Connect [tool A] to [tool B] in one step"
-Reason: "seamlessly" + "unlock" + "unprecedented" all on banned list; replaced with specific claim
-```
-
-Work through every fix. Show all of them before asking for confirmation.
-
----
-
-## Phase 5: Confirm
-
-After showing all before/afters, ask:
+After showing every proposed change, exclude report-only and blocked items from the actionable count, then ask:
 
 > **Ready to apply [X] fixes. Any to skip?**
-> Reply with fix numbers to skip (e.g. "skip 3, 7") or just say "go" to apply all.
+> Reply with fix IDs to skip, or say “go” to apply all.
 
-Wait for the response. Do not apply anything until you have it.
+Wait for approval. Apply only approved changes. Preserve unrelated code and intentional decisions recorded under `DECISIONS TO PRESERVE`.
 
----
+## Phase 9: Verify
 
-## Phase 6: Apply fixes
+After editing:
 
-Apply only the approved fixes. Make changes precisely — do not modify surrounding code or introduce new patterns.
+1. Run the project’s relevant build, typecheck, lint, and tests.
+2. Re-render the same routes, viewports, states, and data.
+3. Confirm each hard-ban pattern is actually gone, not merely renamed.
+4. Confirm type roles and button states form coherent systems.
+5. Check hierarchy, overflow, contrast, focus, semantics, and reduced motion.
+6. Re-run the route comparison and confirm unlike page roles no longer share a thoughtless template.
+7. Confirm the repair did not replace one cliché with another.
+8. Re-extract the copy manifest and confirm all hard-ban counts reach zero.
+9. Re-run copy clustering and confirm unlike page roles diverge while terminology remains coherent.
+10. Verify every material claim is sourced, scoped, narrowed, marked `UNVERIFIED`, or removed.
+11. Re-test action labels, interpolation, pluralization, localization, overflow, and every meaningful UI state.
+12. Read key flows aloud and confirm the cleanup did not impose one terse or faux-conversational house voice.
 
-For design fixes:
-- Replace dual accent with one. Keep the one used in the most important CTA.
-- Replace gradient hero background with flat dark or single color.
-- Remove all decorative `::before` / `::after` overlays. If deleting the CSS rule leaves nothing broken, delete it.
-- Replace `rounded-2xl` uniformity with intentional radius: 3–4px on small elements, 8px on panels, 0 on large containers.
-- Replace three-column grid with a list or two-column layout if the content doesn't actually need three columns.
-- Remove bounce/elastic easing. Replace with `ease-out` or `cubic-bezier(0.16, 1, 0.3, 1)`.
-- Remove staggered fade-ins. If animation is needed, use one — not one per element.
-
-For copy fixes:
-- If the opener narrates → delete it, start with the second sentence.
-- If the sentence hedges → remove the hedge. If the claim breaks without it, make it specific enough to stand alone.
-- If an adjective is empty → replace with a measurement or delete it. "Robust error handling" → "catches and surfaces every Stripe webhook failure."
-- If a phrase is banned → cut it. The sentence almost always improves.
-- If the section ends with a summary → delete the summary.
-
----
-
-## Phase 7: Verify
-
-After changes:
-
-1. Read copy out loud. If you'd feel embarrassed saying it to someone → still slop.
-2. Count accent colors in CSS. More than one needs a reason.
-3. Count decorative pseudo-elements. Each one needs a reason.
-4. Run: `grep -r "seamless\|robust\|leverage\|delve\|tapestry\|supercharge\|unleash\|harness\|elevate\|paramount" .`
-5. Read the hero. If it could describe three different products → not specific enough.
-6. Check motion: `grep -r "cubic-bezier\|bounce\|elastic\|stagger" .`
-
----
-
-## What clean looks like
-
-**Copy is clean when:**
-- Each sentence makes exactly one claim
-- Every adjective could be replaced by a measurement
-- The opener is the thing, not a description of the thing
-- A reader can't tell whether a human or machine wrote it
-
-**Design is clean when:**
-- One accent color, used sparingly
-- No CSS rule exists purely for decoration
-- Removing any visual layer doesn't reduce information
-- The layout follows content structure, not a template
-- No component pattern requires explanation to justify its existence
+Call the work clean only when strong shared foundations coexist with page-specific structure, the product’s identity is visible in its decisions, and no hard slop remains.

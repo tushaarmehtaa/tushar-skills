@@ -6,6 +6,10 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+## 2026-07-16
+- rebuilt `/remove-ai-slop` with hard bans for unmistakable design and copy slop plus evidence-based scoring for contextual patterns
+- added rendered and cross-route convergence audits, page-role and UI-state checks, copy clustering, claim provenance, and approval-safe blocked fixes
+
 ## 2026-06-26
 - renamed `aeo-ready` → `search-ready`
 - rewrote `search-ready` as a full SEO + AEO skill: live site fetch in Phase 0, technical SEO layer, authority + directory strategy, programmatic SEO check, web search for citation strategy, implementation cadence, 90-point audit report
