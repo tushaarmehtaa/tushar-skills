@@ -1,9 +1,7 @@
 ---
 name: ship-credits
-description: Scaffold a complete credits/token metering system. Database schema, backend middleware, payment webhooks, frontend state, UI components. Zero to "buy and spend credits" in one session.
-category: monetization
-tags: [credits, payments, monetization, saas, billing, tokens, metering, webhooks]
-author: tushaarmehtaa
+description: Scaffold credit metering with storage, atomic spending, payments, state, UI, promos, and audit history. Use when an app must sell and consume credits.
+license: MIT
 ---
 
 Scaffold a full credits system — database schema, backend middleware, payment webhooks, frontend state, and UI components. Reads the project first, builds on top of what's already there.
@@ -37,100 +35,17 @@ Defaults: 50 free credits, per-action costs you define, Stripe.
 
 ## Phase 2: Database Schema
 
-Create the schema that matches their database.
+Read [references/database-schemas.md](references/database-schemas.md), then implement only the variant matching the detected database.
 
-### For SQL databases (Supabase / Postgres / PlanetScale):
+Every variant must provide:
 
-**Users table** — add credits column if it doesn't exist:
-```sql
--- Add to existing users table
-ALTER TABLE users ADD COLUMN IF NOT EXISTS credits integer DEFAULT [FREE_CREDITS] NOT NULL;
-```
+- A non-negative balance on the user record
+- An immutable credit transaction audit trail
+- Indexes for user and time-based transaction lookup
+- Atomic balance changes that cannot race below zero
+- Optional promo-code storage only when the user requests it
 
-If no users table exists, create one with the minimum needed:
-```sql
-CREATE TABLE users (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  auth_id text UNIQUE NOT NULL,        -- from auth provider (clerk_id, supabase uid, etc.)
-  email text UNIQUE,
-  credits integer DEFAULT [FREE_CREDITS] NOT NULL,
-  created_at timestamptz DEFAULT now()
-);
-```
-
-**Credit transactions table** — this is the audit trail. Non-negotiable:
-```sql
-CREATE TABLE credit_transactions (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid REFERENCES users(id) NOT NULL,
-  amount integer NOT NULL,              -- positive = add, negative = spend
-  reason text NOT NULL,                 -- 'signup_bonus', 'purchase', 'generation', 'refund', 'admin_grant', 'promo_code'
-  metadata jsonb DEFAULT '{}',          -- payment_id, action details, admin notes
-  created_at timestamptz DEFAULT now()
-);
-
-CREATE INDEX idx_credit_tx_user ON credit_transactions(user_id);
-CREATE INDEX idx_credit_tx_created ON credit_transactions(created_at);
-```
-
-**Promo codes table** (optional but recommended):
-```sql
-CREATE TABLE promo_codes (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  code text UNIQUE NOT NULL,
-  credits_amount integer NOT NULL,
-  max_uses integer DEFAULT 1,
-  times_used integer DEFAULT 0,
-  email text,                           -- NULL = anyone can use, set = restricted to this email
-  expires_at timestamptz,               -- NULL = never expires
-  created_at timestamptz DEFAULT now()
-);
-```
-
-### For Prisma:
-
-```prisma
-model User {
-  id        String   @id @default(uuid())
-  authId    String   @unique @map("auth_id")
-  email     String?  @unique
-  credits   Int      @default([FREE_CREDITS])
-  createdAt DateTime @default(now()) @map("created_at")
-
-  transactions CreditTransaction[]
-
-  @@map("users")
-}
-
-model CreditTransaction {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  amount    Int                          // positive = add, negative = spend
-  reason    String                       // signup_bonus, purchase, generation, etc.
-  metadata  Json     @default("{}")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([createdAt])
-  @@map("credit_transactions")
-}
-```
-
-### For MongoDB / Mongoose:
-
-```javascript
-const creditTransactionSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-  amount: { type: Number, required: true },
-  reason: { type: String, required: true },
-  metadata: { type: Schema.Types.Mixed, default: {} },
-  createdAt: { type: Date, default: Date.now, index: true },
-});
-```
-
-**Tell the user**: "Created credit_transactions table. Every credit change is logged — you'll never wonder where credits went."
+Tell the user when the transaction ledger is ready and name the migration or schema file changed.
 
 ## Phase 3: Backend Credit Service
 
@@ -258,116 +173,15 @@ export const CREDIT_PACKS = [
 
 ## Phase 4: Payment Integration
 
-Wire up the payment provider the user chose. Each provider follows the same pattern:
-1. Create a checkout session with credits amount in metadata
-2. Redirect user to hosted checkout page
-3. Receive webhook when payment succeeds
-4. Add credits to user's account
+Read [references/payment-providers.md](references/payment-providers.md), then implement only the provider selected in Phase 1. Do not install a second provider when the project already has one.
 
-### Stripe Integration
+Every provider path must:
 
-**Create checkout endpoint:**
-```
-POST /api/payments/create-checkout
-Body: { credits: number, price_id: string }
-
-Logic:
-  1. Get authenticated user
-  2. Create Stripe Checkout Session:
-     - line_items: the selected credit pack
-     - metadata: { user_id, credits_amount }
-     - success_url: /checkout/success?session_id={CHECKOUT_SESSION_ID}
-     - cancel_url: /pricing
-  3. Return { url: session.url }
-```
-
-**Webhook handler:**
-```
-POST /api/webhooks/stripe
-Headers: stripe-signature
-
-Logic:
-  1. Verify webhook signature using STRIPE_WEBHOOK_SECRET
-  2. Handle event type: checkout.session.completed
-  3. Extract metadata.user_id and metadata.credits_amount
-  4. IDEMPOTENCY CHECK: query credit_transactions for this payment_id
-     - If found → return 200 (already processed)
-  5. Call add_credits(user_id, credits_amount, 'purchase', { payment_id: session.id })
-  6. Return 200
-
-CRITICAL: Always return 200 to prevent retries, even on errors. Log the error instead.
-```
-
-**Environment variables needed:**
-```
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-STRIPE_PRICE_ID_100=price_...    # $5 = 100 credits
-STRIPE_PRICE_ID_250=price_...    # $10 = 250 credits
-```
-
-### Lemon Squeezy Integration
-
-**Create checkout:**
-```
-POST /api/payments/create-checkout
-Body: { variant_id: string, credits: number }
-
-Logic:
-  1. POST to https://api.lemonsqueezy.com/v1/checkouts
-  2. Include custom_data: { user_id, credits }
-  3. Return { url: checkout_url }
-```
-
-**Webhook:**
-```
-POST /api/webhooks/lemonsqueezy
-Headers: x-signature (HMAC hex)
-
-Logic:
-  1. Verify HMAC-SHA256 signature
-  2. Handle event: order_created
-  3. Extract custom_data.user_id, custom_data.credits
-  4. Idempotency check → add_credits
-```
-
-### Dodo Payments Integration
-
-**Create checkout:**
-```
-POST /api/payments/create-checkout
-Body: { amount_cents: number, credits: number }
-
-Logic:
-  1. POST to https://live.dodopayments.com/checkouts
-  2. Headers: Authorization: Bearer DODO_API_KEY
-  3. Include metadata: { user_id, credits }
-  4. Return { checkout_url }
-```
-
-**Webhook:**
-```
-POST /api/webhooks/dodo
-Headers: webhook-id, webhook-timestamp, webhook-signature
-
-Logic:
-  1. Verify Standard Webhooks signature:
-     - Strip "whsec_" prefix from secret
-     - Base64 decode the secret
-     - HMAC-SHA256 over "{webhook-id}.{webhook-timestamp}.{raw_body}"
-     - Compare with webhook-signature header
-  2. Handle event: payment.succeeded
-  3. Extract metadata → idempotency check → add_credits
-```
-
-### Webhook Security Checklist
-
-Regardless of provider, every webhook handler MUST:
-1. **Verify the signature** — never trust unverified webhooks
-2. **Check idempotency** — payment_id should be unique in credit_transactions
-3. **Return 200 always** — even on errors, to prevent infinite retries
-4. **Log everything** — payment_id, user_id, amount, timestamp
-5. **Use raw body for signature verification** — parsed JSON won't match the signature
+1. Put the user identifier and credit amount in checkout metadata.
+2. Verify webhook signatures against the raw request body.
+3. Enforce idempotency with the provider payment or event ID.
+4. Add credits and write the transaction ledger only after verified payment.
+5. Log processing failures while returning the provider-safe acknowledgement described in the reference.
 
 ## Phase 5: Frontend Credit State
 

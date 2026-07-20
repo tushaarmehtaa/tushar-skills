@@ -1,9 +1,7 @@
 ---
 name: segment-users
-description: Read your database schema, generate behavioral user segments with SQL, recommend actions per segment. Find power users, churn risk, inactive users, email cohorts.
-category: analytics
-tags: [segmentation, users, cohorts, churn, analytics]
-author: tushaarmehtaa
+description: Analyze a database schema and generate behavioral user segments, queries, and actions. Use when identifying power users, churn risk, or outreach cohorts.
+license: MIT
 ---
 
 Read your database schema, generate queries for every behavioral segment, and give you the exact action to take with each group. No analytics platform required.
@@ -141,7 +139,7 @@ Total:          [N] users
 ════════════════════════════════════
 ```
 
-If `/ship-email` is installed, offer to generate email templates for each segment after the queries.
+If the ship-email skill is installed, offer to generate email templates for each segment after the queries.
 
 ## Verify
 

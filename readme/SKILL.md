@@ -1,9 +1,7 @@
 ---
 name: readme
-description: Audit an existing README or generate one from scratch. Scores structure, clarity, install instructions, visual appeal. Makes open source projects professional.
-category: workflow
-tags: [readme, documentation, github, open-source, developer-experience]
-author: tushaarmehtaa
+description: Audit or write a project README with install, usage, visuals, badges, contribution, and license sections. Use when documentation needs a release-ready pass.
+license: MIT
 ---
 
 Audit an existing README or generate one from scratch. Output is a README.md ready to commit.

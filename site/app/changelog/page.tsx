@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Header } from "@/components/header";
+import { PageFrame } from "@/components/page-frame";
 import { Footer } from "@/components/footer";
-import { ScrollReveal } from "@/components/scroll-reveal";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "changelog",
-  description: "What's changed in tushar-skills — new skills, updates, and fixes.",
+  description: "What's changed in slashskills — new skills, updates, and fixes.",
 };
 
 type EntryType = "skill" | "update" | "fix" | "site";
@@ -22,6 +22,14 @@ interface Release {
 }
 
 const RELEASES: Release[] = [
+  {
+    date: "2026-07-17",
+    entries: [
+      { type: "update", text: "migrated the library to portable Agent Skills frontmatter with MIT licensing and a synchronized runtime catalog" },
+      { type: "site", text: "added deterministic installers and setup guides for Claude Code, Codex, Cursor, and the capability-gated Claude app path" },
+      { type: "fix", text: "corrected multi-file skill installs, runtime support labels, and misleading chat upload instructions for local coding workflows" },
+    ],
+  },
   {
     date: "2026-07-16",
     entries: [
@@ -128,11 +136,11 @@ const RELEASES: Release[] = [
   },
 ];
 
-const TYPE_STYLES: Record<EntryType, { label: string; color: string; border: string }> = {
-  skill:  { label: "new",    color: "text-[var(--color-accent)]",   border: "border-[var(--color-accent)]/30" },
-  update: { label: "update", color: "text-[#60a5fa]",               border: "border-[#60a5fa]/30" },
-  fix:    { label: "fix",    color: "text-[#a78bfa]",               border: "border-[#a78bfa]/30" },
-  site:   { label: "site",   color: "text-[var(--color-muted)]",    border: "border-[var(--color-border)]" },
+const TYPE_STYLES: Record<EntryType, { label: string; color: string }> = {
+  skill:  { label: "new",    color: "text-[var(--color-accent)]" },
+  update: { label: "update", color: "text-[#60a5fa]" },
+  fix:    { label: "fix",    color: "text-[#a78bfa]" },
+  site:   { label: "site",   color: "text-[var(--color-muted)]" },
 };
 
 function formatDate(dateStr: string) {
@@ -144,8 +152,9 @@ export default function ChangelogPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1 px-6 py-12">
-        <div className="mx-auto max-w-3xl">
+      <main id="main-content" className="flex-1 px-6 py-12">
+        <PageFrame>
+          <div className="max-w-3xl">
           <Link
             href="/"
             className="back-link mb-10 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
@@ -158,7 +167,6 @@ export default function ChangelogPage() {
           </Link>
 
           <div className="animate-fade-up mb-12">
-            <p className="terminal-caption mb-2 text-[var(--color-muted)]">history</p>
             <h1 className="terminal-heading text-4xl font-semibold text-[var(--color-heading)] sm:text-5xl">
               changelog
             </h1>
@@ -168,42 +176,41 @@ export default function ChangelogPage() {
           </div>
 
           <div className="relative space-y-10">
-            {RELEASES.map((release, i) => (
-              <ScrollReveal key={release.date} delay={i * 50}>
-                <div className="grid grid-cols-[7rem_1fr] gap-6 sm:grid-cols-[9rem_1fr]">
-                  {/* Date */}
-                  <div className="pt-0.5">
-                    <time
-                      dateTime={release.date}
-                      className="font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-muted)]"
-                    >
-                      {formatDate(release.date)}
-                    </time>
-                  </div>
-
-                  {/* Entries */}
-                  <div className="terminal-panel divide-y divide-[var(--color-border)]">
-                    {release.entries.map((entry, j) => {
-                      const style = TYPE_STYLES[entry.type];
-                      return (
-                        <div key={j} className="flex items-start gap-3 px-4 py-3">
-                          <span
-                            className={`mt-0.5 shrink-0 border px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.12em] ${style.color} ${style.border}`}
-                          >
-                            {style.label}
-                          </span>
-                          <p className="text-sm leading-relaxed text-[var(--color-text)]">
-                            {entry.text}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+            {RELEASES.map((release) => (
+              <div key={release.date} className="grid grid-cols-1 gap-3 sm:grid-cols-[9rem_1fr] sm:gap-6">
+                {/* Date */}
+                <div className="pt-0.5">
+                  <time
+                    dateTime={release.date}
+                    className="font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-muted)]"
+                  >
+                    {formatDate(release.date)}
+                  </time>
                 </div>
-              </ScrollReveal>
+
+                {/* Entries */}
+                <div className="terminal-panel divide-y divide-[var(--color-border)]">
+                  {release.entries.map((entry, j) => {
+                    const style = TYPE_STYLES[entry.type];
+                    return (
+                      <div key={j} className="flex items-start gap-3 px-4 py-3">
+                        <span
+                          className={`mt-0.5 w-10 shrink-0 text-xs ${style.color}`}
+                        >
+                          {style.label}
+                        </span>
+                        <p className="text-sm leading-relaxed text-[var(--color-text)]">
+                          {entry.text}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             ))}
           </div>
-        </div>
+          </div>
+        </PageFrame>
       </main>
       <Footer />
     </div>

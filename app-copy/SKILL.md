@@ -1,9 +1,7 @@
 ---
 name: app-copy
-description: Audit or generate all UI microcopy — empty states, errors, buttons, onboarding, tooltips, dialogs, loading states, success messages. Replaces placeholder text and makes apps feel polished.
-category: workflow
-tags: [microcopy, ux-writing, ui-copy, empty-states, onboarding]
-author: tushaarmehtaa
+description: Audit or write UI microcopy for empty, error, loading, onboarding, dialog, and success states. Use when polishing product copy or replacing placeholders.
+license: MIT
 ---
 
 Audit existing UI copy or generate all microcopy for an app in one pass. Output is a copy doc organized by screen and interaction type.

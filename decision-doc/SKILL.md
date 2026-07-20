@@ -1,9 +1,7 @@
 ---
 name: decision-doc
-description: Write a structured decision document. Lays out options, tradeoffs, constraints, and picks one. Ends analysis paralysis.
-category: planning
-tags: [decision, tradeoffs, architecture, planning, analysis]
-author: tushaarmehtaa
+description: Facilitate a choice and write a decision document with options, constraints, tradeoffs, and a recommendation. Use when a team is stuck between approaches.
+license: MIT
 ---
 
 Write a decision doc when you're stuck between approaches. Forces a pick instead of endless deliberation.

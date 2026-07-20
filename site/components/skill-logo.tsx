@@ -1,47 +1,24 @@
 import {
   siSupabase,
-  siStripe,
-  siVercel,
   siGithub,
-  siGoogle,
-  siPosthog,
-  siAnthropic,
-  siClerk,
+  siClaudecode,
   siNextdotjs,
   siDodopayments,
   siResend,
-  siMixpanel,
+  siAgentskills,
 } from "simple-icons";
 
 type IconDef = { path: string; hex: string };
 
 const LOGOS: Record<string, { icon: IconDef; color?: string }> = {
-  "deploy-check":            { icon: siVercel,       color: "#ffffff" },
-  "add-analytics":           { icon: siPosthog },
-  "ship-credits":            { icon: siStripe },
   "dodo-webhook":            { icon: siDodopayments },
   "ship-email":              { icon: siResend },
   "readme":                  { icon: siGithub,       color: "#ffffff" },
   "changelog":               { icon: siGithub,       color: "#ffffff" },
-  "frontend-design":         { icon: siAnthropic,    color: "#ffffff" },
-  "model-audit":             { icon: siAnthropic },
-  "seo-ready":               { icon: siGoogle,       color: "#4285f4" },
-  "aeo-ready":               { icon: siGoogle,       color: "#4285f4" },
-  "wire-auth":               { icon: siClerk },
   "supabase":                { icon: siSupabase },
-  "init-claude-md":          { icon: siAnthropic },
+  "init-claude-md":          { icon: siClaudecode },
   "debug-perf":              { icon: siNextdotjs,    color: "#ffffff" },
-  "pricing-page":            { icon: siStripe },
-  "segment-users":           { icon: siMixpanel },
-  "mvp-spec":                { icon: siAnthropic },
-  "product-brief":           { icon: siAnthropic },
-  "make-skill":              { icon: siAnthropic },
-  "economics":               { icon: siAnthropic },
-  "remove-ai-slop":          { icon: siAnthropic },
-};
-
-const FAVICON_LOGOS: Record<string, string> = {
-  "remotion-video": "https://www.remotion.dev/img/logo-small.png",
+  "pricing-page":            { icon: siDodopayments },
 };
 
 export function SkillLogo({
@@ -51,21 +28,18 @@ export function SkillLogo({
   slug: string;
   className?: string;
 }) {
-  const favicon = FAVICON_LOGOS[slug];
-  if (favicon) {
+  if (slug === "remotion-video") {
     return (
       <img
-        src={favicon}
+        src="/brands/remotion.svg"
         alt=""
         aria-hidden="true"
         className={className}
-        style={{ objectFit: "contain" }}
       />
     );
   }
 
-  const match = LOGOS[slug];
-  if (!match) return null;
+  const match = LOGOS[slug] ?? { icon: siAgentskills, color: "#737373" };
 
   const color = match.color ?? `#${match.icon.hex}`;
 

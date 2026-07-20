@@ -1,12 +1,10 @@
 ---
 name: make-skill
-description: Turn any workflow into a Claude Code skill. YAML frontmatter, phase-based instructions, code blocks, verify checklist. Package and publish reusable automation.
-category: meta
-tags: [skills, automation, workflow, meta, claude-code]
-author: tushaarmehtaa
+description: Turn a repeatable workflow into a portable Agent Skill with standard frontmatter, resources, and verification. Use when creating or improving a SKILL.md package.
+license: MIT
 ---
 
-Package any workflow into a Claude Code skill. The output is a SKILL.md ready to publish with `/publish-skill`.
+Package any repeatable workflow as a portable Agent Skill. The output is a self-contained skill directory that coding agents can discover and load from `SKILL.md`.
 
 ## Phase 1: Capture the Workflow
 
@@ -26,25 +24,25 @@ If the current conversation already describes a workflow, extract answers from i
 ```yaml
 ---
 name: skill-name           # lowercase, hyphenated, no spaces
-description: [What it does]. Use when [contexts]. Triggers on requests like "[exact phrase]", "[exact phrase]", "[exact phrase]", or any request for [broader category].
-category: [devops|ai|analytics|auth|payments|seo|marketing|planning|meta|workflow]
-tags: [tag1, tag2, tag3]   # 3-5 lowercase keywords
-author: tushaarmehtaa
+description: [What it does]. Use when [specific contexts or requests].
+license: MIT
 ---
 ```
 
-**The description is the trigger.** Claude uses it to decide when to activate the skill. Make it explicit:
+**The description is the trigger.** Agent runtimes use it to decide when to activate the skill. Make it explicit and keep it at 200 characters or fewer for broad compatibility:
 
 - Include WHAT the skill does AND WHEN to use it
-- List specific trigger phrases in quotes — exact words a user would type
-- End with a broader catch-all pattern
-- Over-specify rather than under-specify — Claude tends to undertrigger
+- Name concrete contexts or request types
+- Prefer a direct `Use when ...` clause
+- Keep runtime-specific requirements out unless the workflow truly depends on one runtime
+
+Use only fields defined by the Agent Skills specification. Add `compatibility` only when the skill has a real environment or runtime constraint. Do not put catalog-only fields such as category, tags, or author in the package frontmatter.
 
 ## Phase 3: Write the Body
 
 The structure that matches the quality bar of the existing skills:
 
-```
+````markdown
 [One-liner opener — what this does, what it outputs. No heading above this.]
 
 ## Phase 1: [First Phase Title]
@@ -57,16 +55,16 @@ The structure that matches the quality bar of the existing skills:
 
 ## Verify
 
-```
+```text
 [ ] [Thing that must be true]
 [ ] [Thing that must be true]
 [ ] [Edge case handled]
 ```
-```
+````
 
 **Rules that don't move:**
 
-- Open with a single sentence — no `# Heading` before it. This is the first thing Claude reads.
+- Open with a single sentence — no `# Heading` before it. This is the first instruction an agent reads.
 - Use `## Phase N: Title` for every major section
 - Use `### 1.1` sub-phases only when Phase 1 needs branching (stack detection, mode selection)
 - Code blocks must contain real, runnable code — not pseudocode
@@ -117,23 +115,34 @@ Write 3–5 prompts that should trigger the skill, and 2 that should NOT:
 
 Use these to validate the description before publishing. If any trigger should fire but doesn't, add the phrase to the description.
 
-## Phase 7: Publish
+## Phase 7: Package and Validate
 
-Use `/publish-skill` to copy the skill into the repo, update the README, build the site, and push.
+Create one directory named exactly after the skill. Put `SKILL.md` at its root and keep optional resources in `references/`, `scripts/`, or `assets/`.
+
+Before handing it off:
+
+1. Parse the YAML frontmatter and confirm the name matches the directory.
+2. Confirm the description says what the skill does and when to use it in 200 characters or fewer.
+3. Check that every relative Markdown link resolves inside the skill directory.
+4. Confirm every bundled reference is linked directly from `SKILL.md` and says when to read it.
+5. Run the repository's skill validator when one exists.
+6. Deliver the complete directory, not only `SKILL.md`, so installations retain bundled resources.
 
 ## Verify
 
 ```
-[ ] YAML frontmatter has all 5 fields (name, description, category, tags, author)
-[ ] Description includes specific trigger phrases in quotes
+[ ] YAML frontmatter uses standard fields only and includes name, description, and license
+[ ] Name matches the lowercase hyphenated directory name
+[ ] Description states what the skill does and when to use it in 200 characters or fewer
 [ ] Body opens with a one-liner — no heading before it
 [ ] All sections use ## Phase N: Title format
 [ ] Code blocks contain real code, not pseudocode
 [ ] Critical constraints are bolded inline
 [ ] Verify section uses bare [ ] items in a fenced code block
 [ ] SKILL.md is under 500 lines
-[ ] Long examples moved to references/guide.md if needed
+[ ] Long examples moved to references/guide.md when needed and linked from SKILL.md
+[ ] Every relative link resolves and every bundled reference is reachable
 [ ] 3-5 test prompts written to validate triggers
 ```
 
-See [references/guide.md](references/guide.md) for full annotated SKILL.md examples, common structural mistakes, and the complete list of valid categories.
+See [references/guide.md](references/guide.md) for an annotated portable skill, a multi-file example, and common structural mistakes.

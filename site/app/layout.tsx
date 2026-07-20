@@ -12,7 +12,7 @@ const siteUrl =
 
 const siteName = "slashskills";
 const siteDescription =
-  "30 skills from real projects. install in Claude Code or upload a zip to the Claude app.";
+  "Reusable Agent Skills from real projects. Install SKILL.md workflows in Claude Code, Codex, or Cursor.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: siteName,
   authors: [{ name: "Tushar Mehta" }],
-  keywords: ["claude code", "skills", "ai", "claude", "terminal", "developer tools"],
+  keywords: ["Agent Skills", "SKILL.md", "Claude Code", "Codex", "Cursor", "AI workflows", "developer tools"],
   openGraph: {
     type: "website",
     siteName,
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "slashskills — workflows saved as terminal skills",
+        alt: "slashskills — workflows saved as Agent Skills",
       },
     ],
   },
@@ -65,6 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="min-h-screen antialiased">
+        <a href="#main-content" className="skip-link">Skip to content</a>
         {children}
         <Analytics />
       </body>

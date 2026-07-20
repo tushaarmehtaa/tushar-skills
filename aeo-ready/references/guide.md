@@ -159,7 +159,7 @@ Open source / Free / [pricing details]
 
 ## Citation Outreach Email Template
 
-Use with `/cold-email` skill format:
+Use with the cold-email skill format:
 
 ```
 Subject: [Product] for your "[Article Title]" roundup

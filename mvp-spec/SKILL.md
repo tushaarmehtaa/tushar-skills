@@ -1,9 +1,7 @@
 ---
 name: mvp-spec
-description: Turn a rough idea into a structured MVP spec. Problem statement, personas, core loop, feature split, data model, API routes, pages, tech stack. Write before coding. Use after `/product-brief` validates the idea — this skill produces the technical spec, not the concept.
-category: planning
-tags: [mvp, spec, planning, product, prd]
-author: tushaarmehtaa
+description: Turn a validated product idea into a scoped MVP spec with features, data model, routes, pages, and stack. Use when planning a buildable v1 before coding.
+license: MIT
 ---
 
 The spec you write before touching any code. Turns a rough idea into a buildable v1 with a clean feature cut, data model, and stack recommendation.
@@ -179,5 +177,3 @@ This prevents scope creep during the build. Reference it every time someone says
 [ ] Scope cut list explicitly names what v1 does NOT build
 [ ] Entire spec is buildable in 1-2 weeks by one person
 ```
-
-See [references/guide.md](references/guide.md) for full example specs, the one-build rule applied to real product ideas, and data model patterns by product type.

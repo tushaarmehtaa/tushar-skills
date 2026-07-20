@@ -1,9 +1,7 @@
 ---
 name: dodo-webhook
-description: Wire Dodo Payments webhooks end-to-end. Standard Webhooks spec signature verification, idempotent processing, subscription lifecycle handling, and database sync.
-category: payments
-tags: [dodo-payments, webhooks, payments, billing, backend]
-author: tushaarmehtaa
+description: Implement secure, idempotent Dodo Payments webhooks and database sync. Use when handling Dodo payment or subscription events in Next.js or FastAPI.
+license: MIT
 ---
 
 Wire Dodo Payments webhooks end-to-end — signature verification, event routing, idempotency, and database sync. Three specific mistakes will silently break this. All three are covered.

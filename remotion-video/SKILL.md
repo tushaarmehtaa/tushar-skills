@@ -1,9 +1,7 @@
 ---
 name: remotion-video
-description: Scaffold a complete Remotion project. Multi-format compositions, scene architecture, spring animations, beat-synced audio, responsive sizing. Demo, promo, social videos.
-category: workflow
-tags: [remotion, video, animation, demo, product-video]
-author: tushaarmehtaa
+description: Scaffold a multi-format Remotion video project with scenes, springs, responsive sizing, and beat-synced audio. Use when creating demos, promos, or social videos.
+license: MIT
 ---
 
 Scaffold a Remotion video project with multi-format compositions, spring animations, beat-synced audio, and reusable scene primitives. Outputs a project you can `npx remotion studio` immediately.

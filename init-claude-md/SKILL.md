@@ -1,9 +1,8 @@
 ---
 name: init-claude-md
-description: Read a project codebase and write a complete CLAUDE.md. Detects stack, commands, key files, and gotchas so Claude has accurate context from the first message.
-category: workflow
-tags: [claude, context, setup, onboarding]
-author: tushaarmehtaa
+description: Inspect a codebase and create a CLAUDE.md with stack, commands, key files, and gotchas. Use when configuring project context specifically for Claude Code.
+license: MIT
+compatibility: Claude Code only. Creates CLAUDE.md project instructions and does not apply to Codex or Cursor.
 ---
 
 Read the project. Write a CLAUDE.md that gives Claude accurate context from the first message.

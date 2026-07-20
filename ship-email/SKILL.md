@@ -1,9 +1,7 @@
 ---
 name: ship-email
-description: Scaffold email infrastructure end-to-end. Provider setup, templates, user segmentation, admin send UI. Transactional and campaign emails.
-category: infrastructure
-tags: [email, resend, transactional, campaigns, deliverability]
-author: tushaarmehtaa
+description: Scaffold Resend email infrastructure with templates, segmentation, campaigns, and unsubscribe handling. Use when adding transactional or campaign email to an app.
+license: MIT
 ---
 
 Scaffold complete email infrastructure — Resend setup, transactional templates, user segmentation, and an admin send UI. Reads the project first, plugs into existing auth and database.

@@ -1,9 +1,7 @@
 ---
 name: pricing-page
-description: Scaffold a complete pricing system. Tier definitions, feature gating, Dodo Payments integration, polished component. Monetize immediately.
-category: monetization
-tags: [pricing, dodo-payments, feature-gating, subscriptions, monetization]
-author: tushaarmehtaa
+description: Scaffold Dodo Payments pricing, tier definitions, feature gates, checkout, billing portal, and UI. Use when monetizing an app with Dodo Payments.
+license: MIT
 ---
 
 Scaffold a complete pricing system — tier definitions, feature gating logic, Dodo Payments checkout, and a frontend pricing component. Reads the project first, wires into the existing stack.
@@ -18,11 +16,11 @@ Before writing anything, read the codebase:
 - **Auth**: How is the current user identified in API routes?
 - **Existing payments**: Check `package.json` for payment provider:
   - `@dodopayments/sdk` → Dodo Payments (use Phase 4 below)
-  - `stripe` → Stripe (use [references/stripe.md](references/stripe.md))
-  - `@lemonsqueezy/lemonsqueezy.js` → Lemon Squeezy (use [references/lemonsqueezy.md](references/lemonsqueezy.md))
-  - None → ask the user which provider to set up
+  - `stripe` → stop and report: "Unsupported provider: this skill only implements Dodo Payments. Keep Stripe unchanged and use a Stripe-specific workflow."
+  - `@lemonsqueezy/lemonsqueezy.js` → stop and report: "Unsupported provider: this skill only implements Dodo Payments. Keep Lemon Squeezy unchanged and use a Lemon Squeezy-specific workflow."
+  - None → confirm that the user wants to set up Dodo Payments
 
-If the codebase already has a payment provider, wire into it — don't install a second one.
+Never install Dodo alongside an existing unsupported provider. Stop before changing files or dependencies.
 
 ### 1.2 Ask the User
 
@@ -35,8 +33,7 @@ Quick decisions:
 2. What's the pricing model? (flat rate / credits / per-seat / usage-based)
 3. Monthly billing, annual, or both?
 4. What features are gated behind paid? (or let me suggest based on the codebase)
-5. Payment provider? (Dodo Payments / Stripe / Lemon Squeezy)
-   Default: Dodo Payments — skip if already detected above.
+5. Confirm Dodo Payments? (This skill does not implement Stripe or Lemon Squeezy.)
 ```
 
 ## Phase 2: Tier Definitions
@@ -143,7 +140,7 @@ function ExportButton({ userPlan }: { userPlan: Plan }) {
 
 ```
 DODO_API_KEY=          # From Dodo dashboard
-DODO_WEBHOOK_SECRET=   # whsec_... format — see /dodo-webhook skill
+DODO_WEBHOOK_SECRET=   # whsec_... format — see the dodo-webhook skill
 DODO_PRODUCT_ID=       # Product ID for Pro plan
 APP_URL=               # Frontend URL for checkout redirect
 ```
@@ -177,7 +174,7 @@ export async function POST(req: Request) {
 }
 ```
 
-**The metadata is how your webhook finds the user.** If `userId` isn't in metadata, the webhook can't update the right account. Use the `/dodo-webhook` skill to wire the webhook handler.
+**The metadata is how your webhook finds the user.** If `userId` isn't in metadata, the webhook can't update the right account. Use the dodo-webhook skill to wire the webhook handler.
 
 ### Customer Portal
 
@@ -330,7 +327,7 @@ Flow 2: Checkout
 [ ] userId is in checkout metadata
 [ ] After payment, redirects to /checkout/success
 
-Flow 3: Webhook (handled by /dodo-webhook skill)
+Flow 3: Webhook (handled by the dodo-webhook skill)
 [ ] Webhook verified and processed
 [ ] User plan updated in database
 [ ] Success page reflects new plan after polling

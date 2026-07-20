@@ -1,9 +1,7 @@
 ---
 name: supabase
-description: Wire up Supabase for a project or extend an existing integration. Covers schema design, RLS policies, migrations, TypeScript type generation, and auth sync with external providers.
-category: devops
-tags: [supabase, postgres, rls, auth, migrations, typescript]
-author: tushaarmehtaa
+description: Set up or extend Supabase schema, RLS policies, migrations, typed clients, and external-auth sync. Use when integrating Supabase or repairing data access.
+license: MIT
 ---
 
 Set up or extend a Supabase integration from schema to type-safe queries.

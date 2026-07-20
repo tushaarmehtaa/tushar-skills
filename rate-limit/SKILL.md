@@ -1,9 +1,7 @@
 ---
 name: rate-limit
-description: Wire rate limiting into any Next.js app. IP-based and user-based sliding window with Upstash Redis. Per-route config, 429 responses with Retry-After headers, middleware and route handler patterns. Use when adding rate limiting, preventing abuse, or protecting AI endpoints from cost overruns.
-category: devops
-tags: [rate-limit, upstash, redis, security, api, abuse-prevention]
-author: tushaarmehtaa
+description: Implement Upstash Redis rate limits with user or IP keys, 429 headers, and safe fallbacks. Use when protecting Next.js routes from abuse or cost overruns.
+license: MIT
 ---
 
 Wire rate limiting into your Next.js app using Upstash Redis sliding window. Reads the project first, applies IP-based limiting by default, user-based when auth is available.

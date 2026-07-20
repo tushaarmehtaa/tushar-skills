@@ -1,0 +1,16 @@
+{
+  "name": "tushar-skills",
+  "private": true,
+  "license": "MIT",
+  "devDependencies": {
+    "gray-matter": "^4.0.3"
+  },
+  "scripts": {
+    "test": "node --test scripts/*.test.mjs",
+    "catalog:sync": "node scripts/sync-readme-catalog.mjs --write",
+    "catalog:check": "node scripts/sync-readme-catalog.mjs --check",
+    "zips:build": "node site/scripts/build-zips.mjs",
+    "validate": "node scripts/validate.mjs",
+    "check": "npm test && npm run zips:build && npm run validate"
+  }
+}
