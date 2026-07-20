@@ -1,7 +1,7 @@
 {
   "name": "slashskills",
   "short_name": "slashskills",
-  "description": "workflows saved as terminal skills",
+  "description": "workflows saved as Agent Skills",
   "start_url": "/",
   "display": "browser",
   "background_color": "#0a0a0a",

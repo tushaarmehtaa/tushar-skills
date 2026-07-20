@@ -1,9 +1,7 @@
 ---
 name: file-upload
-description: Wire file uploads end-to-end. Presigned URLs for Vercel Blob, Cloudflare R2, or AWS S3. File type validation, size limits, upload progress, frontend state. Use when adding file upload to any Next.js app.
-category: infrastructure
-tags: [file-upload, vercel-blob, r2, s3, storage, presigned-urls]
-author: tushaarmehtaa
+description: Implement direct-to-storage uploads with validation, progress, and presigned URLs for Vercel Blob, R2, or S3. Use when adding uploads to a Next.js app.
+license: MIT
 ---
 
 Wire file uploads using presigned URLs — client uploads directly to storage, your server never touches the bytes. Reads the project first, picks the right storage provider.

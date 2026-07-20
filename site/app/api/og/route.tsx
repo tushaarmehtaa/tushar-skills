@@ -71,31 +71,6 @@ export async function GET(request: NextRequest) {
               gap: "20px",
             }}
           >
-            {/* Skill badge */}
-            {!isHomepage && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: "rgba(245,158,11,0.08)",
-                    border: "1px solid rgba(245,158,11,0.25)",
-                    color: "#f59e0b",
-                    fontSize: "12px",
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    padding: "4px 10px",
-                    borderRadius: "3px",
-                  }}
-                >
-                  skill
-                </div>
-              </div>
-            )}
-
             {/* Title */}
             {isHomepage ? (
               <div
@@ -136,7 +111,7 @@ export async function GET(request: NextRequest) {
                     letterSpacing: "-0.04em",
                   }}
                 >
-                  terminal skills.
+                  Agent Skills.
                 </span>
               </div>
             ) : (
@@ -179,7 +154,7 @@ export async function GET(request: NextRequest) {
                   lineHeight: 1.5,
                 }}
               >
-                30 skills from real projects. install in Claude Code or upload a zip to the Claude app.
+                Reusable SKILL.md workflows for Claude Code, Codex, and Cursor.
               </div>
             )}
           </div>
@@ -205,7 +180,7 @@ export async function GET(request: NextRequest) {
             >
               {isHomepage
                 ? "npx skills add tushaarmehtaa/tushar-skills"
-                : "claude code skills"}
+                : "portable Agent Skill"}
             </span>
             <div
               style={{

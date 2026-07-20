@@ -1,9 +1,7 @@
 ---
 name: gtm-launch
-description: Plan a product launch end-to-end. Research, positioning, distribution, launch assets, post-launch analysis. Covers Product Hunt, X, Reddit, HN, community channels.
-category: marketing
-tags: [gtm, launch, product-hunt, positioning, distribution]
-author: tushaarmehtaa
+description: Research and build a product launch plan covering positioning, assets, distribution, metrics, and follow-up. Use when preparing or reviewing a launch.
+license: MIT
 ---
 
 Turn a product idea, repo, or rough positioning into a launch plan. Research first, separate facts from opinions, find the warm distribution loops, build the assets, feed the roadmap with what the launch needs.

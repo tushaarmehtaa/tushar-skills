@@ -1,9 +1,7 @@
 ---
 name: og-image
-description: Wire dynamic Open Graph image generation and meta tags. Links look professional on Twitter/X, LinkedIn, Slack, and all link-preview surfaces.
-category: marketing
-tags: [og-image, open-graph, meta-tags, twitter-card, social-preview]
-author: tushaarmehtaa
+description: Implement dynamic Open Graph images and social metadata across static or framework routes. Use when shared links lack accurate or professional previews.
+license: MIT
 ---
 
 Dynamic OG image generation and the full meta tag stack — one route, all pages covered. Your links stop looking broken when someone shares them.

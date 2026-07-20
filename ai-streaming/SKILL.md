@@ -1,9 +1,7 @@
 ---
 name: ai-streaming
-description: Wire streaming AI responses end-to-end. Vercel AI SDK useChat/useCompletion, SSE from route handlers, loading states, error handling, abort on unmount. Use when building any chat, generation, or streaming AI feature in Next.js.
-category: ai
-tags: [ai, streaming, vercel-ai-sdk, sse, chat, generation, llm]
-author: tushaarmehtaa
+description: Implement end-to-end AI response streaming in Next.js with Vercel AI SDK, aborts, errors, and loading states. Use when building chat or generation features.
+license: MIT
 ---
 
 Wire streaming AI responses from model to browser. Uses the Vercel AI SDK — the right abstraction for Next.js AI apps. Reads the project first, wires into existing auth and model config.
@@ -220,7 +218,7 @@ function StreamingOutput({ isLoading, completion }: { isLoading: boolean; comple
 
 ## Phase 6: Wire Credits Into the Stream
 
-If the project uses a credits system (from `/ship-credits`), deduct after the stream finishes — not before:
+If the project uses a credits system created with the ship-credits skill, deduct after the stream finishes — not before:
 
 ```typescript
 // In the route handler onFinish callback:
@@ -249,5 +247,3 @@ Never deduct before the stream — if the model errors on token 1, the user lost
 [ ] Test: start generation, navigate away — confirm model call aborts in server logs
 [ ] Test: trigger an error — confirm error state renders, not a frozen UI
 ```
-
-See [references/guide.md](references/guide.md) for tool calling patterns, multi-modal (image) inputs, and streaming with structured output.

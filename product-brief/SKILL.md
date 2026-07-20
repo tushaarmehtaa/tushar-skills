@@ -1,12 +1,10 @@
 ---
 name: product-brief
-description: Write a one-page product brief before coding. What you're building, who it's for, what v1 doesn't include. Lighter than a full spec.
-category: planning
-tags: [product, brief, planning, scope, v1]
-author: tushaarmehtaa
+description: Facilitate and write a one-page product brief covering audience, problem, solution, v1 scope, and exclusions. Use when clarifying an idea before technical planning.
+license: MIT
 ---
 
-Write a one-page product brief before any code gets written. Lighter than `/mvp-spec`. One page. Forces clarity.
+Write a one-page product brief before any code gets written. Lighter than the mvp-spec skill. One page. Forces clarity.
 
 ## How to start
 
@@ -107,7 +105,7 @@ Once all five have real answers, write the brief. If any answer is still vague a
 
 Write the brief as a markdown file. Offer to save it as `BRIEF.md` in the project root.
 
-If `/mvp-spec` would be useful as a next step (the idea is validated and needs full technical planning), say so. The brief comes first — the spec comes after.
+If the mvp-spec skill would be useful next because the idea is validated and needs technical planning, say so. The brief comes first — the spec comes after.
 
 ## Verify
 

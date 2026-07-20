@@ -1,9 +1,7 @@
 ---
 name: seo-ready
-description: Full SEO and AEO audit. Scores every signal, fixes missing meta tags, structured data, sitemap, robots.txt, llms.txt, AI crawler rules. One command to be discoverable by Google and AI.
-category: seo
-tags: [seo, aeo, meta-tags, structured-data, sitemap, robots-txt, llms-txt, open-graph, schema, ai-search]
-author: tushaarmehtaa
+description: Audit and fix SEO and AEO across metadata, schema, sitemaps, robots, content, and AI crawler access. Use when preparing a site for search discovery.
+license: MIT
 ---
 
 Full SEO and AEO audit that reads the codebase, scores every signal, and applies the fixes. Not just a report — it changes the files.
@@ -427,25 +425,25 @@ Remaining (manual):
 
 The user can specify a mode to add domain-specific checks:
 
-**`/seo-ready --mode b2b`** — adds checks for:
+**Mode: `b2b`** — adds checks for:
 - Documentation/help center in subdirectory (not subdomain)
 - Technical content depth (code examples, API references)
 - Comparison/alternatives pages
 - Integration pages
 
-**`/seo-ready --mode commerce`** — adds checks for:
+**Mode: `commerce`** — adds checks for:
 - Product schema with price, availability, reviews
 - Review/rating structured data
 - Category page optimization
 - Image optimization for product photos
 
-**`/seo-ready --mode local`** — adds checks for:
+**Mode: `local`** — adds checks for:
 - LocalBusiness schema
 - NAP (Name, Address, Phone) consistency
 - Google Business Profile link
 - Location-specific content
 
-**`/seo-ready --mode saas`** — adds checks for:
+**Mode: `saas`** — adds checks for:
 - WebApplication schema
 - Pricing page structured data
 - Feature comparison tables

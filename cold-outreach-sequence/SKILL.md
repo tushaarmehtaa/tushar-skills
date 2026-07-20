@@ -1,12 +1,10 @@
 ---
 name: cold-outreach-sequence
-description: Generate multi-touch cold outreach sequences — email + LinkedIn multichannel, signal-based personalization, widening gap timing. Full campaign where each touch has a distinct job.
-category: workflow
-tags: [cold-email, outreach, sequence, sales, follow-up, linkedin, multichannel]
-author: tushaarmehtaa
+description: Create signal-based, multi-touch email and LinkedIn outreach sequences with widening cadence. Use when one cold email is not enough to reach a prospect.
+license: MIT
 ---
 
-Generate complete multi-touch outreach sequences. Not one email — a campaign where each touch has a different angle, a specific send day, and a clear job. Use `/cold-email` for single emails. Use this when one email isn't enough.
+Generate complete multi-touch outreach sequences. Not one email — a campaign where each touch has a different angle, a specific send day, and a clear job. Use the cold-email skill for single emails. Use this when one email isn't enough.
 
 2026 baseline: average cold email reply rate is 3.43%. Signal-based multichannel sequences (email + LinkedIn) hit 15–25%. The gap is personalization and channels.
 
@@ -219,3 +217,5 @@ Last note. Completely understand if the timing's off — happy to revisit whenev
 [ ] Send days fall Tue–Thu where possible
 [ ] LinkedIn touches (if multichannel) are channel-appropriate — no pitch in connection request
 ```
+
+See [references/guide.md](references/guide.md) for complete SaaS and partnership sequences, subject-line tests, research hooks, send timing, and skip rules.

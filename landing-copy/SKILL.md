@@ -1,9 +1,7 @@
 ---
 name: landing-copy
-description: Audit or rewrite landing page copy. Headlines, subheadlines, value props, CTAs, social proof, FAQ. Converts weak sections into high-performing copy.
-category: marketing
-tags: [copy, landing-page, conversion, marketing, headlines]
-author: tushaarmehtaa
+description: Audit, rewrite, or generate landing-page copy across headlines, CTAs, proof, features, and objections. Use when improving conversion messaging for a product page.
+license: MIT
 ---
 
 Audit existing copy and rewrite the weak parts, or generate a full landing page from scratch.

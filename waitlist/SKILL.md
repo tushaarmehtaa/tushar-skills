@@ -1,9 +1,7 @@
 ---
 name: waitlist
-description: Scaffold a complete waitlist. Email capture, duplicate detection, confirmation email via Resend, Supabase storage, admin view of signups, optional referral tracking. Use when launching a product, building an audience, or gating early access.
-category: marketing
-tags: [waitlist, email, launch, early-access, resend, supabase]
-author: tushaarmehtaa
+description: Scaffold a waitlist with storage, duplicate handling, confirmation email, admin access, and optional referrals. Use when collecting signups before or during launch.
+license: MIT
 ---
 
 Scaffold a complete waitlist — email capture, storage, confirmation email, and an admin view. Reads the project first, wires into existing stack.

@@ -1,9 +1,7 @@
 ---
 name: cold-email
-description: Write cold emails that get replies. Signal-based formula, current deliverability requirements, and send limits that keep you out of spam. Covers investors, employers, mentors, partners.
-category: marketing
-tags: [email, outreach, sales, networking, founders]
-author: tushaarmehtaa
+description: Write short, signal-based cold emails and follow-ups with deliverability checks. Use when contacting investors, employers, mentors, customers, or partners.
+license: MIT
 ---
 
 Write cold emails that get responses. Ultra-short, signal-based, specific. Under 80 words — everything else is noise.

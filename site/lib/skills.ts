@@ -1,51 +1,49 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import {
+  CATALOG,
+  CATALOG_SLUGS,
+  type CatalogEntry,
+  type SkillSlug,
+} from "./catalog";
 
-export interface Skill {
-  slug: string;
+export interface Skill extends CatalogEntry {
+  slug: SkillSlug;
   name: string;
   description: string;
-  category: string;
-  tags: string[];
-  author: string;
+  license: string;
+  compatibility?: string;
   content: string;
-  installCommand: string;
-  claudeAppCommand: string;
 }
 
 const REPO_ROOT = path.join(process.cwd(), "..");
-const EXCLUDED = new Set(["site", "node_modules", ".git", ".github", ".next"]);
 
 let skillsCache: Skill[] | null = null;
 
 export function getAllSkills(): Skill[] {
   if (skillsCache) return skillsCache;
 
-  const entries = fs.readdirSync(REPO_ROOT, { withFileTypes: true });
-
-  skillsCache = entries
-    .filter((e) => e.isDirectory() && !EXCLUDED.has(e.name))
-    .map((e) => {
-      const skillPath = path.join(REPO_ROOT, e.name, "SKILL.md");
-      if (!fs.existsSync(skillPath)) return null;
+  skillsCache = CATALOG_SLUGS.map((slug) => {
+      const skillPath = path.join(REPO_ROOT, slug, "SKILL.md");
+      if (!fs.existsSync(skillPath)) {
+        throw new Error(`Catalog skill is missing SKILL.md: ${slug}`);
+      }
 
       const raw = fs.readFileSync(skillPath, "utf-8");
       const { data, content } = matter(raw);
+      const catalog = CATALOG[slug];
 
       return {
-        slug: e.name,
-        name: data.name || e.name,
+        slug,
+        name: data.name || slug,
         description: data.description || "",
-        category: data.category || "workflow",
-        tags: data.tags || [],
-        author: data.author || "tushaarmehtaa",
+        license: data.license || "MIT",
+        compatibility: data.compatibility,
         content,
-        installCommand: `curl -sL https://raw.githubusercontent.com/tushaarmehtaa/tushar-skills/main/${e.name}/SKILL.md -o ~/.claude/skills/${e.name}/SKILL.md --create-dirs`,
-        claudeAppCommand: `git clone https://github.com/tushaarmehtaa/tushar-skills.git && cd tushar-skills && zip -r ../${e.name}.zip ${e.name}`,
+        ...catalog,
       } satisfies Skill;
     })
-    .filter((s): s is Skill => s !== null)
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return skillsCache;

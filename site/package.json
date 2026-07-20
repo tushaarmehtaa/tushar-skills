@@ -1,17 +1,20 @@
 {
   "name": "site",
   "version": "1.0.0",
-  "description": "",
+  "type": "module",
+  "description": "Reusable Agent Skills for Claude Code, Codex, and Cursor.",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/build-zips.mjs && next build",
+    "build": "node scripts/build-zips.mjs && node ../scripts/validate.mjs && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:browser": "playwright test"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.3.3",
@@ -28,5 +31,8 @@
     "simple-icons": "^16.23.0",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
   }
 }

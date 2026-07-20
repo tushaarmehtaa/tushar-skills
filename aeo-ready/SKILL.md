@@ -1,9 +1,7 @@
 ---
 name: aeo-ready
-description: Focused AI search optimization — llms.txt, AI crawler rules, structured data for answer engines. Use this for AI-only optimization. Use `/seo-ready` for the full audit (traditional SEO + AEO combined).
-category: seo
-tags: [aeo, schema, llms-txt, structured-data, ai-search]
-author: tushaarmehtaa
+description: Audit and improve AI search visibility with schema, llms.txt, crawler rules, and answer-first content. Use when optimizing a site for answer engines and AI citations.
+license: MIT
 ---
 
 Google crawls pages and ranks them. AI engines synthesize answers from sources they've already ingested. Getting cited is a different problem: structure, authority, access, and content that directly answers questions.
@@ -341,7 +339,7 @@ Article | Publication | Updated | Accepts Submissions | Pitch Angle
 [title] | [pub]       | [date]  | yes/no              | [one sentence]
 ```
 
-Use `/cold-email` to draft the outreach.
+Use the cold-email skill to draft the outreach.
 
 ---
 
@@ -382,3 +380,5 @@ List the 3 highest-impact fixes in order.
 [ ] Citation strategy table output
 [ ] Audit report with scores output
 ```
+
+See [references/guide.md](references/guide.md) for complete schema sets, advanced llms.txt patterns, citation outreach, and content-gap templates.

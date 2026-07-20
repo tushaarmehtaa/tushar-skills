@@ -1,0 +1,282 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import {
+  generateInstallCommand,
+  generateRemoveCommand,
+  invocationFor,
+} from "../lib/agents.ts";
+import { CATALOG } from "../lib/catalog.ts";
+import { RUNTIME_BRANDS } from "../lib/runtime-brands.ts";
+import {
+  filterDirectorySkills,
+  getDirectoryCategories,
+  type DirectorySkill,
+} from "../lib/skill-directory.ts";
+import {
+  createAgentPanelViewModel,
+  createAgentPanelViewModels,
+  createClaudeAppViewModel,
+} from "../lib/skill-presentation.ts";
+
+test("install commands are generated centrally for every runtime", () => {
+  assert.equal(
+    generateInstallCommand({ skill: "remove-ai-slop" }),
+    "npx skills add tushaarmehtaa/tushar-skills --skill remove-ai-slop",
+  );
+  assert.equal(
+    generateInstallCommand({ skill: "remove-ai-slop", agent: "claude-code" }),
+    "npx skills add tushaarmehtaa/tushar-skills --skill remove-ai-slop -g -a claude-code -y",
+  );
+  assert.equal(
+    generateInstallCommand({ skill: "remove-ai-slop", agent: "codex" }),
+    "npx skills add tushaarmehtaa/tushar-skills --skill remove-ai-slop -g -a codex -y",
+  );
+  assert.equal(
+    generateInstallCommand({ skill: "remove-ai-slop", agent: "cursor" }),
+    "npx skills add tushaarmehtaa/tushar-skills --skill remove-ai-slop -g -a cursor -y",
+  );
+});
+
+test("support labels distinguish evidence from installability", () => {
+  const unsupported = createAgentPanelViewModel({
+    slug: "init-claude-md",
+    agentId: "codex",
+    support: CATALOG["init-claude-md"].support,
+    capabilities: CATALOG["init-claude-md"].capabilities,
+  });
+  assert.deepEqual(unsupported.supportBadge, {
+    status: "unsupported",
+    label: "unsupported",
+    tone: "danger",
+  });
+  assert.equal(unsupported.install.visible, false);
+  assert.equal(unsupported.install.command, null);
+  assert.match(unsupported.unsupportedMessage ?? "", /Claude Code/);
+  assert.deepEqual(unsupported.capabilitySection.items, [
+    { id: "filesystem", label: "project files" },
+    { id: "shell", label: "terminal commands" },
+  ]);
+
+  const tested = createAgentPanelViewModel({
+    slug: "remove-ai-slop",
+    agentId: "cursor",
+    support: { "claude-code": "tested", codex: "tested", cursor: "tested" },
+    capabilities: CATALOG["remove-ai-slop"].capabilities,
+  });
+  assert.deepEqual(tested.supportBadge, {
+    status: "tested",
+    label: "runtime tested",
+    tone: "success",
+  });
+  assert.equal(tested.install.visible, true);
+  assert.match(tested.install.command ?? "", /-a cursor -y$/);
+
+  const untested = createAgentPanelViewModel({
+    slug: "ship-email",
+    agentId: "claude-code",
+    support: CATALOG["ship-email"].support,
+    capabilities: CATALOG["ship-email"].capabilities,
+  });
+  assert.deepEqual(untested.supportBadge, {
+    status: "untested",
+    label: "available to install",
+    tone: "warning",
+  });
+});
+
+test("capability labels render user-facing access requirements", () => {
+  const panel = createAgentPanelViewModel({
+    slug: "remove-ai-slop",
+    agentId: "claude-code",
+    support: CATALOG["remove-ai-slop"].support,
+    capabilities: CATALOG["remove-ai-slop"].capabilities,
+  });
+  assert.equal(panel.capabilitySection.visible, true);
+  assert.equal(panel.capabilitySection.label, "required access");
+  assert.deepEqual(panel.capabilitySection.items, [
+    { id: "filesystem", label: "project files" },
+    { id: "shell", label: "terminal commands" },
+    { id: "browser", label: "browser access" },
+  ]);
+
+  const noCapabilities = createAgentPanelViewModel({
+    slug: "decision-doc",
+    agentId: "claude-code",
+    support: CATALOG["decision-doc"].support,
+    capabilities: [],
+  });
+  assert.equal(noCapabilities.capabilitySection.visible, false);
+  assert.deepEqual(noCapabilities.capabilitySection.items, []);
+});
+
+test("Claude app gating matches the exact chat-capable whitelist", () => {
+  const actual = Object.entries(CATALOG)
+    .filter(([, entry]) => createClaudeAppViewModel({
+      surfaces: entry.surfaces,
+      capabilities: entry.capabilities,
+      support: entry.support,
+    }).showUploadInstructions)
+    .map(([slug]) => slug)
+    .sort();
+  const expected = [
+    "cold-email",
+    "cold-outreach-sequence",
+    "decision-doc",
+    "economics",
+    "gtm-launch",
+    "landing-copy",
+    "make-skill",
+    "mvp-spec",
+    "pitch-vc",
+    "pmarca",
+    "product-brief",
+    "teardown",
+  ].sort();
+  assert.deepEqual(actual, expected);
+
+  assert.deepEqual(createClaudeAppViewModel({
+    surfaces: CATALOG["decision-doc"].surfaces,
+    capabilities: CATALOG["decision-doc"].capabilities,
+    support: CATALOG["decision-doc"].support,
+  }), {
+    available: true,
+    state: "available",
+    heading: "Claude app",
+    description: "This workflow can run in chat using the files and context you provide. Download its complete ZIP, then upload it from Claude's Skills settings.",
+    downloadLabel: "↓ download ZIP",
+    analyticsAgent: "claude-app",
+    showUploadInstructions: true,
+  });
+
+  const localOnly = createClaudeAppViewModel({
+    surfaces: CATALOG["deploy-check"].surfaces,
+    capabilities: CATALOG["deploy-check"].capabilities,
+    support: CATALOG["deploy-check"].support,
+  });
+  assert.equal(localOnly.state, "unavailable");
+  assert.equal(localOnly.heading, "local coding agent required");
+  assert.equal(
+    localOnly.description,
+    "This skill requires project files and terminal commands. Uploading it to a chat app does not provide equivalent execution.",
+  );
+  assert.equal(localOnly.analyticsAgent, "inspection");
+  assert.equal(localOnly.showUploadInstructions, false);
+
+  const runtimeSpecific = createClaudeAppViewModel({
+    surfaces: CATALOG["init-claude-md"].surfaces,
+    capabilities: CATALOG["init-claude-md"].capabilities,
+    support: CATALOG["init-claude-md"].support,
+  });
+  assert.equal(runtimeSpecific.heading, "Claude Code required");
+  assert.equal(
+    runtimeSpecific.description,
+    "This workflow runs only in Claude Code and requires project files and terminal commands. Uploading it to a chat app does not provide equivalent execution.",
+  );
+
+  const browserDependent = createClaudeAppViewModel({
+    surfaces: CATALOG["remove-ai-slop"].surfaces,
+    capabilities: CATALOG["remove-ai-slop"].capabilities,
+    support: CATALOG["remove-ai-slop"].support,
+  });
+  assert.equal(
+    browserDependent.description,
+    "This skill requires project files, terminal commands, and browser access. Uploading it to a chat app does not provide equivalent execution.",
+  );
+});
+
+test("every agent tab view model controls a persistent unique panel", () => {
+  const panels = createAgentPanelViewModels({
+    slug: "decision-doc",
+    support: CATALOG["decision-doc"].support,
+    capabilities: CATALOG["decision-doc"].capabilities,
+  });
+  assert.equal(panels.length, 3);
+  assert.equal(new Set(panels.map((panel) => panel.tabId)).size, 3);
+  assert.equal(new Set(panels.map((panel) => panel.panelId)).size, 3);
+  for (const panel of panels) {
+    assert.equal(panel.tabId, `agent-tab-${panel.id}`);
+    assert.equal(panel.panelId, `agent-panel-${panel.id}`);
+  }
+});
+
+test("invocation syntax follows each runtime", () => {
+  assert.equal(invocationFor("claude-code", "decision-doc"), "/decision-doc");
+  assert.equal(invocationFor("codex", "decision-doc"), "$decision-doc or /skills");
+  assert.equal(invocationFor("cursor", "decision-doc"), "/decision-doc");
+});
+
+test("remove commands put the skill before agent flags", () => {
+  assert.equal(
+    generateRemoveCommand("decision-doc", "codex"),
+    "npx skills remove decision-doc -g -a codex -y",
+  );
+  assert.equal(
+    generateRemoveCommand("decision-doc", "codex", "project"),
+    "npx skills remove decision-doc -a codex -y",
+  );
+});
+
+test("every product surface has a local runtime brand mark", () => {
+  assert.deepEqual(Object.keys(RUNTIME_BRANDS).sort(), [
+    "agent-skills",
+    "chatgpt",
+    "claude-app",
+    "claude-code",
+    "codex",
+    "cursor",
+  ]);
+
+  for (const brand of Object.values(RUNTIME_BRANDS)) {
+    assert.ok(brand.icon.path.length > 20, `${brand.id} has an SVG path`);
+    assert.match(brand.icon.viewBox, /^[-.\d ]+$/);
+    assert.match(brand.colorOnDark, /^#[0-9A-F]{6}$/i);
+    assert.match(brand.sourceUrl, /^https:\/\//);
+  }
+});
+
+test("skill directory filters preserve repository order and combine criteria", () => {
+  const skills = [
+    {
+      slug: "remove-ai-slop",
+      name: "remove-ai-slop",
+      category: "workflow",
+      description: "Audit interface patterns with rendered evidence.",
+      localAvailable: true,
+      claudeAppReady: false,
+    },
+    {
+      slug: "decision-doc",
+      name: "decision-doc",
+      category: "planning",
+      description: "Write a structured decision document.",
+      localAvailable: true,
+      claudeAppReady: true,
+    },
+    {
+      slug: "remotion-video",
+      name: "remotion-video",
+      category: "workflow",
+      description: "Create product videos with Remotion.",
+      localAvailable: true,
+      claudeAppReady: false,
+    },
+  ] satisfies DirectorySkill[];
+
+  assert.deepEqual(getDirectoryCategories(skills), ["planning", "workflow"]);
+  assert.deepEqual(
+    filterDirectorySkills(skills, {
+      query: "document",
+      category: "planning",
+      surface: "chat",
+    }).map((skill) => skill.slug),
+    ["decision-doc"],
+  );
+  assert.deepEqual(
+    filterDirectorySkills(skills, {
+      query: "",
+      category: "workflow",
+      surface: "local",
+    }).map((skill) => skill.slug),
+    ["remove-ai-slop", "remotion-video"],
+  );
+});

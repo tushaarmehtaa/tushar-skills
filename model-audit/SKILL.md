@@ -1,9 +1,7 @@
 ---
 name: model-audit
-description: Print the complete AI model routing table with cost-per-call math, cache opportunities, batch API candidates, and right-sizing flags. Run whenever you change models or pricing.
-category: ai
-tags: [ai, models, cost, routing, audit, caching, batch]
-author: tushaarmehtaa
+description: Audit every AI model call, map routing and cost, and flag caching, batching, or right-sizing opportunities. Use when models, usage, or pricing change.
+license: MIT
 ---
 
 Audit every AI model call in the codebase. Output a routing table with real cost math, not just model names.

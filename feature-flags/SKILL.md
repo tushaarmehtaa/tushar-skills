@@ -1,9 +1,7 @@
 ---
 name: feature-flags
-description: Wire PostHog feature flags into a Next.js app. Server-side evaluation in route handlers and server components, client-side with useFeatureFlagEnabled, local override for dev. Use when shipping behind a flag, rolling out to a percentage, or A/B testing.
-category: ai
-tags: [feature-flags, posthog, rollout, ab-testing, experiments]
-author: tushaarmehtaa
+description: Implement PostHog feature flags across Next.js server and client code with local overrides. Use when gating features, staging rollouts, or running experiments.
+license: MIT
 ---
 
 Wire PostHog feature flags end-to-end — server-side evaluation, client-side hook, and local dev overrides. Reads the project first, extends the existing PostHog setup if present.
@@ -22,7 +20,7 @@ grep -r "posthog" src/ app/ --include="*.ts" --include="*.tsx" -l 2>/dev/null | 
 
 - **`posthog-js` installed + provider found?** → PostHog client-side already set up. Add server-side SDK.
 - **`posthog-node` already installed?** → extend it, don't reinstall.
-- **Nothing?** → wire up PostHog from scratch (run `/add-analytics` first for the base setup, then return here).
+- **Nothing?** → wire up PostHog from scratch with the add-analytics skill first, then return here.
 
 ## Phase 2: Install Server SDK
 
@@ -30,7 +28,7 @@ grep -r "posthog" src/ app/ --include="*.ts" --include="*.tsx" -l 2>/dev/null | 
 npm install posthog-node
 ```
 
-Add to `.env.example` (already set if `/add-analytics` was run):
+Add to `.env.example` (already set if the add-analytics skill was run):
 ```
 NEXT_PUBLIC_POSTHOG_KEY=
 POSTHOG_API_KEY=   # same as POSTHOG_KEY — use for server-side calls
@@ -190,5 +188,3 @@ For A/B tests: use "Multiple Variants" instead of boolean. Then use `getFeatureF
 [ ] Test: set FLAG_[KEY]=true in .env.local — confirm feature is shown
 [ ] PostHog flag set to 0% rollout first — expand after confirming it works
 ```
-
-See [references/guide.md](references/guide.md) for multivariate (A/B) flag patterns, flag-based redirects in middleware, and experiment tracking with PostHog insights.

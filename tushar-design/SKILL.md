@@ -1,7 +1,7 @@
 ---
 name: tushar-design
-description: "Build production-grade frontends in Tushar's personal design system — dark, precise, opinionated. Interactive: asks 4 questions (foundation, accent, typography, motion) before writing any code. Rooted in a real design system derived from real projects, not AI-generated aesthetics. Use when building web components, pages, dashboards, landing pages, or any UI in Tushar's orbit."
-license: Complete terms in LICENSE.txt
+description: Build web interfaces with Tushar's configurable design system and interaction rules. Use when creating pages, dashboards, or components in this style.
+license: MIT
 ---
 
 This skill builds production-grade frontends rooted in one specific, proven design system. It is opinionated by default. Before writing any code, ask 4 short questions to configure the system for the project. The output is always a complete, functional implementation — never a mockup, never a wireframe.

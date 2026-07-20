@@ -1,9 +1,7 @@
 ---
 name: teardown
-description: Analyze an existing product, landing page, or app. What works, what doesn't, what to steal. Competitive intelligence and design patterns in one pass.
-category: workflow
-tags: [teardown, analysis, competitor, landing-page, product-thinking]
-author: tushaarmehtaa
+description: Analyze a product, landing page, or app across positioning, copy, proof, UX, and design. Use when studying a competitor or extracting reusable tactics.
+license: MIT
 ---
 
 Pick apart a product, landing page, or app. Find what works, what doesn't, and what's worth stealing for your own project.
@@ -43,7 +41,7 @@ What do you understand about this product in 5 seconds? Can a stranger tell what
 How does this product position itself? What category does it claim? What's the implicit "us vs. them"? Who are they NOT for? The best products are polarizing — they pick a side.
 
 **3. Copy Quality**
-Score the headline, subheadline, CTAs, feature copy, and microcopy. Use the same rules as `/landing-copy`:
+Score the headline, subheadline, CTAs, feature copy, and microcopy. Use the same rules as the landing-copy skill:
 - Headline under 10 words?
 - Specific benefit over vague promise?
 - CTAs pass the "I want to ___" test?

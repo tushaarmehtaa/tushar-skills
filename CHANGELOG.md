@@ -6,6 +6,10 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- migrated every package to standard Agent Skills frontmatter with an MIT license, portable descriptions, reachable bundled references, and a shared capability/support catalog
+- corrected deterministic installers for Claude Code, Codex, and Cursor, while limiting Claude app upload guidance to chat-capable workflows
+- added runtime guides, a compatibility matrix, synchronized README/ZIP generation, and repository validation for package integrity
+
 ## 2026-07-16
 - rebuilt `/remove-ai-slop` with hard bans for unmistakable design and copy slop plus evidence-based scoring for contextual patterns
 - added rendered and cross-route convergence audits, page-role and UI-state checks, copy clustering, claim provenance, and approval-safe blocked fixes

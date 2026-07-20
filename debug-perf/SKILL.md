@@ -1,9 +1,7 @@
 ---
 name: debug-perf
-description: Diagnose and fix performance issues in Next.js dev environments and production apps. Covers hot reload loops, CPU spikes, bundle bloat, slow server components, and missing caches.
-category: devops
-tags: [performance, nextjs, turbopack, webpack, bundle, caching, cpu]
-author: tushaarmehtaa
+description: Diagnose and fix Next.js development and production performance problems. Use when investigating hot-reload loops, CPU spikes, bundle bloat, or slow server work.
+license: MIT
 ---
 
 Diagnose slow or overheating Next.js apps. Works in dev and production.

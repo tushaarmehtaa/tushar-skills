@@ -1,9 +1,7 @@
 ---
 name: remove-ai-slop
-description: Audit and remove unmistakable AI design and copy slop, then score softer patterns by repetition, product fit, and rendered evidence before applying approved fixes.
-category: workflow
-tags: [design, copy, audit, refactor, quality]
-author: tushaarmehtaa
+description: Audit and remove AI-like design and copy defaults using rendered evidence and confidence scoring. Use when reviewing an interface for generic or repetitive patterns.
+license: MIT
 ---
 
 Audit the actual interface, not just a list of fashionable motifs. Remove unmistakable defaults forcefully. Judge softer patterns by whether they fit the product, content, and brand or merely repeat a learned template.
