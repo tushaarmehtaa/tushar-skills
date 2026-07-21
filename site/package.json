@@ -2,7 +2,7 @@
   "name": "site",
   "version": "1.0.0",
   "type": "module",
-  "description": "Reusable Agent Skills for Claude Code, Codex, and Cursor.",
+  "description": "Reusable Agent Skills for Codex, Claude Code, and Cursor.",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",

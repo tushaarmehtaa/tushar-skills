@@ -9,7 +9,7 @@ import { getAllSkills } from "@/lib/skills";
 
 export const metadata: Metadata = {
   title: "Agent Skills compatibility",
-  description: "Compare slashskills support, required capabilities, and surfaces across Claude Code, Codex, Cursor, and the Claude app.",
+  description: "Compare slashskills support, required capabilities, and surfaces across Codex, Claude Code, Cursor, and the Claude app.",
 };
 
 const STATUS_MARKS: Record<SupportStatus, string> = {
@@ -38,7 +38,7 @@ export default function CompatibilityPage() {
               Compatibility
             </h1>
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">
-              Compare runtime support and required access for every skill. Installation does not grant tools or permissions.
+              Compare runtime support and required access for every skill. Codex leads the local-agent path; installation does not grant tools or permissions.
             </p>
           </header>
 

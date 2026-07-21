@@ -154,7 +154,7 @@ export async function GET(request: NextRequest) {
                   lineHeight: 1.5,
                 }}
               >
-                Reusable SKILL.md workflows for Claude Code, Codex, and Cursor.
+                Reusable SKILL.md workflows for Codex, Claude Code, and Cursor.
               </div>
             )}
           </div>

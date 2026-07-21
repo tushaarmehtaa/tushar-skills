@@ -15,17 +15,6 @@ export interface AgentDefinition {
 }
 
 export const AGENTS = {
-  "claude-code": {
-    id: "claude-code",
-    label: "Claude Code",
-    cliTarget: "claude-code",
-    invocation: "/<skill>",
-    guideRoute: "/guides/claude-code",
-    officialDocsUrl: "https://code.claude.com/docs/en/skills",
-    projectDirectory: ".claude/skills",
-    globalDirectory: "~/.claude/skills",
-    reload: "Edits are live. Restart only after adding a new top-level skill directory.",
-  },
   codex: {
     id: "codex",
     label: "Codex",
@@ -36,6 +25,17 @@ export const AGENTS = {
     projectDirectory: ".agents/skills",
     globalDirectory: "~/.codex/skills",
     reload: "Skills reload automatically; restart Codex if a newly added skill is missing.",
+  },
+  "claude-code": {
+    id: "claude-code",
+    label: "Claude Code",
+    cliTarget: "claude-code",
+    invocation: "/<skill>",
+    guideRoute: "/guides/claude-code",
+    officialDocsUrl: "https://code.claude.com/docs/en/skills",
+    projectDirectory: ".claude/skills",
+    globalDirectory: "~/.claude/skills",
+    reload: "Edits are live. Restart only after adding a new top-level skill directory.",
   },
   cursor: {
     id: "cursor",

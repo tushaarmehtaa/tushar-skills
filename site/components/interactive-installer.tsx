@@ -16,7 +16,7 @@ export function InteractiveInstaller({
   skills: readonly { slug: string; name: string }[];
 }) {
   const [selectedSkill, setSelectedSkill] = useState("");
-  const [selectedAgent, setSelectedAgent] = useState<AgentId | "">("");
+  const [selectedAgent, setSelectedAgent] = useState<AgentId | "">("codex");
   const [selectedScope, setSelectedScope] = useState<InstallScope | "">("");
   const allSkillsCommand = generateInstallCommand();
   const canGenerateCommand = selectedAgent !== "" && selectedScope !== "";
@@ -68,7 +68,9 @@ export function InteractiveInstaller({
           >
             <option value="">Choose runtime</option>
             {AGENT_IDS.map((agentId) => (
-              <option key={agentId} value={agentId}>{AGENTS[agentId].label}</option>
+              <option key={agentId} value={agentId}>
+                {AGENTS[agentId].label}{agentId === "codex" ? " (default)" : ""}
+              </option>
             ))}
           </select>
         </label>

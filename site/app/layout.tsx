@@ -12,7 +12,7 @@ const siteUrl =
 
 const siteName = "slashskills";
 const siteDescription =
-  "Reusable Agent Skills from real projects. Install SKILL.md workflows in Claude Code, Codex, or Cursor.";
+  "Reusable Agent Skills from real projects. Install SKILL.md workflows in Codex, Claude Code, or Cursor.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: siteName,
   authors: [{ name: "Tushar Mehta" }],
-  keywords: ["Agent Skills", "SKILL.md", "Claude Code", "Codex", "Cursor", "AI workflows", "developer tools"],
+  keywords: ["Agent Skills", "SKILL.md", "Codex", "Claude Code", "Cursor", "AI workflows", "developer tools"],
   openGraph: {
     type: "website",
     siteName,

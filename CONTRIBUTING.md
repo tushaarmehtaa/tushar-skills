@@ -116,4 +116,4 @@ For every local runtime marked `tested`, add one matching entry to [`runtime-ver
 
 ## V1 boundaries
 
-V1 distribution targets local Agent Skills for Claude Code, Codex, and Cursor. Claude app upload is limited to chat-capable workflows. Copilot, Gemini, and OpenAI plugin packaging are intentionally outside v1; propose those as separate scoped changes rather than adding undocumented install paths.
+V1 distribution targets local Agent Skills for Codex, Claude Code, and Cursor. Claude app upload is limited to chat-capable workflows. Copilot, Gemini, and OpenAI plugin packaging are intentionally outside v1; propose those as separate scoped changes rather than adding undocumented install paths.

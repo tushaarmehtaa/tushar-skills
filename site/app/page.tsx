@@ -57,7 +57,7 @@ export default function Home() {
             </h1>
             <p className="mt-8 max-w-3xl text-base leading-relaxed sm:text-lg">
               Reusable <code className="font-[family-name:var(--font-mono)] text-[var(--color-heading)]">SKILL.md</code> workflows from real projects. Install them in
-              <span className="sr-only"> Claude Code, Codex, or Cursor</span>
+              <span className="sr-only"> Codex, Claude Code, or Cursor</span>
               <span aria-hidden="true" className="mx-2 inline-flex translate-y-[7px] items-center gap-1.5">
                 {AGENT_IDS.map((agentId) => (
                   <RuntimeLogoTile key={agentId} runtime={agentId} size="sm" decorative />
@@ -86,7 +86,7 @@ export default function Home() {
                     <code className="hidden font-[family-name:var(--font-mono)] text-xs text-[var(--color-heading)] lg:block">SKILL.md</code>
                   </div>
                   <span aria-hidden="true" className="bg-[var(--color-surface)] px-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)]">→</span>
-                  <div role="img" aria-label="Claude Code, Codex, and Cursor" className="flex items-center gap-1.5 bg-[var(--color-surface)] pl-2">
+                  <div role="img" aria-label="Codex, Claude Code, and Cursor" className="flex items-center gap-1.5 bg-[var(--color-surface)] pl-2">
                     {AGENT_IDS.map((agentId) => (
                       <RuntimeLogoTile key={agentId} runtime={agentId} size="sm" decorative />
                     ))}

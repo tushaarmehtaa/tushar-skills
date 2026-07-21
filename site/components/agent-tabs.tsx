@@ -152,7 +152,7 @@ export function AgentTabs({
   support: Record<AgentId, SupportStatus>;
   capabilities: readonly Capability[];
 }) {
-  const [selected, setSelected] = useState<AgentId>("claude-code");
+  const [selected, setSelected] = useState<AgentId>("codex");
   const tabsRef = useRef<Record<string, HTMLButtonElement | null>>({});
   const panels = createAgentPanelViewModels({ slug, support, capabilities });
 

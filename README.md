@@ -2,7 +2,7 @@
 
 **workflows saved as Agent Skills.**
 
-Reusable SKILL.md workflows from real projects. Install them in Claude Code, Codex, or Cursor; see what each skill needs and where it has been tested.
+Reusable SKILL.md workflows from real projects. Install them in Codex, Claude Code, or Cursor; see what each skill needs and where it has been tested.
 
 **[Browse the directory →](https://slashskills.vercel.app)**
 
@@ -108,7 +108,7 @@ Validation covers standard frontmatter, naming, licensing, description portabili
 
 ## V1 scope
 
-V1 supports local Agent Skills in Claude Code, Codex, and Cursor, plus a capability-gated Claude app path for chat workflows. Copilot, Gemini, and OpenAI plugin packaging are outside v1.
+V1 supports local Agent Skills in Codex, Claude Code, and Cursor, plus a capability-gated Claude app path for chat workflows. Copilot, Gemini, and OpenAI plugin packaging are outside v1.
 
 ## License
 
