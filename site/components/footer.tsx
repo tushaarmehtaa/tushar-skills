@@ -10,7 +10,7 @@ export function Footer() {
             <p>
               built by{" "}
               <a
-                href="https://twitter.com/tushaarmehtaa"
+                href="https://tushaarmehtaa.xyz"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-text)] transition-colors hover:text-[var(--color-heading)]"
@@ -18,6 +18,14 @@ export function Footer() {
                 @tushaarmehtaa
               </a>
             </p>
+            <a
+              href="https://tushaarmehtaa.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="-my-2 flex min-h-8 items-center py-2 text-[var(--color-text)] transition-colors hover:text-[var(--color-heading)]"
+            >
+              I build things on the internet →
+            </a>
             <a
               href="https://agentskills.io"
               target="_blank"
