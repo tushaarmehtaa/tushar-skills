@@ -6,6 +6,8 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- made Codex the primary local runtime across the installer, documentation, and site defaults
+- linked the site footer to [tushaarmehtaa.xyz](https://tushaarmehtaa.xyz)
 - migrated every package to standard Agent Skills frontmatter with an MIT license, portable descriptions, reachable bundled references, and a shared capability/support catalog
 - corrected deterministic installers for Claude Code, Codex, and Cursor, while limiting Claude app upload guidance to chat-capable workflows
 - added runtime guides, a compatibility matrix, synchronized README/ZIP generation, and repository validation for package integrity
@@ -15,8 +17,7 @@ All notable changes to tushar-skills.
 - added rendered and cross-route convergence audits, page-role and UI-state checks, copy clustering, claim provenance, and approval-safe blocked fixes
 
 ## 2026-06-26
-- renamed `aeo-ready` → `search-ready`
-- rewrote `search-ready` as a full SEO + AEO skill: live site fetch in Phase 0, technical SEO layer, authority + directory strategy, programmatic SEO check, web search for citation strategy, implementation cadence, 90-point audit report
+- rewrote `aeo-ready` as a full SEO + AEO skill: live site fetch in Phase 0, technical SEO layer, authority + directory strategy, programmatic SEO check, web search for citation strategy, implementation cadence, 90-point audit report
 
 ## 2026-06-22
 - added `/tushar-design` skill

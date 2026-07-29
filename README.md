@@ -23,11 +23,11 @@ The catalog records those differences explicitly:
 Select a package, runtime, and scope in the directory installer. For a deterministic global install, target the runtime explicitly:
 
 ```bash
-# Claude Code
-npx skills add tushaarmehtaa/tushar-skills --skill <slug> -g -a claude-code -y
-
 # Codex
 npx skills add tushaarmehtaa/tushar-skills --skill <slug> -g -a codex -y
+
+# Claude Code
+npx skills add tushaarmehtaa/tushar-skills --skill <slug> -g -a claude-code -y
 
 # Cursor
 npx skills add tushaarmehtaa/tushar-skills --skill <slug> -g -a cursor -y
@@ -35,8 +35,8 @@ npx skills add tushaarmehtaa/tushar-skills --skill <slug> -g -a cursor -y
 
 Omit `--skill <slug>` to install every skill. See the runtime guides for project-scoped installs, invocation, updates, removal, reload behavior, and known limitations:
 
-- [Claude Code guide](https://slashskills.vercel.app/guides/claude-code)
 - [Codex guide](https://slashskills.vercel.app/guides/codex)
+- [Claude Code guide](https://slashskills.vercel.app/guides/claude-code)
 - [Cursor guide](https://slashskills.vercel.app/guides/cursor)
 - [Compatibility matrix](https://slashskills.vercel.app/compatibility)
 

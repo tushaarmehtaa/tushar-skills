@@ -23,6 +23,13 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-07-21",
+    entries: [
+      { type: "site", text: "made Codex the primary local runtime across the installer, documentation, and site defaults" },
+      { type: "site", text: "linked the footer to tushaarmehtaa.xyz" },
+    ],
+  },
+  {
     date: "2026-07-17",
     entries: [
       { type: "update", text: "migrated the library to portable Agent Skills frontmatter with MIT licensing and a synchronized runtime catalog" },
@@ -41,8 +48,7 @@ const RELEASES: Release[] = [
   {
     date: "2026-06-26",
     entries: [
-      { type: "update", text: "renamed aeo-ready → search-ready" },
-      { type: "update", text: "rewrote search-ready as a full SEO + AEO skill — live site fetch, technical SEO layer, directory strategy, programmatic SEO check, web search for citations, implementation cadence, 90-point audit report" },
+      { type: "update", text: "rewrote aeo-ready as a full SEO + AEO skill — live site fetch, technical SEO layer, directory strategy, programmatic SEO check, web search for citations, implementation cadence, 90-point audit report" },
     ],
   },
   {
