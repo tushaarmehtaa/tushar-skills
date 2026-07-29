@@ -227,7 +227,9 @@ test("every product surface has a local runtime brand mark", () => {
   ]);
 
   for (const brand of Object.values(RUNTIME_BRANDS)) {
-    assert.ok(brand.icon.path.length > 20, `${brand.id} has an SVG path`);
+    const hasSvgPath = "path" in brand.icon && brand.icon.path.length > 20;
+    const hasLocalImage = "imageSrc" in brand.icon && brand.icon.imageSrc.startsWith("/");
+    assert.ok(hasSvgPath || hasLocalImage, `${brand.id} has a local runtime mark`);
     assert.match(brand.icon.viewBox, /^[-.\d ]+$/);
     assert.match(brand.colorOnDark, /^#[0-9A-F]{6}$/i);
     assert.match(brand.sourceUrl, /^https:\/\//);

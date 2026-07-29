@@ -47,7 +47,16 @@ export function RuntimeLogo({
         ...style,
       }}
     >
-      <path d={brand.icon.path} fill="currentColor" />
+      {"imageSrc" in brand.icon ? (
+        <image
+          href={brand.icon.imageSrc}
+          width="100%"
+          height="100%"
+          preserveAspectRatio="xMidYMid meet"
+        />
+      ) : (
+        <path d={brand.icon.path} fill="currentColor" />
+      )}
     </svg>
   );
 }

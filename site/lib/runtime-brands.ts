@@ -9,10 +9,9 @@ import type { AgentId } from "./catalog.ts";
 
 export type RuntimeBrandId = AgentId | "claude-app" | "chatgpt" | "agent-skills";
 
-export interface RuntimeBrandIcon {
-  viewBox: string;
-  path: string;
-}
+export type RuntimeBrandIcon =
+  | { viewBox: string; path: string; imageSrc?: never }
+  | { viewBox: string; imageSrc: string; path?: never };
 
 export interface RuntimeBrandDefinition {
   id: RuntimeBrandId;
@@ -50,10 +49,12 @@ export const RUNTIME_BRANDS = {
     id: "codex",
     label: "Codex",
     shortLabel: "Codex",
-    colorOnDark: "#F7F7F4",
-    icon: OPENAI_BLOSSOM,
-    sourceUrl:
-      "https://images.ctfassets.net/kftzwdyauwt9/3hUGLn3ypllZ0oa01qOYVq/28e8188e6f11b84c3e876569d492734f/Blossom_Light.svg",
+    colorOnDark: "#8DA4FF",
+    icon: {
+      viewBox: "0 0 1024 1024",
+      imageSrc: "/brands/codex.png",
+    },
+    sourceUrl: "https://chatgpt.com/features/codex-get-started/",
   },
   cursor: {
     id: "cursor",
