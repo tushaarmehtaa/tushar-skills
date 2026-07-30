@@ -6,6 +6,8 @@ import { SkillDetail } from "@/components/skill-detail";
 import { getAllSkills, getSkill } from "@/lib/skills";
 import { renderMarkdown } from "@/lib/markdown";
 
+const siteUrl = "https://www.slashskills.xyz";
+
 export function generateStaticParams() {
   return getAllSkills().map((skill) => ({ skill: skill.slug }));
 }
@@ -58,9 +60,27 @@ export default async function SkillPage({
   if (!skill) notFound();
 
   const contentHtml = renderMarkdown(skill.content);
+  const skillUrl = `${siteUrl}/${skill.slug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: `${skill.name} Agent Skill`,
+    description: skill.description,
+    url: skillUrl,
+    author: {
+      "@type": "Person",
+      name: skill.author,
+    },
+    keywords: skill.tags.join(", "),
+    about: skill.tags.map((name) => ({ "@type": "Thing", name })),
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
       <main id="main-content" className="flex-1 px-6 py-12">
         <div className="mx-auto w-full max-w-5xl min-w-0">

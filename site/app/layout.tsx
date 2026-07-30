@@ -6,9 +6,8 @@ import "./globals.css";
 const GeistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const GeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+// Keep a single public identity. Preview deployments must never become canonical.
+const siteUrl = "https://www.slashskills.xyz";
 
 const siteName = "slashskills";
 const siteDescription =
@@ -49,6 +48,28 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  description: siteDescription,
+  publisher: {
+    "@type": "Person",
+    name: "Tushar Mehta",
+  },
 };
 
 export const viewport: Viewport = {
@@ -64,6 +85,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-screen antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
         {children}

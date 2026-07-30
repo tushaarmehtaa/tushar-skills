@@ -1,0 +1,29 @@
+# slashskills
+
+> Portable, practical Agent Skills from real projects.
+
+slashskills is an open library of reusable SKILL.md workflows for coding agents and chat-based AI tools. Each skill is a self-contained folder with instructions and, when useful, scripts, references, and assets.
+
+## What it is for
+
+- Founders and developers who want repeatable AI-assisted workflows.
+- Coding-agent users working in Codex, Claude Code, or Cursor.
+- Chat users who want reusable planning, writing, launch, and analysis workflows.
+
+## Key pages
+
+- [Skill directory](https://www.slashskills.xyz/): Browse all skills and copy an install command.
+- [Compatibility](https://www.slashskills.xyz/compatibility): Runtime support and required capabilities for every skill.
+- [Changelog](https://www.slashskills.xyz/changelog): Recent product and library updates.
+
+## Representative skills
+
+- [remove-ai-slop](https://www.slashskills.xyz/remove-ai-slop): Audit and improve AI-generated product copy and interfaces.
+- [gtm-launch](https://www.slashskills.xyz/gtm-launch): Plan a product launch and distribution.
+- [seo-ready](https://www.slashskills.xyz/seo-ready): Implement technical SEO and AI-search foundations.
+- [aeo-ready](https://www.slashskills.xyz/aeo-ready): Improve answer-engine discoverability with clear, structured content.
+- [pitch-vc](https://www.slashskills.xyz/pitch-vc): Prepare a startup fundraising pitch.
+
+## Source
+
+- [GitHub repository](https://github.com/tushaarmehtaa/tushar-skills)
