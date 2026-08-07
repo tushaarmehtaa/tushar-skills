@@ -12,9 +12,9 @@ test.describe("slashskills platform", () => {
     await expectNoDocumentOverflow(page);
     await expect(page.getByRole("heading", { name: "workflows saved as Agent Skills." })).toBeVisible();
 
-    await page.goto("/cold-outreach-sequence");
+    await page.goto("/cold-outreach");
     await expectNoDocumentOverflow(page);
-    await expect(page.getByRole("heading", { name: "cold-outreach-sequence" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "cold-outreach" })).toBeVisible();
 
     await page.goto("/compatibility");
     await expectNoDocumentOverflow(page);

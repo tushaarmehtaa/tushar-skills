@@ -45,7 +45,7 @@ Good Agent Skills make the execution contract concrete without assuming one vend
 - Inspect existing project state before changing files or installing dependencies.
 - State required capabilities such as filesystem, shell, browser, network, or user files in the catalog.
 - Use relative links for bundled resources and verify that each target exists.
-- Refer to another workflow as “the `product-brief` skill,” not as a runtime-specific slash command.
+- Refer to another workflow as “the `product-spec` skill,” not as a runtime-specific slash command.
 - Put runtime-specific behavior behind detection or a clear `compatibility` constraint.
 - Stop with a clear unsupported-path message when the documented workflow cannot safely handle a detected provider.
 - Finish with proportional verification and distinguish work performed from work the user still needs to do.

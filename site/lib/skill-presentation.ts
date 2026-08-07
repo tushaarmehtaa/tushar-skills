@@ -94,9 +94,7 @@ export function createAgentPanelViewModel({
     },
     unsupportedMessage: canInstall
       ? null
-      : slug === "init-claude-md"
-        ? "This workflow creates Claude Code's CLAUDE.md context file and is intentionally runtime-specific. Use it with Claude Code."
-        : `${slug} is intentionally unsupported in ${agent.label}.`,
+      : `${slug} is intentionally unsupported in ${agent.label}.`,
   };
 }
 

@@ -1,7 +1,6 @@
 import {
   siSupabase,
   siGithub,
-  siClaudecode,
   siNextdotjs,
   siDodopayments,
   siResend,
@@ -11,14 +10,12 @@ import {
 type IconDef = { path: string; hex: string };
 
 const LOGOS: Record<string, { icon: IconDef; color?: string }> = {
-  "dodo-webhook":            { icon: siDodopayments },
-  "ship-email":              { icon: siResend },
+  "payments-with-dodo":      { icon: siDodopayments },
+  "email-with-resend":       { icon: siResend },
   "readme":                  { icon: siGithub,       color: "#ffffff" },
   "changelog":               { icon: siGithub,       color: "#ffffff" },
   "supabase":                { icon: siSupabase },
-  "init-claude-md":          { icon: siClaudecode },
-  "debug-perf":              { icon: siNextdotjs,    color: "#ffffff" },
-  "pricing-page":            { icon: siDodopayments },
+  "performance-diagnosis":   { icon: siNextdotjs,    color: "#ffffff" },
 };
 
 export function SkillLogo({
@@ -28,7 +25,7 @@ export function SkillLogo({
   slug: string;
   className?: string;
 }) {
-  if (slug === "remotion-video") {
+  if (slug === "demo-video") {
     return (
       <img
         src="/brands/remotion.svg"

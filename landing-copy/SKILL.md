@@ -4,7 +4,7 @@ description: Audit, rewrite, or generate landing-page copy across headlines, CTA
 license: MIT
 ---
 
-Audit existing copy and rewrite the weak parts, or generate a full landing page from scratch.
+Audit existing copy or write a page from a defensible product claim. Read [claim-first writing](references/claim-first.md) before generate mode or any substantial rewrite. Do not polish a sentence until the audience, failure state, mechanism, and available proof are clear.
 
 ## Phase 1: Determine Mode
 
@@ -18,8 +18,12 @@ Gather anything missing before writing:
 
 - What does the product do? (one sentence)
 - Who is the target user? (specific, not "developers" or "businesses")
-- What's the key differentiator?
+- What breaks without the product?
+- What mechanism makes the outcome possible?
+- What promise would constrain the company if published?
 - Any social proof — numbers, testimonials, logos?
+
+Write the core claim once in plain, unpolished language and confirm it when the user is available. Every headline and section must compress or prove that claim.
 
 ## Phase 2: The 7 Dimensions
 
@@ -120,7 +124,7 @@ Don't dodge the hard questions. Direct answers build trust faster than polished 
 
 **Second CTA** — Your second button has context the first one didn't. Pair it with a reminder of the value. Not just another "Sign Up" — reinforce why.
 
-**Founder's note (optional but powerful)** — A personal narrative: you had the same problem, you built the solution, here's what changed. "People buy from people." If this section makes the reader think "I want that too," it's working.
+**Founder's note (optional)** — A personal narrative: you had the same problem, you built the solution, here's what changed. Use it only when the story supplies evidence or context the rest of the page cannot.
 
 ## Phase 5.5: Conversational Copy Rules
 

@@ -23,6 +23,15 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-08-07",
+    entries: [
+      { type: "update", text: "refocused the catalog from 38 narrow packages to 30 outcome-driven skills with clear public names" },
+      { type: "update", text: "merged search, outreach, AI cost, Dodo billing, product specification, fundraising, and launch workflows without dropping their detailed references" },
+      { type: "update", text: "expanded AI development, analytics, experiments, agent instructions, UI copy, landing copy, social sharing, and demo video guidance" },
+      { type: "fix", text: "removed the standalone file-upload package and synchronized routes, ZIPs, compatibility metadata, tests, and documentation" },
+    ],
+  },
+  {
     date: "2026-07-21",
     entries: [
       { type: "site", text: "made Codex the primary local runtime across the installer, documentation, and site defaults" },

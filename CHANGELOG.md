@@ -6,6 +6,10 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- consolidated the library from 38 narrow packages into 30 outcome-driven skills with generic public names
+- merged SEO and AI search into `search-ready`; model usage and economics into `ai-cost-audit`; cold email and sequences into `cold-outreach`; product brief and MVP planning into `product-spec`; founder frameworks and VC pitching into `fundraising`; Dodo pricing and webhooks into `payments-with-dodo`; and launch planning with waitlist implementation into `product-launch`
+- expanded `ai-product-development`, `analytics`, `product-experiments`, `agent-instructions`, `ui-copy`, `landing-copy`, `social-sharing`, and `demo-video` beyond their earlier single-feature scopes
+- retired the standalone `file-upload` package and synchronized the catalog, generated README, downloads, runtime metadata, tests, and site copy
 - made Codex the primary local runtime across the installer, documentation, and site defaults
 - linked the site footer to [tushaarmehtaa.xyz](https://tushaarmehtaa.xyz)
 - migrated every package to standard Agent Skills frontmatter with an MIT license, portable descriptions, reachable bundled references, and a shared capability/support catalog

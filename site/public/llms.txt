@@ -19,10 +19,11 @@ slashskills is an open library of reusable SKILL.md workflows for coding agents 
 ## Representative skills
 
 - [remove-ai-slop](https://www.slashskills.xyz/remove-ai-slop): Audit and improve AI-generated product copy and interfaces.
-- [gtm-launch](https://www.slashskills.xyz/gtm-launch): Plan a product launch and distribution.
-- [seo-ready](https://www.slashskills.xyz/seo-ready): Implement technical SEO and AI-search foundations.
-- [aeo-ready](https://www.slashskills.xyz/aeo-ready): Improve answer-engine discoverability with clear, structured content.
-- [pitch-vc](https://www.slashskills.xyz/pitch-vc): Prepare a startup fundraising pitch.
+- [search-ready](https://www.slashskills.xyz/search-ready): Improve technical SEO, content, structured data, and AI-search visibility.
+- [ai-product-development](https://www.slashskills.xyz/ai-product-development): Build production AI features with reliable UX and evaluation.
+- [payments-with-dodo](https://www.slashskills.xyz/payments-with-dodo): Implement the complete Dodo Payments billing lifecycle.
+- [product-spec](https://www.slashskills.xyz/product-spec): Turn an idea into a clear brief and buildable v1 specification.
+- [demo-video](https://www.slashskills.xyz/demo-video): Script and build product demos and technical explainers with Remotion.
 
 ## Source
 

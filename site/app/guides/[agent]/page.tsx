@@ -19,7 +19,7 @@ const EXAMPLE_SKILL = "remove-ai-slop";
 const LIMITATIONS: Record<AgentId, readonly string[]> = {
   "claude-code": [
     "Tool use still follows your Claude Code permission settings; installing a skill does not grant silent shell or network access.",
-    "The init-claude-md skill is intentionally Claude Code-specific. Other catalog skills are portable unless their page says otherwise.",
+    "The agent-instructions skill can maintain CLAUDE.md alongside shared or runtime-specific project instructions.",
     "Claude app uploads are a separate chat surface and do not replace local project execution.",
   ],
   codex: [

@@ -38,25 +38,6 @@ test("install commands are generated centrally for every runtime", () => {
 });
 
 test("support labels distinguish evidence from installability", () => {
-  const unsupported = createAgentPanelViewModel({
-    slug: "init-claude-md",
-    agentId: "codex",
-    support: CATALOG["init-claude-md"].support,
-    capabilities: CATALOG["init-claude-md"].capabilities,
-  });
-  assert.deepEqual(unsupported.supportBadge, {
-    status: "unsupported",
-    label: "unsupported",
-    tone: "danger",
-  });
-  assert.equal(unsupported.install.visible, false);
-  assert.equal(unsupported.install.command, null);
-  assert.match(unsupported.unsupportedMessage ?? "", /Claude Code/);
-  assert.deepEqual(unsupported.capabilitySection.items, [
-    { id: "filesystem", label: "project files" },
-    { id: "shell", label: "terminal commands" },
-  ]);
-
   const tested = createAgentPanelViewModel({
     slug: "remove-ai-slop",
     agentId: "cursor",
@@ -72,10 +53,10 @@ test("support labels distinguish evidence from installability", () => {
   assert.match(tested.install.command ?? "", /-a cursor -y$/);
 
   const untested = createAgentPanelViewModel({
-    slug: "ship-email",
+    slug: "email-with-resend",
     agentId: "claude-code",
-    support: CATALOG["ship-email"].support,
-    capabilities: CATALOG["ship-email"].capabilities,
+    support: CATALOG["email-with-resend"].support,
+    capabilities: CATALOG["email-with-resend"].capabilities,
   });
   assert.deepEqual(untested.supportBadge, {
     status: "untested",
@@ -119,18 +100,16 @@ test("Claude app gating matches the exact chat-capable whitelist", () => {
     .map(([slug]) => slug)
     .sort();
   const expected = [
-    "cold-email",
-    "cold-outreach-sequence",
+    "ai-cost-audit",
+    "cold-outreach",
     "decision-doc",
-    "economics",
-    "gtm-launch",
+    "fundraising",
     "landing-copy",
-    "make-skill",
-    "mvp-spec",
-    "pitch-vc",
-    "pmarca",
-    "product-brief",
-    "teardown",
+    "product-spec",
+    "product-teardown",
+    "skill-creator",
+    "ui-copy",
+    "user-insights",
   ].sort();
   assert.deepEqual(actual, expected);
 
@@ -161,17 +140,6 @@ test("Claude app gating matches the exact chat-capable whitelist", () => {
   );
   assert.equal(localOnly.analyticsAgent, "inspection");
   assert.equal(localOnly.showUploadInstructions, false);
-
-  const runtimeSpecific = createClaudeAppViewModel({
-    surfaces: CATALOG["init-claude-md"].surfaces,
-    capabilities: CATALOG["init-claude-md"].capabilities,
-    support: CATALOG["init-claude-md"].support,
-  });
-  assert.equal(runtimeSpecific.heading, "Claude Code required");
-  assert.equal(
-    runtimeSpecific.description,
-    "This workflow runs only in Claude Code and requires project files and terminal commands. Uploading it to a chat app does not provide equivalent execution.",
-  );
 
   const browserDependent = createClaudeAppViewModel({
     surfaces: CATALOG["remove-ai-slop"].surfaces,
@@ -255,8 +223,8 @@ test("skill directory filters preserve repository order and combine criteria", (
       claudeAppReady: true,
     },
     {
-      slug: "remotion-video",
-      name: "remotion-video",
+      slug: "demo-video",
+      name: "demo-video",
       category: "workflow",
       description: "Create product videos with Remotion.",
       localAvailable: true,
@@ -279,6 +247,6 @@ test("skill directory filters preserve repository order and combine criteria", (
       category: "workflow",
       surface: "local",
     }).map((skill) => skill.slug),
-    ["remove-ai-slop", "remotion-video"],
+    ["remove-ai-slop", "demo-video"],
   );
 });

@@ -17,7 +17,7 @@ import {
   readCatalog,
 } from "./repository.mjs";
 
-const EXPECTED_SKILL_COUNT = 38;
+const EXPECTED_SKILL_COUNT = 30;
 const ALLOWED_FRONTMATTER = new Set([
   "name",
   "description",
@@ -47,18 +47,16 @@ const CATALOG_FIELDS = [
 ];
 const RUNTIME_VERIFICATION_PATH = path.join(REPO_ROOT, "runtime-verification.json");
 const CLAUDE_APP_SKILLS = new Set([
-  "cold-email",
-  "cold-outreach-sequence",
+  "ai-cost-audit",
+  "cold-outreach",
   "decision-doc",
-  "economics",
-  "gtm-launch",
+  "fundraising",
   "landing-copy",
-  "make-skill",
-  "mvp-spec",
-  "pitch-vc",
-  "pmarca",
-  "product-brief",
-  "teardown",
+  "product-spec",
+  "product-teardown",
+  "skill-creator",
+  "ui-copy",
+  "user-insights",
 ]);
 
 const errors = [];
@@ -169,15 +167,6 @@ function validateFrontmatter(slug, parsed) {
   ) {
     addError(`${skillPath}: compatibility must contain between 1 and 500 characters`);
   }
-  if (slug === "init-claude-md") {
-    if (
-      typeof data.compatibility !== "string" ||
-      !/Claude Code/i.test(data.compatibility)
-    ) {
-      addError(`${skillPath}: compatibility must identify this skill as Claude Code-specific`);
-    }
-  }
-
   if (Object.hasOwn(data, "metadata")) {
     if (types.metadata !== "object" || Array.isArray(data.metadata) || data.metadata === null) {
       addError(`${skillPath}: metadata must be a string-to-string mapping`);
