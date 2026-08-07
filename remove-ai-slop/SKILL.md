@@ -12,7 +12,7 @@ Never turn the cleanup into another house style. Do not make every interface fla
 
 ### HARD BAN
 
-Use this only when the element meets one of the exact definitions below. One confirmed occurrence is enough. Report it directly and recommend removal. Do not write “consider,” “could,” “may,” or “if desired.”
+Use this only for exact unfinished-copy, semantic-duplication, consequential-ambiguity, fabricated-evidence, or similarly objective definitions below. One confirmed occurrence is enough. Visual taste, common components, geometry, fonts, and decorative motifs do not qualify by themselves.
 
 Use this verdict:
 
@@ -36,6 +36,14 @@ Keep accessibility, semantics, performance, and factual-integrity defects in a s
 
 ## Phase 1: Establish context
 
+Choose an audit scope before inventorying the repository:
+
+- **Focused** — one route, component family, flow, or reported pattern. Inspect every meaningful state inside that boundary.
+- **Representative** — the default for a product-wide review. Sample each distinct page role, shared chrome, major component system, and high-risk flow; include enough routes to test convergence without rendering every sibling page.
+- **Exhaustive** — every in-scope route, locale, channel, and meaningful state. Use when the user explicitly requests full coverage or when regulated, release-blocking, or migration work justifies the cost.
+
+Infer the narrowest sufficient scope from the request and repository. State inclusions, exclusions, sampling rationale, and unavailable states. Expand only when a finding may originate in a shared source or when the requested confidence requires it.
+
 Read repository evidence before judging taste:
 
 - Read the README, product brief, design documentation, route structure, existing copy, design tokens, font setup, logo, and first-party assets.
@@ -44,7 +52,7 @@ Read repository evidence before judging taste:
 - Record the primary action and content shape for each route.
 - Separate shared navigation and footer chrome from page-specific composition when comparing routes.
 
-Discover relevant source without truncating the inventory:
+Discover relevant source without truncating the selected scope:
 
 ```bash
 rg --files \
@@ -52,11 +60,11 @@ rg --files \
   -g '!node_modules/**' -g '!.next/**' -g '!dist/**' -g '!build/**'
 ```
 
-Include theme files, Tailwind configuration, component-library overrides, content files, and asset manifests. Read every relevant file, using dependency and route structure to avoid unrelated application code.
+Include theme files, component-library overrides, content files, and asset manifests that influence the selected scope. Use dependency and route structure to avoid unrelated application code.
 
 ## Phase 2: Inspect rendered output
 
-Run the existing application when the repository provides a safe development command. Capture each in-scope route at desktop and mobile widths plus meaningful states such as empty, loading, error, success, and populated views.
+Run the existing application when the repository provides a safe development command. In focused mode, capture every meaningful in-scope state. In representative mode, capture each distinct page role and shared system at viewports and states that can reveal the suspected issue. In exhaustive mode, use a route/state matrix and record coverage.
 
 For each rendered finding, record:
 
@@ -71,27 +79,27 @@ If rendering is unavailable, label appearance-dependent findings:
 
 Do not claim visual dominance, hierarchy failure, or poor composition from a class name alone.
 
-## Phase 3: Find hard slop
+## Phase 3: Find high-confidence defects and defaults
 
 ### 1. Ornamental bold all-caps eyebrows
 
-Count an eyebrow as a hard ban when a short label immediately above an H1 or H2:
+Treat an eyebrow as a strong presumption when a short label immediately above an H1 or H2:
 
 - Uses uppercase text or `text-transform: uppercase`
 - Uses weight 600+, high contrast, accent color, wide tracking, a dot, or a decorative rule to manufacture importance
 - Adds no information beyond the heading, route, or surrounding navigation
 
-Treat labels such as `FEATURES`, `WHY US`, `OUR PLATFORM`, `MANUAL PAGE`, and `INTRODUCING` as decorative when they merely announce the content below. One ornamental eyebrow is enough.
+Treat labels such as `FEATURES`, `WHY US`, `OUR PLATFORM`, `MANUAL PAGE`, and `INTRODUCING` as decorative candidates when they merely announce the content below. Repetition, visual dominance, or conflict with the established hierarchy raises confidence; one occurrence alone does not prove a system-level problem.
 
 Allow only real, non-redundant status or operational metadata such as `LIVE`, `ERROR`, `BETA`, a permission state, or a version. Do not flag natural acronyms.
 
-Required verdict:
+Default verdict:
 
-> **HARD BAN — Ornamental all-caps eyebrow. It adds hierarchy theatre without information. Remove it; move any unique fact into the heading, metadata, or body.**
+> **STRONG PRESUMPTION — Ornamental all-caps eyebrow. It appears to add emphasis without information because [evidence]. Remove or reduce it unless it performs a documented navigation, status, or brand role.**
 
 ### 2. Incoherent or misused fonts
 
-Count typography as a hard ban when any of these is true:
+Report typography as a quality defect when legibility or semantic consistency fails, and as a strong presumption of template assembly when any of these is true without a supported role:
 
 - Three or more visible type families appear without explicit, stable roles
 - The same semantic role changes family between components or routes
@@ -101,37 +109,33 @@ Count typography as a hard ban when any of these is true:
 
 Allow wordmarks, real code or terminal content, mathematical notation, and language-specific fallbacks when scoped to that content.
 
-Required verdict:
+Default verdict:
 
-> **HARD BAN — Incoherent type system. These font changes have no stable role and make the interface look assembled. Consolidate them into explicit display, body, and code roles.**
+> **STRONG PRESUMPTION — Incoherent type system. These font changes have no stable role in the inspected system. Consolidate them into explicit roles unless product or language evidence explains the variation.**
 
 Repair with one family or an intentional pair plus optional mono. Define roles as tokens. Do not automatically replace everything with Inter or Geist.
 
 ### 3. Generic rounded or pill buttons
 
-Count a button as a hard ban when either condition is true:
+Treat a button as a strong presumption of starter styling when either condition is true and rendered evidence shows it conflicts with the product's action hierarchy:
 
 - An ordinary text CTA uses capsule geometry such as `rounded-full`, `9999px`, or a computed radius at least half its height
 - An action retains an unmodified starter-library recipe: generic radius, stock padding, solid fill, white label, and default hover/focus treatment, with no meaningful hierarchy or product character
 
 Allow actual chips, tags, filter tokens, segmented controls, toggles, and circular icon-only controls. An ordinary CTA does not become a chip because it is small.
 
-Required verdict:
+Default verdict:
 
-> **HARD BAN — Generic rounded/pill CTA. This is starter-kit styling with no product character. Remove it and redesign the action hierarchy; do not merely recolor it.**
+> **STRONG PRESUMPTION — Generic rounded/pill CTA. Its geometry and state treatment repeat an unmodified starter pattern and do not express this product's action hierarchy. Redesign the action system unless the pattern is established and functional here.**
 
 Repair primary, secondary, destructive, and quiet actions as one system. Choose geometry, typography, borders or fills, icon treatment, focus, hover, pressed, loading, and disabled states from the product’s visual language. Do not replace every pill with the same stock 8px black rectangle.
 
-### 4. Other hard bans
+### 4. Other high-confidence findings
 
-- Fake terminal chrome: blinking cursors or `> ` prefixes on ordinary headings. Allow actual CLI or terminal output.
-- Decorative shimmer or animated-gradient borders on static surfaces. Allow restrained progress or loading feedback tied to real state.
-- Unsupported stat banners: prominent numbers without definition, timeframe, source, or real data.
-- Fake charts: invented data presented as evidence, decorative charts that encode no claim, or misleading axes and scales.
-- Confetti on page load, navigation, routine saves, or ordinary button clicks. Allow it only for a rare, real achievement whose importance justifies celebration.
-- Emoji used as the primary icon system in professional navigation, settings, or repeated feature UI.
+- Fake terminal chrome, decorative shimmer, animated-gradient borders, routine confetti, and emoji navigation are strong presumptions when they do not fit product subject, state, frequency, or established brand.
+- Unsupported stat banners and invented or misleading charts are claim-integrity defects. Report them under `QUALITY DEFECTS`, regardless of whether their visual style looks generated.
 
-Confirm appearance-dependent hard bans in the render. Cite the exact rule that failed; “ugly font” and “boring button” are not findings.
+Confirm appearance-dependent findings in the render. Cite the exact role, repetition, mismatch, or integrity rule that failed; “ugly font” and “boring button” are not findings.
 
 ## Phase 4: Find contextual slop
 
@@ -381,7 +385,7 @@ Use `5+` as `HIGH`, `3–4` as `MEDIUM`, and `≤2` as `LOW`. Hard bans and inte
 
 ## Phase 7: Report findings and fixes
 
-Stop before editing. Report these sections when applicable:
+Stop before editing. Lead with a prioritized summary ranked by user impact, frequency, confidence, and repair cost. In focused work, report all in-scope findings. In representative or exhaustive work, group repeated source decisions so the report does not duplicate the same repair for every rendered instance. Use these sections when applicable:
 
 ```text
 COPY MANIFEST COVERAGE
@@ -423,15 +427,17 @@ DECISIONS TO PRESERVE
 P1. [element] — [why it is intentional, specific, and effective]
 ```
 
-Critique the artifact, not its author. Be blunt about hard slop: write “This is starter-kit styling. Remove it,” not “You may want to consider refining it.”
+Critique the artifact, not its author. Be direct about objective hard slop: write “This placeholder is exposed as finished copy. Remove it,” not “You may want to consider refining it.” For visual defaults, state the rendered evidence and confidence rather than presenting taste as fact.
 
-For every actionable fix, show the exact before and after. Use real product copy and existing tokens rather than placeholders. Ground rewritten claims in cited repository evidence. Treat `UNVERIFIED` and `BLOCKED — CONTENT REQUIRED` as report-only statuses; never write them into user-facing copy. When rendering is available, compare the same route, viewport, state, data, and animation setting.
+For every actionable source decision, show the exact before and after when the replacement can be grounded in repository evidence. When content or product intent is missing, state the required decision instead of generating speculative alternatives. Use real product copy and existing tokens rather than placeholders. Ground rewritten claims in cited repository evidence. Treat `UNVERIFIED` and `BLOCKED — CONTENT REQUIRED` as report-only statuses; never write them into user-facing copy. When rendering is available, compare the same route, viewport, state, data, and animation setting.
 
 Do not use canonical replacements such as flat black, one accent, 8px radii, a two-column list, uniformly terse prose, or default casual voice unless the product evidence supports them. State the intended design or copy job first, then propose the smallest repair that performs it.
 
 ## Phase 8: Confirm and apply
 
-After showing every proposed change, exclude report-only and blocked items from the actionable count, then ask:
+Enter this phase only when the user requested implementation or asks to continue after a diagnosis. For diagnosis-only work, return the prioritized report, verification limits, and an optional one-line offer to apply fixes; do not manufacture an approval gate.
+
+When implementation is in scope, after showing proposed source changes or a prioritized first batch, exclude report-only and blocked items from the actionable count, then ask:
 
 > **Ready to apply [X] fixes. Any to skip?**
 > Reply with fix IDs to skip, or say “go” to apply all.

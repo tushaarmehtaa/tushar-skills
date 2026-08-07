@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import matter from "gray-matter";
 import {
   CATALOG,
@@ -15,11 +16,46 @@ export interface Skill extends CatalogEntry {
   license: string;
   compatibility?: string;
   content: string;
+  files: SkillFile[];
 }
 
-const REPO_ROOT = path.join(process.cwd(), "..");
+export interface SkillFile {
+  path: string;
+  content: string;
+  lineCount: number;
+}
+
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 let skillsCache: Skill[] | null = null;
+
+function getBundledMarkdownFiles(skillRoot: string): SkillFile[] {
+  const files: SkillFile[] = [];
+
+  function walk(directory: string) {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const absolutePath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        walk(absolutePath);
+        continue;
+      }
+      if (!entry.isFile() || !entry.name.endsWith(".md") || absolutePath === path.join(skillRoot, "SKILL.md")) {
+        continue;
+      }
+
+      const raw = fs.readFileSync(absolutePath, "utf-8");
+      const { content } = matter(raw);
+      files.push({
+        path: path.relative(skillRoot, absolutePath).split(path.sep).join("/"),
+        content,
+        lineCount: content.split(/\r?\n/).length,
+      });
+    }
+  }
+
+  walk(skillRoot);
+  return files.sort((a, b) => a.path.localeCompare(b.path));
+}
 
 export function getAllSkills(): Skill[] {
   if (skillsCache) return skillsCache;
@@ -33,6 +69,7 @@ export function getAllSkills(): Skill[] {
       const raw = fs.readFileSync(skillPath, "utf-8");
       const { data, content } = matter(raw);
       const catalog = CATALOG[slug];
+      const skillRoot = path.dirname(skillPath);
 
       return {
         slug,
@@ -41,6 +78,7 @@ export function getAllSkills(): Skill[] {
         license: data.license || "MIT",
         compatibility: data.compatibility,
         content,
+        files: getBundledMarkdownFiles(skillRoot),
         ...catalog,
       } satisfies Skill;
     })

@@ -6,6 +6,12 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- reconstructed all 30 skills around adaptive modes, consequential questions, safety boundaries, concrete outputs, and outcome-level verification; removed forced questionnaires, personal house styles, false precision, static prices, and stale provider folklore
+- rebuilt specialist references as conditional package knowledge instead of hidden standalone skills, including current auth, Supabase, Resend, Dodo, AI streaming, experimentation, analytics, search, copy, interface, and video workflows
+- added a repository quality contract and normal, ambiguous, and risk eval prompts for every catalog skill, then cross-reviewed representative high-risk cases across independent audit lanes
+- rendered every bundled Markdown reference on each skill page and rewrote intra-package links to working on-page anchors
+- hardened package rendering against duplicate/colliding anchors, unsafe link schemes, encoded traversal, malformed source URLs, and JSON-LD script injection
+- expanded validation to reject standalone reference frontmatter, require navigation for long references, validate Markdown fragments and URL policy, and keep all 30 generated ZIPs synchronized
 - consolidated the library from 38 narrow packages into 30 outcome-driven skills with generic public names
 - merged SEO and AI search into `search-ready`; model usage and economics into `ai-cost-audit`; cold email and sequences into `cold-outreach`; product brief and MVP planning into `product-spec`; founder frameworks and VC pitching into `fundraising`; Dodo pricing and webhooks into `payments-with-dodo`; and launch planning with waitlist implementation into `product-launch`
 - expanded `ai-product-development`, `analytics`, `product-experiments`, `agent-instructions`, `ui-copy`, `landing-copy`, `social-sharing`, and `demo-video` beyond their earlier single-feature scopes

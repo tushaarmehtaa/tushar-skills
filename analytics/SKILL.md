@@ -1,116 +1,53 @@
 ---
 name: analytics
-description: Plan and implement product analytics, error monitoring, health checks, dashboards, and optional admin reporting. Use when adding or auditing app measurement.
+description: Plan, implement, or audit analytics, error monitoring, health checks, dashboards, and reporting. Use when designing events, consent-aware tracking, incident visibility, or observability.
 license: MIT
 ---
 
 # Analytics
 
-Build a measurement system that answers product and operational questions. Support PostHog, Google Analytics, Supabase-backed reporting, Sentry, health endpoints, and an optional internal dashboard. Do not install every provider by default.
+Build the smallest measurement system that answers explicit product or operational questions. Preserve existing providers and schemas unless a migration is part of the request.
 
-Before implementation, identify the decisions the data must support: acquisition, activation, retention, feature adoption, revenue, reliability, or incident response. Then choose the smallest stack that can answer them.
+## Workflow
 
-## Phase 1: Detect the Stack
+1. Inspect the framework, router/runtime, deployment target, auth model, existing analytics and monitoring packages, environment-variable examples, privacy controls, and current event calls.
+2. Define the decisions the data must support: acquisition, activation, retention, adoption, revenue, reliability, or incident response. For every metric, record its unit, eligible population and exclusions, numerator/event, denominator, cohort anchor where relevant, observation window, maturity/censoring rule, timezone, owner, and decision threshold. Record event names, required properties, identity rules, retention needs, and sensitive fields to exclude.
+3. Separate four concerns before choosing tools:
+   - traffic analytics;
+   - product analytics and experimentation;
+   - errors, traces, and logs;
+   - liveness, readiness, and business reporting.
+4. Reuse an installed provider. If none exists, recommend the minimum stack and explain the tradeoff. Ask only for unresolved choices that materially affect implementation, such as consent requirements, data residency, provider preference, or whether a database dependency belongs in readiness checks. Never ask the user to paste secrets into chat; scaffold names in `.env.example` and let the user set values in the deployment environment.
+5. Create or update a measurement plan before adding calls. Use stable event names, typed properties, server-side capture for authoritative outcomes, and a documented anonymous-to-authenticated identity transition.
+6. Implement only the selected paths:
+   - Read [PostHog](references/posthog.md) before changing PostHog browser/server setup, identity, page views, or events.
+   - Read [Sentry](references/sentry.md) before changing Sentry initialization, boundaries, logging, replay, tracing, or source maps.
+   - Read [health endpoints](references/health-endpoint.md) before adding liveness/readiness routes or uptime monitoring.
+7. When an internal dashboard is requested, implement it as an authenticated product surface, not a public health endpoint. Use server-owned aggregate queries; define freshness and caching; reconcile each tile to its metric contract; enforce role/tenant access; suppress or coarsen small sensitive groups; and cover loading, empty, stale, partial, and error states. Keep operational status separate from product metrics even when they share a page.
+8. Apply privacy controls before capture: minimize properties, exclude credentials/payment data/content by default, avoid URLs or query strings that contain personal data, honor applicable consent/opt-out rules, and review replay masking and log scrubbing.
+9. Preserve secrets and deployment boundaries. Public ingestion tokens may be exposed only when the provider defines them as public; source-map tokens, service-role keys, and personal API keys stay server-side and out of logs and git.
 
-Read the project and figure out what to install.
+## Verification
 
-### 1.1 Framework
-- `next.config.*` → Next.js (check App Router vs Pages Router)
-- `vite.config.*` → Vite / React SPA
-- `astro.config.*` → Astro
-- `nuxt.config.*` → Nuxt
-- Python backend (`main.py`, `app.py`, `manage.py`) → FastAPI / Django / Flask
+Verify only systems actually implemented:
 
-### 1.2 Existing Analytics
-Check if any analytics/monitoring is already installed:
-- `posthog-js` or `posthog-node` → PostHog already present
-- `@sentry/nextjs` or `@sentry/react` or `sentry-sdk` → Sentry already present
-- `@vercel/analytics` → Vercel Analytics present
-- `@google-analytics` or `gtag` → GA present
+- Trigger a known page view and typed product event; confirm exact names/properties in the provider.
+- Test anonymous activity, sign-in identification, account switching, and logout reset without merging the wrong people.
+- Trigger a controlled client and server error; record event IDs, verify redaction, environment/release tags, and resolved source maps, then remove the test path.
+- Test liveness independently from dependencies. Test readiness with a forced dependency failure, a short timeout, and the expected non-2xx response.
+- For dashboards, test authorization and tenant boundaries, reconcile aggregate queries to source fixtures, verify timezone/window/maturity behavior, and render loading, empty, stale, partial, error, and populated states.
+- Run the project’s lint/type/test/build commands and test in the target runtime when serverless or edge behavior matters.
+- Record anything that requires dashboard access or production credentials as manual setup, not as verified.
 
-If already installed, audit the setup instead of installing fresh. Check for gaps (missing error boundaries, no server-side tracking, no health endpoint).
+## Output
 
-### 1.3 Define the measurement plan
+Report:
 
-List the questions, events, properties, identity rules, sensitive fields to exclude, retention needs, and who will read the data. Distinguish product analytics from traffic analytics, operational monitoring, and business reporting.
-
-### 1.4 Ask the User
-```
-Detected: [framework]
-Existing analytics: [what's already there, or "none"]
-
-I'll set up:
-1. PostHog — event tracking, user identification, feature flags
-2. Sentry — error tracking with source maps
-3. Health endpoint — /api/status for uptime monitoring
-
-Need your project keys:
-- PostHog API key (get from app.posthog.com → Project Settings)
-- Sentry DSN (get from sentry.io → Project Settings → Client Keys)
-
-Or I can set up the code and you add the keys later.
-```
-
-## Phase 2: Implement Observability
-
-Load only the implementation references needed for this project:
-
-- **PostHog analytics:** Read [references/posthog.md](references/posthog.md) before adding client or server tracking, page views, identification, or typed events.
-- **Sentry error tracking:** Read [references/sentry.md](references/sentry.md) before configuring Sentry, error boundaries, or structured logging.
-- **Health endpoint:** Read [references/health-endpoint.md](references/health-endpoint.md) before adding a Next.js or FastAPI status route and uptime monitoring.
-
-Preserve existing integrations. If a system is already present, use its reference to audit gaps instead of installing it again. Match every example to the detected framework and authentication model.
-
-## Phase 3: Environment Variables
-
-Add to `.env.local` (or `.env`):
-
-```
-# PostHog
-NEXT_PUBLIC_POSTHOG_KEY=phc_...
-NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
-POSTHOG_API_KEY=phc_...  # Same key, used server-side
-
-# Sentry
-NEXT_PUBLIC_SENTRY_DSN=https://xxx@o123.ingest.sentry.io/456
-SENTRY_AUTH_TOKEN=sntrys_...  # For source map uploads
-SENTRY_ORG=your-org
-SENTRY_PROJECT=your-project
-```
-
-Verify none of these are committed to git. Check `.gitignore` includes `.env*`.
-
-## Phase 4: Verify
-
-After wiring everything, test each system:
-
-```
-PostHog:
-[ ] Open the app → check PostHog dashboard for a pageview event
-[ ] Navigate between pages → each page triggers a pageview
-[ ] Log in → user appears in PostHog with email/name (identified)
-[ ] Track a custom event → appears in PostHog events
-[ ] Log out → posthog.reset() called, new anonymous session
-
-Sentry:
-[ ] Add a temporary `throw new Error('sentry test')` to a page
-[ ] Load the page → error appears in Sentry dashboard
-[ ] Check that source maps resolve (you see your actual code, not minified)
-[ ] Remove the test error
-[ ] Error boundary renders fallback UI (not a white screen)
-
-Health Endpoint:
-[ ] GET /api/status returns 200 with uptime and database status
-[ ] If database is down, returns 503
-[ ] Set up monitoring service to ping it every 5 minutes
-```
-
-Tell the user which systems are live and working.
-
-## Important Notes
-
-- **PostHog free tier:** up to 1M events/month. Confirm the current plan limits before relying on them.
-- **Sentry free tier:** up to 5K errors/month. Confirm the current plan limits before relying on them.
-- **Don't track PII** in PostHog events (no passwords, no credit card numbers). User IDs and emails are fine.
-- **Sample rates matter.** 10% tracing in prod keeps costs near zero. Increase only if debugging specific issues.
-- **Source maps** are critical for Sentry. Without them, error stack traces show minified code. The Sentry wizard handles this for Next.js. For other frameworks, upload maps during build.
+- questions the system now answers and the event/monitoring plan;
+- metric contracts for activation, retention, or other implemented measures;
+- providers reused, added, or deliberately omitted;
+- files and environment-variable names changed;
+- dashboard routes/components, aggregate queries, access policy, freshness, and rendered states when applicable;
+- privacy, consent, identity, sampling, and retention decisions;
+- verification performed with event IDs or observed responses;
+- dashboard, DNS, token, alerting, and production checks still required.

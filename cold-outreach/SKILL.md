@@ -1,34 +1,59 @@
 ---
 name: cold-outreach
-description: Research and write specific cold emails, follow-ups, and multichannel outreach sequences. Use when contacting prospects, investors, partners, or candidates.
+description: Research, write, audit, and improve cold messages, introductions, replies, and sequences. Use when contacting prospects, investors, partners, candidates, or other professional recipients.
 license: MIT
 ---
 
 # Cold outreach
 
-Write outreach that proves attention and makes one reasonable ask. Support a single message or a full sequence; do not force a campaign when one email is enough.
+Write outreach that proves attention, makes one reasonable ask, and respects the recipient and applicable rules.
 
-## Choose the mode
+## Choose a mode
 
-- **Single message:** one cold email, introduction request, follow-up, or direct message.
-- **Sequence:** several touches across email and an optional professional network, each with a different job.
-- **Audit:** diagnose an existing message or sequence for specificity, clarity, deliverability, and repetition.
+- **Single message:** one email, introduction request, follow-up, or professional direct message.
+- **Sequence:** coordinated touches with distinct purposes and stop conditions.
+- **Audit:** diagnose existing copy, research, cadence, deliverability, or compliance risk.
+- **Reply handling:** answer a positive reply, objection, referral, out-of-office, unsubscribe, or rejection.
+
+Do not create a campaign when one message is enough.
 
 ## Workflow
 
-1. Establish the sender, recipient, relationship, goal, offer, evidence, and requested next step. Ask only for facts the available context cannot supply.
-2. Research current recipient signals when browsing is available. Prefer primary sources: the person's work, company pages, interviews, releases, job posts, and public writing.
-3. Separate verified facts from inference. Never invent familiarity, praise, mutual contacts, results, or urgency.
-4. Write the shortest message that can establish relevance and make the ask. The first sentence must fail if pasted into an email to a different recipient.
-5. For a sequence, give each touch a distinct purpose: relevance, useful proof, a new angle, a low-friction alternative, or a graceful close. Do not paraphrase the first email five times.
-6. Check subject lines, sender identity, domain authentication, unsubscribe requirements, and applicable outreach law before recommending volume.
-7. Read every message aloud. Remove throat-clearing, generic flattery, hidden asks, fake scarcity, and claims without provenance.
+1. Inspect supplied context and existing messages. Establish sender, recipient, relationship, goal, offer, proof, and requested next step without re-asking known facts.
+2. Research current recipient signals when research is authorized and useful. Prefer the person's work, company pages, filings/releases, job posts, interviews, and public writing. Record URLs and retrieval dates.
+3. Separate verified facts, sender-provided claims, and inference. Never invent familiarity, praise, mutual contacts, urgency, results, or social proof.
+4. Draft the shortest message that can establish relevance and make the ask. Use length and subject-line guidance as defaults, not universal laws.
+5. For a sequence, give every touch a different job and widening space where appropriate. Define stop conditions before copy.
+6. For reply handling, match the state: answer the question, reduce friction, propose the next step, or stop. Never continue after an opt-out.
+7. Check sender identity, authentication, list provenance, suppression handling, required identification/opt-out language, and applicable jurisdiction before recommending volume. If jurisdiction or recipient type is unknown, flag the legal uncertainty rather than declaring compliance.
+8. Read copy aloud. Remove generic flattery, throat-clearing, fake scarcity, hidden asks, manipulative guilt, and unsupported claims.
 
-## Load deeper guidance
+Ask only for a missing fact that materially changes the message. If a fact is useful but non-blocking, draft with a clearly marked confirmation note.
 
-- Read [single-email workflow](references/single-email-workflow.md) and [single-email reference](references/single-email-reference.md) for short-message formulas and deliverability checks.
-- Read [sequence workflow](references/sequence-workflow.md) and [sequence reference](references/sequence-reference.md) for cadence, widening channels, and campaign output.
+## Load conditional references
 
-## Output
+- For a single message or audit, read [single-message patterns](references/single-email-workflow.md). Read [single-message examples](references/single-email-reference.md) only when an example is useful.
+- For a sequence, read [sequence design](references/sequence-workflow.md). Read [sequence examples](references/sequence-reference.md) only when needed.
 
-For a single message, return the subject, body, one alternate opening, and any fact that needs confirmation. For a sequence, return a table with day, channel, purpose, copy, stop condition, and measurement. Keep research notes separate from send-ready copy.
+References are heuristic libraries, not mandatory workflows. This file is authoritative.
+
+## Output contract
+
+For a single message, return:
+
+- subject or channel opener;
+- send-ready body;
+- one meaningfully different opening when useful;
+- facts requiring confirmation and source notes, separate from copy.
+
+For a sequence, return a table with touch, timing rationale, channel, purpose, copy, stop condition, and measurement. For an audit, identify the issue, evidence, impact, and rewrite. For reply handling, return send-ready copy plus the intended next state.
+
+## Verify
+
+- The opener depends on this recipient or situation.
+- Every material claim is verified, sender-provided, or marked for confirmation.
+- There is one clear ask or next step.
+- Sequence touches are not paraphrases of one another.
+- Opt-out, bounce, reply, referral, and out-of-office states have stop or routing rules.
+- Research notes are not mixed into send-ready copy.
+- Any timing, benchmark, deliverability, or legal claim is sourced and dated or presented as a testable default.

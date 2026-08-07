@@ -1,200 +1,65 @@
-# Sentry Implementation
+# Sentry implementation
 
-Read this reference when the project needs Sentry installation, runtime configuration, React error boundaries, or structured exception logging.
+Read this reference before changing Sentry initialization, source maps, boundaries, structured errors, replay, or tracing. Use the installed SDK’s current wizard/manual setup and review every generated file.
 
 ## Contents
 
-- [Install](#31-install)
-- [Configuration](#32-configuration)
-- [React error boundaries](#33-error-boundary-react)
-- [Structured error logging](#34-structured-error-logging)
+- [Install and configure](#install-and-configure)
+- [Privacy and sampling](#privacy-and-sampling)
+- [Boundaries and logging](#boundaries-and-logging)
+- [Source maps](#source-maps)
+- [Verification](#verification)
 
-### 3.1 Install
+## Install and configure
 
-**Next.js:**
-```bash
-npx @sentry/wizard@latest -i nextjs
-```
+For Next.js, the current Sentry wizard may generate instrumentation files, client initialization, `global-error`, and `withSentryConfig`. Run it only when dependency installation and generated changes are in scope, then inspect the diff and adapt it to the detected Next.js/Sentry versions.
 
-This auto-creates `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`, and updates `next.config.ts`. Review the generated files.
+Keep DSNs where the SDK expects them. Keep source-map auth tokens and organization/project management credentials server-side and out of the application bundle.
 
-**React SPA (Vite):**
-```bash
-npm install @sentry/react
-```
+## Privacy and sampling
 
-**Python (FastAPI):**
-```bash
-pip install sentry-sdk[fastapi]
-```
+Choose trace/replay sampling from traffic, incident needs, and budget rather than hard-coding 10%. Before enabling replay or request data capture:
 
-### 3.2 Configuration
+- mask text and block sensitive media/DOM regions;
+- scrub authorization, cookies, tokens, payment fields, prompts, and message bodies;
+- set user identity only when allowed by policy;
+- honor consent and regional requirements;
+- tag environment and release consistently.
 
-**Next.js** — the wizard generates most of this. Review and adjust:
+Error-triggered replay can still collect personal data; it is not automatically safe because normal session replay sampling is zero.
 
-`sentry.client.config.ts`:
+## Boundaries and logging
+
+Use framework error files/boundaries for user recovery and capture unexpected exceptions once. Avoid duplicate capture in nested boundaries. Preserve a safe user-facing message and a retry/reset path.
+
 ```typescript
 import * as Sentry from '@sentry/nextjs';
 
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-  replaysSessionSampleRate: 0,
-  replaysOnErrorSampleRate: 1.0,
-  debug: false,
-  enabled: process.env.NODE_ENV === 'production',
-});
-```
-
-Key settings:
-- `tracesSampleRate: 0.1` — sample 10% of transactions in prod (controls cost)
-- `replaysOnErrorSampleRate: 1.0` — always capture session replay when errors happen
-- `enabled: false` in development — don't pollute Sentry with dev errors
-
-**React SPA:**
-```typescript
-import * as Sentry from '@sentry/react';
-
-Sentry.init({
-  dsn: import.meta.env.VITE_SENTRY_DSN,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
-  ],
-  tracesSampleRate: 0.1,
-  replaysSessionSampleRate: 0,
-  replaysOnErrorSampleRate: 1.0,
-  enabled: import.meta.env.PROD,
-});
-```
-
-**Python (FastAPI):**
-```python
-import sentry_sdk
-
-sentry_sdk.init(
-    dsn=os.getenv("SENTRY_DSN"),
-    traces_sample_rate=0.1,
-    profiles_sample_rate=0.1,
-    environment=os.getenv("ENVIRONMENT", "development"),
-    enabled=os.getenv("ENVIRONMENT") == "production",
-)
-```
-
-### 3.3 Error Boundary (React)
-
-Create a global error boundary that catches rendering errors:
-
-**Next.js App Router** — `app/global-error.tsx`:
-```typescript
-'use client';
-
-import * as Sentry from '@sentry/nextjs';
-import { useEffect } from 'react';
-
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    Sentry.captureException(error);
-  }, [error]);
-
-  return (
-    <html>
-      <body>
-        <div style={{ padding: '2rem', textAlign: 'center' }}>
-          <h1>something went wrong</h1>
-          <p style={{ color: '#666', marginTop: '0.5rem' }}>
-            the error has been reported automatically.
-          </p>
-          <button
-            onClick={reset}
-            style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer' }}
-          >
-            try again
-          </button>
-        </div>
-      </body>
-    </html>
-  );
-}
-```
-
-**Also add `app/error.tsx`** for non-fatal page errors:
-```typescript
-'use client';
-
-import * as Sentry from '@sentry/nextjs';
-import { useEffect } from 'react';
-
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    Sentry.captureException(error);
-  }, [error]);
-
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h2>something went wrong</h2>
-      <button onClick={reset}>try again</button>
-    </div>
-  );
-}
-```
-
-### 3.4 Structured Error Logging
-
-Create a helper for logging errors with context:
-
-```typescript
-// lib/logger.ts
-import * as Sentry from '@sentry/nextjs';
-
-interface ErrorContext {
-  userId?: string;
-  action?: string;
-  metadata?: Record<string, any>;
-}
-
-export function logError(error: unknown, context?: ErrorContext) {
-  const err = error instanceof Error ? error : new Error(String(error));
-
-  if (context) {
-    Sentry.withScope((scope) => {
-      if (context.userId) scope.setUser({ id: context.userId });
-      if (context.action) scope.setTag('action', context.action);
-      if (context.metadata) scope.setExtras(context.metadata);
-      Sentry.captureException(err);
-    });
-  } else {
-    Sentry.captureException(err);
-  }
-
-  // Also log to console in development
-  if (process.env.NODE_ENV !== 'production') {
-    console.error('[Error]', err.message, context);
-  }
-}
-```
-
-Usage:
-```typescript
-try {
-  await generateContent(prompt);
-} catch (error) {
-  logError(error, {
-    userId: user.id,
-    action: 'generate_content',
-    metadata: { promptLength: prompt.length },
+export function captureAppError(
+  error: unknown,
+  context: { action?: string; requestId?: string; metadata?: Record<string, unknown> } = {},
+) {
+  const normalized = error instanceof Error ? error : new Error(String(error));
+  Sentry.withScope((scope) => {
+    if (context.action) scope.setTag('action', context.action);
+    if (context.requestId) scope.setTag('request_id', context.requestId);
+    if (context.metadata) scope.setExtras(context.metadata);
+    Sentry.captureException(normalized);
   });
 }
 ```
+
+Metadata must be allow-listed and scrubbed. Do not attach entire request bodies or user objects.
+
+## Source maps
+
+Upload source maps during the production build using the provider’s supported integration. Do not expose source-map tokens at runtime. Verify with a real event/release, because a successful build alone does not prove frames resolve.
+
+## Verification
+
+- Trigger controlled client and server errors and record their event IDs.
+- Confirm each error is captured once with correct environment/release tags.
+- Inspect payloads/replay for redaction and masking.
+- Confirm the boundary recovery/reset path works.
+- Verify source frames resolve to authored code, then remove the test path.
+- Exercise tracing only at the configured sampling behavior and confirm cost-sensitive data is not attached.

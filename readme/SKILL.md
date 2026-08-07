@@ -1,154 +1,110 @@
 ---
 name: readme
-description: Audit or write a project README with install, usage, visuals, badges, contribution, and license sections. Use when documentation needs a release-ready pass.
+description: Audit, write, and verify README files for adoption, operation, contribution, or internal orientation. Use when repository documentation is missing, inaccurate, or hard to follow.
 license: MIT
 ---
 
-Audit an existing README or generate one from scratch. Output is a README.md ready to commit.
+# README
 
-## Phase 1: Determine Mode
+Create the README its actual readers need, grounded in repository behavior. Accuracy and successful first use come before promotional completeness.
 
-**Audit mode** — README.md exists in the project root. Score 8 dimensions, rewrite the weakest sections.
+## Choose mode and reader job
 
-**Generate mode** — no README.md, or user explicitly asks to write one from scratch.
+- **Audit** — report accuracy, coverage, and usability defects; edit only when requested.
+- **Repair** — update specific weak or stale sections.
+- **Generate** — create a README when none exists or a rewrite is explicitly requested.
 
-Gather anything missing before writing:
+Identify the repository type and primary reader job:
 
-- What does this project do? (one sentence a stranger would understand)
-- Who is it for? (specific audience, not "developers")
-- How do you install it? (exact commands)
-- How do you use it? (simplest possible example)
+- library or SDK adoption;
+- CLI installation and first command;
+- hosted application setup or contribution;
+- service operation and local development;
+- monorepo navigation and package ownership;
+- standard, dataset, research, or documentation project;
+- internal project orientation.
 
-If you can answer these by reading the codebase, do that instead of asking.
+Recover product purpose, audience, package manager, commands, supported versions, configuration, examples, repository policy, and license from code and authoritative files. Ask only for missing intent that the repository cannot establish.
 
-## Phase 2: The 8 Dimensions
+## Audit accuracy first
 
-Score each 1–10 in audit mode. Use as a writing checklist in generate mode.
+Check every material README claim against manifests, source, CI, examples, configuration, and license files. Prioritize defects that cause a failed install, unsafe operation, wrong API usage, security misunderstanding, or legal ambiguity.
 
-**Name & Description (15%)** — Project name is clear. First paragraph explains what it does in plain language. A stranger can understand it in 5 seconds.
+For each finding report:
 
-**Visual Hook (10%)** — Logo, banner, screenshot, or GIF above the fold. Something visual that shows what the project looks like or does. No visual = automatic 1/10.
-
-**Badges (5%)** — Build status, version, license, download count. Use shields.io. Don't overdo it — 3-6 badges max.
-
-**Install (20%)** — Copy-pasteable commands. Covers npm/yarn/pnpm or equivalent. Prerequisites listed if any. Works on first try.
-
-**Usage (20%)** — Minimal working example. Shows expected output. A new user can go from install to "it works" in under 60 seconds.
-
-**API / Features (10%)** — Key features or API surface listed. Not exhaustive — just enough to know what's possible. Link to full docs if they exist.
-
-**Contributing (10%)** — How to set up the dev environment. How to run tests. Where to report bugs. Makes a first contribution feel approachable.
-
-**License (10%)** — License specified clearly. If missing, flag it — unlicensed code is legally unusable.
-
-## Phase 3: Structure Rules
-
-The order that works. Don't rearrange without reason.
-
-```
-# Project Name
-
-[one-line description]
-
-[badges row]
-
-[screenshot / GIF / banner]
-
-## Install
-
-[copy-paste commands]
-
-## Usage
-
-[minimal example with expected output]
-
-## Features
-
-[bullet list — benefit-first, not feature-first]
-
-## API
-
-[if applicable — key methods/endpoints]
-
-## Contributing
-
-[setup + test commands + link to issues]
-
-## License
-
-[license name + link]
+```text
+[severity] [section or line]
+Claim or omission:
+Repository evidence:
+Reader impact:
+Recommended repair:
+Verification:
 ```
 
-**Rules that don't move:**
+Do not let a numerical score hide a release-blocking defect. If the user requests scoring, score dimensions appropriate to the reader job and explain weighting.
 
-- **First paragraph is everything.** If someone reads nothing else, this paragraph must explain what the project does and who it's for.
-- **Install must be copy-pasteable.** No "configure your environment" hand-waving. Exact commands.
-- **Usage example must be minimal.** The simplest possible thing that shows it working. Not a full app — a 3-5 line snippet.
-- **Screenshot or GIF above the fold.** If the project has a UI, show it. If it's a CLI, show terminal output. If it's a library, show the code + output side by side.
-- **No wall of text.** Short paragraphs. Bullet points. Code blocks. A README is scanned, not read.
-- **Features lead with benefit.** "Generate OG images automatically" not "Dynamic Open Graph Image Generation Module."
+## Design the information path
 
-## Phase 4: The One-Line Description
+Choose sections from reader needs rather than a fixed template. Most public software READMEs need some form of:
 
-The hardest part. One sentence under 15 words.
+1. identity and concise purpose;
+2. who it is for and what problem it solves;
+3. prerequisites and installation;
+4. minimal successful use with expected result;
+5. important capabilities, constraints, or compatibility;
+6. configuration and operational requirements;
+7. links to deeper documentation;
+8. development, contribution, support, security, and license information when relevant.
 
-**Formulas:**
+Internal services may emphasize ownership, dependencies, local setup, common operations, and runbooks. Monorepos may need a package map before installation. Research or data repositories may need methodology, provenance, citation, and reproducibility rather than badges or marketing visuals.
 
-- "[Verb] [thing] [benefit]" — "Generate changelogs from git history"
-- "[Thing] that [does what]" — "CLI that audits your SEO in 30 seconds"
-- "[Outcome] for [audience]" — "Type-safe API routes for Next.js"
+Put the first successful path early. Keep reference material in dedicated docs when the README would become harder to navigate, but do not hide prerequisites or critical warnings behind links.
 
-**Test it:** paste the one-liner into a Slack message with no other context. Does the recipient understand what the project does? If not, rewrite.
+## Write from verified behavior
 
-## Phase 5: Badges
+The opening should let the intended reader identify the project and its use without relying on slogans. Do not force an arbitrary word count when a qualifier is necessary for accuracy.
 
-Use shields.io. Pick from:
+Installation commands must match the repository's package manager, supported runtime, workspace layout, and environment needs. Show the simplest working use that represents the real API or product, along with an observable result.
 
-```markdown
-![npm version](https://img.shields.io/npm/v/PACKAGE)
-![license](https://img.shields.io/github/license/USER/REPO)
-![build](https://img.shields.io/github/actions/workflow/status/USER/REPO/WORKFLOW)
-![downloads](https://img.shields.io/npm/dm/PACKAGE)
-```
+Use feature lists only when they help selection. Name capabilities and relevant outcomes without inventing performance, popularity, or customer proof.
 
-**3-6 badges.** More than that is noise. Order: build status, version, downloads, license.
+Do not add badges, banners, screenshots, or GIFs as mandatory ingredients:
 
-For non-npm projects, adapt: PyPI, crates.io, Go pkg, Docker pulls — whatever fits.
+- add status badges only for maintained, meaningful endpoints;
+- add visuals when they materially clarify a UI, CLI result, architecture, or workflow;
+- use existing brand assets and repository conventions;
+- do not create decorative media or noisy badge rows to improve an audit score.
 
-## Phase 6: Audit Output Format
+Describe the repository's actual license and link to its file. When no license is present, report the practical ambiguity without giving categorical legal advice.
 
-```
-README AUDIT — [project]
-════════════════════════════════════
-Name & Description   [X/10]  [one-line note]
-Visual Hook          [X/10]  [one-line note]
-Badges               [X/10]  [one-line note]
-Install              [X/10]  [one-line note]
-Usage                [X/10]  [one-line note]
-API / Features       [X/10]  [one-line note]
-Contributing         [X/10]  [one-line note]
-License              [X/10]  [one-line note]
-────────────────────────────────────
-Overall              [X/80]
-════════════════════════════════════
+## Handle commands and examples safely
 
-TOP 3 REWRITES:
+Classify commands as executed, partially verified, documented only, or unavailable. Prefer a clean temporary environment for install/quick-start verification when feasible and safe. Do not publish secrets, personal paths, or environment values captured locally.
 
-[Section]: [what's wrong]
-→ [rewritten version]
-```
+Compile, typecheck, or run examples when the project makes that practical. If an example is illustrative rather than executable, label it and keep it consistent with current APIs.
+
+## Output contract
+
+In generate or repair mode, deliver the updated `README.md` and a short report containing:
+
+- primary audience and reader job;
+- authoritative sources used;
+- commands and examples actually executed;
+- sections added, removed, or intentionally omitted;
+- links, assets, badges, and license status checked;
+- limitations or setup paths that remain unverified.
+
+In audit mode, deliver prioritized findings and proposed replacements for the most consequential defects. Do not rewrite only the lowest-scoring cosmetic sections.
 
 ## Verify
 
-```
-[ ] One-line description under 15 words — a stranger gets it
-[ ] Screenshot, GIF, or banner visible above the fold
-[ ] Install commands copy-paste and work on first try
-[ ] Usage example is under 10 lines and shows expected output
-[ ] Features lead with benefit, not feature name
-[ ] No wall of text — short paragraphs, bullets, code blocks
-[ ] License specified
-[ ] Badges use shields.io with real endpoints
-[ ] README is under 300 lines — link to full docs for the rest
-[ ] Read it like a stranger — does it make you want to try this?
-```
+1. Read the README in order as a new member of the intended audience and confirm the first-use path is discoverable.
+2. Check project name, package names, versions, paths, environment variables, ports, and expected output against repository evidence.
+3. Run installation and the minimal usage path in a clean environment when feasible; label anything not executed.
+4. Validate code blocks using the project's compiler, interpreter, linter, or doctest path where available.
+5. Check relative links, anchors, referenced files, images, badge endpoints, and external documentation links with available tooling.
+6. Confirm prerequisites, destructive operations, migrations, security-sensitive configuration, and known constraints are visible at the point of use.
+7. Confirm contribution and test commands match CI and repository scripts.
+8. Confirm license wording matches the repository license file or clearly reports its absence.
+9. Remove placeholders, invented claims, stale screenshots, and sections that do not serve the identified reader job.
+10. Report the environment and checks used so “ready” does not imply unperformed verification.

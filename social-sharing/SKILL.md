@@ -1,215 +1,133 @@
 ---
 name: social-sharing
-description: Implement and verify social metadata, share URLs, Open Graph images, and per-route link previews. Use when shared links look wrong or need better context.
+description: Audit, implement, and verify canonical URLs, social metadata, preview images, and share links. Use when shared routes are missing, stale, generic, private, or incorrect.
 license: MIT
 ---
 
 # Social sharing
 
-Make every important URL carry the right title, description, canonical URL, preview image, and platform card. Treat the preview as part of the page's information, not a decorative banner.
+Make each important URL describe itself accurately when crawled or shared. Treat canonical identity, metadata, image delivery, and user-facing share actions as separate concerns that must agree.
 
-## Phase 1: Detect the Stack
+## Choose the mode and scope
 
-Check the codebase:
-- **Framework**: Next.js App Router / Pages Router / Astro / Remix / static HTML?
-- **Existing meta tags**: Search for `og:image`, `twitter:card` in layout files
-- **Dynamic pages**: Blog posts, product pages, skill pages — anything that needs per-page OG?
+Use the narrowest mode that satisfies the request:
 
-If meta tags already exist, audit them before changing anything.
+- **Audit** — inspect existing metadata and report defects without editing.
+- **Repair** — correct specific routes, images, or share actions.
+- **Implement** — add a complete metadata path for a new or uncovered site.
 
-## Phase 2: Framework-Specific Setup
+Choose the coverage separately:
 
-### Next.js App Router (recommended path)
+- **Representative** — sample every distinct metadata behavior and route family. Use this by default for open-ended audits.
+- **Exhaustive** — enumerate every finite public route and preview-image response when the user requests complete verification or the release risk warrants it. For unbounded dynamic routes, define the finite source set, query boundary, and snapshot time; report routes that could not be enumerated or fetched.
 
-Create `app/api/og/route.tsx`:
+Inventory the framework, router, rendering mode, deployment origin, locales, dynamic route families, metadata helpers, image assets or endpoints, and existing share-link components. In representative mode, select routes for each metadata behavior rather than checking only the homepage. In exhaustive mode, preserve an enumeration manifest with every resolved URL and image endpoint.
 
-```typescript
-import { ImageResponse } from 'next/og';
+Ask for the production origin, brand assets, or content fallback only when the repository and deployment configuration cannot establish them. Never ship a placeholder domain.
 
-export const runtime = 'edge';
+## Define the route contract
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const title = searchParams.get('title') || '[Project Name]';
-  const description = searchParams.get('description') || '[One-line description]';
+For every in-scope route family, determine:
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#09090b',
-          color: '#fafafa',
-          fontFamily: 'system-ui, sans-serif',
-          padding: '60px',
-        }}
-      >
-        <div
-          style={{
-            fontSize: 64,
-            fontWeight: 'bold',
-            marginBottom: 24,
-            textAlign: 'center',
-            lineHeight: 1.1,
-          }}
-        >
-          {title}
-        </div>
-        <div
-          style={{
-            fontSize: 28,
-            opacity: 0.55,
-            textAlign: 'center',
-            maxWidth: '80%',
-            lineHeight: 1.4,
-          }}
-        >
-          {description}
-        </div>
-      </div>
-    ),
-    { width: 1200, height: 630 }
-  );
-}
-```
+- canonical URL and locale policy;
+- page title and description source;
+- Open Graph type and any domain-specific fields;
+- preview image source, dimensions, alt text, and fallback behavior;
+- whether the route may be private, noindexed, parameterized, paginated, or unavailable;
+- which social platform links, native share actions, or copy-link controls are actually needed.
 
-Add to `app/layout.tsx` — read the actual project name and description from package.json, README, or landing page copy:
+Do not generate share controls merely because metadata exists. When controls are requested, encode the canonical URL and share text with URL APIs rather than string concatenation.
 
-```typescript
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://yourdomain.com'),
-  openGraph: {
-    title: '[Project Name]',
-    description: '[One-line description]',
-    images: [{
-      url: '/api/og?title=[Project Name]&description=[Description]',
-      width: 1200,
-      height: 630,
-    }],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: '[Project Name]',
-    description: '[One-line description]',
-    images: ['/api/og?title=[Project Name]&description=[Description]'],
-  },
-};
-```
+## Implement using the repository's stack
 
-For dynamic pages (blog posts, skill pages, product pages), override per page:
+Use the framework's supported metadata mechanism and current project version. Inspect installed dependencies and local type definitions before choosing an API.
 
-```typescript
-// app/[slug]/page.tsx
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const item = getItem(slug);
-  if (!item) return {};
+### Framework metadata APIs
 
-  const ogUrl = `/api/og?title=${encodeURIComponent(item.title)}&description=${encodeURIComponent(item.description)}`;
+For frameworks with first-class metadata support, implement shared defaults in the root layout or document and route-specific metadata beside the route's data loader. Include canonical identity and explicit absolute-image resolution. Keep metadata generation aligned with not-found and permission behavior.
 
-  return {
-    title: `${item.title} — [Site Name]`,
-    description: item.description,
-    openGraph: {
-      images: [{ url: ogUrl, width: 1200, height: 630 }],
-    },
-    twitter: {
-      images: [ogUrl],
-    },
-  };
-}
-```
+For Next.js App Router, prefer `metadataBase`, `alternates.canonical`, `openGraph`, `twitter`, and `generateMetadata` where supported by the installed version. Derive dynamic metadata from the same validated record used to render the page. Await asynchronous data and encode image-endpoint parameters with `URLSearchParams`.
 
-### Next.js Pages Router
+For Pages Router, Astro, Remix, SvelteKit, or another framework, inspect the project's existing head/metadata convention. If specialist implementation details are uncertain or version-sensitive, consult the framework's installed docs or official documentation rather than improvising a partial endpoint.
 
-Create `pages/api/og.tsx` with the same `ImageResponse` logic.
-Add meta tags via `next/head` in `_app.tsx` or per-page with `<Head>`.
+### Static HTML or build-time pages
 
-### Astro
+Emit absolute canonical and image URLs in the generated document. For multiple pages, generate page-specific metadata from content records at build time. Avoid a single generic image when the route's identity matters and the build already has the necessary data.
 
-Install: `npm install satori @resvg/resvg-js`
+### Image delivery
 
-Create `src/pages/og/[...slug].png.ts` as an endpoint that uses satori to generate a PNG buffer and returns it with `Content-Type: image/png`.
+Whether images are static or generated, ensure the public response:
 
-Add meta tags in `src/layouts/Layout.astro` in the `<head>` section.
+- returns a successful status and correct image content type;
+- uses dimensions appropriate to the target card without relying on unsafe edge content;
+- remains readable at thumbnail size;
+- handles long titles, missing descriptions, non-Latin text, and unexpected characters;
+- has a stable cache policy consistent with how often content changes;
+- uses a deterministic fallback when route data is missing.
 
-### Static HTML
+Do not invent customer logos, claims, statistics, or product screenshots for the card.
 
-Generate a static `og-image.png` (1200×630) once, and reference it:
+## Required metadata semantics
+
+The exact emitted tags depend on framework and page type, but the resolved document should normally include:
 
 ```html
-<meta property="og:image" content="https://yourdomain.com/og-image.png" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-```
-
-For static sites with many pages, consider generating per-page OG images at build time.
-
-## Phase 3: Required Meta Tags
-
-Every page needs these. Inject them in the base layout:
-
-```html
-<!-- Open Graph -->
+<link rel="canonical" href="https://example.com/resolved-path" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="[Canonical page URL]" />
-<meta property="og:title" content="[Page title]" />
-<meta property="og:description" content="[Page description — 1-2 sentences]" />
-<meta property="og:image" content="[OG image URL — absolute, not relative]" />
+<meta property="og:url" content="https://example.com/resolved-path" />
+<meta property="og:title" content="Page title" />
+<meta property="og:description" content="Accurate page description" />
+<meta property="og:image" content="https://example.com/resolved-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-
-<!-- Twitter / X -->
+<meta property="og:image:alt" content="Meaningful image description" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="[Page title]" />
-<meta name="twitter:description" content="[Page description]" />
-<meta name="twitter:image" content="[OG image URL — must match og:image]" />
 ```
 
-**Common mistakes that break previews:**
-- Using relative URLs for `og:image` — must be absolute (`https://...`)
-- Setting `og:image` but not `twitter:image` — Twitter ignores `og:image`
-- Missing `og:image:width` and `:height` — causes slow rendering and sometimes no preview
-- Not setting `metadataBase` in Next.js — all relative URLs become broken
+Add platform-specific title, description, and image tags when the platform behavior or product requirements justify them. Do not assume one platform's fallback behavior is permanent.
 
-## Phase 4: Design Rules
+Canonical and `og:url` values must follow the same normalization policy for scheme, host, path, locale, slash, pagination, and tracking parameters. Private or noindex pages need an explicit sharing policy rather than accidental global defaults.
 
-The image renders at 1200×630 on desktop and gets thumbnail-cropped on mobile. Design for both:
+## Audit findings
 
-- **Text must be readable at 300px wide** — that's how it looks in a Slack/Twitter feed
-- **Keep all content within center 80%** — platforms crop the edges unpredictably
-- **Dark background preferred** — stands out in light-mode feeds
-- **Title: 48-64px bold** — readable at thumbnail size
-- **Description/subtitle: 24-32px, lower opacity** — supporting context
-- **Minimum 4.5:1 contrast ratio** — both light and dark mode platforms
+For each defect, report:
 
-## Phase 5: Verify
-
-Paste your URL into these tools after deploying. Don't skip this — meta tags look correct in code but break in practice more often than you'd expect:
-
-- Twitter Card Validator: cards-dev.twitter.com/validator
-- LinkedIn Post Inspector: linkedin.com/post-inspector/
-- Facebook Debugger: developers.facebook.com/tools/debug/ (also works for WhatsApp)
-- Quick check: paste URL in any Slack channel
-
+```text
+[route family and representative URL]
+Source: [file:line or generator]
+Resolved value: [observed tag, URL, or image response]
+Expected behavior: [route contract]
+Impact: [wrong identity, missing preview, stale image, privacy risk, or broken action]
+Repair: [specific source change]
+Verification: [automated and deployed check]
 ```
-[ ] OG image route returns valid image at /api/og (or equivalent)
-[ ] og:title, og:description, og:image all set in base layout
-[ ] og:image:width and og:image:height set
-[ ] twitter:card set to summary_large_image
-[ ] twitter:image set (separate from og:image — both required)
-[ ] og:image URL is absolute, not relative
-[ ] Dynamic pages have per-page og:image with correct title param
-[ ] Image readable at 300px thumbnail width
-[ ] Verified in Twitter Card Validator or LinkedIn Inspector
-```
+
+Separate source-code candidates from defects confirmed in rendered HTML or image responses.
+
+For repair or implementation work, also return:
+
+- files and route families changed;
+- metadata sources, canonical policy, and image fallback implemented;
+- representative or exhaustive coverage manifest, including every enumerated image response in exhaustive mode;
+- local and deployed checks with observed status, content type, dimensions, and resolved values;
+- cache/debugger state and any refresh still pending;
+- routes, dynamic sets, credentials, or production checks that remain unverified.
+
+## Verify locally
+
+Use the repository's build or development path when safe, then check representative routes programmatically:
+
+1. Fetch the resolved HTML, not only the source component.
+2. Assert one canonical URL and the expected Open Graph/Twitter fields.
+3. Confirm canonical, `og:url`, and share-link targets normalize to the intended public URL.
+4. Fetch every in-scope preview image: the representative set in representative mode, or every URL in the enumeration manifest in exhaustive mode. Verify status, content type, and actual dimensions, and report any untestable set.
+5. Exercise long, empty, encoded, localized, and not-found metadata inputs.
+6. Confirm dynamic routes do not fall back to another record's title or image.
+7. Run the project's build, typecheck, and relevant tests.
+8. Inspect images at full size and thumbnail size for clipping, contrast, and truthful content.
+
+## Verify after deployment
+
+Fetch public URLs because crawlers cannot access localhost and deployment configuration may change origins or caching. Inspect response HTML and images before using current platform debuggers or a real share as a final confirmation. Record which public routes were checked and any cache refresh still pending.
+
+Do not claim completion when only source tags were inspected or when the production origin remains unknown.

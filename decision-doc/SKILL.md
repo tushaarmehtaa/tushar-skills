@@ -1,139 +1,58 @@
 ---
 name: decision-doc
-description: Facilitate a choice and write a decision document with options, constraints, tradeoffs, and a recommendation. Use when a team is stuck between approaches.
+description: Facilitate, research, write, or audit decision records with options, evidence, tradeoffs, ownership, and review triggers. Use when a person or team must choose or document an approach.
 license: MIT
 ---
 
-Write a decision doc when you're stuck between approaches. Forces a pick instead of endless deliberation.
+# Decision document
 
-## How to start
+Turn ambiguity into a decision that can be understood, executed, reviewed, and superseded.
 
-Ask ONE question. Do not explain the process or list what you'll need.
+## Choose a mode
 
-> "What's the decision? One sentence."
+- **Fast record:** context already contains the decision and rationale; write the record.
+- **Facilitation:** important inputs are missing or stakeholders are stuck.
+- **Research comparison:** evidence must be gathered before choosing.
+- **Experiment to decide:** a bounded test has positive expected value of information.
+- **Audit:** evaluate an existing decision record or a decision that is not holding.
 
-Wait for the answer. If it's vague ("we're thinking about our auth setup"), push back: "What specifically are you deciding between? Name the options." Do not move on until you have a one-sentence decision and at least two named options.
+Classify the decision as reversible, costly to reverse, or effectively irreversible. This changes the depth and evidence burden; reversibility is not an automatic tiebreaker.
 
-If the user gives "let's do both" at any point — stop immediately. "Doing both means you're not deciding. Which one first? That's the decision."
+## Workflow
 
-If the user says "it depends" — push back. "On what specifically? Name the variable."
+1. Extract the decision, owner, deadline, status quo, options, constraints, decision drivers, and known evidence from context.
+2. If a blocking input is missing, ask one focused question at a time. Do not force an interview when the record is already supportable.
+3. Include the status quo when it is a real option. Allow parallel or phased choices when dependencies, capacity, and order make them genuinely distinct—not as an escape from choosing.
+4. Evaluate options against the agreed drivers. Use weights only when they clarify the tradeoff; show sensitivity when small weight changes reverse the result.
+5. Distinguish facts, estimates, assumptions, preferences, and unknowns. Research time-sensitive claims from primary sources when authorized.
+6. If a short experiment could resolve a pivotal uncertainty, specify hypothesis, cost, duration, success rule, and the decision each outcome triggers. Otherwise decide with current evidence.
+7. Recommend one option or sequence. State confidence, strongest counterargument, consequences, and what would cause reconsideration.
+8. Name the first action, owner, due date, review trigger, and how this record supersedes or is superseded by later decisions.
 
-Ask one question at a time through the phases below. Don't list all the questions upfront.
+## Output contract
 
----
+Return a concise decision record with:
 
-## Phase 1: Frame the Decision
+- title, date, status, owner, participants;
+- decision statement and deadline;
+- context, constraints, and decision drivers;
+- evidence and assumptions;
+- options, including status quo where relevant;
+- comparison and strongest argument for/against each;
+- decision, confidence, and rationale;
+- consequences and what is being given up;
+- first action, owner, due date;
+- review/expiry trigger and supersession links;
+- unresolved risks or dissent.
 
-Get these from the user or extract from conversation:
-
-1. **What's the decision?** — One sentence. "Which auth provider to use" not "thinking about auth stuff."
-2. **Why now?** — What's blocked until this is decided? Urgency changes the answer.
-3. **What are the options?** — 2-4 options. More than 4 means you haven't filtered enough.
-4. **What are the constraints?** — Budget, timeline, team size, existing tech, non-negotiables.
-
-If the user says "I'm stuck between X and Y," you already have 1 and 3. Don't re-ask.
-
-## Phase 2: Define the Criteria
-
-Before comparing options, agree on what matters. Ask the user to rank these or suggest your own based on context:
-
-**Common criteria (pick 3-5 that matter for this decision):**
-
-- Time to implement
-- Long-term maintenance burden
-- Cost (money)
-- Team familiarity / learning curve
-- Scalability / performance
-- Flexibility to change later
-- Community / ecosystem / docs
-- User experience impact
-- Security implications
-- Reversibility — how hard is it to switch if this is wrong?
-
-**Reversibility is the tiebreaker.** When two options are close, pick the one that's easier to undo. Irreversible decisions deserve more deliberation. Reversible ones deserve speed.
-
-## Phase 3: Write the Doc
-
-```
-DECISION — [title]
-════════════════════════════════════
-
-CONTEXT
-[2-3 sentences. What we're building, why this decision matters now,
-what's blocked until we decide.]
-
-CONSTRAINTS
-- [constraint 1]
-- [constraint 2]
-- [constraint 3]
-
-OPTIONS
-
-┌─────────────────────────────────────────────┐
-│ Option A: [name]                            │
-├─────────────────────────────────────────────┤
-│ How it works: [1-2 sentences]               │
-│ Upside: [strongest argument]                │
-│ Downside: [strongest argument against]      │
-│ Effort: [S/M/L]                             │
-│ Reversibility: [easy/medium/hard]           │
-└─────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────┐
-│ Option B: [name]                            │
-├─────────────────────────────────────────────┤
-│ How it works: [1-2 sentences]               │
-│ Upside: [strongest argument]                │
-│ Downside: [strongest argument against]      │
-│ Effort: [S/M/L]                             │
-│ Reversibility: [easy/medium/hard]           │
-└─────────────────────────────────────────────┘
-
-[Option C if needed — same format]
-
-RECOMMENDATION
-[Pick one. Say why in 2-3 sentences. Be direct.]
-
-WHAT WE'RE GIVING UP
-[Name the tradeoff explicitly. What's the cost of this choice?
-This forces honesty about what you're sacrificing.]
-
-════════════════════════════════════
-```
-
-## Phase 4: Anti-Patterns
-
-Decisions stall for predictable reasons. Call them out:
-
-**"Let's do both"** — No. Doing both means you're not deciding. If you genuinely need both, build one first and the other later. Which one first? That's the decision.
-
-**"Let's prototype and see"** — Sometimes valid. Usually a delay tactic. If a 2-hour spike will genuinely resolve uncertainty, do it. If you'll still be unsure after, decide now.
-
-**"It depends"** — On what? Name the specific variable. If you can name it, you can evaluate it. If you can't, you're stalling.
-
-**"What do other companies use?"** — Useful data point, bad decision framework. You're not other companies. What matters is your constraints, your timeline, your team.
-
-**Bike-shedding** — Spending an hour debating a decision that takes 30 minutes to reverse. If the decision is easily reversible, timebox to 10 minutes and pick.
-
-## Phase 5: After the Decision
-
-Once decided:
-
-1. **Save the doc** — Offer to write it as `DECISIONS.md` or `docs/decisions/YYYY-MM-DD-[title].md`
-2. **First action** — What's the very first thing to do to execute this decision? Name it.
-3. **Kill the other options** — Don't leave doors open. If you picked Clerk, stop evaluating NextAuth. Decision debt compounds.
+Offer to save it only when the user requested a file or the workspace convention clearly supports one.
 
 ## Verify
 
-```
-[ ] Decision framed as one clear sentence
-[ ] 2-4 options — no more
-[ ] Each option has: how it works, upside, downside, effort, reversibility
-[ ] Criteria are explicit — what matters for THIS decision, not generic
-[ ] Recommendation picks one and says why in 2-3 sentences
-[ ] "What we're giving up" section names the real tradeoff
-[ ] No "it depends" — variables are named and evaluated
-[ ] No "let's do both" unless genuinely phased with a clear order
-[ ] Decision is saved somewhere the team can find it later
-[ ] First action after the decision is named
-```
+- The record states one executable decision or explicit sequence.
+- The recommendation follows the stated drivers and evidence.
+- Material claims are sourced, measured, or labeled as assumptions.
+- Reversibility, implementation cost, and downside are explicit.
+- An experiment is used only when its result can change the decision.
+- Owner, first action, due date, and review trigger are present.
+- Dissent and the strongest counterargument are represented fairly.

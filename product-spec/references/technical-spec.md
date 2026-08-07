@@ -1,179 +1,110 @@
----
-name: mvp-spec
-description: Turn a validated product idea into a scoped MVP spec with features, data model, routes, pages, and stack. Use when planning a buildable v1 before coding.
-license: MIT
----
+# Buildable technical specification
 
-The spec you write before touching any code. Turns a rough idea into a buildable v1 with a clean feature cut, data model, and stack recommendation.
+Adapt this reference to the existing architecture and selected mode. It is not a default stack recommendation or a mandatory interview.
 
-## How to start
+## Contents
 
-Ask ONE question.
+- [Architecture fit](#architecture-fit)
+- [Flows and states](#flows-and-states)
+- [Data and authorization](#data-and-authorization)
+- [Interfaces and background work](#interfaces-and-background-work)
+- [Non-functional requirements](#non-functional-requirements)
+- [Delivery and rollout](#delivery-and-rollout)
+- [Acceptance and verification](#acceptance-and-verification)
 
-> "What's the idea? One sentence."
+## Architecture fit
 
-Wait for the answer. Then immediately challenge scope before anything else.
+Document the relevant current state before proposing change:
 
-**Ask the narrowing question before moving to Phase 1:**
+- component/service boundaries and owners;
+- frameworks, persistence, auth, queues, analytics, deployment;
+- existing conventions and reusable modules;
+- known constraints, debt, and incompatible assumptions;
+- build-versus-buy decision and reversibility where relevant.
 
-> "If you could only ship ONE feature this week and it had to deliver real value — what would it be?"
+Prefer the smallest change consistent with the product outcome and operating risk. Do not introduce a fashionable stack to a working repository without evidence.
 
-This is not optional. The spec is built around the answer to this question. If the user can't answer it, the idea isn't ready for a spec. Keep pushing until they name one thing.
+## Flows and states
 
-If they list 3 features as "the one thing" — push back. "That's three things. Which one is first? If you had to cut the other two for launch, which one stays?"
+For each user/system flow, specify:
 
-Once you have the one core thing, proceed. Do not write the spec until you have it.
+| Step | Actor | Preconditions | Action/system behavior | State/result | Failure/recovery |
+|---|---|---|---|---|---|
 
----
+Consider first use, repeat use, empty, loading, validation, permission denied, conflict, timeout, partial failure, cancellation, retry, success, deletion, and support recovery as applicable.
 
-## Phase 1: Capture the Idea
+## Data and authorization
 
-Ask for anything missing:
+For each entity:
 
-1. **The idea** — What does it do? One sentence.
-2. **Who is it for?** — Target user. "Developers" is too vague. "Solo SaaS founders building with Next.js" is specific.
-3. **Monetization** — Free, freemium, paid, credits? Skip for now if unclear.
-4. **Tech preferences** — Any stack constraints? Or let the skill recommend.
+- purpose and owner/tenant;
+- identifiers and relationships;
+- lifecycle and allowed state transitions;
+- required/optional fields and constraints;
+- source of truth and derived fields;
+- retention, deletion, export, and audit needs;
+- migration/backfill and compatibility;
+- authorization matrix by actor and operation.
 
-If the user gives you a paragraph, extract these from it and confirm before continuing. Don't ask for what you already have.
+Address idempotency, unique constraints, concurrency, ordering, and transaction boundaries where multiple writes or retries can occur.
 
-## Phase 2: The One-Build Rule
+## Interfaces and background work
 
-Before writing anything, validate the scope:
+For each API, event, job, or integration, define:
 
-- Is this ONE product, or three ideas stapled together?
-- Can v1 be built and shipped in 1–2 weeks by one person?
-- Is there one clear action the user takes to get value?
+- caller/consumer and authorization;
+- input/output schema and versioning;
+- validation and stable error contract;
+- idempotency/retry/timeout behavior;
+- rate and size limits;
+- observability and privacy classification;
+- dependency failure and recovery;
+- compatibility/deprecation policy.
 
-If the idea is too broad, cut it. This spec covers v1 only — not the vision, not the roadmap.
+Use concrete endpoints only when the architecture calls for them. UI routes are not a substitute for state and permission requirements.
 
-**The narrowing question:** "If you could only ship ONE feature this week and it had to deliver real value — what would it be?" That's the core loop. Build the spec around that.
+## Non-functional requirements
 
-## Phase 3: Feature Split
+Include proportional requirements for:
 
-List every feature that came up. Then sort ruthlessly.
+- security and abuse prevention;
+- privacy, consent, retention, and deletion;
+- accessibility and responsive/input behavior;
+- performance budgets and service objectives;
+- reliability, backups, and disaster recovery;
+- analytics and auditability;
+- support and operational ownership;
+- cost limits and capacity.
 
-### LAUNCH (ships in v1)
+Mark what is required for launch, what can be monitored, and what is explicitly deferred with risk accepted.
 
-Only features that complete the core loop:
+## Delivery and rollout
 
-- User can sign up
-- User can do the one thing
-- User gets value from doing it
-- You can see that they got value
+Use vertical slices:
 
-### LATER (month 2+)
-
-Everything else. Default everything here unless it's provably required for launch:
-
-- Settings, preferences, notifications
-- Team features, collaboration, multi-user
-- Admin dashboard
-- Analytics dashboards
-- Mobile optimization
-- Integrations, webhooks, API access
-
-**The test:** "If I remove this, can a user still get value from v1?" Yes → LATER.
-
-## Phase 4: Data Model
-
-Design only for LAUNCH features. Don't model LATER features — the schema will change anyway.
-
-```
-users
-├── id (uuid)
-├── email
-├── [plan | credits — if monetized in v1]
-├── created_at
-└── updated_at
-
-[core resource]
-├── id (uuid)
-├── user_id → users.id
-├── [core fields]
-├── created_at
-└── updated_at
-
-Relationships:
-- users has many [resources]
-- [resource] belongs to user
+```text
+user outcome
+→ flow and states
+→ data/interface changes
+→ implementation boundary
+→ acceptance criteria
+→ verification evidence
 ```
 
-One table per entity. No join tables unless collaboration is in v1 (it almost never is).
+For live changes, define feature gating, migration order, backward compatibility, canary population, monitoring, rollback trigger, backout steps, and stale-code/data cleanup.
 
-## Phase 5: API Routes
+The solo-MVP modifier may constrain time and staffing, but it does not remove mandatory security, data integrity, or accessibility work.
 
-Only routes LAUNCH features actually need.
+## Acceptance and verification
 
-```
-Auth
-POST   /api/auth/signup
-POST   /api/auth/login
-GET    /api/auth/me
+Write acceptance criteria as observable behavior under explicit conditions. Cover happy path, permission, validation, dependency failure, concurrency/idempotency, accessibility, observability, migration, and rollback as risk requires.
 
-[Resource]
-GET    /api/[resource]           — list (current user only)
-POST   /api/[resource]           — create
-GET    /api/[resource]/:id       — get one
-DELETE /api/[resource]/:id       — delete
-```
+Specify verification method and environment:
 
-No PUT/PATCH unless editing is core to the loop in v1.
-
-## Phase 6: Pages
-
-Every screen the user sees in v1.
-
-```
-/                  — Landing page
-/login             — Auth
-/signup            — Auth
-/dashboard         — Main view after login
-/[resource]/:id    — Detail view (if needed)
-/settings          — Only if required for launch
-```
-
-## Phase 7: Tech Stack
-
-Match the recommendation to the user's stated constraints.
-
-| Priority | Stack |
-|----------|-------|
-| Ship fastest, solo | Next.js + Supabase + Vercel |
-| Full backend control | Next.js + Postgres + Prisma + Railway |
-| AI-heavy | Next.js + Vercel AI SDK + Supabase |
-| Python backend | FastAPI + Postgres + Supabase Auth |
-
-Always explain why — one sentence per choice. "Supabase: auth + postgres in one service, no separate backend needed for v1."
-
-## Phase 8: Scope Cut List
-
-The most important section. Explicitly list what v1 does NOT build.
-
-```
-v1 does NOT include:
-- Team workspaces or multi-user support
-- Email notifications
-- API access for external integrations
-- Mobile app
-- Custom domains
-- [anything that came up but got cut]
-```
-
-This prevents scope creep during the build. Reference it every time someone says "just one more thing."
-
-## Verify
-
-```
-[ ] Problem statement is one sentence
-[ ] 2-3 user personas with specific pain — not demographic labels
-[ ] Core loop identified — one action, one value delivered
-[ ] Feature list split into LAUNCH and LATER
-[ ] LAUNCH features cover exactly one core loop, nothing else
-[ ] Data model covers LAUNCH features only — no speculative tables
-[ ] API routes listed with HTTP methods
-[ ] All pages listed — no screens without a route
-[ ] Tech stack recommended with one-sentence reasoning per choice
-[ ] Scope cut list explicitly names what v1 does NOT build
-[ ] Entire spec is buildable in 1-2 weeks by one person
-```
+- unit/property tests for invariants;
+- integration/contract tests for boundaries;
+- end-to-end tests for value paths;
+- migration rehearsal and reconciliation;
+- security/privacy/accessibility checks;
+- load/performance tests where thresholds matter;
+- deployed smoke tests and telemetry confirmation.

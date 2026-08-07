@@ -1,289 +1,151 @@
 ---
 name: demo-video
-description: Plan, script, build, and render product demos and technical explainers with Remotion. Use when creating walkthroughs, launch videos, or social clips.
+description: Plan, script, build, and verify Remotion product demos, walkthroughs, launch clips, and explainers. Use when a product or technical claim needs a storyboard or rendered video.
 license: MIT
 ---
 
 # Demo video
 
-Turn a product or technical idea into a clear visual story, then build it in Remotion. Start with the viewer, claim, proof, and narration before choosing transitions. Use [explainer writing](references/explainer-writing.md) when the subject is technical or research-heavy.
+Turn one defensible message into a visual sequence that works in its viewing context, then implement it with the repository's Remotion setup. Story, evidence, and comprehension determine the treatment; transitions do not.
 
-## Phase 1: Get the Brief
+## Establish the brief from available evidence
 
-Before writing any code, ask for what's missing:
+Inspect the product, existing media, brand assets, UI, documentation, and Remotion configuration before asking questions. Establish:
 
-```
-I'll scaffold a Remotion video project. Quick decisions:
+- target viewer and what they know before watching;
+- destination, aspect ratio, sound-on or sound-off context, and duration range;
+- one primary claim or learning outcome;
+- product action, result, data, or demonstration that can prove it;
+- call to action or final implication;
+- available footage, UI states, narration, music, fonts, and brand constraints;
+- deadline, rendering environment, and required deliverables.
 
-1. Product name? (used for composition IDs and file names)
-2. One-line pitch? (the core message of the video)
-3. Scene ideas? (3-8 scenes — what story does each beat tell?)
-4. Color vibe?
-   a) Dark + amber accent (#d97706) — warm, editorial
-   b) Dark + monochrome — clean, minimal
-   c) Custom — give me bg, text, and accent hex values
-5. BPM of your music track? (default: 115)
-6. Font? (default: system stack — or provide .woff2 files for Geist/custom)
-```
+Ask only for missing information that changes the claim, evidence, production scope, or rights to use an asset. If creative direction is open, propose a treatment and storyboard rather than asking the user to invent scenes.
 
-If the user already described their video in the conversation, extract answers before asking. Don't ask for what you already have.
+## Choose the format
 
-**Defaults if user skips:** 25 seconds, 30fps, 6 scenes, dark + amber, 115 BPM, system font stack.
+- **Product walkthrough** — chronological task completion with legible UI and minimal editorial interruption.
+- **Launch or social clip** — compressed proposition, product evidence, payoff, and action; must work muted if the destination commonly autoplays without sound.
+- **Technical explainer** — mechanism, observation, interpretation, limitation, and implication. Read [explainer writing](references/explainer-writing.md) before scripting.
+- **Feature demo** — one capability, starting state, action, visible result, and boundary.
+- **Narrated tutorial** — paced instruction with prerequisites, cursor intent, captions, recovery, and a reproducible result.
 
-## Phase 2: Scaffold the Project
+Do not combine every format into one video. When several outputs are requested, define a master narrative and decide which beats survive each cut.
 
-Create this exact file tree:
+## Write a proof-led treatment
 
-```
-[name]-video/
-├── package.json
-├── tsconfig.json
-├── src/
-│   ├── index.ts
-│   ├── Root.tsx
-│   ├── [Name]Demo.tsx        # orchestrator
-│   └── [Name]Scenes.tsx      # scenes + tokens + primitives
-├── public/
-│   ├── audio/                # user drops .mp3 here
-│   └── fonts/                # .woff2 files if custom font
-└── out/
-```
+Before code, produce:
 
-### package.json
-
-```json
-{
-  "name": "[name]-video",
-  "type": "commonjs",
-  "dependencies": {
-    "@remotion/cli": "^4.0.421",
-    "@types/react": "^19.2.13",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "remotion": "^4.0.421",
-    "typescript": "^5.9.3"
-  }
-}
+```text
+Viewer:
+Destination and format:
+Primary claim:
+Visible proof:
+What must be understood by the end:
+Narration/caption approach:
+Treatment:
+Beat list with approximate timing:
+Required assets or captures:
+Risks or unknowns:
 ```
 
-**Add `@remotion/fonts: "^4.0.434"` only if loading local font files.** Don't include it otherwise.
+Each beat must change what the viewer knows, sees, or can do. Pair every material narration line with visible evidence or necessary context. Cut decorative scenes that merely repeat the voiceover.
 
-**`"type": "commonjs"` is required.** ESM causes issues with Remotion's bundler.
+Use real product states and truthful data. Label representative fixture data and avoid presenting it as customer proof.
 
-### tsconfig.json
+## Script for time and sound context
 
-```json
-{
-  "compilerOptions": {
-    "target": "ES2018",
-    "module": "commonjs",
-    "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
-  },
-  "include": ["src/**/*"]
-}
-```
+Draft narration and on-screen copy together. Estimate timing by reading the script aloud at the intended delivery pace, then validate against recorded or generated audio rather than relying only on word count.
 
-### src/index.ts
+- Keep critical on-screen text readable long enough to parse.
+- Caption spoken content when the deliverable requires accessibility or muted comprehension.
+- Do not make captions compete with product UI or platform overlays.
+- State specialist terms after explaining the mechanism, then use them consistently.
+- Keep claims within what the visible demonstration establishes.
 
-Always identical:
+For voiceover, music, sound effects, caption generation, or loudness work, read [audio and captions](references/audio.md) before adding media.
 
-```typescript
-import { registerRoot } from "remotion";
-import { RemotionRoot } from "./Root";
-registerRoot(RemotionRoot);
-```
+## Plan formats deliberately
 
-## Phase 3: Compositions (Root.tsx)
+Do not render one unchanged composition into every aspect ratio. For each requested format, define safe areas, text measure, crop behavior, product-UI scale, and any beat that needs recomposition or omission.
 
-Register three compositions. Same component renders all three — aspect ratio detection happens inside.
+Share components and timeline data when useful, but allow format-specific composition. Register only deliverables the user needs.
 
-```typescript
-import { Composition } from "remotion";
-import { Demo } from "./[Name]Demo";
+## Implement in the existing Remotion project
 
-export const RemotionRoot = () => (
-  <>
-    <Composition id="[Name]Demo" component={Demo} durationInFrames={750} fps={30} width={1920} height={1080} />
-    <Composition id="[Name]DemoMobile" component={Demo} durationInFrames={750} fps={30} width={1080} height={1920} />
-    <Composition id="[Name]DemoMobileLandscape" component={Demo} durationInFrames={750} fps={30} width={1334} height={750} />
-  </>
-);
-```
+Inspect installed versions, module format, project entry point, configuration, scripts, and existing primitives. Use those APIs and conventions. For a new standalone project, select compatible current versions rather than copying pinned versions from this skill.
 
-**750 frames at 30fps = 25 seconds.** Adjust if user specified a different duration.
+Separate concerns where the project size benefits from it:
 
-**Never build separate mobile components.** Inside the component, detect format:
+- composition registration and input props;
+- narrative/timeline data;
+- scenes or shots;
+- shared visual primitives;
+- media and font loading;
+- captions and audio mix;
+- tests or frame assertions.
 
-```typescript
-const { width, height, fps } = useVideoConfig();
-const isPhone = height > width;
-const isMobileLandscape = width > height && width <= 1400;
-const globalScale = isPhone ? 1.14 : isMobileLandscape ? 1.08 : 1;
-```
+Pass local timeline time to scenes when their animation is scene-relative. Use global time only for deliberately continuous behavior. Clamp interpolation only when values can travel outside the intended range; do not add ceremonial options to bounded inputs.
 
-Wrap the entire scene area in a scaled `<AbsoluteFill>` using `globalScale`.
+Read [Remotion primitives](references/primitives.md) only when the treatment needs reusable scene lifecycle, text-reveal, transition, or typing patterns. Adapt the primitives to the chosen visual language; none is mandatory.
 
-If loading custom fonts, call the font loader at module level in Root.tsx before compositions.
+Read [implementation cheatsheet](references/cheatsheet.md) when choosing animation parameters, responsive sizing, font loading, or render commands. Verify APIs against the installed Remotion version.
 
-## Phase 4: Scene Architecture (The Orchestrator)
+## Design motion from meaning
 
-The orchestrator file (`[Name]Demo.tsx`) does three things: defines timing, wires audio, and lays out sequences.
+Choose cuts, dissolves, spatial continuity, reveals, zooms, or pauses based on the relationship between beats. Avoid applying springs, stagger, grain, glow, terminal simulation, bouncing buttons, or animated gradients as a signature recipe.
 
-### Scene Timing Object
+Animation must be deterministic under frame seeking. Support reduced motion when the video is embedded as an interactive or web experience. Do not animate fine detail that disappears at the final delivery size.
 
-```typescript
-const scenes = {
-  hook:   { from: 0,   dur: 90 },
-  xfade1: { from: 86,  dur: 10 },
-  pain:   { from: 90,  dur: 120 },
-  xfade2: { from: 206, dur: 10 },
-  // ... continue for each scene
-} as const;
-```
+## Handle product capture
 
-Rules:
-- **Crossfades overlap** with the previous scene by 4 frames (`from = prev scene end - 4`)
-- Crossfade duration: 10-16 frames
-- Scene durations: 60-195 frames (2-6.5 seconds). Short. No scene should overstay.
-- **`as const` is required** for TypeScript to treat values as literals
+When showing a live product:
 
-### Sequence Layout
+1. define the exact state and data needed;
+2. remove secrets and personal information;
+3. control viewport, cursor, zoom, and animation settings;
+4. capture at sufficient resolution;
+5. preserve UI chronology so actions and results remain believable;
+6. record limitations when a mock or fixture substitutes for a live state.
 
-Repeating pattern for every scene + crossfade pair:
+## Output contract
 
-```typescript
-const frame = useCurrentFrame();
+Deliver the requested combination of:
 
-<Sequence from={scenes.hook.from} durationInFrames={scenes.hook.dur}>
-  <SceneHook frame={frame - scenes.hook.from} duration={scenes.hook.dur} />
-</Sequence>
-<Sequence from={scenes.xfade1.from} durationInFrames={scenes.xfade1.dur}>
-  <CrossfadeTransition frame={frame - scenes.xfade1.from} dur={scenes.xfade1.dur} />
-</Sequence>
-```
+- treatment and timed beat sheet;
+- narration and on-screen script;
+- asset/capture manifest with provenance;
+- Remotion source and composition IDs;
+- caption file or embedded captions;
+- rendered files named by format;
+- representative stills or review frames;
+- verification report including technical and editorial checks.
 
-**Always pass `frame - scenes.X.from` so each scene gets local frame starting at 0.** Scenes must never reference the global frame.
-
-### Audio
-
-```typescript
-<Audio src={staticFile("audio/music.mp3")} volume={(f) => getMusicVolume(f)} />
-```
-
-Build `getMusicVolume` using the 5-layer system in [references/audio.md](references/audio.md). Pass the scenes object and transition frame numbers.
-
-## Phase 5: Build the Scenes
-
-Put all scene components, design tokens, and primitives in `[Name]Scenes.tsx`.
-
-### Design Tokens
-
-Based on user's color choice:
-
-**Dark + amber accent:**
-```typescript
-export const colors = {
-  bg: "#000000", surface: "#080808", surfaceRaised: "#111111",
-  border: "#191919", borderHover: "#333333", muted: "#555555",
-  text: "#999999", heading: "#ffffff",
-  accent: "#d97706", accentDim: "rgba(217,119,6,0.19)",
-  accentGlow: "rgba(217,119,6,0.07)", accentBright: "rgba(217,119,6,0.35)",
-};
-```
-
-**Dark + monochrome:**
-```typescript
-export const colors = {
-  bg: "#09090b", surface: "#18181b", border: "#27272a",
-  textPrimary: "#e4e4e7", textSecondary: "#c2c2cb",
-  textMuted: "#ababb5", textDim: "#9595a0", accent: "#e4e4e7",
-};
-```
-
-### Include These Primitives
-
-Copy from [references/primitives.md](references/primitives.md):
-
-1. **SceneWrap** — every scene uses this. Handles fade-in/fade-out with non-monotonic inputRange guard.
-2. **SlamText** — word-by-word spring entrance. Used for headlines.
-3. **CrossfadeTransition** — opacity spike between scenes. Must have `zIndex: 100`.
-4. **TypingEffect** — terminal/input simulation with blinking cursor.
-5. **GrainOverlay** — SVG noise texture (amber vibe only). `opacity: 0.035`, `zIndex: 50`.
-6. **StageLight + AmbientGlow** — drifting radial gradients (amber vibe only).
-
-### Scene Playbook
-
-Pick scenes from this menu based on the user's brief:
-
-| Scene Type | Duration | Purpose |
-|---|---|---|
-| Hook | 2-4.5s | SlamText headline + spring subtext. Grabs attention. |
-| Pain/Problem | 4-5s | Terminal typing showing the old way. "New session" flash resets. |
-| Snap/Solution | 2-3s | One command typed, result appears, "done." with glow pulse. |
-| Cooking/Loading | 1.5-2s | Emoji + shake + progress bar. Anticipation. |
-| Results/Cards | 4-6.5s | Items fly in from different directions. Shows output quality. |
-| Feature Grid | 2-3s | 2x3 or 3x2 grid, staggered spring entrances. |
-| Feedback/Chat | 3-4s | Chat bubbles: user asks (slides right), AI responds (slides left). |
-| Scroll/Carousel | 5-6.5s | Items cycle through center with enter/exit transitions. |
-| Install | 3s | Headline + typing animation of install command + "done." |
-| CTA | 3s | SlamText + pulsing button + URL. `fadeOut: 0` (no fade, video ends). |
-
-Common patterns inside scenes:
-- Every text element uses `spring()` for entrance, never raw `interpolate()` for motion
-- Staggered entrances: delay each item by 3-6 frames
-- Glow pulse on completion: `interpolate(Math.sin(frame * 0.1), [-1, 1], [0.03, 0.12])`
-- Subtle zoom drift: `interpolate(frame, [0, duration], [1, 1.03])`
-
-### Responsive Sizing
-
-Every size constant branches on `isPhone`:
-
-```typescript
-const fontSize = isPhone ? 148 : 88;      // headlines
-const subSize = isPhone ? 72 : 46;        // subtext
-const cmdSize = isPhone ? 72 : 48;        // terminal commands
-const panelW = isPhone ? 920 : 800;       // UI panels
-const borderRadius = isPhone ? 20 : 14;   // card corners
-```
-
-Phone sizes are roughly 1.4-2x desktop. Not a linear scale.
-
-See [references/cheatsheet.md](references/cheatsheet.md) for the full spring config table, responsive values, and render commands.
-
-## Phase 6: Gotchas
-
-These will silently break your video if ignored:
-
-1. **Always clamp extrapolation.** Every `interpolate()` call needs `{ extrapolateLeft: "clamp", extrapolateRight: "clamp" }`. Without it, values explode past 0/1.
-2. **Non-monotonic inputRange crash.** If `fadeOut=0` in SceneWrap, the inputRange gets duplicate values. The `safeEnd = Math.max(duration - fadeOut, fadeIn + 1)` guard in the primitive fixes this.
-3. **Font timeout on render.** `delayRender()` for font loading can timeout on frames >700. Use `--timeout=60000`.
-4. **zIndex on crossfades.** Crossfade overlays must have `zIndex: 100` to sit above scene content.
-5. **Local frame vs global frame.** Always pass `frame - scenes.X.from` to scene components.
-6. **`as const` on scenes object.** Required for TypeScript to treat values as literals.
-7. **No remotion.config.ts needed.** CLI defaults work fine.
-8. **`type: "commonjs"` in package.json.** Required. ESM breaks Remotion's bundler.
-9. **Background color on SceneWrap.** Set `backgroundColor: colors.bg` on the AbsoluteFill. Transparent backgrounds reveal previous scenes during crossfades.
-10. **Cursor blink rate.** `Math.sin(frame * 0.25)` with asymmetric thresholds `[-1, -0.2, 0.2, 1] → [0, 0, 1, 1]` gives realistic 60% visibility.
+State which formats share a timeline and which were independently composed.
 
 ## Verify
 
-```
-[ ] npm install completes without errors
-[ ] npx remotion studio opens and shows all 3 compositions
-[ ] Desktop composition (1920x1080) renders without crashes
-[ ] Mobile portrait composition (1080x1920) renders — text is readable
-[ ] Mobile landscape composition (1334x750) renders
-[ ] No interpolate() calls without extrapolation clamping
-[ ] SceneWrap has the safeEnd/safeDur guard for fadeOut=0
-[ ] Every scene component receives local frame (frame - scenes.X.from)
-[ ] Crossfade overlays have zIndex: 100
-[ ] Audio plays with volume changes across transitions
-[ ] Full render completes: npx remotion render [Id] out/video.mp4 --timeout=60000
-```
+### Technical
+
+1. Install or reuse dependencies according to repository policy.
+2. Run typecheck, build, and relevant tests.
+3. List compositions and render every requested deliverable.
+4. Seek representative frames around scene boundaries and confirm deterministic output.
+5. Check missing-media, font-loading, long-text, and format-specific branches.
+6. Confirm output resolution, frame rate, duration, codec, and file size match the delivery contract.
+
+### Editorial and visual
+
+1. Watch each final render from beginning to end at normal speed.
+2. Confirm the opening establishes relevance, the proof is visible, and the ending resolves the stated claim.
+3. Review at actual feed or player size, muted and with sound when applicable.
+4. Check text duration, caption synchronization, safe areas, platform overlays, UI legibility, and visual continuity.
+5. Confirm narration never outruns the evidence or claims unavailable product behavior.
+
+### Audio and accessibility
+
+1. Listen on headphones and ordinary speakers; check peaks, clipping, abrupt edits, intelligibility, and consistent loudness.
+2. Verify captions against the final audio, including names and technical terms.
+3. Confirm essential meaning survives muted playback when required.
+
+Report every check actually performed and any limitation caused by unavailable assets, services, codecs, or deployment context.

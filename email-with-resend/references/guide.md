@@ -1,198 +1,138 @@
-# Ship Email — Reference Guide
+# Resend implementation guide
 
-## Email Copy by Segment
+Read only the sections needed for the selected transactional, lifecycle, or marketing email path. Check the installed Resend SDK and current primary documentation before using API field names.
 
-### Power Users (top 20% by usage)
+## Contents
 
-**Goal:** Convert to paid or higher tier.
+- [Send wrapper](#send-wrapper)
+- [Templates and idempotency](#templates-and-idempotency)
+- [Durable delivery](#durable-delivery)
+- [Campaigns](#campaigns)
+- [Webhooks and suppression](#webhooks-and-suppression)
+- [Preferences and unsubscribe](#preferences-and-unsubscribe)
+- [Copy guidance](#copy-guidance)
+- [Verification](#verification)
 
-```
-Subject: you're one of our most active users
+## Send wrapper
 
-Hey [Name],
+Current Resend Node SDK calls return `{ data, error }` for API failures and may also throw for runtime/transport failures. The SDK uses `replyTo` in Node options.
 
-You've used [Product] more than 80% of our users this month.
-
-We're working on [upcoming feature] — would love your take on it.
-And if you haven't already, [paid tier] gets you [key benefit].
-
-— [Your Name]
-```
-
-### Active Users (regular usage, not top tier)
-
-**Goal:** Deepen engagement, educate on underused features.
-
-```
-Subject: one thing most people miss in [Product]
-
-Hey [Name],
-
-Most users never discover [underused feature]. It [specific benefit].
-
-[One sentence on how to find/use it].
-
-Let me know if you try it.
-
-— [Your Name]
-```
-
-### Dormant Users (no activity in 7-30 days)
-
-**Goal:** Re-engagement.
-
-```
-Subject: still there?
-
-Hey [Name],
-
-Haven't seen you in a while. [Product] has [one improvement since they last used it].
-
-Takes 30 seconds to try: [CTA URL]
-
-— [Your Name]
-```
-
-### Churned Users (30+ days inactive)
-
-**Goal:** Win-back or learn why they left.
-
-```
-Subject: honest question
-
-Hey [Name],
-
-You haven't used [Product] in a while. Genuinely curious — was it missing something, or just not the right time?
-
-One reply is enough. Happy to hear it.
-
-— [Your Name]
-```
-
----
-
-## Subject Line Formulas
-
-| Formula | Example |
-|---------|---------|
-| "[Number] [thing] about [topic]" | "one thing most people miss in [Product]" |
-| "honest [word]" | "honest question" |
-| "you [did something]" | "you're one of our most active users" |
-| "[thing] just [changed/happened]" | "something just changed for power users" |
-| "still [verb]?" | "still there?" |
-
-**Never use:**
-- "Following up on my last email"
-- "Quick question"
-- "Just checking in"
-- "Hope this finds you well"
-- ALL CAPS in subject lines
-- Exclamation marks in subject lines
-
----
-
-## Spam Trigger Words to Avoid
-
-In subject lines and body copy:
-- Free, free offer, free trial (in subject lines)
-- Guaranteed, guarantee
-- Act now, limited time (when it isn't)
-- Click here
-- Earn money, make money
-- No obligation
-- Risk-free
-- Special promotion
-
----
-
-## Rate Limiting Strategy
-
-| Resend Tier | Daily Limit | Strategy |
-|------------|-------------|---------|
-| Free | 100 emails/day | Segment campaigns, send in batches |
-| Pro ($20/mo) | 50,000/day | Fine for most indie builders |
-| Business | 100,000+/day | Only needed at scale |
-
-For campaigns larger than your daily limit:
 ```typescript
-// Send in batches with delay
-async function sendCampaignBatch(users: User[], template: string) {
-  const BATCH_SIZE = 50;
-  const DELAY_MS = 1000;
+import { Resend } from 'resend';
 
-  for (let i = 0; i < users.length; i += BATCH_SIZE) {
-    const batch = users.slice(i, i + BATCH_SIZE);
-    await Promise.all(batch.map(user => sendEmail({ to: user.email, ... })));
-    if (i + BATCH_SIZE < users.length) {
-      await new Promise(resolve => setTimeout(resolve, DELAY_MS));
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+type SendResult =
+  | { ok: true; id: string }
+  | { ok: false; retryable: boolean; message: string };
+
+export async function sendEmail(input: {
+  to: string | string[];
+  subject: string;
+  html: string;
+  text: string;
+  idempotencyKey: string;
+}): Promise<SendResult> {
+  try {
+    const { data, error } = await resend.emails.send(
+      {
+        from: process.env.EMAIL_FROM!,
+        replyTo: process.env.EMAIL_REPLY_TO,
+        to: input.to,
+        subject: input.subject,
+        html: input.html,
+        text: input.text,
+      },
+      { idempotencyKey: input.idempotencyKey },
+    );
+
+    if (error || !data?.id) {
+      return classifyResendError(error);
     }
+    return { ok: true, id: data.id };
+  } catch (error) {
+    return classifyTransportError(error);
   }
 }
 ```
 
----
+Adapt the second-argument/idempotency signature to the installed SDK version. Do not return success merely because the promise resolved.
 
-## Resend Webhooks (for delivery tracking)
+## Templates and idempotency
 
-Resend fires events you can log:
-- `email.sent` — left Resend servers
-- `email.delivered` — confirmed delivered
-- `email.opened` — recipient opened (if tracking enabled)
-- `email.clicked` — link clicked
-- `email.bounced` — hard bounce (remove from list)
-- `email.complained` — spam complaint (remove immediately)
+Prefer React Email or provider templates for structured escaping. If generating HTML manually, escape every untrusted name, URL, and content value. Include a useful text alternative and one primary action.
+
+Derive idempotency keys from the logical event, for example `welcome:{userId}:{signupEventId}`. Store send intent/status locally when delivery matters beyond Resend’s idempotency retention window.
+
+Use a verified sending domain/subdomain and a monitored reply-to. SPF and DKIM are required for domain verification; add DMARC according to the domain’s delivery policy. Treat dashboard/DNS status as manual until observed.
+
+## Durable delivery
+
+For user actions, write an outbox row in the same transaction as the triggering state change. A worker sends, records the Resend message ID, and retries classified transient failures with backoff. Use a dead-letter/alert path for permanent exhaustion.
+
+Runtime-specific post-response primitives can be acceptable for low-value notifications, but an unawaited promise may be terminated in serverless environments. Do not hold a signup request open for network email delivery unless the email itself is the security transaction and the UX is designed for it.
+
+## Campaigns
+
+Marketing/lifecycle email requires consent or another documented lawful basis and a product preference policy. Before send:
+
+1. materialize/preview the segment and recipient count;
+2. require role-based admin authorization and confirmation;
+3. create a campaign/run ID;
+4. enqueue one idempotent recipient job or use Resend Broadcasts/Contacts for marketing campaigns;
+5. filter current preferences and suppression at send time;
+6. record sent/skipped/failed counts without returning recipient PII broadly.
+
+Resend’s Batch API can send up to the current documented limit per request and is suited to multiple transactional messages. Current Resend guidance recommends Broadcasts for marketing campaigns. Do not implement a long request loop with `setTimeout` as a campaign queue.
+
+## Webhooks and suppression
+
+Verify Resend/Svix signatures using the raw request body and webhook secret before parsing/processing.
 
 ```typescript
-// app/api/webhooks/resend/route.ts
 export async function POST(req: Request) {
-  const event = await req.json();
-
-  if (event.type === 'email.bounced' || event.type === 'email.complained') {
-    await db.user.update({
-      where: { email: event.data.to },
-      data: { emailUnsubscribed: true }
+  const payload = await req.text();
+  let event;
+  try {
+    event = resend.webhooks.verify({
+      payload,
+      headers: {
+        id: req.headers.get('svix-id')!,
+        timestamp: req.headers.get('svix-timestamp')!,
+        signature: req.headers.get('svix-signature')!,
+      },
+      webhookSecret: process.env.RESEND_WEBHOOK_SECRET!,
     });
-  }
-}
-```
-
----
-
-## Unsubscribe Implementation
-
-Every campaign email must have an unsubscribe link:
-
-```typescript
-// Generate unsubscribe token
-import { createHmac } from 'crypto';
-
-function generateUnsubToken(email: string): string {
-  return createHmac('sha256', process.env.UNSUB_SECRET!)
-    .update(email)
-    .digest('hex');
-}
-
-// In template
-const unsubUrl = `https://yourdomain.com/unsubscribe?email=${encodeURIComponent(email)}&token=${generateUnsubToken(email)}`;
-
-// Footer of every campaign email
-`<p style="font-size: 12px; color: #999;">
-  <a href="${unsubUrl}">Unsubscribe</a>
-</p>`
-```
-
-```typescript
-// app/api/unsubscribe/route.ts
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const email = searchParams.get('email');
-  const token = searchParams.get('token');
-
-  if (generateUnsubToken(email!) !== token) {
-    return new Response('Invalid link', { status: 400 });
+  } catch {
+    return new Response('Invalid signature', { status: 400 });
   }
 
-  await db.user.update({ where: { email: email! }, data: { emailUnsubscribed: true } });
-  return new Response('Unsubscribed successfully');
+  await processResendEventIdempotently(event);
+  return new Response('OK');
 }
 ```
+
+Use webhook/event ID for deduplication. `data.to` may contain multiple recipients; normalize addresses. Suppress hard bounces and complaints immediately, track transient delivery failures separately, and avoid equating a bounce with a user’s global marketing preference.
+
+## Preferences and unsubscribe
+
+Model preferences by purpose/topic, with a global marketing opt-out and a separate suppression state. Security and essential transactional messages should not be disabled by a marketing opt-out.
+
+Use an opaque, random or signed preference token that resolves server-side rather than placing raw email in the URL. Validate signatures in constant time, support key rotation/expiry policy, and provide a confirmation/preferences page. Add standards-compliant `List-Unsubscribe` and one-click behavior where applicable.
+
+## Copy guidance
+
+- State why the recipient is receiving the message.
+- Keep subject lines factual; avoid false urgency or fabricated personalization.
+- One primary action is usually enough.
+- Re-engagement should mention a real product change or user state, not placeholders.
+- Do not infer “power”, “churned”, or “inactive” solely from simplistic percentiles; define segments from product behavior and validate queries.
+
+## Verification
+
+- Test `{ data, error }` and thrown-error paths.
+- Confirm idempotency prevents duplicate logical sends.
+- Verify HTML escaping, text rendering, sender, reply-to, and test recipient delivery.
+- Test valid/invalid/replayed webhooks and multi-recipient payloads.
+- Test bounce/complaint suppression and preference/unsubscribe paths.
+- Test unauthorized campaign access, segment preview, duplicate run, retry, cancellation, and rate limits.

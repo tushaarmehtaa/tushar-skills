@@ -1,35 +1,54 @@
 ---
 name: product-spec
-description: Turn an idea into a clear brief and buildable v1 specification with scope, flows, data, routes, risks, and acceptance criteria. Use when planning before implementation.
+description: Create or audit product briefs and buildable specs covering scope, flows, data, permissions, rollout, and acceptance. Use when planning a new product or a change before implementation.
 license: MIT
 ---
 
 # Product specification
 
-Move from an idea to a product decision and then to an implementable v1. Do not manufacture technical detail before the audience, problem, and scope are credible.
+Move from a product decision to an implementable, testable change. Do not manufacture technical detail before the audience, problem, and scope are credible.
 
-## Choose the depth
+## Choose a mode
 
-- **Brief:** clarify the audience, problem, promise, v1 boundary, and exclusions.
-- **Buildable spec:** add flows, states, data model, routes, integrations, risks, milestones, and acceptance criteria.
-- **Audit:** find contradictions, missing states, vague requirements, and scope that cannot fit the stated constraints.
+- **Brief:** clarify audience, trigger, problem, promise, smallest value path, and exclusions.
+- **Greenfield buildable spec:** define a new v1 and its operating boundary.
+- **Change spec:** fit a feature or behavior change into an existing product and architecture.
+- **Audit:** find contradictions, missing states, untestable requirements, and infeasible scope.
+- **Solo-MVP modifier:** constrain to a short, one-person build only when that is the actual goal.
+
+Do not automatically prepend a brief to an audit or a sufficiently grounded change spec.
 
 ## Workflow
 
-1. Read existing research, conversation context, code, constraints, and decisions. Do not ask the user to repeat known information.
-2. State the target user and triggering situation precisely. Separate observed evidence from assumptions.
-3. Define the problem, current workaround, desired outcome, product promise, and why the proposed mechanism can produce it.
-4. Draw the v1 boundary. List included capabilities, explicit exclusions, success signals, and the smallest end-to-end path that proves value.
-5. Map primary and failure flows, including first use, empty, loading, permission, validation, error, success, cancellation, and recovery states.
-6. For a technical spec, inspect the existing stack before choosing architecture. Define entities, ownership, permissions, routes or endpoints, integrations, background work, and operational needs.
-7. Split delivery into vertical slices that each produce a testable user outcome. Add acceptance criteria and proportional verification.
-8. Record open questions, risks, reversibility, and decisions that require the user. Never bury uncertainty inside confident requirements.
+1. Read research, conversation context, decisions, existing specs, repository, architecture, constraints, and conventions. Ask only blocking questions.
+2. Separate facts, observations, assumptions, decisions, and open questions.
+3. Define target user or role, triggering situation, current workaround, desired outcome, product promise, and mechanism. Use a real person only when it improves evidence; do not force one where role/context is the correct unit.
+4. Draw the boundary: included capabilities, exclusions, dependencies, success signals, and smallest end-to-end path that proves value.
+5. Map primary, alternate, and failure flows: first use, empty, loading, offline/timeout, permission, validation, conflict, error, success, cancellation, recovery, and deletion where relevant.
+6. For technical work, inspect the existing stack before proposing architecture. Define entities and lifecycle, ownership, authorization, APIs/routes, integrations, background work, idempotency/concurrency, migrations, privacy/security, accessibility, observability, performance/SLOs, and operational needs in proportion to risk.
+7. Split delivery into vertical slices that each produce a testable user outcome. Trace each outcome through flow/state, data/API change, acceptance criterion, and verification.
+8. Define rollout, compatibility, migration/backfill, kill/rollback, and cleanup when modifying a live system.
+9. Record decisions, risks, confidence, unresolved questions, and owners. Never bury uncertainty inside confident requirements.
 
-## Load deeper guidance
+## Load conditional references
 
-- Read [product brief](references/product-brief.md) for the lightweight clarification interview and one-page output.
-- Read [technical spec](references/technical-spec.md) for detailed MVP scope, data model, routes, pages, and stack planning.
+- Read [product brief](references/product-brief.md) only for brief mode or when product framing is genuinely incomplete.
+- Read [technical specification](references/technical-spec.md) for greenfield, change-spec, or technical-audit detail.
 
-## Output
+References provide templates and prompts, not mandatory interviews. This file is authoritative.
 
-Return a concise product brief followed by the technical specification only when requested or justified. Keep facts, assumptions, decisions, and open questions visibly separate.
+## Output contract
+
+For a brief, return audience/trigger, problem/evidence, promise/mechanism, smallest value path, scope, exclusions, success signals, assumptions, and open questions.
+
+For a buildable or change spec, add flows/states, architecture fit, data and authorization, interfaces, non-functional requirements, rollout/migration, vertical slices, acceptance criteria, verification, risks, and decisions. For an audit, return findings with evidence, impact, and required correction rather than silently rewriting product intent.
+
+## Verify
+
+- Scope traces to a stated user outcome and evidence.
+- Facts, assumptions, decisions, and open questions are distinguishable.
+- Primary and failure states are covered.
+- Data ownership and authorization are explicit.
+- Interfaces and acceptance criteria are testable.
+- Migration, compatibility, observability, security/privacy, and rollback are addressed proportionally.
+- Every delivery slice yields a verifiable user outcome.

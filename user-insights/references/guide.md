@@ -1,189 +1,196 @@
-# Segment Users — Reference Guide
+# Product analysis patterns
 
-## RFM Analysis (Advanced Segmentation)
+Adapt these patterns to the actual event model and product decision. They intentionally avoid fixed lifecycle thresholds and snapshot-based retention.
 
-RFM stands for Recency, Frequency, Monetary. Score each user 1-5 on each dimension, combine for a composite score.
+## Contents
+
+- [Metric contract](#metric-contract)
+- [Data-quality audit](#data-quality-audit)
+- [Activation and funnel analysis](#activation-and-funnel-analysis)
+- [Behavioral segmentation](#behavioral-segmentation)
+- [Event-based retention](#event-based-retention)
+- [Usage decline](#usage-decline)
+- [Query validation](#query-validation)
+- [Action design](#action-design)
+
+## Metric contract
+
+For every metric record:
+
+```text
+name and decision supported
+unit: user | account | workspace | subscription | device
+eligible population and exclusions
+numerator/event and denominator
+time zone and window
+event maturity/censoring rule
+source tables and grain
+known instrumentation changes
+```
+
+## Data-quality audit
+
+Before interpreting behavior, measure:
+
+- event volume and distinct subjects by day/version/environment;
+- duplicate event IDs and retry patterns;
+- null/unknown identity and merge rate;
+- internal, bot, test, and deleted-account inclusion;
+- late-arriving events and ingestion outages;
+- event-property availability and semantic changes;
+- plan/status history, refunds, pauses, and account merges.
+
+Reconcile eligible totals across source systems where feasible.
+
+## Activation and funnel analysis
+
+Define activation as an observed value event or validated leading indicator, not signup or a convenient click by default. Record the eligible population, ordered or unordered steps, allowed window, unit of analysis, identity transition, and whether repeated attempts count.
+
+Build the funnel from subject-level first qualifying timestamps so retries and duplicate events do not inflate conversion:
 
 ```sql
-WITH rfm AS (
+WITH eligible AS (
+  SELECT subject_id, MIN(occurred_at) AS entered_at
+  FROM events
+  WHERE event_name = :entry_event
+    AND occurred_at >= :analysis_start
+    AND occurred_at < :analysis_end
+  GROUP BY subject_id
+), steps AS (
   SELECT
-    id,
-    email,
-    -- Recency: days since last activity (lower = better, score 5 = most recent)
-    CASE
-      WHEN last_active_at > NOW() - INTERVAL '7 days' THEN 5
-      WHEN last_active_at > NOW() - INTERVAL '14 days' THEN 4
-      WHEN last_active_at > NOW() - INTERVAL '30 days' THEN 3
-      WHEN last_active_at > NOW() - INTERVAL '60 days' THEN 2
-      ELSE 1
-    END AS recency_score,
-    -- Frequency: number of actions (higher = better)
-    CASE
-      WHEN action_count > 100 THEN 5
-      WHEN action_count > 50 THEN 4
-      WHEN action_count > 20 THEN 3
-      WHEN action_count > 5 THEN 2
-      ELSE 1
-    END AS frequency_score,
-    -- Monetary: total spend or credits purchased (higher = better)
-    CASE
-      WHEN total_spend > 100 THEN 5
-      WHEN total_spend > 50 THEN 4
-      WHEN total_spend > 20 THEN 3
-      WHEN total_spend > 0 THEN 2
-      ELSE 1
-    END AS monetary_score
-  FROM users
+    e.subject_id,
+    e.entered_at,
+    MIN(v.occurred_at) FILTER (
+      WHERE v.event_name = :value_event
+        AND v.occurred_at >= e.entered_at
+        AND v.occurred_at < e.entered_at + :activation_window
+    ) AS activated_at
+  FROM eligible e
+  LEFT JOIN events v ON v.subject_id = e.subject_id
+  GROUP BY e.subject_id, e.entered_at
 )
 SELECT
-  *,
-  (recency_score + frequency_score + monetary_score) AS rfm_total,
-  CASE
-    WHEN recency_score >= 4 AND frequency_score >= 4 THEN 'Champions'
-    WHEN recency_score >= 3 AND frequency_score >= 3 THEN 'Loyal'
-    WHEN recency_score >= 4 AND frequency_score <= 2 THEN 'New High Potential'
-    WHEN recency_score <= 2 AND frequency_score >= 4 THEN 'At Risk'
-    WHEN recency_score <= 2 AND frequency_score <= 2 THEN 'Lost'
-    ELSE 'Standard'
-  END AS rfm_segment
-FROM rfm
-ORDER BY rfm_total DESC;
+  COUNT(*) AS eligible_subjects,
+  COUNT(activated_at) AS activated_subjects
+FROM steps;
 ```
 
----
+For multi-step funnels, calculate each step from raw events and require timestamps to satisfy the intended ordering. Report subject counts and denominators at every step, time-to-step distributions, window maturity, and exclusions. Compare segments only after checking sample size, instrumentation parity, acquisition mix, and exposure opportunity. Treat the observed funnel as descriptive unless assignment or a causal design supports stronger claims.
 
-## Cohort Analysis
+## Behavioral segmentation
 
-Track how behavior changes over time for users who signed up in the same week:
+Choose features tied to the product mechanism, such as recent active periods, successful value events, frequency, breadth/depth, collaboration, spend, or support friction.
+
+Use quantiles when relative rank is meaningful:
 
 ```sql
--- Weekly cohort retention
-SELECT
-  DATE_TRUNC('week', created_at) AS cohort_week,
-  COUNT(*) AS cohort_size,
-  COUNT(CASE WHEN last_active_at > created_at + INTERVAL '7 days' THEN 1 END) AS retained_week1,
-  COUNT(CASE WHEN last_active_at > created_at + INTERVAL '30 days' THEN 1 END) AS retained_month1,
-  ROUND(
-    COUNT(CASE WHEN last_active_at > created_at + INTERVAL '7 days' THEN 1 END)::numeric
-    / COUNT(*) * 100, 1
-  ) AS week1_retention_pct
-FROM users
-GROUP BY cohort_week
-ORDER BY cohort_week DESC;
+WITH subject_metrics AS (
+  SELECT
+    subject_id,
+    COUNT(*) FILTER (WHERE event_name = :value_event) AS value_events,
+    COUNT(DISTINCT DATE_TRUNC(:period, occurred_at)) AS active_periods,
+    MAX(occurred_at) AS last_value_at
+  FROM events
+  WHERE occurred_at >= :analysis_start
+    AND occurred_at < :analysis_end
+    AND environment = 'production'
+  GROUP BY subject_id
+), ranked AS (
+  SELECT *,
+    PERCENT_RANK() OVER (ORDER BY value_events) AS value_event_rank
+  FROM subject_metrics
+)
+SELECT * FROM ranked;
 ```
 
----
+Define segments after inspecting distributions. Handle ties, zero-inflation, small populations, and overlapping definitions. Run sensitivity checks at nearby boundaries and explain why a segment changes a decision.
 
-## Credits-Based App Segments (Bangers Only Pattern)
+## Event-based retention
 
-For apps with a credit system where users start with free credits:
+Build cohort and activity periods from event rows:
 
 ```sql
--- Free users who used all free credits (high intent, didn't pay)
-SELECT * FROM users
-WHERE credits = 0
-  AND total_credits_purchased = 0  -- or track via transactions
-  AND created_at > NOW() - INTERVAL '30 days';
-
--- Free users with credits remaining but haven't used any in 7 days
-SELECT * FROM users
-WHERE credits > 0
-  AND (50 - credits) > 0  -- used some credits (50 = initial free credits)
-  AND last_active_at < NOW() - INTERVAL '7 days';
-
--- Power users: consumed 80%+ of their credits
-SELECT * FROM users
-WHERE (initial_credits - credits)::float / NULLIF(initial_credits, 0) > 0.8;
+WITH cohort AS (
+  SELECT
+    subject_id,
+    DATE_TRUNC('week', MIN(occurred_at) AT TIME ZONE :analysis_timezone)::date AS cohort_week
+  FROM events
+  WHERE event_name = :entry_event
+  GROUP BY subject_id
+), activity AS (
+  SELECT DISTINCT
+    subject_id,
+    DATE_TRUNC('week', occurred_at AT TIME ZONE :analysis_timezone)::date AS activity_week
+  FROM events
+  WHERE event_name = :return_event
+), matrix AS (
+  SELECT
+    c.subject_id,
+    c.cohort_week,
+    ((a.activity_week - c.cohort_week) / 7)::int AS period
+  FROM cohort c
+  JOIN activity a USING (subject_id)
+  WHERE a.activity_week >= c.cohort_week
+)
+SELECT cohort_week, period, COUNT(DISTINCT subject_id) AS retained_subjects
+FROM matrix
+GROUP BY cohort_week, period
+ORDER BY cohort_week, period;
 ```
 
----
+Join to cohort sizes and exclude cohorts that have not matured for the period. Define whether retention is exact-period, rolling, or bounded. Adapt SQL dialect and event eligibility.
 
-## Action Recommendations — Detailed
+## Usage decline
 
-### Champions / Power Users
-- Send personal thank-you from the founder
-- Give early access to new features
-- Ask for testimonial or case study
-- Offer referral program
-- **Do NOT** bombard with upsell — they already love it
+Measure a subject against its own prior comparable windows:
 
-### At Risk (Paying, Declining Usage)
-```
-Subject: noticed you haven't been in [Product] lately
-
-Hey [Name],
-
-Saw your usage dropped recently — wanted to check in directly.
-
-Is there something broken, or something missing that would make [Product] more useful for what you're working on now?
-
-One reply is enough.
-
-— [Your Name]
-```
-
-### Free Users Who Hit Credit Limit
-```
-Subject: you ran out — here's 25 more
-
-Hey [Name],
-
-You used all your free credits. That means [Product] worked well enough that you wanted to keep going.
-
-Here's 25 more on us: [CREDIT_CODE]
-
-If you want unlimited, [paid tier] is $[price]/mo.
-
-— [Your Name]
+```sql
+WITH periods AS (
+  SELECT
+    subject_id,
+    COUNT(*) FILTER (
+      WHERE occurred_at >= :current_start AND occurred_at < :current_end
+    ) AS current_value_events,
+    COUNT(*) FILTER (
+      WHERE occurred_at >= :prior_start AND occurred_at < :prior_end
+    ) AS prior_value_events
+  FROM events
+  WHERE event_name = :value_event
+  GROUP BY subject_id
+)
+SELECT *,
+  (current_value_events - prior_value_events)::numeric
+    / NULLIF(prior_value_events, 0) AS relative_change
+FROM periods;
 ```
 
-### Churned Paid Users
-Goal is learning, not winback (yet):
-```
-Subject: honest question
+Align weekday/season length, exclude incomplete windows, set a minimum prior activity, and distinguish product-wide seasonality from subject-specific decline. Do not label a person “at risk” without validating association with churn or a business rule.
 
-Hey [Name],
+## Query validation
 
-You cancelled [Product] — no hard feelings at all.
+For every final query:
 
-Would genuinely love to know: was it missing something specific, or just not the right time?
+- inspect join cardinality and duplicate amplification;
+- reconcile totals to the eligible population;
+- test empty, small, tied, null, deleted, and multi-account cases;
+- verify time boundaries and timezone;
+- compare a sample of subjects with raw event timelines;
+- explain overlap or enforce mutually exclusive segments;
+- use parameters, least-privilege access, and minimal fields;
+- review execution plan/cost on large datasets.
 
-One sentence is enough. It'll directly shape what we build next.
+ORM output is optional. Produce it only when the application needs the query in that ORM; do not duplicate SQL mechanically.
 
-— [Your Name]
-```
+## Action design
 
----
+For each finding state:
 
-## Prisma Segment Queries
+- evidence and denominator;
+- plausible mechanism;
+- alternative explanations;
+- affected population and privacy risk;
+- proposed action and expected change;
+- guardrail and test design;
+- decision owner and review window.
 
-```typescript
-// Power users — top 10% by credits consumed
-const allUsers = await prisma.user.findMany({ select: { id: true, credits: true } });
-const sorted = allUsers.sort((a, b) => (50 - b.credits) - (50 - a.credits));
-const top10pct = sorted.slice(0, Math.ceil(sorted.length * 0.1)).map(u => u.id);
-
-const powerUsers = await prisma.user.findMany({
-  where: { id: { in: top10pct } }
-});
-
-// Dormant users
-const dormantUsers = await prisma.user.findMany({
-  where: {
-    lastActiveAt: {
-      lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      gt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-    }
-  }
-});
-
-// At-risk paying users
-const atRiskUsers = await prisma.user.findMany({
-  where: {
-    plan: { not: 'free' },
-    lastActiveAt: {
-      lt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-    }
-  }
-});
-```
+Founder outreach, incentives, onboarding, or feature education are hypotheses—not universal winners. Test proportionally and stop actions that create complaint, trust, or fairness harm.

@@ -1,202 +1,126 @@
 ---
 name: ui-copy
-description: Write and audit clear, human UI copy across actions, forms, onboarding, empty states, errors, and confirmations. Use when product language needs a coherent voice.
+description: Audit, write, and implement interface language across actions, forms, states, errors, progress, and notifications. Use when product copy must match system behavior and voice.
 license: MIT
 ---
 
 # UI copy
 
-Write interface language that helps people understand state, consequence, and next action. Match the product's audience and existing voice. Do not impose a cute, blunt, or overly polished house style.
+Write interface language that tells people what state they are in, what changed, what is safe, and what they can do next. Match wording to actual product behavior and let tone vary appropriately with consequence.
 
-## Phase 1: Determine Mode
+## Choose mode and scope
 
-**Audit mode** — codebase exists. Scan for hardcoded strings, placeholder text, generic messages. Score and rewrite.
+- **Audit** — inventory and diagnose copy without editing unless asked.
+- **Flow rewrite** — repair one journey across all states and channels.
+- **Generate** — create a copy specification for new screens or behavior.
+- **Implement** — update source strings, localization resources, or content models and verify the running product.
 
-**Generate mode** — user describes the app. Build a complete copy doc from scratch.
+Define in-scope surfaces, routes, flows, locales, channels, and states. For broad work, sample low-risk routine interactions and high-risk account, permission, payment, privacy, and destructive flows before expanding coverage.
 
-**How to scan:** Read page components, look for:
-- Strings in JSX/TSX (`<p>`, `<h1>`, button text, placeholder attrs)
-- Toast/notification messages (search for `toast(`, `notify(`, `alert(`)
-- Error boundaries and catch blocks
-- Empty state components (search for "empty", "no results", "nothing here", "get started")
-- Loading text (search for "loading", "please wait", skeleton components)
-- Form validation messages
-- Modal/dialog copy
+Inspect the codebase and product evidence before asking questions. Recover the primary user, domain terminology, existing voice, product behavior, localization setup, content ownership, and design constraints. Ask only for unresolved product decisions or voice choices that materially alter the copy.
 
-Gather before writing:
-- What does the app do? (one sentence)
-- What existing sentences sound unmistakably right for this product?
-- How formal, warm, technical, and playful should each surface be?
-- Who is the primary user?
+Read [copy quality and state rules](references/copy-quality.md) before the final writing pass or whenever errors, progress, localization, destructive actions, or voice consistency are in scope.
 
-If the codebase tells you, don't ask. Read [copy quality](references/copy-quality.md) before the final writing pass.
+## Build a copy manifest
 
-## Phase 2: The 8 Copy Categories
+Search components, route data, constants, locale files, CMS fixtures, server responses, form schemas, validation, toasts, notifications, emails, dialogs, empty states, accessible labels, and alt text.
 
-Score each 1–10 in audit mode. Use as a generation checklist in generate mode.
+Record each material source decision:
 
-**Empty States (15%)** — what users see before they've done anything. This is where most apps fail. An empty state must: explain what will appear here, show how to create it, feel inviting not blank. "No items yet" is a 1/10.
-
-**Error Messages (15%)** — what broke, why, and what to do next. Three parts: (1) what happened, (2) why, (3) what to do now. Never blame the user. Never be vague. "Something went wrong" is a 1/10.
-
-**Button Labels (15%)** — every button must finish the sentence "I want to ___." "Submit" fails this test. "Save draft", "Send invite", "Create project" pass it.
-
-**Onboarding (15%)** — first-run experience. Welcome message, setup steps, first action prompt. Must reduce time-to-value. Don't explain features — guide the first action.
-
-**Loading & Progress (10%)** — what happens during waits. Skeleton screens > spinners > "Loading..." For long operations, show progress and what's happening. "Processing your data" beats a spinner.
-
-**Success Messages (10%)** — confirmation that something worked. Specific: "Invoice sent to alex@company.com" not "Success!" Include the next action when relevant.
-
-**Tooltips & Help Text (10%)** — contextual guidance. Answer the question the user is thinking right now. Keep under 15 words. If you need more, link to docs.
-
-**Confirmation Dialogs (10%)** — destructive actions need clear stakes. State what will happen, what can't be undone, and make the primary action match the verb. "Delete 3 projects" not "Are you sure? [OK] [Cancel]"
-
-## Phase 3: Voice Calibration
-
-Before writing any copy, establish the voice:
-
-**Casual** (Slack, Notion) — contractions, lowercase, humor where appropriate. "you're all set!" / "nothing here yet — create your first project"
-
-**Professional** (banking, healthcare, enterprise) — proper capitalization, no humor, precise language. "Your transfer has been initiated." / "No records found. Use the search filters above."
-
-**Playful** (Duolingo, Mailchimp) — personality-forward, emoji ok, character voice. "High five! You nailed it!" / "Your inbox is lonely. Send your first campaign!"
-
-**Minimal** (Linear, Vercel) — fewest words possible, no filler, stark. "No issues" / "Deployed" / "Saved"
-
-**Default to casual unless the product clearly demands otherwise.** Most indie/vibe-coded products benefit from casual.
-
-## Phase 4: Empty State Rules
-
-Empty states are the most neglected copy in any app. They're also the first thing new users see.
-
-**Structure:**
-```
-[Illustration or icon — optional but effective]
-[Headline — what will appear here]
-[Subtext — how to create the first one]
-[CTA button — the action to take]
+```text
+Surface/channel and flow:
+Route/component and source location:
+State and audience:
+Rendered text:
+Message ID, locale, variables, plural/select branches, fallback:
+Actual system behavior or destination:
+Claim/cause provenance when consequential:
 ```
 
-**Good examples:**
-```
-No projects yet
-Create your first project to get started.
-[+ New Project]
+Distinguish unique source strings from rendered instances. Exclude tests, logs, and non-user-facing examples unless the request includes documentation copy.
 
-No messages
-When someone messages you, it'll show up here.
+## Model meaningful states
 
-Your dashboard is empty
-Connect your first data source to see metrics.
-[Connect Data Source]
-```
+Use only states the product can reach, commonly including:
 
-**Bad examples:**
-```
-No data                    ← says nothing
-Nothing to show            ← no guidance
-0 results found            ← database language, not human language
-No items match your search ← ok but add "Try different keywords"
-```
+- initial and first use;
+- populated;
+- filtered zero results;
+- permission-limited or unavailable;
+- loading and measurable progress;
+- validation and system error;
+- partial success or retry;
+- success and saved state;
+- disabled;
+- destructive confirmation and completion.
 
-## Phase 5: Error Message Rules
+Do not write one generic empty state or error for semantically different conditions. State an error cause only when the system knows it. If the cause is unknown, name the failed action or object, what remains safe, and a useful recovery path.
 
-Every error has three jobs: say what happened, say why, say what to do.
+## Calibrate voice from evidence
 
-**Formula:** `[What happened]. [Why / context]. [What to do next].`
+Identify several existing lines that sound right and record formality, warmth, directness, technical density, contractions, casing, humor, and preferred domain terms. Preserve useful quirks and calibrated uncertainty.
 
-```
-Couldn't save your changes. The server didn't respond. Try again in a few seconds.
+Do not default to casual, minimal, playful, or lowercase copy. Marketing warmth should not leak into security, payment, privacy, or destructive flows. Conventional labels such as Back, Close, Done, Retry, or Continue are valid when the surrounding flow makes their consequence clear.
 
-That email is already registered. Sign in instead?
+## Write by job
 
-File too large. Max size is 10MB. Try compressing the image first.
+### Actions and confirmations
 
-Payment failed. Your card was declined. Update your payment method to continue.
-```
+Name the action and object when consequence matters. Confirmation copy should state the object, consequence, reversibility, and any effect on collaborators or data. Button text and surrounding context work as one unit.
 
-**Never write:**
-- "Something went wrong" (what went wrong?)
-- "Invalid input" (which input? what's wrong with it?)
-- "Error 500" (meaningless to users)
-- "Please try again later" (when is later?)
-- "An unexpected error occurred" (all errors are unexpected)
-- "Oops!" before serious errors (payment failure is not cute)
+### Errors and validation
 
-## Phase 6: Button & CTA Rules
+State what failed, what remains safe, and what the user can do. Add a cause only when known and useful. Put field-specific validation beside the field and preserve entered data where the product does.
 
-Every button finishes the sentence "I want to ___."
+### Empty and unavailable states
 
-**Pair the button with what it does, not what it is:**
+Distinguish first use, no matching results, no permission, deleted content, sync delay, and true absence. Explain what normally appears and offer a next step only when one exists.
 
-```
-"Save changes"        ← what it does
-"Submit"              ← what it is (bad)
+### Loading and progress
 
-"Send invitation"     ← specific action
-"Confirm"             ← vague (bad)
+Describe progress only when the system can measure or truthfully identify it. Set expectations for long operations, safe navigation, cancellation, and completion notification when relevant. Skeletons and spinners are presentation choices, not substitutes for state copy.
 
-"Delete account"      ← clear stakes
-"OK"                  ← unclear stakes (bad)
+### Success and status
 
-"Start free trial"    ← value clear
-"Get Started"         ← started with what? (bad)
-```
+Show success only after confirmation. Name what changed and the next action only when users benefit from it. Avoid celebratory language for routine or sensitive events.
 
-**Destructive buttons** must name the action: "Delete project", "Remove member", "Cancel subscription." Never just "Delete" or "Remove" without the object.
+### Onboarding and help
 
-## Phase 7: Output Format
+Guide the next useful action and reveal explanation at the point of need. Do not turn onboarding into a feature tour when the product can lead through a real first task.
 
-### Audit output:
+## Output contract
 
-```
-APP COPY AUDIT — [product]
-════════════════════════════════════
-Empty States         [X/10]  [one-line note]
-Error Messages       [X/10]  [one-line note]
-Button Labels        [X/10]  [one-line note]
-Onboarding           [X/10]  [one-line note]
-Loading & Progress   [X/10]  [one-line note]
-Success Messages     [X/10]  [one-line note]
-Tooltips & Help      [X/10]  [one-line note]
-Confirmations        [X/10]  [one-line note]
-────────────────────────────────────
-Overall              [X/80]
-════════════════════════════════════
+### Audit
 
-REWRITES (worst 3 categories):
+Deliver manifest coverage, prioritized findings, exact source locations, before/after repairs grounded in behavior, decisions to preserve, and states or channels that could not be inspected.
 
-[Category] — [file:line]
-  Before: "[original text]"
-  After:  "[rewritten text]"
+### Generate or flow rewrite
+
+Organize copy by flow and state rather than a fixed list of fields:
+
+```text
+[Flow / screen / state]
+Purpose and system behavior:
+Visible copy:
+Actions and destinations:
+Accessible names or announcements:
+Variables and localization notes:
+Source/content owner:
 ```
 
-### Generate output:
+### Implement
 
-Organized by screen/component. Each entry:
-
-```
-[Screen Name]
-  empty state:   "[copy]"
-  error:         "[copy]"
-  success:       "[copy]"
-  buttons:       "[label1]" / "[label2]"
-  placeholder:   "[copy]"
-```
-
-**After generating, offer to write the copy directly into the codebase** — find the components and replace strings in place.
+Update the correct source of truth, preserve unrelated strings, and report files changed, migrations or message-ID changes, rendered states checked, and unverified channels.
 
 ## Verify
 
-```
-[ ] Every empty state explains what will appear and how to create it
-[ ] Every error message has: what happened + why + what to do next
-[ ] Every button passes the "I want to ___" test
-[ ] No "Submit", "OK", "Confirm", "Click here", "Learn more" without context
-[ ] No "Something went wrong" or "An error occurred" anywhere
-[ ] No "Loading..." as the only loading indicator
-[ ] Success messages are specific — name the thing that was created/sent/saved
-[ ] Destructive buttons name the object being destroyed
-[ ] Voice is consistent across all copy (same tone, same casing, same punctuation)
-[ ] No lorem ipsum, placeholder text, or TODOs left in the codebase
-```
+1. Compare every consequential line with actual action, destination, system state, and recovery behavior.
+2. Exercise representative states in the running product when feasible, including failures and destructive flows.
+3. Confirm causes, progress, success, security, privacy, and availability claims are known rather than inferred.
+4. Check terminology across navigation, forms, notifications, email, settings, documentation, and support surfaces in scope.
+5. Test interpolation, escaping, missing variables, plural/select branches, locale fallback, and pseudo-localized or long translations where available.
+6. Inspect wrapping, truncation, responsive overflow, focus order, accessible names, live announcements, and error associations.
+7. Run relevant build, typecheck, tests, and localization validation.
+8. Read key flows aloud and compare tone at routine versus high-stakes moments.
+9. Confirm placeholder copy, TODOs, and fictional proof do not reach production surfaces.
+10. Report exact coverage and limitations; do not imply a complete product audit from a partial string scan.

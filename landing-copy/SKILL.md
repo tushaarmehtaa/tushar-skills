@@ -1,200 +1,123 @@
 ---
 name: landing-copy
-description: Audit, rewrite, or generate landing-page copy across headlines, CTAs, proof, features, and objections. Use when improving conversion messaging for a product page.
+description: Research, audit, or write evidence-backed landing-page messaging, proof, objections, and calls to action. Use when product, pricing, campaign, or waitlist pages need clearer positioning.
 license: MIT
 ---
 
-Audit existing copy or write a page from a defensible product claim. Read [claim-first writing](references/claim-first.md) before generate mode or any substantial rewrite. Do not polish a sentence until the audience, failure state, mechanism, and available proof are clear.
+# Landing copy
 
-## Phase 1: Determine Mode
+Build the page around a defensible buying claim and the evidence needed to evaluate it. Preserve an effective brand voice; do not force every product into terse, casual, benefit-first startup copy.
 
-**Audit mode** — user provides existing copy. Score 7 dimensions, rewrite the bottom 3.
+## Choose the mode and page job
 
-**Generate mode** — user provides a product description. Build the full page from scratch.
+- **Positioning** — find the claim, audience, alternatives, mechanism, and proof before page copy.
+- **Audit** — diagnose existing messaging and propose prioritized repairs.
+- **Targeted rewrite** — improve a hero, proof section, pricing explanation, objection, or CTA in context.
+- **Generate** — produce a complete page message architecture and copy deck.
+- **Experiment** — create variants that test one meaningful messaging hypothesis.
 
-If the user sends a URL, fetch it and read the copy. If they paste text, use that. If they describe the product without providing copy, use generate mode.
+Identify the page job: category introduction, product selection, campaign response, feature evaluation, waitlist signup, pricing decision, or another explicit action. Determine traffic intent, buyer awareness, purchase risk, category maturity, and available proof from the brief, repository, customer language, analytics, or supplied research.
 
-Gather anything missing before writing:
+Ask only for missing facts that would change the claim, audience, offer, or legal truth. When facts remain unavailable, mark them as content requirements rather than inventing them.
 
-- What does the product do? (one sentence)
-- Who is the target user? (specific, not "developers" or "businesses")
-- What breaks without the product?
-- What mechanism makes the outcome possible?
-- What promise would constrain the company if published?
-- Any social proof — numbers, testimonials, logos?
+## Find the defensible claim
 
-Write the core claim once in plain, unpolished language and confirm it when the user is available. Every headline and section must compress or prove that claim.
+Read [claim-first writing](references/claim-first.md) before positioning, generate mode, or any rewrite that changes the core proposition.
 
-## Phase 2: The 7 Dimensions
+Document:
 
-Score each 1–10 in audit mode. Use as a writing checklist in generate mode.
+- buyer and situation;
+- failure, cost, or unmet goal;
+- product capability and mechanism;
+- close alternatives and meaningful difference;
+- evidence, constraint, demonstration, or costly promise;
+- exact customer or domain language;
+- limits the page must not imply away.
 
-**Headline (20%)** — Under 10 words. Clear benefit. Specific beats clever. No jargon the user wouldn't say themselves.
+Generate several plain claim shapes, then choose or recommend the one best supported by importance, specificity, differentiation, and proof. Confirm with the user only when choosing among materially different business promises; otherwise proceed with stated assumptions.
 
-**Subheadline (10%)** — Expands the headline. Answers "how." One sentence.
+## Audit the decision path
 
-**Value proposition (20%)** — Why this over alternatives. One sentence. Not a feature list.
+Evaluate the page as a sequence rather than scoring isolated ingredients:
 
-**Social proof (15%)** — Numbers, real names, specific results. "847 builders use this" beats "trusted by thousands."
+1. Can the intended buyer recognize the page is for their situation?
+2. Is the proposition understandable and important?
+3. Does the page explain or demonstrate how the product changes the outcome?
+4. Is differentiation visible where alternatives enter the decision?
+5. Does proof support the exact claim being made?
+6. Are price, trust, risk, compatibility, effort, and limitations handled near the decisions they affect?
+7. Does each CTA accurately describe the next step and commitment?
+8. Does the voice match the brand, audience, and stakes?
 
-**CTA (15%)** — Action verb + specific outcome. Passes the "I want to ___" test.
+Report missing evidence separately from writing defects. Do not lower copy quality merely because the company has not supplied proof; identify the content gap and narrow unsupported claims.
 
-**Feature copy (10%)** — Benefit first, feature name second. "Write in your voice" not "AI-Powered Writing Engine."
+## Design the message architecture
 
-**Objection handling (10%)** — Addresses the 3–5 real reasons someone doesn't buy. Pricing, trust, limitations, competitors.
+Select only the sections required for this buying decision. Possible roles include:
 
-## Phase 3: Headline Rules
+- proposition and next action;
+- product evidence or demonstration;
+- mechanism and capabilities;
+- comparison or alternatives;
+- proof and provenance;
+- use-case qualification;
+- pricing context and terms;
+- objections, limitations, security, or trust;
+- final decision support.
 
-The headline is worth more than all other copy combined. You earn $100 for every word you eliminate from it.
+Section order follows reader questions and evidence, not a universal hero/features/testimonials/FAQ template. A familiar product with high-intent traffic may need little education; a new category or high-risk purchase may require mechanism, comparison, and proof before action.
 
-**Formulas that work:**
+## Write without flattening the voice
 
-- "[Achieve outcome] without [pain point]"
-- "Stop [painful activity]. Start [desired activity]."
-- "[Product]: [outcome] in [timeframe]"
-- "[Specific number] [people] use [product] to [outcome]"
-- "The [category] that [unexpected benefit]"
-- Explain what you do (when genuinely unique, simplicity wins)
-- Hook on the pain (address the customer's primary concern head-on)
-- Own the niche (declare yourself THE solution for a specific segment)
+Use concrete domain nouns, actions, mechanisms, constraints, and observable results. Keep technical detail when the buyer needs it. Use customer language when it is representative and accurately sourced.
 
-**Rules:**
+Headline length, sentence length, feature-first versus benefit-first order, casing, contractions, fragments, humor, and punctuation are contextual choices. Reject filler and unsupported superlatives because they add no substance, not because individual words are universally banned.
 
-- Under 10 words
-- Specific beats clever every time
-- Benefit over feature — always
-- No word the target user wouldn't say themselves
-- A caveman should glance at it and grunt back what you offer
-- Never: "revolutionary", "next-generation", "powerful", "seamless", "robust"
+Calls to action should make destination, result, or commitment clear in context. Conventional labels can be appropriate when surrounding UI makes them unambiguous. Do not manufacture urgency, scarcity, customer counts, rankings, or performance outcomes.
 
-**Banned landing page words** — words that sound like marketing, not humans:
-unlock, unleash, enhance, exceed, empower, supercharge, elevate, leverage, optimize, cutting-edge, best-in-class, turnkey, holistic, synergy, paradigm. If a normal person wouldn't say it at a dinner table, cut it.
+Read [copy patterns and examples](references/guide.md) only when selecting a narrative framework, diagnosing a recurring copy failure, or designing an experiment. Treat patterns as options, not performance guarantees.
 
-## Phase 4: CTA Rules
+## Design experiments honestly
 
-Good CTAs describe what happens when you click, not what you're doing.
+Test one material hypothesis at a time, such as audience framing, problem versus outcome emphasis, mechanism visibility, proof placement, or commitment language. Keep offer, layout, and traffic stable when the goal is to attribute messaging impact.
 
-```
-"Start generating tweets"          ← good: describes the outcome
-"Get your first report free"       ← good: value + no risk
-"See it in action"                 ← good: low commitment
-"Sign Up"                          ← bad: says nothing
-"Learn More"                       ← bad: goes nowhere
-"Get Started"                      ← bad: started with what?
-"Submit"                           ← bad: you're not submitting anything
-```
+State the hypothesis, primary measure, guardrail measure, audience, sample or runtime limitation, and decision rule. Do not predict arbitrary lift percentages.
 
-**The test:** finish "I want to ___." If the CTA fits that sentence, it works.
+## Output contract
 
-## Phase 5: Above the Fold (the 5-second test)
+### Audit or targeted rewrite
 
-In five seconds visitors decide if you can help them. Clarity over creativity. A caveman should understand what you offer.
-
-### Hero
-
-```
-[Headline — benefit, under 10 words]
-[Subheadline — explains the mechanism, one sentence]
-[CTA — value-driven, not generic]
-[Social proof — one number above the fold: "18,000+ reviews" or "Used by 500+ builders"]
+```text
+Page job and intended buyer:
+Core claim and proof status:
+Priority findings: [impact, evidence, and source location]
+Before -> after: [for grounded repairs]
+Content required: [missing facts, proof, or product decisions]
+Preserve: [effective language or structure]
+Verification and experiment recommendations:
 ```
 
-**Visual:** Show the product in use. Not a decorative illustration — the actual product, or the actual result. Action shots > stock art.
+### Generate or positioning
 
-### Below the Fold (the rest of the page)
+Deliver:
 
-**Feature sections** — Lead with the benefit. Put the feature name second or not at all. Each section directly supports the promise made above the fold.
-
-"Generate tweets that sound like you wrote them" → correct
-"AI-Powered Tweet Generation Feature" → wrong
-
-One feature per section. Each section must answer "so what?" from the reader's perspective. Handle objections inline — if a feature raises a concern, address it right there.
-
-**Social proof (lower section)** — Above-the-fold proof builds credibility. Below-the-fold proof inspires action. Use customer testimonials that bring the promised value to life through real outcomes: savings, transformations, specific numbers. Real names + roles. Screenshots of real results when you have them.
-
-**FAQ / Objection handling** — These are the reasons people leave without buying. Talk to real users to find them. Address directly:
-
-- Is this free? What does it actually cost?
-- How is this different from [competitor]?
-- What happens to my data?
-- Does this work for [specific use case]?
-- What if I want to cancel?
-
-Don't dodge the hard questions. Direct answers build trust faster than polished deflections.
-
-**Second CTA** — Your second button has context the first one didn't. Pair it with a reminder of the value. Not just another "Sign Up" — reinforce why.
-
-**Founder's note (optional)** — A personal narrative: you had the same problem, you built the solution, here's what changed. Use it only when the story supplies evidence or context the rest of the page cannot.
-
-## Phase 5.5: Conversational Copy Rules
-
-Copy should read like a conversation, not a press release.
-
-- **Write how you talk.** Read it aloud. If your partner would cringe, rewrite it.
-- **Use contractions.** "You're" not "You are." "We've" not "We have."
-- **Start sentences with "And" or "But."** It creates flow.
-- **Use "you" and "we."** Direct address beats third person.
-- **Don't persuade.** Let readers reach their own conclusions. Heavy-handed tactics feel desperate.
-- **Use your customers' words.** Mine testimonials, support tickets, and reviews for the language real users use. That's your copy.
-- **More periods, fewer commas.** Short sentences. Better pacing. Long comma-spliced sentences exhaust readers.
-- **Kill adverbs and adjectives.** They're vague. Strong nouns and verbs do the work.
-- **Stories beat facts.** A customer story sticks. A feature list doesn't.
-
-## Phase 6: Audit Output Format
-
-```
-LANDING COPY AUDIT — [product]
-════════════════════════════════════
-Headline             [X/10]  [one-line note]
-Subheadline          [X/10]  [one-line note]
-Value Proposition    [X/10]  [one-line note]
-Social Proof         [X/10]  [one-line note]
-CTA                  [X/10]  [one-line note]
-Feature Copy         [X/10]  [one-line note]
-Objection Handling   [X/10]  [one-line note]
-────────────────────────────────────
-Overall              [X/70]
-════════════════════════════════════
-
-TOP 3 REWRITES:
-
-[Section]: [original text]
-→ [rewritten version]
-```
+1. claim/evidence ledger;
+2. message architecture with the question each section answers;
+3. complete copy deck labelled by section and component;
+4. CTA destinations and commitment level;
+5. proof, asset, and content requirements;
+6. assumptions, excluded claims, and implementation notes;
+7. optional variants only when they test a stated hypothesis.
 
 ## Verify
 
-```
-[ ] Headline under 10 words with specific benefit
-[ ] No "powerful", "seamless", "revolutionary", "next-generation", "robust"
-[ ] Subheadline explains "how" in one sentence
-[ ] Value prop differentiates from alternatives — not just a feature list
-[ ] CTA passes the "I want to ___" test
-[ ] Every feature section leads with benefit, not feature name
-[ ] Social proof uses specific numbers and real names
-[ ] FAQ addresses real objections — not softballs
-[ ] No jargon the target audience wouldn't use themselves
-[ ] Each section answers "so what?" from the reader's perspective
-```
-
-## The Landing Page Checklist (10 Steps)
-
-Your landing page is your sales pitch. Examine each element and ask: would this help me sell if I met the customer in person? Remove anything that wouldn't survive a face-to-face conversation.
-
-```
-ABOVE THE FOLD
-1. Explain the value          (title)
-2. Explain the mechanism      (subtitle)
-3. Enable visualization       (visual — real product, not stock)
-4. Establish credibility      (social proof — specific number)
-5. Enable action              (CTA — value-driven)
-
-BELOW THE FOLD
-6. Concretize the value       (features + inline objection handling)
-7. Motivate through proof     (testimonials with real outcomes)
-8. Answer remaining questions (FAQ — real objections, not softballs)
-9. Reinforce action           (second CTA with context)
-10. Build connection          (founder's note — optional)
-```
-
-See [references/guide.md](references/guide.md) for copy frameworks (PAS, AIDA, BAB, 4Ps), headline split-test patterns, and full before/after rewrites by product type.
+1. Map every material claim to product behavior, a source, a scoped assumption, or an explicit content requirement.
+2. Run a competitor/alternative swap test on major propositions and explain any generic line retained.
+3. Trace the reader's likely questions through the section order; remove repeated promises that add no mechanism, proof, or decision support.
+4. Check price, security, privacy, compatibility, cancellation, implementation effort, and limitations where relevant to the offer.
+5. Confirm CTA text, destination, and actual commitment agree.
+6. Read the page aloud and compare it with established brand/customer language without normalizing every sentence into one cadence.
+7. Check terminology consistency across landing page, product UI, pricing, and documentation.
+8. Verify no proof, statistic, urgency, guarantee, or comparison was invented or broadened.
+9. For implemented copy, inspect responsive rendering, text overflow, links, analytics hooks, and accessible control names.
+10. Report what was verified directly and what still needs customer, legal, product, or analytics input.

@@ -1,29 +1,50 @@
 # Claim-first landing copy
 
-Separate finding the claim from compressing it into polished copy.
+Use this reference when positioning, generating a page, or changing its core proposition. Skip it for a bounded wording repair that leaves the claim intact.
 
-## Find the claim
+## Establish the claim
 
-Extract these facts before writing headlines:
+Extract evidence before writing headlines:
 
-1. What fails or becomes expensive without the product?
-2. Who experiences that problem, in what situation?
-3. What does the product do that changes the outcome?
-4. Which number, customer fact, demonstration, or constraint can support the claim?
-5. What do close alternatives already claim?
-6. What promise would cost the company something to publish?
-7. Which words does the buyer use that outsiders usually get wrong?
+1. What fails, costs more, or remains unavailable without the product?
+2. Who experiences that problem, in which situation and level of awareness?
+3. What product action or mechanism changes the outcome?
+4. What demonstration, number, customer fact, constraint, or guarantee can support it?
+5. What do close alternatives do and claim?
+6. What promise would constrain the company if published?
+7. Which buyer terms do outsiders commonly misuse?
+8. What limitation or qualification must remain visible?
 
-Write one deliberately plain claim. Confirm that it is true and important. Never invent proof to make it stronger.
+Write the claim in deliberately plain language. Separate observation, product capability, interpretation, and expected outcome. Never strengthen the sentence by inventing proof or hiding a constraint.
 
-## Compress the claim
+## Generate meaningful alternatives
 
-Generate varied headline shapes internally: name the failure state, state the category, describe the mechanism, frame an existing loss, use accurate buyer language, or make a costly promise. Reduce them to three candidates.
+Vary the strategic frame, not only wording:
 
-Run the swap test on every headline and section heading: substitute a close competitor and its product. If the line still works unchanged, it is not specific enough.
+- name the existing loss or failure;
+- state the category and differentiator;
+- explain the mechanism;
+- describe an observable outcome;
+- qualify the buyer or use case;
+- make a costly, supportable promise;
+- challenge the dominant alternative with evidence.
 
-Use the subhead for concrete nouns, mechanism, integrations, constraints, or measurable outcomes. Avoid intensifier verbs, adjective triplets, rhetorical-question calls to action, and proof-free superlatives.
+Compare candidates on buyer relevance, specificity, differentiation, proof, comprehension, and business commitment. Recommend one and preserve credible runners-up for a real experiment only when the choice remains uncertain.
 
-## Assemble and verify
+## Apply the swap and proof tests
 
-Use only the sections the buying decision needs: proposition, product evidence, capabilities, proof, objections, pricing context, and next action. Vary sentence shapes without hiding the capability. Mark missing proof as a content requirement in the handoff, never as invented user-facing copy.
+Replace the product with a close competitor. If the line survives unchanged, add the missing mechanism, constraint, buyer, evidence, or outcome.
+
+For each material proposition, record:
+
+```text
+Claim:
+Product behavior or source:
+Scope and limitation:
+Proof available:
+Proof missing:
+Allowed wording:
+Wording to avoid:
+```
+
+Use only the sections the decision requires. Missing proof becomes a content requirement or a narrower claim, never invented page copy.

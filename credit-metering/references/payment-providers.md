@@ -1,124 +1,57 @@
-# Credit Payment Providers
+# Credit payment providers
 
-Read this reference after the user selects a provider or the project reveals an existing one. Implement exactly one provider path.
+Read this reference after detecting the existing provider and installed SDK version. Implement one provider path and verify API/event names against current primary documentation.
 
 ## Contents
 
-- [Shared payment flow](#payment-flow)
-- [Stripe](#stripe-integration)
-- [Lemon Squeezy](#lemon-squeezy-integration)
-- [Dodo Payments](#dodo-payments-integration)
-- [Webhook security](#webhook-security-checklist)
+- [Shared checkout contract](#shared-checkout-contract)
+- [Stripe](#stripe)
+- [Lemon-Squeezy](#lemon-squeezy)
+- [Dodo Payments](#dodo-payments)
+- [Webhook processing](#webhook-processing)
+- [Verification](#verification)
 
-## Payment Flow
+## Shared checkout contract
 
-Wire up the payment provider the user chose. Each provider follows the same pattern:
-1. Create a checkout session with credits amount in metadata
-2. Redirect user to hosted checkout page
-3. Receive webhook when payment succeeds
-4. Add credits to user's account
+The browser submits only a server-owned pack key. The server maps that key to provider price/product ID, currency, and credit amount.
 
-### Stripe Integration
-
-**Create checkout endpoint:**
-```
-POST /api/payments/create-checkout
-Body: { credits: number, price_id: string }
-
-Logic:
-  1. Get authenticated user
-  2. Create Stripe Checkout Session:
-     - line_items: the selected credit pack
-     - metadata: { user_id, credits_amount }
-     - success_url: /checkout/success?session_id={CHECKOUT_SESSION_ID}
-     - cancel_url: /pricing
-  3. Return { url: session.url }
+```text
+POST /api/billing/credit-checkout
+authenticated body: { pack: "starter" }
+server lookup: starter -> provider product/price -> 100 credits
 ```
 
-**Webhook handler:**
-```
-POST /api/webhooks/stripe
-Headers: stripe-signature
+Attach stable internal account/user ID and pack key as provider metadata. Never accept `credits`, `amount_cents`, price IDs outside an allow-list, or user identity as authoritative browser input.
 
-Logic:
-  1. Verify webhook signature using STRIPE_WEBHOOK_SECRET
-  2. Handle event type: checkout.session.completed
-  3. Extract metadata.user_id and metadata.credits_amount
-  4. IDEMPOTENCY CHECK: query credit_transactions for this payment_id
-     - If found → return 200 (already processed)
-  5. Call add_credits(user_id, credits_amount, 'purchase', { payment_id: session.id })
-  6. Return 200
+## Stripe
 
-CRITICAL: Always return 200 to prevent retries, even on errors. Log the error instead.
-```
+Use the installed Stripe SDK’s Checkout Session pattern and a server-owned `price` mapping. Process the current successful-payment event appropriate to the checkout mode and payment status. Verify `stripe-signature` over the raw body with the endpoint secret. Store both event ID and payment/session reference as unique identifiers where useful.
 
-**Environment variables needed:**
-```
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-STRIPE_PRICE_ID_100=price_...    # $5 = 100 credits
-STRIPE_PRICE_ID_250=price_...    # $10 = 250 credits
-```
+## Lemon Squeezy
 
-### Lemon Squeezy Integration
+Use the current Lemon Squeezy checkout API/SDK with a server-owned variant mapping and `custom_data` containing stable account/user ID plus pack key. Verify the webhook signature exactly as current primary docs specify and handle only the paid/order state that guarantees funds.
 
-**Create checkout:**
-```
-POST /api/payments/create-checkout
-Body: { variant_id: string, credits: number }
+## Dodo Payments
 
-Logic:
-  1. POST to https://api.lemonsqueezy.com/v1/checkouts
-  2. Include custom_data: { user_id, credits }
-  3. Return { url: checkout_url }
-```
+Use the current official `dodopayments` SDK and Checkout Sessions API with a server-owned `product_cart`. Store account/user ID plus pack key in metadata. Prefer the official SDK webhook verification helper and current event guide. Dodo also has provider-managed credit capabilities; decide deliberately whether the application ledger or Dodo wallet is the source of truth—do not update both without reconciliation.
 
-**Webhook:**
-```
-POST /api/webhooks/lemonsqueezy
-Headers: x-signature (HMAC hex)
+## Webhook processing
 
-Logic:
-  1. Verify HMAC-SHA256 signature
-  2. Handle event: order_created
-  3. Extract custom_data.user_id, custom_data.credits
-  4. Idempotency check → add_credits
-```
+1. Read the raw body and verify signature/timestamp with the provider-supported helper.
+2. Insert a webhook-inbox/event row with a unique provider event ID.
+3. If processing synchronously, grant credits and mark the event complete in a database transaction. Return non-2xx for transient failure so the provider retries.
+4. If acknowledging immediately, first durably enqueue/store the event, then return success and process with retry/dead-letter monitoring.
+5. Resolve pack value from the server-owned mapping, not mutable metadata credit amounts alone. Cross-check product/price, currency, amount, payment status, and environment.
+6. Grant with the payment/event reference as the ledger idempotency key.
+7. Handle refunds/disputes according to the explicit clawback/debt policy and link reversal entries to the purchase.
 
-### Dodo Payments Integration
+Do not “always return 200” after a database error in a synchronous handler; that permanently discards the provider’s retry opportunity.
 
-**Create checkout:**
-```
-POST /api/payments/create-checkout
-Body: { amount_cents: number, credits: number }
+## Verification
 
-Logic:
-  1. POST to https://live.dodopayments.com/checkouts
-  2. Headers: Authorization: Bearer DODO_API_KEY
-  3. Include metadata: { user_id, credits }
-  4. Return { checkout_url }
-```
-
-**Webhook:**
-```
-POST /api/webhooks/dodo
-Headers: webhook-id, webhook-timestamp, webhook-signature
-
-Logic:
-  1. Verify Standard Webhooks signature:
-     - Strip "whsec_" prefix from secret
-     - Base64 decode the secret
-     - HMAC-SHA256 over "{webhook-id}.{webhook-timestamp}.{raw_body}"
-     - Compare with webhook-signature header
-  2. Handle event: payment.succeeded
-  3. Extract metadata → idempotency check → add_credits
-```
-
-### Webhook Security Checklist
-
-Regardless of provider, every webhook handler MUST:
-1. **Verify the signature** — never trust unverified webhooks
-2. **Check idempotency** — payment_id should be unique in credit_transactions
-3. **Return 200 always** — even on errors, to prevent infinite retries
-4. **Log everything** — payment_id, user_id, amount, timestamp
-5. **Use raw body for signature verification** — parsed JSON won't match the signature
+- Unknown/tampered pack keys are rejected before checkout.
+- Test and live product IDs cannot cross environments.
+- Valid, invalid, duplicate, concurrent, and out-of-order events behave deterministically.
+- A transient database failure is retried or remains in a durable queue.
+- Refund/dispute behavior matches the documented balance policy.
+- Ledger, cached balance, provider payment, and UI reconcile.

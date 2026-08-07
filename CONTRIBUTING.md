@@ -52,6 +52,8 @@ Good Agent Skills make the execution contract concrete without assuming one vend
 
 Never imply that a chat upload can replace filesystem, shell, browser, or repository access. Only add the `claude-app` surface to a workflow that can produce its result using conversation and user-provided files.
 
+Follow the repository's [skill quality contract](./QUALITY.md). Add or update the skill's normal, ambiguous, and risk cases in [`skill-evals.json`](./skill-evals.json) whenever behavior changes materially.
+
 ## Catalog metadata
 
 Add exactly one catalog entry with:

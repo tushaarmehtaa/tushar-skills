@@ -4,13 +4,21 @@ import { TrackedLink } from "./tracked-link";
 import { createClaudeAppViewModel } from "@/lib/skill-presentation";
 import { supportsChatGPT } from "@/lib/catalog";
 import type { Skill } from "@/lib/skills";
+import { githubFileUrl } from "@/lib/markdown";
 
 export function SkillDetail({
   skill,
   contentHtml,
+  renderedFiles,
 }: {
   skill: Skill;
   contentHtml: string;
+  renderedFiles: Array<{
+    path: string;
+    lineCount: number;
+    anchor: string;
+    contentHtml: string;
+  }>;
 }) {
   const claudeApp = createClaudeAppViewModel({
     surfaces: skill.surfaces,
@@ -131,13 +139,57 @@ export function SkillDetail({
 
       <div className="divider mb-10" />
 
-      <div>
+      <div id="package-skill-md">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-sm font-medium text-[var(--color-heading)]">Instructions</h2>
           <span className="text-xs text-[var(--color-muted)]">Source: SKILL.md</span>
         </div>
         <div className="prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </div>
+
+      {renderedFiles.length > 0 ? (
+        <section className="mt-16" aria-labelledby="package-references-heading">
+          <div className="mb-6 border-b border-[var(--color-border)] pb-4">
+            <h2 id="package-references-heading" className="text-sm font-medium text-[var(--color-heading)]">
+              Bundled references
+            </h2>
+            <p className="mt-2 text-xs text-[var(--color-muted)]">
+              {renderedFiles.length} {renderedFiles.length === 1 ? "file" : "files"} · {renderedFiles.reduce((total, file) => total + file.lineCount, 0).toLocaleString()} lines
+            </p>
+          </div>
+
+          <nav aria-label="Bundled reference files" className="mb-10 flex flex-wrap gap-2">
+            {renderedFiles.map((file) => (
+              <a
+                key={file.path}
+                href={`#${file.anchor}`}
+                className="border border-[var(--color-border)] px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-heading)]"
+              >
+                {file.path}
+              </a>
+            ))}
+          </nav>
+
+          <div className="space-y-14">
+            {renderedFiles.map((file) => (
+              <section key={file.path} id={file.anchor} className="scroll-mt-6 border-t border-[var(--color-border)] pt-6">
+                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-heading)]">{file.path}</h3>
+                  <a
+                    href={githubFileUrl(skill.slug, file.path)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[var(--color-muted)] hover:text-[var(--color-accent)]"
+                  >
+                    source ↗
+                  </a>
+                </div>
+                <div className="prose" dangerouslySetInnerHTML={{ __html: file.contentHtml }} />
+              </section>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <div className="mt-16 border-t border-[var(--color-border)] pt-8">
         <a

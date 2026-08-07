@@ -46,6 +46,7 @@ const CATALOG_FIELDS = [
   "tags",
 ];
 const RUNTIME_VERIFICATION_PATH = path.join(REPO_ROOT, "runtime-verification.json");
+const SKILL_EVALS_PATH = path.join(REPO_ROOT, "skill-evals.json");
 const CLAUDE_APP_SKILLS = new Set([
   "ai-cost-audit",
   "cold-outreach",
@@ -188,44 +189,109 @@ function validateFrontmatter(slug, parsed) {
 function resolveLocalLink(skillRoot, sourcePath, target) {
   if (
     !target ||
-    target.startsWith("#") ||
     target.startsWith("/") ||
     /^[a-z][a-z0-9+.-]*:/i.test(target)
   ) {
     return null;
   }
 
-  const withoutFragment = target.split("#", 1)[0].split("?", 1)[0];
-  if (!withoutFragment) return null;
+  const [beforeFragment, fragment = ""] = target.split("#", 2);
+  const withoutFragment = beforeFragment.split("?", 1)[0];
   let decoded;
   try {
     decoded = decodeURIComponent(withoutFragment);
   } catch {
-    decoded = withoutFragment;
+    return { invalidEncoding: true };
   }
 
-  const absolutePath = path.resolve(path.dirname(sourcePath), decoded);
+  const absolutePath = decoded ? path.resolve(path.dirname(sourcePath), decoded) : sourcePath;
   const relativeToSkill = path.relative(skillRoot, absolutePath);
   return {
     absolutePath,
+    fragment,
     escaped: relativeToSkill === ".." || relativeToSkill.startsWith(`..${path.sep}`),
     relativeToSkill: relativeToSkill.split(path.sep).join("/"),
   };
+}
+
+function canonicalHeadingSlug(value) {
+  let decoded;
+  try {
+    decoded = decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+  const slug = decoded
+    .replace(/&#(\d+);/g, (_, decimal) => String.fromCodePoint(Number(decimal)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, hexadecimal) => String.fromCodePoint(Number.parseInt(hexadecimal, 16)))
+    .replace(/&(?:amp|#38);/gi, "&")
+    .replace(/<[^>]+>/g, "")
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[`*_~]/g, "")
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s_-]/gu, "")
+    .trim()
+    .replace(/[\s-]+/g, "-");
+  return slug || "section";
+}
+
+function markdownHeadingIds(source) {
+  const ids = new Set();
+  const counts = new Map();
+  let fence = null;
+  for (const line of source.split(/\r?\n/)) {
+    const fenceMatch = line.match(/^\s{0,3}(`{3,}|~{3,})/);
+    if (fenceMatch) {
+      if (!fence) fence = fenceMatch[1][0];
+      else if (fence === fenceMatch[1][0]) fence = null;
+      continue;
+    }
+    if (fence) continue;
+    const heading = line.match(/^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$/);
+    if (!heading) continue;
+    const base = canonicalHeadingSlug(heading[1]);
+    if (!base) continue;
+    const count = counts.get(base) ?? 0;
+    counts.set(base, count + 1);
+    ids.add(count === 0 ? base : `${base}-${count}`);
+  }
+  return ids;
+}
+
+function unsafeLinkReason(target) {
+  if (/[\u0000-\u001f\u007f\\]/.test(target)) return "contains a control character or backslash";
+  if (target.startsWith("//")) return "uses a protocol-relative URL";
+  const scheme = target.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
+  if (scheme && !["http", "https", "mailto"].includes(scheme)) return `uses disallowed ${scheme}: scheme`;
+  return null;
 }
 
 function validateLinksAndReferences(slug) {
   const skillRoot = path.join(REPO_ROOT, slug);
   const markdownFiles = listRegularFiles(skillRoot).filter((file) => file.endsWith(".md"));
   const graph = new Map();
+  const headingIds = new Map(
+    markdownFiles.map((markdownPath) => [markdownPath, markdownHeadingIds(fs.readFileSync(markdownPath, "utf8"))]),
+  );
 
   for (const markdownPath of markdownFiles) {
     const relativeSource = path.relative(skillRoot, markdownPath).split(path.sep).join("/");
     const source = fs.readFileSync(markdownPath, "utf8");
     const targets = [];
     for (const link of extractMarkdownLinks(source)) {
+      const unsafeReason = unsafeLinkReason(link.target);
+      if (unsafeReason) {
+        addError(`${slug}/${relativeSource}:${link.line}: unsafe Markdown target ${JSON.stringify(link.target)} ${unsafeReason}`);
+        continue;
+      }
       const resolved = resolveLocalLink(skillRoot, markdownPath, link.target);
       if (!resolved) continue;
       const displaySource = `${slug}/${relativeSource}:${link.line}`;
+      if (resolved.invalidEncoding) {
+        addError(`${displaySource}: relative link has invalid percent encoding: ${link.target}`);
+        continue;
+      }
       if (resolved.escaped) {
         addError(`${displaySource}: relative link escapes the portable skill package: ${link.target}`);
         continue;
@@ -235,6 +301,12 @@ function validateLinksAndReferences(slug) {
         continue;
       }
       const stat = fs.statSync(resolved.absolutePath);
+      if (resolved.fragment && stat.isFile() && resolved.absolutePath.endsWith(".md")) {
+        const fragmentSlug = canonicalHeadingSlug(resolved.fragment);
+        if (!fragmentSlug || !headingIds.get(resolved.absolutePath)?.has(fragmentSlug)) {
+          addError(`${displaySource}: Markdown fragment does not match a heading: ${link.target}`);
+        }
+      }
       if (stat.isFile() && link.reachable) targets.push(resolved.relativeToSkill);
     }
     graph.set(relativeSource, targets);
@@ -261,6 +333,22 @@ function validateLinksAndReferences(slug) {
       if (!reachable.has(relativeReference)) {
         addError(`${slug}/${relativeReference}: bundled reference is not reachable from SKILL.md`);
       }
+    }
+  }
+}
+
+function validateReferenceQuality(slug) {
+  const referencesRoot = path.join(REPO_ROOT, slug, "references");
+  if (!fs.existsSync(referencesRoot)) return;
+
+  for (const referencePath of listRegularFiles(referencesRoot).filter((file) => file.endsWith(".md"))) {
+    const source = fs.readFileSync(referencePath, "utf8");
+    const displayPath = `${slug}/${path.relative(path.join(REPO_ROOT, slug), referencePath).split(path.sep).join("/")}`;
+    if (source.startsWith("---\n") || source.startsWith("---\r\n")) {
+      addError(`${displayPath}: references must not contain standalone skill frontmatter`);
+    }
+    if (logicalLineCount(source) > 100 && !/^## Contents\s*$/im.test(source)) {
+      addError(`${displayPath}: references longer than 100 lines need a Contents section`);
     }
   }
 }
@@ -350,6 +438,66 @@ function validateRuntimeVerifications(catalog, verifications) {
       if (entry.support[runtime] === "tested" && !verified.has(key)) {
         addError(`site/lib/catalog.ts (${slug}): tested support for ${runtime} requires a runtime-verification record`);
       }
+    }
+  }
+}
+
+function validateSkillEvals(skillDirectories) {
+  if (!fs.existsSync(SKILL_EVALS_PATH)) {
+    addError("skill-evals.json: file is missing");
+    return;
+  }
+
+  let registry;
+  try {
+    registry = JSON.parse(fs.readFileSync(SKILL_EVALS_PATH, "utf8"));
+  } catch (error) {
+    addError(`skill-evals.json: invalid JSON (${error.message})`);
+    return;
+  }
+
+  if (registry?.version !== 2 || !registry.skills || typeof registry.skills !== "object" || Array.isArray(registry.skills)) {
+    addError("skill-evals.json: expected version 2 and a skills object");
+    return;
+  }
+
+  if (!registry.rubric || typeof registry.rubric !== "object" || Array.isArray(registry.rubric)) {
+    addError("skill-evals.json: rubric must define observable criteria for each case type");
+  } else {
+    for (const field of ["normal", "ambiguous", "risk"]) {
+      const criteria = registry.rubric[field];
+      if (!Array.isArray(criteria) || criteria.length < 2 || criteria.some((criterion) => typeof criterion !== "string" || criterion.trim().length < 20)) {
+        addError(`skill-evals.json: rubric.${field} must contain at least two concrete observable criteria`);
+      }
+    }
+  }
+
+  const evalSlugs = Object.keys(registry.skills).sort();
+  if (!sameValues(evalSlugs, skillDirectories)) {
+    const missing = skillDirectories.filter((slug) => !evalSlugs.includes(slug));
+    const extra = evalSlugs.filter((slug) => !skillDirectories.includes(slug));
+    if (missing.length) addError(`skill-evals.json: missing skills: ${missing.join(", ")}`);
+    if (extra.length) addError(`skill-evals.json: unknown skills: ${extra.join(", ")}`);
+  }
+
+  for (const [slug, cases] of Object.entries(registry.skills)) {
+    const location = `skill-evals.json (${slug})`;
+    if (!cases || typeof cases !== "object" || Array.isArray(cases)) {
+      addError(`${location}: cases must be an object`);
+      continue;
+    }
+    const fields = Object.keys(cases).sort();
+    if (!sameValues(fields, ["ambiguous", "normal", "risk"])) {
+      addError(`${location}: cases must contain exactly normal, ambiguous, and risk`);
+    }
+    for (const field of ["normal", "ambiguous", "risk"]) {
+      if (typeof cases[field] !== "string" || cases[field].trim().length < 20) {
+        addError(`${location}: ${field} must be a concrete prompt of at least 20 characters`);
+      }
+    }
+    const prompts = [cases.normal, cases.ambiguous, cases.risk].filter((value) => typeof value === "string");
+    if (new Set(prompts.map((prompt) => prompt.trim().toLowerCase())).size !== prompts.length) {
+      addError(`${location}: prompts must be distinct`);
     }
   }
 }
@@ -559,10 +707,12 @@ validateRootLicense();
 validatePackageLicenses();
 
 const skillDirectories = getSkillDirectories();
+validateSkillEvals(skillDirectories);
 const parsedSkills = loadParsedSkills(skillDirectories);
 for (const slug of skillDirectories) {
   validateFrontmatter(slug, parsedSkills.get(slug));
   validateLinksAndReferences(slug);
+  validateReferenceQuality(slug);
 }
 
 let catalog;

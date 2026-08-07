@@ -23,6 +23,15 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-08-08",
+    entries: [
+      { type: "update", text: "reconstructed all 30 skills with adaptive workflows, safety boundaries, concrete outputs, and outcome-level verification" },
+      { type: "update", text: "replaced hidden standalone references, forced questionnaires, personal style presets, static prices, and stale provider patterns with conditional specialist guidance" },
+      { type: "site", text: "skill pages now render every bundled reference and keep intra-package Markdown links on the correct file and heading" },
+      { type: "fix", text: "hardened reference anchors, package links, source URLs, and JSON-LD rendering; added repository-wide quality and behavioral eval gates" },
+    ],
+  },
+  {
     date: "2026-08-07",
     entries: [
       { type: "update", text: "refocused the catalog from 38 narrow packages to 30 outcome-driven skills with clear public names" },

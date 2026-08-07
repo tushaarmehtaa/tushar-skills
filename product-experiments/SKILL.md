@@ -1,194 +1,84 @@
 ---
 name: product-experiments
-description: Design, implement, measure, and conclude product experiments with feature flags and safe rollouts. Use when testing whether a feature changes user behavior.
+description: Design, implement, validate, analyze, and conclude experiments or safe rollouts. Use when testing product behavior with flags, exposure tracking, metrics, staged releases, or A/B tests.
 license: MIT
 ---
 
 # Product experiments
 
-Turn a product question into a measurable, reversible release. Use PostHog when it is already present or selected, but keep the experiment design independent of the vendor.
+Turn a product question into a measurable decision. A feature flag without trustworthy exposure data and a decision rule is release control, not an experiment.
 
-Before writing flag code, record the hypothesis, target population, exposure unit, primary outcome, guardrail metrics, minimum observation window, rollout stages, and the decision that each result would trigger. A flag without exposure tracking and a decision rule is release control, not an experiment.
+## Choose a mode
 
-## Two things that silently break PostHog flags
+- **Design:** create an experiment brief and analysis plan.
+- **Implement:** add assignment, exposure tracking, metrics, and safeguards.
+- **Rollout-only:** release safely when causal inference is unnecessary.
+- **Validate:** audit instrumentation and assignment before launch.
+- **Analyze:** estimate effects and diagnose data-quality failures.
+- **Conclude:** decide ship, iterate, continue, or rollback and record why.
 
-1. **Evaluating flags client-side when you need server-side behavior.** `useFeatureFlagEnabled` runs in the browser after hydration. If you're using a flag to show/hide a page section, that section flashes on then disappears. For anything above the fold or that affects routing, evaluate the flag on the server.
-2. **Missing `distinctId` in server-side calls.** PostHog's server SDK requires a distinct user identifier to evaluate flags. Using a placeholder like `"anonymous"` means every unauthenticated user gets the same flag variant — not a rollout, just a constant.
+Keep design vendor-independent. Use an existing analytics/flag provider when present; add a new provider only when selected or explicitly authorized.
 
-## Phase 1: Detect the Project
+## Experiment brief
 
-```bash
-cat package.json | grep -E "posthog"
-grep -r "posthog" src/ app/ --include="*.ts" --include="*.tsx" -l 2>/dev/null | head -5
-```
+Before implementation, record:
 
-- **`posthog-js` installed + provider found?** → PostHog client-side already set up. Add server-side SDK.
-- **`posthog-node` already installed?** → extend it, don't reinstall.
-- **Nothing?** → use the `analytics` skill to establish the measurement layer, then return here.
+- product decision and causal hypothesis;
+- mechanism: why treatment should change behavior;
+- eligible population and exclusions;
+- assignment unit, exposure unit, and identity transition rules;
+- control and variants, experiment key, and immutable version;
+- primary outcome with numerator, denominator, window, and direction;
+- guardrails and diagnostic metrics;
+- baseline, minimum detectable effect or smallest worthwhile effect, and uncertainty method;
+- minimum observation/maturity window and stop rules;
+- rollout stages, kill conditions, owner, and rollback path;
+- action triggered by positive, neutral, harmful, or invalid results.
 
-## Phase 2: Install Server SDK
+If inputs are unavailable, state what can be designed now and what must be measured before launch. Do not invent power or duration.
 
-```bash
-npm install posthog-node
-```
+## Workflow
 
-Add to `.env.example` (already set if the `analytics` skill was run):
-```
-NEXT_PUBLIC_POSTHOG_KEY=
-POSTHOG_API_KEY=   # same as POSTHOG_KEY — use for server-side calls
-```
+1. Inspect the product, event taxonomy, identity model, analytics, flag system, existing experiments, and deployment constraints.
+2. Choose assignment and exposure units that match the causal question. Address anonymous-to-authenticated identity, group assignment, repeat exposure, interference, and concurrent experiments.
+3. Implement deterministic assignment or the provider's documented mechanism. Preserve assignment across requests and devices as required.
+4. Capture one deduplicated exposure record at the point treatment can affect behavior. Include experiment key, version, variant, subject, timestamp, and relevant context. Do not substitute flag evaluation for exposure.
+5. Instrument outcomes and guardrails with testable schemas. Verify that exposure joins to outcomes and that control/treatment event semantics match.
+6. Launch at a safe initial allocation. Monitor errors, latency, data loss, sample-ratio mismatch, and guardrails before widening.
+7. Analyze only after the planned maturity window unless a kill condition fires. Report effect size and uncertainty, not just significance. Check sample-ratio mismatch, missingness, novelty/carryover, peeking, multiple comparisons, censoring, and segment exploration.
+8. Conclude against the prewritten decision rule. Separate invalid, inconclusive, practically neutral, beneficial, and harmful results.
+9. Remove or graduate flags, document the decision, and verify the post-decision product state.
 
-## Phase 3: Server-Side Flag Client
+## Provider guidance
 
-Create a singleton for server-side evaluation:
+- If PostHog is already selected, read [PostHog implementation](references/posthog.md) if present. If it is absent, inspect installed versions and use current official documentation rather than copying remembered SDK code.
+- If the measurement layer is missing, use an available analytics capability or provide a minimal vendor-neutral event contract and identify the implementation blocker.
 
-```typescript
-// lib/posthog-server.ts
-import { PostHog } from 'posthog-node';
+## Safety
 
-let client: PostHog | null = null;
+- Do not expose users to security, privacy, billing, or irreversible-risk variants without appropriate review.
+- Minimize sensitive properties and define retention/access controls for experiment data.
+- Do not recommend shipping from underpowered or invalid data.
+- Never silently change the primary metric or exclusions after seeing results.
 
-export function getPostHogServer(): PostHog {
-  if (!client) {
-    client = new PostHog(process.env.POSTHOG_API_KEY!, {
-      host: 'https://us.i.posthog.com',
-      flushAt: 1,      // flush immediately in serverless
-      flushInterval: 0,
-    });
-  }
-  return client;
-}
+## Output contract
 
-export async function isFeatureEnabled(
-  flagKey: string,
-  distinctId: string,
-  groups?: Record<string, string>
-): Promise<boolean> {
-  const ph = getPostHogServer();
-  const result = await ph.isFeatureEnabled(flagKey, distinctId, { groups });
-  return result ?? false;
-}
+Return the applicable artifact:
 
-export async function getFeatureFlagVariant(
-  flagKey: string,
-  distinctId: string
-): Promise<string | boolean | undefined> {
-  const ph = getPostHogServer();
-  return ph.getFeatureFlag(flagKey, distinctId);
-}
-```
-
-## Phase 4: Server Component Usage
-
-Evaluate flags in Server Components and route handlers — no client-side flicker:
-
-```typescript
-// app/dashboard/page.tsx (Server Component)
-import { isFeatureEnabled } from '@/lib/posthog-server';
-import { getAuthUser } from '@/lib/auth';
-
-export default async function DashboardPage() {
-  const user = await getAuthUser();
-
-  const showNewDashboard = user
-    ? await isFeatureEnabled('new-dashboard', user.id)
-    : false;
-
-  return showNewDashboard ? <NewDashboard /> : <OldDashboard />;
-}
-```
-
-```typescript
-// app/api/generate/route.ts (Route Handler)
-import { isFeatureEnabled } from '@/lib/posthog-server';
-
-export async function POST(req: Request) {
-  const user = await getAuthUser(req);
-  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-
-  const hasStreamingAccess = await isFeatureEnabled('streaming-responses', user.id);
-
-  if (hasStreamingAccess) {
-    return handleStreaming(req, user);
-  }
-  return handleNonStreaming(req, user);
-}
-```
-
-## Phase 5: Client-Side Usage
-
-For flags that change UI after user interaction (not on initial render):
-
-```tsx
-// components/feature-flagged-button.tsx
-'use client';
-import { useFeatureFlagEnabled } from 'posthog-js/react';
-
-export function NewFeatureButton() {
-  const isEnabled = useFeatureFlagEnabled('new-export-feature');
-
-  // useFeatureFlagEnabled returns undefined while loading
-  if (isEnabled === undefined) return null;
-  if (!isEnabled) return null;
-
-  return <button>Export (New)</button>;
-}
-```
-
-**Never use the client hook for above-the-fold content.** The hook returns `undefined` on first render, which causes layout shift. Use the server-side approach for anything visible on page load.
-
-## Phase 6: Local Dev Overrides
-
-Add a dev-only flag override mechanism so you can test both variants locally without touching PostHog:
-
-```typescript
-// lib/posthog-server.ts (add to existing file)
-export async function isFeatureEnabled(
-  flagKey: string,
-  distinctId: string,
-  groups?: Record<string, string>
-): Promise<boolean> {
-  // Local override for development
-  if (process.env.NODE_ENV === 'development') {
-    const override = process.env[`FLAG_${flagKey.toUpperCase().replace(/-/g, '_')}`];
-    if (override === 'true') return true;
-    if (override === 'false') return false;
-  }
-
-  const ph = getPostHogServer();
-  const result = await ph.isFeatureEnabled(flagKey, distinctId, { groups });
-  return result ?? false;
-}
-```
-
-In `.env.local`:
-```
-FLAG_NEW_DASHBOARD=true    # force-enable new-dashboard flag locally
-FLAG_STREAMING_RESPONSES=false  # force-disable
-```
-
-## Phase 7: Creating Flags in PostHog
-
-Tell the user exactly what to set up. In PostHog dashboard:
-
-1. Feature Flags → New Feature Flag
-2. Key: `new-dashboard` (matches what's in code)
-3. Rollout: start at 0%, increment to 10%, 50%, 100%
-4. Conditions: can target by user properties (plan = 'pro'), cohorts, or percentage
-
-For A/B tests: use "Multiple Variants" instead of boolean. Then use `getFeatureFlagVariant()` and return `'control'` or `'test'`.
+- experiment brief and analysis plan;
+- implementation changes and event schemas;
+- pre-launch validation report;
+- staged rollout/rollback plan;
+- analysis with data-quality checks, effect sizes, uncertainty, and limitations;
+- decision record with follow-up and flag cleanup.
 
 ## Verify
 
-```
-[ ] posthog-node installed
-[ ] POSTHOG_API_KEY in .env.example
-[ ] Server-side evaluation uses real user ID as distinctId — not "anonymous"
-[ ] Server Components use isFeatureEnabled() — not the client hook
-[ ] Client hook used only for post-hydration interactions, not initial render
-[ ] Local override via FLAG_* env vars works in development
-[ ] Flags created in PostHog dashboard with matching key names
-[ ] Test: set FLAG_[KEY]=false in .env.local — confirm feature is hidden
-[ ] Test: set FLAG_[KEY]=true in .env.local — confirm feature is shown
-[ ] PostHog flag set to 0% rollout first — expand after confirming it works
-```
+- Assignment is stable and matches the intended unit.
+- Exposure is deduplicated, versioned, and recorded when treatment can act.
+- Exposure joins to outcome and guardrail events.
+- Control and treatment pass functional tests.
+- Kill switch, provider failure behavior, and rollback are tested.
+- Sample-ratio mismatch and event completeness are checked.
+- Analysis honors the registered population, windows, and decision rule.
+- Final decision includes practical significance, uncertainty, limitations, and cleanup.

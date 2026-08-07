@@ -1,86 +1,78 @@
-# Health Endpoint Implementation
+# Health endpoints
 
-Read this reference when the project needs an uptime endpoint for Next.js or FastAPI, an optional database probe, or external monitoring.
+Read this reference when the selected observability plan needs liveness, readiness, or external uptime monitoring.
 
 ## Contents
 
-- [Next.js endpoint](#nextjs--appapistatusroutets)
-- [FastAPI endpoint](#python-fastapi)
-- [Monitoring checks](#what-to-monitor)
+- [Choose the signal](#choose-the-signal)
+- [Next.js pattern](#nextjs-pattern)
+- [FastAPI pattern](#fastapi-pattern)
+- [Verification](#verification)
 
-A single endpoint that tells you if the app is alive. Use it for uptime monitoring (Vercel cron, UptimeRobot, Better Uptime).
+## Choose the signal
 
-### Next.js — `app/api/status/route.ts`:
+- **Liveness** answers whether the process can serve. Keep it cheap and independent of downstream services.
+- **Readiness** answers whether this instance can perform essential work. Probe only critical dependencies, use short timeouts, and return a non-2xx response when unavailable.
+- **Business checks** belong in synthetic monitoring, not a public health response.
+
+Do not expose environment names, versions, connection details, exception text, row counts, or dependency topology publicly. In serverless runtimes, process uptime is instance-local and usually not a useful service metric.
+
+## Next.js pattern
 
 ```typescript
-import { NextResponse } from 'next/server';
-
-const startTime = Date.now();
-
+// app/api/health/live/route.ts
 export async function GET() {
-  const uptime = Math.floor((Date.now() - startTime) / 1000);
-
-  // Basic health check
-  const health: Record<string, any> = {
-    status: 'ok',
-    uptime: `${uptime}s`,
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'unknown',
-    version: process.env.NEXT_PUBLIC_APP_VERSION || 'dev',
-  };
-
-  // Database check (if applicable)
-  try {
-    // Supabase
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      const { createClient } = await import('@supabase/supabase-js');
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
-      const { error } = await supabase.from('users').select('id').limit(1);
-      health.database = error ? 'error' : 'ok';
-    }
-
-    // Prisma
-    // const count = await prisma.user.count();
-    // health.database = 'ok';
-  } catch {
-    health.database = 'error';
-  }
-
-  const isHealthy = health.database !== 'error';
-
-  return NextResponse.json(health, {
-    status: isHealthy ? 200 : 503,
-  });
+  return Response.json(
+    { status: 'ok', timestamp: new Date().toISOString() },
+    { headers: { 'Cache-Control': 'no-store' } },
+  );
 }
 ```
 
-### Python (FastAPI):
+For readiness, inject a project-specific dependency check rather than assuming a `users` table or creating a new service-role client on every request:
 
-```python
-from datetime import datetime
-import time
+```typescript
+// app/api/health/ready/route.ts
+import { checkDatabase } from '@/lib/health/check-database';
 
-START_TIME = time.time()
-
-@app.get("/api/status")
-async def health_check():
-    uptime = int(time.time() - START_TIME)
-    return {
-        "status": "ok",
-        "uptime": f"{uptime}s",
-        "timestamp": datetime.utcnow().isoformat(),
-        "environment": os.getenv("ENVIRONMENT", "development"),
-    }
+export async function GET() {
+  const result = await checkDatabase({ timeoutMs: 1_500 });
+  return Response.json(
+    { status: result.ok ? 'ok' : 'unavailable' },
+    {
+      status: result.ok ? 200 : 503,
+      headers: { 'Cache-Control': 'no-store' },
+    },
+  );
+}
 ```
 
-### What to monitor
+Reuse the application’s server-only database client. The check should be bounded, non-mutating, and inexpensive. Protect readiness with network policy or a monitoring token if exposing dependency status creates risk.
 
-Set up a cron or external service to hit `/api/status` every 5 minutes. Alert if:
-- Response status is not 200
-- Response time exceeds 5 seconds
-- Database field is "error"
+## FastAPI pattern
 
-**Free options:** UptimeRobot (free tier), Better Uptime, or Vercel's built-in cron.
+```python
+from datetime import datetime, timezone
+from fastapi import Response
+
+@app.get('/health/live')
+async def live():
+    return {
+        'status': 'ok',
+        'timestamp': datetime.now(timezone.utc).isoformat(),
+    }
+
+@app.get('/health/ready')
+async def ready(response: Response):
+    ok = await check_database(timeout_seconds=1.5)
+    response.status_code = 200 if ok else 503
+    return {'status': 'ok' if ok else 'unavailable'}
+```
+
+## Verification
+
+- Liveness returns quickly while a downstream dependency is unavailable.
+- Readiness returns 200 normally and 503 under a forced dependency failure or timeout.
+- Responses contain no sensitive internals and are not cached.
+- The external monitor uses the expected path, interval, regions, and alert contacts.
+- Record dashboard/monitor configuration as manual until actually observed.

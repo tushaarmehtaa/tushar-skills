@@ -1,102 +1,78 @@
-# NextAuth Provider Implementation
+# Auth.js / NextAuth implementation
 
-Read this reference only when the detected authentication provider is NextAuth. The examples target Next.js App Router with Prisma.
+Read this reference only after detecting the installed Auth.js/NextAuth major version and router. The examples below follow current Auth.js v5-style Next.js setup; preserve a working v4 integration unless migration is requested.
 
 ## Contents
 
-- [Database sync](#nextauth--prisma)
-- [Frontend auth hook](#for-nextauth)
-- [Middleware](#middleware)
-- [API route protection](#api-route-protection)
-- [Environment variables](#environment-variables)
+- [Configuration and handlers](#configuration-and-handlers)
+- [Session and authorization](#session-and-authorization)
+- [Adapters and account linking](#adapters-and-account-linking)
+- [Environment](#environment)
+- [Verification](#verification)
 
-### NextAuth + Prisma
+## Configuration and handlers
 
-**Adapter handles sync automatically.** But you need callbacks for extra fields:
+Keep configuration in `auth.ts`, then export route handlers separately.
 
 ```typescript
-// app/api/auth/[...nextauth]/route.ts
+// auth.ts
 import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from '@/lib/prisma';
+import GitHub from 'next-auth/providers/github';
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  providers: [/* your providers */],
-  callbacks: {
-    async session({ session, user }) {
-      // Attach database user ID to session
-      session.user.id = user.id;
-      return session;
-    },
-    async signIn({ user, account, profile }) {
-      // Custom logic on every sign-in (e.g., update last_login)
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { updatedAt: new Date() },
-      });
-      return true;
-    },
-  },
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  providers: [GitHub],
+  // Add an adapter/session strategy only after inspecting the existing schema.
 });
 ```
 
-### For NextAuth
-
 ```typescript
-// hooks/useAuthSync.ts
-'use client';
+// app/api/auth/[...nextauth]/route.ts
+import { handlers } from '@/auth';
 
-import { useSession } from 'next-auth/react';
-
-export function useAuthSync() {
-  const { data: session, status } = useSession();
-
-  return {
-    user: session?.user ?? null,
-    isNewUser: false, // NextAuth adapter handles creation
-    isLoading: status === 'loading',
-    isAuthenticated: status === 'authenticated',
-  };
-}
+export const { GET, POST } = handlers;
 ```
 
-NextAuth is simpler because the adapter handles user creation. The hook is mostly a wrapper.
+Do not place the `NextAuth()` destructuring in `route.ts` and omit `GET`/`POST`; the route would not expose handlers.
 
-## Middleware
+## Session and authorization
 
-Create `middleware.ts` at the project root:
-
-```typescript
-export { auth as middleware } from '@/auth';
-
-export const config = {
-  matcher: ['/dashboard/:path*', '/settings/:path*', '/api/protected/:path*'],
-};
-```
-
-## API Route Protection
-
-For every API route that requires authentication:
+Use `auth()` on the server and enforce resource/tenant authorization next to access.
 
 ```typescript
 import { auth } from '@/auth';
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user) {
+  if (!session?.user?.id) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  // ... your logic
+  await requireProjectAccess(session.user.id);
 }
 ```
 
-## Environment Variables
+Add TypeScript module augmentation when placing database IDs/roles on the session. Do not trust client session fields as the only authorization boundary. For Next.js 16+, follow current `proxy.ts` naming; preserve `middleware.ts` on older versions.
 
-```
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=... (generate with: openssl rand -base64 32)
-DATABASE_URL=postgresql://...
-```
+## Adapters and account linking
 
-Verify that `.env` and `.env.local` cannot be committed.
+Inspect the adapter’s required schema and existing migrations before adding it. Provider account records, verification tokens, sessions, and users have distinct lifecycle rules. Do not assume an adapter makes all account linking safe:
+
+- allow automatic linking only under provider/documented guarantees;
+- require verified email and explicit reauthentication when linking identities;
+- preserve unique provider-account constraints;
+- handle deleted/revoked accounts and database cleanup deliberately.
+
+Callbacks must not assume a database user exists at a lifecycle point unless the installed adapter/version guarantees it. Test first-login and repeated-login behavior.
+
+## Environment
+
+Current Auth.js commonly uses `AUTH_SECRET` and provider-specific `AUTH_*` variables; older NextAuth versions may use `NEXTAUTH_SECRET`/`NEXTAUTH_URL`. Detect the installed version and existing convention instead of adding both sets blindly.
+
+Keep OAuth client secrets and auth secrets server-only. Add names, not values, to `.env.example`.
+
+## Verification
+
+- Test provider callback/handler routes and CSRF/state behavior.
+- Test new/returning login, logout, expiry/refresh, denied account, and account linking.
+- Test database/session strategies if both are supported.
+- Test anonymous, other-user, other-tenant, and non-admin access to protected resources.
+- Run schema migrations plus lint/type/test/build.

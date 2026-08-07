@@ -1,84 +1,32 @@
 ---
 name: performance-diagnosis
-description: Diagnose and fix web-app performance across development, build, server, browser, and network paths. Use when investigating slowness, CPU spikes, loops, or bloat.
+description: Diagnose web-app performance across build, server, browser, database, and network paths. Use when investigating slowness, resource spikes, reload loops, regressions, bloat, or poor Web Vitals.
 license: MIT
 ---
 
 # Performance diagnosis
 
-Measure the slow path before changing it. Inspect the framework and runtime first; use the Next.js patterns below when they match the project, and adapt the same evidence-first workflow elsewhere.
+Measure a reproducible slow path before changing it. Diagnosis does not authorize a fix unless the user requested implementation.
 
-## Steps
+## Workflow
 
-### 1. Check for compile loops
+1. Establish the symptom, affected environment, route/action, regression window, expected threshold, and a repeatable reproduction. Infer these from traces/issues/code when possible; ask only for missing facts that change the investigation.
+2. Detect framework/runtime/version, deploy topology, package manager, data stores, observability, and recent relevant diffs. Separate development-only behavior from production behavior.
+3. Attribute resource symptoms before profiling the application. For heat, fan, battery, or system-wide spikes, use a short, thermally safe reproduction and sample process CPU, memory, energy, and GPU where available. Isolate the browser tab from extensions, the Node/dev server, compiler watchers, database, and unrelated processes. Stop the reproduction if temperature, power draw, or system stability becomes unsafe.
+4. Capture a baseline with the tool suited to the symptom:
+   - dev/build: timed cold and warm start/build, compiler logs, watcher scope;
+   - server: route spans, CPU/memory profile, cold start, event-loop delay, query timing;
+   - browser: tab/task-manager isolation, performance trace, network waterfall, long tasks, hydration, animation/compositor/GPU load, polling/timers, and Core Web Vitals;
+   - bundle: framework-supported analyzer and route-level client/server composition;
+   - database/network: query plans, connection waits, downstream latency and payload size.
+5. Form ranked hypotheses and test the cheapest discriminating one first. A large log, expensive-looking call, or large package is evidence to investigate, not proof of root cause.
+6. For Next.js, detect the major version and caching model before recommending `React.cache`, `use cache`, fetch caching, or Turbopack settings. `React.cache` deduplicates within a request; it is not a cross-request cache. Configure `turbopack.root` only when the project truly resolves linked files outside the detected root.
+7. If implementation is authorized, make one narrow change at a time. Protect user/tenant isolation, freshness, invalidation, memory bounds, and failure behavior when caching. Preserve a before/after artifact and revert changes that do not improve the target metric.
 
-```bash
-ls -lh /tmp/*.log 2>/dev/null
-# If any log is >100MB, a hot reload loop is running
-```
+## Verification
 
-Look for repeated module resolution errors in the dev server output. Common culprit: `geist/font/*` imports breaking with Turbopack. Fix by switching to `next/font/google`:
+Repeat the same reproduction under the same conditions. Compare median and tail values where possible, test cold/warm behavior separately, run correctness tests for changed caching/concurrency, and run project lint/type/test/build. For browser performance, pair local lab results with field data when available.
 
-```ts
-// layout.tsx — replace geist package imports
-import { Geist, Geist_Mono } from "next/font/google";
-const GeistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
-const GeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
-```
+## Output
 
-### 2. Check file watching scope
-
-If the project reads files outside its own directory at runtime:
-
-```ts
-// lib/something.ts
-const ROOT = path.join(process.cwd(), ".."); // watches the parent dir
-```
-
-Turbopack watches any directory referenced by runtime file reads. Edits to files in `..` trigger full recompiles. Fix: scope reads to the project directory, or use `turbopack: {}` in `next.config.ts` to silence the warning while you plan a proper fix.
-
-### 3. Check for uncached disk reads
-
-```bash
-grep -rn "fs.readFileSync\|fs.readdirSync" lib/ app/ src/ 2>/dev/null
-```
-
-Any function that reads files and is called from a server component runs on every request. Add a module-level cache:
-
-```ts
-let cache: ReturnType<typeof loadData> | null = null;
-
-export function loadData() {
-  if (cache) return cache;
-  // ... read files ...
-  cache = result;
-  return cache;
-}
-```
-
-### 4. Profile the bundle (production)
-
-```bash
-npx @next/bundle-analyzer
-# or add to next.config.ts:
-# bundleAnalyzer: { enabled: process.env.ANALYZE === 'true' }
-```
-
-Look for: large client components that could be server components, duplicate packages across chunks, packages that shouldn't be in the client bundle.
-
-### 5. Find expensive server components
-
-Server components re-render on every request in dev unless wrapped with `cache()`. Search for:
-
-```bash
-grep -rn "await fetch\|readFileSync\|prisma\.\|supabase\." app/ --include="*.tsx" --include="*.ts"
-```
-
-Any expensive call in a server component without `import { cache } from 'react'` wrapping it will run on every page load.
-
-### 6. Report
-
-State:
-- Root cause (loop, file watching, uncached reads, bundle)
-- Files changed and what changed
-- Expected behavior after fix (idle CPU, hot reload time)
+Report symptom and reproduction, baseline, evidence, root cause or ranked remaining hypotheses, files changed only if authorized, before/after metrics, correctness checks, confidence level, and next measurement. Do not claim a cause or improvement without observed evidence.

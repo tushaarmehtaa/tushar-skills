@@ -1,179 +1,80 @@
-# Pricing Page — Reference Guide
+# Pricing and entitlement design
 
-## Pricing Psychology That Actually Works
+Read this reference only when the task includes pricing architecture, tier presentation, or feature gates. Commercial choices require product evidence; do not manufacture tiers or urgency.
 
-### The Decoy Effect
-Add a middle tier that makes the top tier look reasonable. If Pro is $49/mo and Enterprise is $199/mo, users anchor to Pro. If you only had Free and $199/mo, $199 feels expensive.
+## Contents
 
-### Annual Discount Psychology
-- Show annual price as monthly equivalent: "$29/mo, billed annually"
-- Show the saving explicitly: "Save $96/year"
-- Add urgency if truthful: "Most popular choice"
+- [Define the commercial model](#define-the-commercial-model)
+- [Model entitlements](#model-entitlements)
+- [Present pricing](#present-pricing)
+- [Experiment safely](#experiment-safely)
+- [Verification](#verification)
 
-### Feature Gating Principles
-- Gate on VALUE, not on effort to build
-- Power features should feel natural to lock, not punitive
-- "Need more?" is better framing than "Upgrade required"
-- Show locked features on free tier with a lock icon — makes upgrading feel like unlocking, not paying
+## Define the commercial model
 
-### What to Put Behind the Gate
-Good candidates for gating:
-- Volume/usage limits (100 actions/mo free, unlimited paid)
-- Integrations with other tools
-- API access
-- Export/download features
-- Team/collaboration features
-- Priority support
-- Custom branding
+Infer existing plans, prices, trials, limits, and product IDs from server config and Dodo dashboard mappings. Ask only about unresolved choices. Record:
 
-Bad candidates (makes free tier feel broken):
-- Core functionality that defines what the product is
-- Basic settings or preferences
-- Basic analytics for the user's own data
+- one-time, subscription, credit, seat, or usage model;
+- currency and tax-inclusive/exclusive display;
+- monthly/annual periods and truthful annual savings;
+- trial start/end and payment-method requirements;
+- upgrade/downgrade proration and effective timing;
+- cancellation/refund policy;
+- exact capabilities and limits granted.
 
----
+Do not add a decoy tier, “most popular” badge, urgency, or savings claim without evidence. Do not gate core data access or cancellation behind a higher plan.
 
-## Dodo Payments — Key Concepts
+## Model entitlements
 
-### Products vs Payment Links
-
-Dodo has two main primitives:
-- **Products** — what you're selling (created in dashboard, has a `product_id`)
-- **Payment links** — a URL that takes a customer through checkout
-
-For most indie apps: create one product per plan in the dashboard, then create payment links programmatically.
-
-### Metadata Pattern (Critical)
-
-Always pass user context in metadata at checkout creation:
+Define capabilities and quantitative limits independently of display names:
 
 ```typescript
-const checkout = await dodo.payments.create({
-  payment_link: true,
-  customer: { email: user.email },
-  product_cart: [{ product_id: process.env.DODO_PRO_PRODUCT_ID!, quantity: 1 }],
-  metadata: {
-    userId: user.id,        // Your internal user ID
-    planId: 'pro',          // Which plan they're buying
-    source: 'pricing-page', // Where they came from (optional, useful for analytics)
-  },
-  return_url: `${process.env.APP_URL}/checkout/success?plan=pro`,
-});
+export type Entitlement =
+  | 'export:data'
+  | 'api:access'
+  | 'team:manage';
+
+export type BillingState = {
+  status: 'free' | 'trialing' | 'active' | 'on_hold' | 'cancel_scheduled' | 'expired';
+  entitlements: ReadonlySet<Entitlement>;
+  currentPeriodEnd?: Date;
+};
 ```
 
-The webhook receives this metadata — it's how you know which user just paid.
-
-### Handling Plan Upgrades
-
-When a user on Free upgrades to Pro:
-1. Dodo fires `payment.succeeded` or `subscription.activated`
-2. Your webhook updates `users.plan = 'pro'` in DB
-3. Feature gates now pass for pro features
-4. User doesn't need to re-login
-
----
-
-## Advanced Feature Gating Patterns
-
-### In API Routes (Server-side)
+Server checks resolve the latest normalized billing state. Avoid storing only `users.plan = 'pro'`; that cannot represent scheduled cancellation, period boundaries, add-ons, grandfathering, or recovery.
 
 ```typescript
-// Throw early, before any expensive work
-export async function POST(req: Request) {
-  const user = await getUser(req);
-
-  if (!canAccess(user.plan, 'api-access')) {
-    return Response.json(
-      { error: 'This feature requires Pro.', upgradeUrl: '/pricing' },
-      { status: 403 }
-    );
+export async function requireEntitlement(userId: string, entitlement: Entitlement) {
+  const state = await getBillingState(userId);
+  if (!state.entitlements.has(entitlement)) {
+    throw new BillingAccessError(entitlement);
   }
-
-  // ... rest of handler
 }
 ```
 
-### In UI (Client-side)
+Use usage reservations/counters for quantitative limits rather than a simple Boolean gate.
 
-```tsx
-// Show locked state rather than hiding the feature
-function ExportButton({ userPlan }: { userPlan: string }) {
-  const hasAccess = canAccess(userPlan, 'export-data');
+## Present pricing
 
-  if (!hasAccess) {
-    return (
-      <button
-        onClick={() => router.push('/pricing')}
-        className="opacity-60 cursor-not-allowed"
-      >
-        🔒 Export Data — Pro only
-      </button>
-    );
-  }
+Pricing UI must derive from the same server-owned catalog used for checkout. Show:
 
-  return <button onClick={handleExport}>Export Data</button>;
-}
-```
+- exact billing period/currency and tax wording;
+- trial and renewal terms;
+- meaningful feature/limit differences;
+- current plan, scheduled changes, and effective dates;
+- accessible comparison and CTA states;
+- a clear manage/cancel/refund path.
 
-### Usage-Based Limits (Credits Model)
+The return/success page displays “confirming” until server billing state reflects a verified provider event or a server-side provider lookup. Never display a query-string `plan` as proof of upgrade.
 
-```typescript
-// Check before action, deduct after success
-async function generateContent(userId: string) {
-  const user = await db.user.findUnique({ where: { id: userId } });
+## Experiment safely
 
-  if (user.credits < GENERATION_COST) {
-    throw new Error('Insufficient credits');
-  }
+Define a hypothesis, primary conversion metric, guardrails (refunds, support, churn), assignment unit, sample-size plan, and stopping rule before an experiment. Run only one materially interacting pricing experiment at a time and preserve tax/renewal disclosure in every variant.
 
-  const result = await runGeneration();
+## Verification
 
-  await db.user.update({
-    where: { id: userId },
-    data: { credits: { decrement: GENERATION_COST } }
-  });
-
-  return result;
-}
-```
-
----
-
-## A/B Test Ideas for Pricing Pages
-
-| Test | Variant A | Variant B |
-|------|-----------|-----------|
-| CTA copy | "Upgrade to Pro" | "Start Free Trial" |
-| Price display | "$29/mo" | "$0.96/day" |
-| Annual default | Monthly tab selected | Annual tab selected |
-| Feature list | Checkmarks | Detailed descriptions |
-| Social proof position | Above pricing | Below pricing |
-
-Run each test for at least 2 weeks and 100+ unique visitors before concluding.
-
----
-
-## Checkout Success Page
-
-Always redirect to a success page that:
-1. Confirms what they bought
-2. Shows next steps (not just "thanks!")
-3. Links directly to the feature they unlocked
-
-```tsx
-// app/checkout/success/page.tsx
-export default function CheckoutSuccess({ searchParams }) {
-  const plan = searchParams.plan;
-
-  return (
-    <div>
-      <h1>You're on {plan}.</h1>
-      <p>Your account has been upgraded. Here's what you can do now:</p>
-      <ul>
-        <li>[First pro feature] — <a href="/dashboard/feature">Try it now</a></li>
-        <li>[Second pro feature] — <a href="/dashboard/feature2">Try it now</a></li>
-      </ul>
-    </div>
-  );
-}
-```
+- Catalog, UI display, checkout mapping, and server entitlements agree.
+- Unknown products/features deny safely.
+- Free, trial, active, on-hold, scheduled-cancel, expired, and grandfathered states render correctly.
+- Upgrade/downgrade/refund timing matches provider behavior and policy.
+- Accessibility, currency/tax, and renewal disclosures are reviewed.

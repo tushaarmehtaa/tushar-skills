@@ -1,221 +1,64 @@
----
-name: cold-outreach-sequence
-description: Create signal-based, multi-touch email and LinkedIn outreach sequences with widening cadence. Use when one cold email is not enough to reach a prospect.
-license: MIT
----
+# Sequence design
 
-Generate complete multi-touch outreach sequences where each touch has a different angle, a specific send day, and a clear job. Use the single-message route in the `cold-outreach` skill when one email is enough.
+Use a sequence only when repeated contact is proportionate to the relationship, value, and jurisdiction. The main skill controls research, compliance, output, and verification.
 
-2026 baseline: average cold email reply rate is 3.43%. Signal-based multichannel sequences (email + LinkedIn) hit 15–25%. The gap is personalization and channels.
-
-## Before Writing Anything
+## Design the state machine first
 
-Gather this — ask for anything missing:
+Define states and stops before cadence:
 
-1. **Target** — Role, company type, industry. Specific beats general.
-2. **Offer** — What you're proposing. One sentence.
-3. **Credibility** — Numbers, notable clients, specific results.
-4. **Goal** — Meeting, demo, partnership, intro, advice?
-5. **Asset** — Demo link, one-pager, case study, free tool? (goes in Touch 4)
-6. **Channel** — Email-only or LinkedIn + email? (default: multichannel)
-7. **Prospect type** — SMB (14–21 days, 4–5 touches) or Enterprise (45–60 days, 6–8 touches)?
+- no response → next distinct touch after an appropriate interval;
+- positive/qualified reply → stop automation and route to a human;
+- question/objection → answer it, do not send the scheduled template;
+- referral → contact the referred person only with authorized context;
+- out of office → pause until the stated return date;
+- unsubscribe, complaint, invalid address, or hard bounce → suppress immediately;
+- not now → record an authorized follow-up time or stop.
 
-## Research Before Drafting
+## Give each touch one job
 
-Five minutes of research before writing increases reply rates 3–5x over templates. Find a signal — something real that happened recently.
+Possible jobs:
 
-**Tier 1 signals (18–25% reply rates when referenced):**
-- New job / role change in last 30 days
-- Recent funding round
-- Hiring surge in a relevant function
-- Product launch or major announcement
+1. establish relevance and make the initial ask;
+2. clarify one point or reduce the ask;
+3. provide a genuinely useful artifact without a hidden call request;
+4. add verified proof that maps to the recipient's situation;
+5. offer a referral or asynchronous alternative;
+6. close politely and stop.
 
-**Tier 2 signals (8–15% reply rates):**
-- Recent LinkedIn post about a problem your offer solves
-- Company press mention or award
-- Competitor move that creates urgency
+Skip any job the sender cannot execute honestly. Do not paraphrase the original pitch.
 
-**Tier 3 signals (3–5% reply rates — only if nothing else exists):**
-- General industry trend
-- LinkedIn activity (likes, comments)
+## Cadence
 
-Stacking two signals pushes reply rates to 25–40%. A Tier 1 + Tier 2 combo is the target.
+Choose intervals from recipient expectations, sales cycle, channel rules, and urgency. Widening intervals are often less intrusive, but no fixed sequence length, weekday, or send time is universally optimal. Treat timing as an experiment and use recipient-local time.
 
-Where to look:
-- LinkedIn: recent post, new role, company milestone
-- Their company blog or newsroom
-- Crunchbase: recent funding
-- Job postings: what they're hiring tells you what they're building
-- Twitter/X: recent problem they've articulated
+For multichannel contact:
 
----
+- respect each platform's rules and cultural norms;
+- do not create fake engagement before pitching;
+- do not repeat the same message on every channel;
+- coordinate suppression across channels.
 
-## The Two Sequence Structures
+## Measurement
 
-### Multichannel SMB (5 touches, 14 days)
+Prefer:
 
-| Touch | Day | Channel | Job | Max Length |
-|-------|-----|---------|-----|-----------|
-| 1 | 1 | LinkedIn | Connection request — no pitch | 300 chars |
-| 2 | 3 | LinkedIn | Engage — like or comment on a recent post | (no message) |
-| 3 | 4 | Email | Signal-anchored opener + ask | 60 words |
-| 4 | 8 | Email | Give value, ask nothing | 40 words |
-| 5 | 14 | Email | Breakup | 25 words |
+- delivery, hard bounce, complaint, unsubscribe;
+- positive, neutral, negative, and referral reply rates;
+- qualified next-step rate;
+- time to reply and touch that influenced the response;
+- downstream conversion with an explicitly qualified attribution model.
 
-### Email-Only (5 touches, 18 days)
+Open tracking can be unreliable and privacy-invasive. Do not optimize copy solely on opens.
 
-| Touch | Day | Job | Max Length |
-|-------|-----|-----|-----------|
-| Email 1 | 1 | Signal hook + credibility + ask | 60 words |
-| Email 2 | 3 | Bump — no repitch | 25 words |
-| Email 3 | 7 | Give value, ask nothing | 40 words |
-| Email 4 | 12 | Social proof — specific result | 45 words |
-| Email 5 | 18 | Breakup — clean exit | 25 words |
+## Experiment hygiene
 
-**Gap logic:** Widen gaps as the sequence progresses. Day 1 → 3 → 7 → 12 → 18. Fixed-interval sequences look automated.
+Test one meaningful variable at a time when volume supports interpretation. Predefine the population and outcome. Avoid declaring a winner from tiny samples or comparing different recipient cohorts without adjustment.
 
-**Send time:** Tuesday–Thursday, 9–11 AM prospect's timezone. Avoid Monday morning and Friday afternoon.
+## Sequence audit
 
----
-
-## The Rules That Don't Move
-
-**Subject lines:**
-- Touch 1 email: Short, specific. References the signal.
-- All follow-ups: `Re: [original subject]` — stay in thread. Never break it.
-- Never: "Following up", "Checking in", "Touching base", "Just wanted to"
-
-**Length:**
-- 50–75 words is the sweet spot for Email 1 (2026 benchmark data)
-- Follow-ups: 25–40 words
-- Breakup: under 25 words
-- LinkedIn messages: under 300 characters
-
-**Tone escalation:**
-
-| Touch | Tone |
-|-------|------|
-| LinkedIn connection | Neutral — just get accepted |
-| Email 1 | Confident, signal-aware, specific ask |
-| Email 2 | Casual, zero pressure |
-| Email 3/4 | Generous — give something, ask nothing |
-| Last email | Clean exit — door stays open |
-
-**What each touch must NOT do:**
-- LinkedIn connection: Must not pitch. One sentence why you're connecting, or blank.
-- Email 1: Must not be generic. Remove the name — does it fall apart? If not, rewrite.
-- Email 2: Must not re-pitch. Just nudge.
-- Value touch: Must not ask for a call or response. Only give.
-- Social proof touch: Must not fabricate. Real clients and real numbers, or skip it.
-- Breakup: Must not guilt-trip. Clean, warm, final.
-
----
-
-## The Templates
-
-### LinkedIn Connection Request (Touch 1)
-
-```
-[Option A — with note]
-Saw your post on [specific topic] — [one genuine reaction]. Thought it worth connecting.
-
-[Option B — blank]
-(No note. Your profile is the pitch.)
-```
-
-### Email 1
-
-```
-Subject: [signal reference — their company + what happened]
-
-Hey [Name],
-
-[One sentence: the signal. Recent, specific, about them.]
-
-[One sentence: what you do + strongest proof point.]
-
-[One sentence: specific ask — "15 minutes this week?"]
-
-[Name]
-```
-
-### Email 2 (Day 3)
-
-```
-Subject: Re: [original subject]
-
-Hey [Name],
-
-Bumping this up.
-
-[Name]
-```
-
-### Email 3 — Value (Day 7)
-
-```
-Subject: Re: [original subject]
-
-Hey [Name],
-
-[One sentence: something genuinely useful for them — a resource, insight, or relevant result. No ask.]
-
-[Name]
-```
-
-### Email 4 — Social Proof (Day 12)
-
-```
-Subject: Re: [original subject]
-
-Hey [Name],
-
-[One sentence: specific client + specific result.] [One sentence: why that maps to their situation.]
-
-Worth a quick call — [specific time ask].
-
-[Name]
-```
-
-### Email 5 — Breakup (Day 18)
-
-```
-Subject: Re: [original subject]
-
-Hey [Name],
-
-Last note. Completely understand if the timing's off — happy to revisit whenever it makes sense.
-
-[Name]
-```
-
----
-
-## Workflow
-
-1. Gather target, offer, credibility, goal, asset, channel, prospect type
-2. Find one Tier 1 or Tier 2 signal — do not draft without it
-3. Choose sequence structure (multichannel or email-only)
-4. Draft all touches in order
-5. Check every email: under 60 words?
-6. Check Email 1: would it fail without the recipient's name?
-7. Check each touch: does it have a distinct job from the others?
-8. Label output with send days and channel
-
-## Verify
-
-```
-[ ] Signal found — Tier 1 or Tier 2, within last 60 days
-[ ] Email 1 references the signal in sentence 1
-[ ] Email 1 under 60 words
-[ ] Follow-ups thread on same subject with "Re:"
-[ ] Each touch has a distinct job — no repeated pitch
-[ ] Value touch gives something, asks nothing
-[ ] Social proof touch uses real numbers or is skipped
-[ ] Breakup is clean — no guilt
-[ ] Send days use widening gaps (not fixed intervals)
-[ ] Send days fall Tue–Thu where possible
-[ ] LinkedIn touches (if multichannel) are channel-appropriate — no pitch in connection request
-```
-
-See [sequence-reference.md](sequence-reference.md) for complete SaaS and partnership sequences, subject-line tests, research hooks, send timing, and skip rules.
+- Does every touch add information or value?
+- Are all proof and personalization claims traceable?
+- Are reply states removed from automation promptly?
+- Is the final touch actually final?
+- Does total contact pressure remain proportionate?
+- Are suppression and jurisdiction rules enforced across tools?

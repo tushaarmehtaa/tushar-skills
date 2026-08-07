@@ -1,43 +1,58 @@
-# Supabase Auth Provider Implementation
+# Supabase Auth implementation
 
-Read this reference only when the project uses Supabase Auth. Supabase creates identities in `auth.users`; the trigger below mirrors app-specific fields into `public.users`.
+Read this reference only when the project uses Supabase Auth. Decide whether an application profile table is needed; `auth.users` already owns authentication identities.
 
 ## Contents
 
-- [Public-user sync](#supabase-auth-no-separate-sync-needed)
-- [Environment variables](#environment-variables)
+- [Profile synchronization](#profile-synchronization)
+- [Sessions and authorization](#sessions-and-authorization)
+- [Verification](#verification)
 
-### Supabase Auth (no separate sync needed)
+## Profile synchronization
 
-Supabase Auth creates users in `auth.users` automatically. But you likely want a `public.users` table with app-specific fields:
+If app-specific fields require `public.users`/`profiles`, use a migration-backed trigger with a fixed `search_path`, idempotent conflict behavior, and only the metadata fields the application trusts.
 
 ```sql
--- Trigger to auto-create public user on signup
-create or replace function public.handle_new_user()
-returns trigger as $$
+create or replace function public.handle_new_auth_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
 begin
-  insert into public.users (auth_id, email, name, avatar_url)
+  insert into public.profiles (id, email, display_name, avatar_url)
   values (
-    new.id::text,
+    new.id,
     new.email,
-    new.raw_user_meta_data->>'full_name',
-    new.raw_user_meta_data->>'avatar_url'
-  );
+    new.raw_user_meta_data ->> 'full_name',
+    new.raw_user_meta_data ->> 'avatar_url'
+  )
+  on conflict (id) do update
+    set email = excluded.email,
+        display_name = excluded.display_name,
+        avatar_url = excluded.avatar_url;
   return new;
 end;
-$$ language plpgsql security definer;
+$$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute function public.handle_new_user();
+after insert or update on auth.users
+for each row execute function public.handle_new_auth_user();
 ```
 
-## Environment Variables
+Adapt table/field names to the existing schema. Decide how deletion, email changes, anonymous users, and metadata trust are handled. Restrict function execution/grants as appropriate and review all `security definer` code.
 
-```
-NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
-```
+## Sessions and authorization
 
-Keep the service-role key server-side, use the anonymous key only where appropriate, and verify that `.env` and `.env.local` cannot be committed.
+Use current `@supabase/ssr` guidance for cookie-backed Next.js sessions: create clients per request, use `getAll`/`setAll`, await framework cookie APIs, and implement the required refresh proxy/middleware. Enforce access with RLS and server checks; a client auth hook is not authorization.
+
+Prefer current publishable/secret key names when the project has migrated, while preserving supported legacy anon/service environment names until an intentional key migration.
+
+## Verification
+
+- Create/update/delete users and confirm profile lifecycle behavior.
+- Replay the trigger path and confirm no duplicate profile.
+- Test session refresh/expiry in the target runtime.
+- Test RLS as owner, another user, and anonymous for every profile-backed resource.
+- Run the migration from a clean local database and regenerate types.

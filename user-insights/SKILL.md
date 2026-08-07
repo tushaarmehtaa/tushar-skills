@@ -1,159 +1,64 @@
 ---
 name: user-insights
-description: Analyze product data to find behavioral segments, retention patterns, churn risks, and actions. Use when deciding what different user groups need next.
+description: Analyze behavioral segments, retention, activation, funnels, adoption, churn, and monetization. Use when product, event, billing, or qualitative data must inform a product decision.
 license: MIT
 ---
 
 # User insights
 
-Read the available data model and measurement setup, form useful questions, generate defensible queries, and connect each finding to a product decision. Do not turn arbitrary thresholds into personas.
+Start from a product decision and metric definition. Do not turn convenient columns or arbitrary time thresholds into personas.
 
-## Phase 1: Read the Schema
+## Choose a mode
 
-Check the codebase for the user model. The signals you need:
+- **Question framing:** turn a product concern into measurable questions.
+- **Segmentation:** identify behaviorally meaningful groups from distributions or justified business rules.
+- **Retention/cohort:** measure return behavior from event history.
+- **Activation/funnel:** locate progression and drop-off.
+- **Feature adoption/pathing:** understand use sequences and value realization.
+- **Churn/monetization:** analyze decline, cancellation, expansion, and revenue behavior.
+- **Qualitative synthesis:** connect interviews, support, or survey evidence to behavioral patterns.
+- **Audit:** validate an existing query, dashboard, segment, or conclusion.
 
-- **Usage metric** — What counts as activity? Credits consumed, API calls, generations, logins, content created. Find the field.
-- **Timestamps** — `created_at`, `last_active_at`, `last_login_at`. Any date fields on the user.
-- **Plan / billing** — Free vs paid, plan name, subscription status.
-- **ORM** — Prisma, Drizzle, Mongoose, raw SQL? Match your output to what's already in the codebase.
+## Workflow
 
-If any of the three signals are missing (usage, timestamps, plan), tell the user before generating queries. Don't fabricate fields that don't exist in the schema.
+1. State the product decision, population, behavior, time window, and action the analysis may trigger.
+2. Inspect schemas, event taxonomy, identity model, account/user relationships, plan history, billing/refunds, timezone, retention policy, and available qualitative evidence. Match the query language to the actual system.
+3. Audit data quality before analysis: event semantics, duplicate/late events, nulls, bots/internal/test accounts, identity merges, plan changes, censoring, seasonality, and instrumentation changes.
+4. Define every metric with numerator, denominator, eligibility, window, and unit of analysis. Prefer event history over current user snapshots for trends and retention.
+5. For segments, inspect distributions and use quantiles, clusters, or business thresholds only when interpretable and justified. Test sensitivity to reasonable boundary changes. Small groups and ties need explicit handling.
+6. For retention, build cohort-period activity from events and distinguish classic, rolling, and bounded retention. Do not infer historical retention from `last_active_at`.
+7. For decline or churn risk, compare each subject with its own prior behavior or an appropriate matched baseline; do not call low cumulative usage a decline.
+8. Execute queries only when access is available. Otherwise return executable queries and expected result shapes without fabricating counts.
+9. Quantify sample size, uncertainty, missingness, and alternative explanations. Treat observational associations as non-causal.
+10. Connect each finding to a decision, mechanism, proposed action, and validation method. Prefer experiments or staged tests for causal recommendations.
 
-## Phase 2: Define the Segments
+## Privacy and safety
 
-Use whatever signals are available. Don't force a segment if the data isn't there.
+- Minimize selected fields; avoid `SELECT *` and raw email unless the task requires identifiable outreach and access is authorized.
+- Aggregate or pseudonymize outputs where possible.
+- Respect consent, retention, deletion, and access-control boundaries.
+- Do not label individuals with sensitive or stigmatizing inferred traits.
 
-### Usage-Based (requires usage metric)
+## Load conditional reference
 
-**Power Users** — top 10% by usage. These people love the product. Treat them differently than everyone else.
+Read [analysis patterns](references/guide.md) for calibrated segmentation, event-based cohort SQL, decline analysis, query review, and action design. The reference contains patterns to adapt, not fixed thresholds or a separate workflow.
 
-**Active** — used in the last 7 days, above median usage.
+## Output contract
 
-**Casual** — used in the last 30 days, below median usage.
+Distinguish two states:
 
-**Dormant** — no usage in 7–30 days. The clock is ticking.
+- **Executed analysis:** evidence ledger, metric definitions, data-quality findings, results with denominators/uncertainty, limitations, and decisions.
+- **Query plan:** schema mapping, executable queries, expected columns, validation queries, and interpretation rules—no invented results.
 
-**Churned** — no usage in 30+ days. Harder to recover, not impossible.
-
-### Lifecycle (requires `created_at`)
-
-**New** — signed up < 7 days ago. Haven't formed a habit yet.
-
-**Onboarding** — 7–14 days, hasn't hit the "aha moment" (define this as hitting a specific usage threshold based on the product).
-
-**Established** — 14–60 days, regular usage pattern.
-
-**Veteran** — 60+ days, consistent activity. The most valuable free-tier users.
-
-### Revenue (requires plan data)
-
-**Free Tier** — never paid.
-
-**Paying** — active subscription or purchased credits.
-
-**At Risk** — paying but usage declining in the last 14 days. The most urgent segment.
-
-**Churned Paid** — was paying, subscription ended. Revenue already lost.
-
-## Phase 3: Generate the Queries
-
-For each applicable segment, generate both SQL and ORM. Adapt to the actual schema — no placeholder column names.
-
-```sql
--- Power Users: top 10% by credits consumed
-SELECT *, (initial_credits - credits) AS credits_used
-FROM users
-ORDER BY credits_used DESC
-LIMIT (SELECT COUNT(*) / 10 FROM users);
-
--- Dormant: was active, silent for 7-30 days
-SELECT * FROM users
-WHERE last_active_at < NOW() - INTERVAL '7 days'
-  AND last_active_at > NOW() - INTERVAL '30 days';
-
--- At Risk: paying user, usage dropped below half their average
-SELECT * FROM users
-WHERE plan != 'free'
-  AND (initial_credits - credits) < (
-    SELECT AVG(initial_credits - credits) * 0.5
-    FROM users WHERE plan != 'free'
-  );
-```
-
-```typescript
-// Prisma: dormant users
-const dormant = await prisma.user.findMany({
-  where: {
-    lastActiveAt: {
-      lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      gt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-    },
-  },
-});
-```
-
-Always include a count query so the user can see the full distribution immediately:
-
-```sql
-SELECT 'power_users' AS segment, COUNT(*) AS count FROM users WHERE ...
-UNION ALL
-SELECT 'active'      AS segment, COUNT(*) AS count FROM users WHERE ...
-UNION ALL
-SELECT 'dormant'     AS segment, COUNT(*) AS count FROM users WHERE ...
-UNION ALL
-SELECT 'churned'     AS segment, COUNT(*) AS count FROM users WHERE ...
-```
-
-## Phase 4: Recommend Actions
-
-One action per segment. Concrete, not vague.
-
-**Power Users** — upgrade offer or exclusive early access. They're already bought in. A personal email from the founder converts here better than any automated campaign.
-
-**Active** — surface features they haven't used. In-app tooltip or email with one specific feature. Don't pitch; educate.
-
-**Casual** — re-engage with the one thing they got value from. Remind them what worked.
-
-**Dormant** — win-back email. One specific hook: what's changed, what's new. Not "we miss you."
-
-**Churned** — short survey, then an incentive. Find out why before trying to recover them.
-
-**New** — onboarding sequence. Define the "aha moment" threshold and build the first 3 days around reaching it.
-
-**At Risk** — personal outreach before cancellation. A direct message from a human beats automation here.
-
-## Phase 5: Output Format
-
-Print distribution, then queries, then actions.
-
-```
-USER SEGMENTS — [project name]
-════════════════════════════════════
-CURRENT DISTRIBUTION
-────────────────────────────────────
-Power Users:    [N] users  ([X]%)
-Active:         [N] users  ([X]%)
-Casual:         [N] users  ([X]%)
-Dormant:        [N] users  ([X]%)
-Churned:        [N] users  ([X]%)
-────────────────────────────────────
-Total:          [N] users
-════════════════════════════════════
-```
-
-If the `email-with-resend` skill is installed, offer to generate product-email templates for relevant segments after the queries.
+For either state, include justified segments/cohorts only, privacy notes, alternative explanations, recommended action, and how to test it.
 
 ## Verify
 
-```
-[ ] User model read from codebase — no invented fields
-[ ] Usage metric identified and defined
-[ ] Only segments with available signals generated
-[ ] SQL + ORM queries output for each segment
-[ ] Count queries included so distribution is visible
-[ ] At Risk segment flagged if any paying users exist
-[ ] Action recommendation per segment — specific, not generic
-[ ] All column names in queries match the actual schema
-```
-
-See [references/guide.md](references/guide.md) for RFM scoring, cohort retention analysis, and churn prediction patterns.
+- Queries use real schema fields and correct grain.
+- Trends and retention use event history rather than snapshots.
+- Cohort denominators and maturity/censoring are correct.
+- Segment thresholds are justified and sensitivity-tested.
+- Counts reconcile to eligible-population totals without unintended overlap.
+- PII is minimized and access assumptions are explicit.
+- Observational results are not presented as causal.
+- Recommendations state evidence, mechanism, uncertainty, and validation.

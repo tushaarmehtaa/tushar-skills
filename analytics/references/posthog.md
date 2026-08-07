@@ -1,229 +1,83 @@
-# PostHog Implementation
+# PostHog implementation
 
-Read this reference when the project needs PostHog installation, browser or server tracking, page views, user identification, or typed custom events.
+Read this reference before changing PostHog browser/server setup, identity, page views, feature flags, or events. Check the installed `posthog-js`/`posthog-node` versions and current PostHog documentation before copying API options.
 
 ## Contents
 
-- [Install](#21-install)
-- [Client-side provider](#22-client-side-provider)
-- [Page-view tracking](#23-page-view-tracking-nextjs-spa)
-- [User identification](#24-user-identification)
-- [Custom events](#25-custom-event-tracking)
-- [Server-side tracking](#26-server-side-tracking-nextjs)
+- [Plan events and privacy](#plan-events-and-privacy)
+- [Initialize](#initialize)
+- [Identity](#identity)
+- [Typed capture](#typed-capture)
+- [Server capture](#server-capture)
+- [Verification](#verification)
 
-### 2.1 Install
+## Plan events and privacy
 
-**Next.js:**
-```bash
-npm install posthog-js posthog-node
-```
+Define stable event names and required properties before installation. Avoid credentials, payment data, message/content bodies, raw prompts, unrestricted URLs/query strings, and unnecessary personal data. Email addresses are personal data; capture them only when justified by the product’s privacy/consent policy. Configure opt-out/consent, retention, replay masking, and region before production.
 
-**React SPA (Vite):**
-```bash
-npm install posthog-js
-```
+## Initialize
 
-**Python:**
-```bash
-pip install posthog
-```
-
-### 2.2 Client-Side Provider
-
-**Next.js App Router** — create `app/providers.tsx`:
+Use the framework pattern recommended for the installed version. In current Next.js versions, prefer PostHog’s current App Router guidance and do not add manual page-view capture until checking whether the selected defaults already capture navigation.
 
 ```typescript
 'use client';
 
 import posthog from 'posthog-js';
-import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react';
-import { useEffect } from 'react';
+import { PostHogProvider as Provider } from 'posthog-js/react';
 
 if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     person_profiles: 'identified_only',
-    capture_pageview: false, // We handle this manually for SPA navigation
-    capture_pageleave: true,
-    loaded: (posthog) => {
-      if (process.env.NODE_ENV === 'development') {
-        // Disable in dev unless you want to test
-        // posthog.opt_out_capturing();
-      }
-    },
+    // Set capture_pageview explicitly only when the installed-version plan requires it.
   });
 }
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  return <PHProvider client={posthog}>{children}</PHProvider>;
+  return <Provider client={posthog}>{children}</Provider>;
 }
 ```
 
-Wrap the app in `layout.tsx`:
-```typescript
-import { PostHogProvider } from './providers';
+The browser project token is designed for ingestion; do not confuse it with a personal API key. Keep personal keys and management API credentials server-only.
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html>
-      <body>
-        <PostHogProvider>{children}</PostHogProvider>
-      </body>
-    </html>
-  );
-}
-```
+## Identity
 
-**React SPA (Vite)** — create `lib/analytics.ts`:
+Use the stable internal application user ID as `distinct_id`. Identify only after authoritative authentication, reset on logout, and test account switching and impersonation.
 
 ```typescript
-import posthog from 'posthog-js';
-
-let initialized = false;
-
-export function initAnalytics() {
-  if (initialized || typeof window === 'undefined') return;
-
-  const key = import.meta.env.VITE_POSTHOG_KEY;
-  if (!key) return;
-
-  posthog.init(key, {
-    api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
-    person_profiles: 'identified_only',
-    capture_pageview: true,
-  });
-
-  initialized = true;
-}
-
-export { posthog };
-```
-
-Call `initAnalytics()` in your app entry point.
-
-### 2.3 Page View Tracking (Next.js SPA)
-
-PostHog doesn't auto-track SPA navigation. Add a component that fires on route changes:
-
-```typescript
-// components/PostHogPageView.tsx
-'use client';
-
-import { usePathname, useSearchParams } from 'next/navigation';
-import { usePostHog } from 'posthog-js/react';
-import { useEffect, Suspense } from 'react';
-
-function PageViewTracker() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const posthog = usePostHog();
-
-  useEffect(() => {
-    if (pathname && posthog) {
-      let url = window.origin + pathname;
-      const search = searchParams.toString();
-      if (search) url += '?' + search;
-      posthog.capture('$pageview', { $current_url: url });
-    }
-  }, [pathname, searchParams, posthog]);
-
-  return null;
-}
-
-export function PostHogPageView() {
-  return (
-    <Suspense fallback={null}>
-      <PageViewTracker />
-    </Suspense>
-  );
-}
-```
-
-Add to layout:
-```typescript
-<PostHogProvider>
-  <PostHogPageView />
-  {children}
-</PostHogProvider>
-```
-
-### 2.4 User Identification
-
-When a user logs in, identify them in PostHog so events are linked to a person:
-
-```typescript
-import posthog from 'posthog-js';
-
-// Call this after successful auth sync
-function identifyUser(user: { id: string; email?: string; name?: string }) {
-  posthog.identify(user.id, {
-    email: user.email,
-    name: user.name,
-  });
-}
-
-// Call this on logout
-function resetUser() {
-  posthog.reset();
-}
-```
-
-Wire this into your auth hook or auth sync callback.
-
-### 2.5 Custom Event Tracking
-
-Create a thin wrapper for type safety and consistency:
-
-```typescript
-// lib/track.ts
-import posthog from 'posthog-js';
-
-type TrackEvent =
-  | { event: 'signed_up'; properties?: { method: string } }
-  | { event: 'created_project'; properties: { projectId: string } }
-  | { event: 'upgraded_plan'; properties: { plan: string; price: number } }
-  | { event: 'used_feature'; properties: { feature: string } };
-
-export function track({ event, properties }: TrackEvent) {
-  posthog.capture(event, properties);
-}
-```
-
-Usage:
-```typescript
-track({ event: 'created_project', properties: { projectId: '123' } });
-```
-
-The union type ensures you can't track events with wrong properties. Add your events to the union as your product grows.
-
-### 2.6 Server-Side Tracking (Next.js)
-
-For events that happen on the server (API routes, webhooks):
-
-```typescript
-// lib/posthog-server.ts
-import { PostHog } from 'posthog-node';
-
-let client: PostHog | null = null;
-
-export function getPostHogServer() {
-  if (!client && process.env.POSTHOG_API_KEY) {
-    client = new PostHog(process.env.POSTHOG_API_KEY, {
-      host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
-      flushAt: 1,
-      flushInterval: 0,
-    });
-  }
-  return client;
-}
-```
-
-Usage in API routes:
-```typescript
-const posthog = getPostHogServer();
-posthog?.capture({
-  distinctId: userId,
-  event: 'api_call',
-  properties: { endpoint: '/api/generate', status: 200 },
+posthog.identify(user.id, {
+  // Include personal properties only when approved by the measurement/privacy plan.
+  plan: user.plan,
 });
+
+posthog.reset();
 ```
+
+Do not identify from untrusted query/body fields. Define how anonymous pre-login activity merges and how deletion/opt-out requests are handled.
+
+## Typed capture
+
+```typescript
+type ProductEvent =
+  | { event: 'project_created'; properties: { projectId: string } }
+  | { event: 'generation_completed'; properties: { generationId: string; latencyMs: number } };
+
+export function captureProductEvent(value: ProductEvent) {
+  posthog.capture(value.event, value.properties);
+}
+```
+
+Capture authoritative outcomes on the server when a browser event could be blocked, forged, or duplicated.
+
+## Server capture
+
+Create one reusable server client per runtime pattern, pass the stable user ID, and ensure queued events are flushed according to the host lifecycle. Do not force `flushAt: 1` without measuring latency/cost. Serverless and edge runtimes may require explicit shutdown/flush handling from current SDK documentation.
+
+## Verification
+
+- Confirm exactly one expected page-view event per navigation strategy.
+- Confirm typed custom events and property shapes.
+- Test anonymous-to-authenticated merge, logout reset, and account switching.
+- Confirm development/test traffic is separated or disabled.
+- Inspect a real event for accidental personal/sensitive properties.
+- For server capture, confirm delivery before the runtime exits and verify duplicate-request behavior.

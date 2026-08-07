@@ -1,104 +1,74 @@
-# Credit Database Variants
+# Credit database variants
 
-Read this reference after detecting the database. Implement exactly one schema variant and preserve the shared balance, audit-trail, indexing, and atomicity requirements.
+Read this reference after detecting the database. Implement one compatible variant and keep all balance/ledger mutations transactional.
 
 ## Contents
 
-- [SQL databases](#for-sql-databases-supabase--postgres--planetscale)
-- [Prisma](#for-prisma)
-- [MongoDB and Mongoose](#for-mongodb--mongoose)
+- [Shared invariants](#shared-invariants)
+- [PostgreSQL and Supabase](#postgresql-and-supabase)
+- [Prisma](#prisma)
+- [MySQL and PlanetScale](#mysql-and-planetscale)
+- [MongoDB](#mongodb)
+- [Verification](#verification)
 
-Create the schema that matches their database.
+## Shared invariants
 
-### For SQL databases (Supabase / Postgres / PlanetScale):
+- Amounts are positive integers at the operation boundary; ledger deltas carry the sign.
+- Every logical operation has a unique idempotency key.
+- Ledger rows are append-only and link reversals/refunds to the original operation.
+- Balance and ledger update in one transaction, or balance is derived from the ledger.
+- Reservation status supports pending/captured/released where concurrent or variable-cost work exists.
+- Database constraints enforce the chosen no-debt/debt policy.
 
-**Users table** — add credits column if it doesn't exist:
+## PostgreSQL and Supabase
+
 ```sql
--- Add to existing users table
-ALTER TABLE users ADD COLUMN IF NOT EXISTS credits integer DEFAULT [FREE_CREDITS] NOT NULL;
-```
+alter table public.users
+  add column if not exists credit_balance bigint not null default 0,
+  add constraint users_credit_balance_nonnegative check (credit_balance >= 0);
 
-If no users table exists, create one with the minimum needed:
-```sql
-CREATE TABLE users (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  auth_id text UNIQUE NOT NULL,        -- from auth provider (clerk_id, supabase uid, etc.)
-  email text UNIQUE,
-  credits integer DEFAULT [FREE_CREDITS] NOT NULL,
-  created_at timestamptz DEFAULT now()
+create table public.credit_transactions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.users(id),
+  idempotency_key text not null unique,
+  kind text not null check (kind in (
+    'grant', 'reserve', 'capture', 'release', 'refund', 'reverse', 'expire', 'rollover'
+  )),
+  amount bigint not null check (amount <> 0),
+  balance_after bigint not null,
+  original_transaction_id uuid references public.credit_transactions(id),
+  external_reference text,
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
 );
+
+create index credit_transactions_user_created_idx
+  on public.credit_transactions (user_id, created_at desc);
+create unique index credit_transactions_external_reference_idx
+  on public.credit_transactions (external_reference)
+  where external_reference is not null;
 ```
 
-**Credit transactions table** — this is the audit trail. Non-negotiable:
-```sql
-CREATE TABLE credit_transactions (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid REFERENCES users(id) NOT NULL,
-  amount integer NOT NULL,              -- positive = add, negative = spend
-  reason text NOT NULL,                 -- 'signup_bonus', 'purchase', 'generation', 'refund', 'admin_grant', 'promo_code'
-  metadata jsonb DEFAULT '{}',          -- payment_id, action details, admin notes
-  created_at timestamptz DEFAULT now()
-);
+Implement a database function or application transaction that locks/conditionally updates the balance and inserts the ledger row atomically. For spend/reserve, use a conditional update such as `... where credit_balance >= amount` and confirm one affected row inside the transaction.
 
-CREATE INDEX idx_credit_tx_user ON credit_transactions(user_id);
-CREATE INDEX idx_credit_tx_created ON credit_transactions(created_at);
-```
+Apply RLS/grants based on the real auth model. Users may read their own history; only trusted server paths should mutate financial rows.
 
-**Promo codes table** (optional but recommended):
-```sql
-CREATE TABLE promo_codes (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  code text UNIQUE NOT NULL,
-  credits_amount integer NOT NULL,
-  max_uses integer DEFAULT 1,
-  times_used integer DEFAULT 0,
-  email text,                           -- NULL = anyone can use, set = restricted to this email
-  expires_at timestamptz,               -- NULL = never expires
-  created_at timestamptz DEFAULT now()
-);
-```
+## Prisma
 
-### For Prisma:
+Model the same fields and unique constraints in the provider-compatible Prisma schema. Use an interactive transaction for conditional balance update plus ledger insert. Raw conditional SQL may be necessary for strict atomic spend; do not implement read-then-write in separate calls. JSON defaults and UUID generation differ by database provider, so avoid copying PostgreSQL annotations into MySQL.
 
-```prisma
-model User {
-  id        String   @id @default(uuid())
-  authId    String   @unique @map("auth_id")
-  email     String?  @unique
-  credits   Int      @default([FREE_CREDITS])
-  createdAt DateTime @default(now()) @map("created_at")
+## MySQL and PlanetScale
 
-  transactions CreditTransaction[]
+Use MySQL-compatible types (`char(36)`/binary UUID choice, `json`, `datetime`) and migrations supported by the project. `gen_random_uuid()`, `jsonb`, partial indexes, and `ADD COLUMN IF NOT EXISTS` are PostgreSQL-specific. Verify foreign-key support/configuration on the actual PlanetScale project. Preserve idempotency with unique indexes and use a transaction or single conditional update supported by the database.
 
-  @@map("users")
-}
+## MongoDB
 
-model CreditTransaction {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  amount    Int                          // positive = add, negative = spend
-  reason    String                       // signup_bonus, purchase, generation, etc.
-  metadata  Json     @default("{}")
-  createdAt DateTime @default(now()) @map("created_at")
+Store balance on the user/account document and ledger in a separate collection with unique indexes on `idempotencyKey` and optional `externalReference`. Use a replica-set transaction for balance+ledger atomicity, or a rigorously designed single-document ledger/balance model. A transaction schema alone is insufficient.
 
-  user User @relation(fields: [userId], references: [id])
+## Verification
 
-  @@index([userId])
-  @@index([createdAt])
-  @@map("credit_transactions")
-}
-```
-
-### For MongoDB / Mongoose:
-
-```javascript
-const creditTransactionSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-  amount: { type: Number, required: true },
-  reason: { type: String, required: true },
-  metadata: { type: Schema.Types.Mixed, default: {} },
-  createdAt: { type: Date, default: Date.now, index: true },
-});
-```
-
-**Tell the user**: "Created credit_transactions table. Every credit change is logged — you'll never wonder where credits went."
+- Concurrent spends cannot cross the permitted balance boundary.
+- Replaying an idempotency key returns the original result without another delta.
+- Ledger and cached balances reconcile after grants, capture/release, and refund.
+- Mutation attempts from ordinary client credentials are denied.
+- Migration applies from a clean database and upgrades an existing fixture safely.

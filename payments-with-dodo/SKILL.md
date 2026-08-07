@@ -1,30 +1,29 @@
 ---
 name: payments-with-dodo
-description: Implement Dodo Payments checkout, subscriptions, webhooks, entitlements, billing UI, and verification. Use when adding or repairing Dodo billing in an app.
+description: Implement or repair Dodo Payments checkout, subscriptions, webhooks, entitlements, billing UI, refunds, and verification. Use when adding Dodo billing or auditing its full lifecycle.
 license: MIT
 ---
 
 # Payments with Dodo
 
-Implement the full billing lifecycle, not an isolated checkout button or webhook. Match the existing stack and treat the payment provider as the source of billing events, not the application's authorization model.
+Implement the full billing lifecycle. Dodo is the source of billing events; the application’s server-side entitlement model is the authorization boundary.
 
 ## Workflow
 
-1. Inspect the framework, auth, database, existing products, billing code, environment variables, and deployment targets.
-2. Confirm the commercial model: one-time purchase or subscription, plans, currency, trial behavior, cancellation rules, refund policy, tax handling, and which capabilities each purchase unlocks.
-3. Model products and entitlements in one typed server-side definition. Do not trust plan names, prices, or feature access sent by the browser.
-4. Configure Dodo products and environments. Keep test and live identifiers separate and document the mapping in `.env.example` without secrets.
-5. Build server-created checkout sessions with authenticated customer identity and stable metadata that can map every event back to the correct account.
-6. Implement billing UI for pricing, checkout states, current plan, renewal/cancellation state, invoices or portal access, and recovery from failed payments.
-7. Implement signature-verified, idempotent webhooks. Store event IDs, process retries safely, tolerate out-of-order delivery, and update subscriptions and entitlements transactionally.
-8. Protect paid features on the server. The UI may explain access, but it must not be the security boundary.
-9. Test purchase, duplicate webhook, renewal, cancellation, expiration, refund, failed payment, replay, and unknown-customer paths in the provider's test environment.
-10. Report provider-dashboard steps separately from code changes and list the exact production checks still required.
+1. Inspect framework/runtime, auth, database, existing provider/SDK and version, products, billing code, webhook storage, environment mapping, and deployment targets. Do not install Dodo beside another provider without explicit migration scope.
+2. Infer existing products and commercial policy. Ask only about unresolved one-time/subscription behavior, currency, trials, cancellation timing, refunds, tax, and capabilities unlocked.
+3. Model server-owned products, prices, and entitlements. The browser may submit a stable product key, never price, currency, credit amount, or entitlement.
+4. Keep test/live API keys, product IDs, webhook keys, and environment settings separate. Document names in `.env.example` without values.
+5. Read [pricing and checkout](references/pricing-and-checkout.md) for current official SDK checkout, product mapping, portal, and UI patterns. Read [implementation guidance](references/implementation-guide.md) only when designing pricing or feature gates.
+6. Read [webhooks](references/webhooks.md) before implementing event ingestion. Prefer official SDK verification, a durable webhook inbox with unique event ID, transactional state updates, explicit transient/permanent failure policy, and ordering by provider timestamps/version where available.
+7. Store provider customer/payment/subscription IDs and normalized status, billing-period boundaries, cancellation schedule, and last processed event data needed for reconciliation. Handle relevant payment, subscription, refund, dispute, dunning, and entitlement events.
+8. Protect paid features on the server using normalized entitlements. UI gates explain access but do not grant it.
+9. Build billing UI for checkout states, current entitlement, renewal/cancellation timing, failed-payment recovery, invoices/portal, and delayed webhook confirmation. Never treat a return URL or query parameter as proof of payment.
 
-## Load deeper guidance
+## Verification
 
-- Read [webhooks](references/webhooks.md) for signature verification, event handling, database synchronization, and framework examples.
-- Read [pricing and checkout](references/pricing-and-checkout.md) for tiers, feature gates, checkout, portal, and UI implementation.
-- Read [implementation guide](references/implementation-guide.md) for supporting pricing-page patterns.
+In Dodo test mode, test purchase, invalid product key, duplicate/concurrent webhook, invalid signature, transient database failure and retry, out-of-order update, renewal, scheduled cancellation, expiration, plan change, failed payment/on-hold/recovery, refund, dispute where relevant, replay, and unknown customer. Reconcile a stored subscription against the provider API. Run repository lint/type/test/build commands.
 
-Use current Dodo documentation for API names, event types, and SDK behavior. Do not rely on remembered endpoints when the implementation can be verified against primary documentation.
+## Output
+
+Report product/entitlement mapping, SDK and environment detected, files/migrations changed, checkout/portal paths, webhook inbox and state transitions, payload minimization/access/retention decisions, server enforcement points, test evidence/event IDs, and exact dashboard/production steps still required.

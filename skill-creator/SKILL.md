@@ -1,148 +1,135 @@
 ---
 name: skill-creator
-description: Turn a repeatable workflow into a concise, portable Agent Skill with useful resources and validation. Use when creating, merging, or improving SKILL.md packages.
+description: Create, improve, merge, and validate portable Agent Skill packages with adaptive workflows and behavioral evals. Use when authoring or reconstructing SKILL.md packages.
 license: MIT
 ---
 
-Package any repeatable workflow as a portable Agent Skill. The output is a self-contained skill directory that coding agents can discover and load from `SKILL.md`.
+# Skill creator
 
-## Phase 1: Capture the Workflow
+Turn a repeatable workflow into a compact specialist package, or improve an existing package without erasing its effective domain knowledge. Optimize for correct behavior on real requests rather than conformity to one Markdown template.
 
-Ask for anything missing:
+## Choose the mode
 
-1. **What does it do?** — One sentence. What problem does it solve?
-2. **When should it trigger?** — Exact phrases or contexts. Be specific.
-3. **What does it need from the user?** — Inputs before it can run.
-4. **What does it output?** — File changes, code, chat output, commands?
-5. **What are the steps?** — Walk through the process start to finish.
-6. **What are the hard rules?** — Things it must always or never do.
+- **Create** — build a new package from concrete usage examples.
+- **Improve** — diagnose and revise an existing package while preserving working behavior.
+- **Merge** — combine overlapping packages, reconcile triggers and resources, and define migration boundaries.
+- **Validate** — inspect structure, resource routing, triggers, and behavior without changing the package unless asked.
 
-If the current conversation already describes a workflow, extract answers from it before asking. Don't ask for what you already have.
+Read the current package, repository conventions, validators, and catalog metadata before asking questions. Ask only for intent that cannot be recovered and would materially alter trigger scope, side effects, or output.
 
-## Phase 2: Write the Frontmatter
+## Model real usage
 
-```yaml
----
-name: skill-name           # lowercase, hyphenated, no spaces
-description: [What it does]. Use when [specific contexts or requests].
-license: MIT
----
-```
+Collect or derive representative prompts:
 
-**The description is the trigger.** Agent runtimes use it to decide when to activate the skill. Make it explicit and keep it at 200 characters or fewer for broad compatibility:
+- direct requests that should trigger;
+- common paraphrases and incomplete requests;
+- near-miss requests that belong to another skill;
+- multi-turn requests where the skill becomes relevant later;
+- risky, unavailable, or ambiguous cases that require a branch;
+- examples of successful output and known failure modes.
 
-- Include WHAT the skill does AND WHEN to use it
-- Name concrete contexts or request types
-- Prefer a direct `Use when ...` clause
-- Keep runtime-specific requirements out unless the workflow truly depends on one runtime
+For each positive example, outline the execution path from inputs to verified outcome. Identify decisions that depend on context and operations that should remain deterministic.
 
-Use only fields defined by the Agent Skills specification. Add `compatibility` only when the skill has a real environment or runtime constraint. Do not put catalog-only fields such as category, tags, or author in the package frontmatter.
+## Audit an existing package
 
-## Phase 3: Write the Body
+When improving or merging, inventory:
 
-The structure that matches the quality bar of the existing skills:
+- frontmatter trigger coverage and collisions;
+- user inputs, inferred context, and unnecessary questions;
+- decision branches and missing failure paths;
+- domain rules versus generic advice;
+- output and side-effect contract;
+- verification that exercises behavior rather than checking ingredients;
+- every reference, script, and asset, including reachability and duplication;
+- runtime-specific assumptions and portability constraints.
 
-````markdown
-[One-liner opener — what this does, what it outputs. No heading above this.]
+Preserve concise, evidence-backed instructions and tested resources. Remove false precision, unsupported claims, authorial house style, and formatting rules that do not affect behavior.
 
-## Phase 1: [First Phase Title]
+For merges, map which package owns each trigger, workflow, resource, and output. Resolve contradictory rules explicitly and state whether old package names need a compatibility or migration path.
 
-[Instructions. Dense. Opinionated. No hedging.]
+## Design the resource graph
 
-## Phase 2: [Next Phase Title]
+Keep core selection logic, invariants, workflow, output, and verification in `SKILL.md`. Move material only when it improves execution:
 
-...
+- `references/` for conditional domain knowledge, provider or framework variants, schemas, and extended examples;
+- `scripts/` for repeated deterministic work, parsing, conversion, or validation that should not be regenerated each run;
+- `assets/` for templates, fixtures, media, or boilerplate copied into outputs rather than read as instructions.
 
-## Verify
+Link every reference directly from `SKILL.md` at the decision that requires it and say when to read it. Avoid forcing unrelated references into context. Add a `Contents` section near the top of reference files longer than 100 lines.
+
+Do not duplicate the same rule in the main file and a reference. Test added scripts by running representative inputs, including failure cases.
+
+## Write the trigger
+
+Use the repository's frontmatter contract. The description must state both capability and trigger context in concrete language. Include important modes when they affect discovery, but do not turn the description into a workflow summary.
+
+Check the trigger against:
+
+1. positive examples;
+2. paraphrases that omit the skill's preferred nouns;
+3. adjacent tasks that should not trigger;
+4. broad requests where another skill should remain primary;
+5. contexts where this skill is necessary even if not explicitly named.
+
+Avoid vague “helps with” wording and avoid runtime branding unless the workflow truly depends on that runtime.
+
+## Write adaptive instructions
+
+Set the degree of freedom from task variability:
+
+- use principles and decision criteria when multiple approaches are valid;
+- use parameterized patterns when a preferred approach has meaningful variants;
+- use deterministic scripts and strict sequencing for fragile, repeatable operations.
+
+The body should tell the next agent how to inspect context, choose a branch, execute, handle unavailable inputs, produce a bounded output, and verify the result. Do not mandate phase numbering, a heading style, checklist syntax, tone, or arbitrary line target beyond the repository's actual constraints.
+
+Prefer observable rules. Replace “make it polished” with the evidence, behavior, or acceptance check that demonstrates polish in this domain.
+
+## Define side effects and output
+
+State whether the skill answers, audits, edits files, runs commands, opens applications, or changes external state. Separate report-only work from mutation and require approval where the underlying action is consequential.
+
+Define the minimum complete output, source/provenance expectations, how blocked facts are represented, and what limitations must be reported. Avoid a single fixed output form when audit, generation, and implementation modes need different artifacts.
+
+## Build behavioral evals
+
+Create a small eval set with expected behavior, not only trigger labels:
 
 ```text
-[ ] [Thing that must be true]
-[ ] [Thing that must be true]
-[ ] [Edge case handled]
-```
-````
-
-**Rules that don't move:**
-
-- Open with a single sentence — no `# Heading` before it. This is the first instruction an agent reads.
-- Use `## Phase N: Title` for every major section
-- Use `### 1.1` sub-phases only when Phase 1 needs branching (stack detection, mode selection)
-- Code blocks must contain real, runnable code — not pseudocode
-- **Bold warnings inline** for things that fail silently or break the whole flow
-- End with `## Verify` using bare `[ ]` items inside a code block (not markdown `- [ ]` list items)
-- Under 500 lines total — push long examples to `references/guide.md`
-
-## Phase 4: The Verify Section
-
-The verify section is not optional. It's how the user confirms the skill ran correctly.
-
-Format exactly like this — bare brackets in a fenced code block:
-
-````markdown
-## Verify
-
-```
-[ ] [Thing that must be true after the skill runs]
-[ ] [Output format is correct]
-[ ] [Edge case handled]
-[ ] [Common mistake avoided]
-```
-````
-
-Each item must be checkable — either it's done or it isn't. No vague items like "quality looks good."
-
-## Phase 5: References (if needed)
-
-Create `references/guide.md` when:
-
-- Full examples would push SKILL.md over 500 lines
-- Multiple variants need their own section
-- Edge cases are complex enough to need real examples
-
-The reference file must have real input → output examples. Not outlines of examples.
-
-## Phase 6: Test Prompts
-
-Write 3–5 prompts that should trigger the skill, and 2 that should NOT:
-
-```
-"make a skill for PR reviews"          ✅ should trigger
-"create a skill to audit my code"      ✅ should trigger
-"turn this process into a skill"       ✅ should trigger
-"review my PR"                         ❌ should not trigger (different skill)
-"what skills are available?"           ❌ should not trigger
+Prompt:
+Expected trigger decision:
+Expected mode and context inspection:
+Expected questions, if any:
+Expected artifact or changes:
+Expected verification:
+Disallowed behavior:
 ```
 
-Use these to validate the description before publishing. If any trigger should fire but doesn't, add the phrase to the description.
+Cover positive, negative, near-miss, incomplete-input, multi-turn, and failure-recovery cases. For a reconstructed skill, include at least one regression case for each major defect being fixed.
 
-## Phase 7: Package and Validate
+When feasible, forward-test the package in a clean context using raw prompts and artifacts. Do not leak the intended answer or audit diagnosis into the test. Compare observed behavior with the expected contract and revise the package when failures expose a generalizable gap.
 
-Create one directory named exactly after the skill. Put `SKILL.md` at its root and keep optional resources in `references/`, `scripts/`, or `assets/`.
+## Package and validate
 
-Before handing it off:
+1. Keep `SKILL.md` at the package root and within the repository's line limit.
+2. Confirm the directory name and frontmatter name agree.
+3. Parse frontmatter using the repository validator.
+4. Resolve every relative Markdown link.
+5. Confirm references are directly and conditionally routed from `SKILL.md`.
+6. Confirm references longer than 100 lines have a contents section.
+7. Run and test deterministic scripts that changed.
+8. Run the repository's skill validator on every touched package.
+9. Re-run representative behavioral evals after structural changes.
 
-1. Parse the YAML frontmatter and confirm the name matches the directory.
-2. Confirm the description says what the skill does and when to use it in 200 characters or fewer.
-3. Check that every relative Markdown link resolves inside the skill directory.
-4. Confirm every bundled reference is linked directly from `SKILL.md` and says when to read it.
-5. Run the repository's skill validator when one exists.
-6. Deliver the complete directory, not only `SKILL.md`, so installations retain bundled resources.
+## Output contract
 
-## Verify
+Deliver:
 
-```
-[ ] YAML frontmatter uses standard fields only and includes name, description, and license
-[ ] Name matches the lowercase hyphenated directory name
-[ ] Description states what the skill does and when to use it in 200 characters or fewer
-[ ] Body opens with a one-liner — no heading before it
-[ ] All sections use ## Phase N: Title format
-[ ] Code blocks contain real code, not pseudocode
-[ ] Critical constraints are bolded inline
-[ ] Verify section uses bare [ ] items in a fenced code block
-[ ] SKILL.md is under 500 lines
-[ ] Long examples moved to references/guide.md when needed and linked from SKILL.md
-[ ] Every relative link resolves and every bundled reference is reachable
-[ ] 3-5 test prompts written to validate triggers
-```
+- the complete package, including changed resources;
+- a concise behavior summary and trigger boundary;
+- validation and eval results;
+- resources added, removed, or rerouted;
+- preserved behavior and intentional breaking changes;
+- remaining limitations or untested environments.
 
-See [references/guide.md](references/guide.md) for an annotated portable skill, a multi-file example, and common structural mistakes.
+Read [the authoring guide](references/guide.md) when selecting a multi-file resource structure, designing eval cases, merging packages, or diagnosing portability and routing failures.

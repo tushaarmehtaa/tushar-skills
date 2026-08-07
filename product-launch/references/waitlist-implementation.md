@@ -1,314 +1,121 @@
----
-name: waitlist
-description: Scaffold a waitlist with storage, duplicate handling, confirmation email, admin access, and optional referrals. Use when collecting signups before or during launch.
-license: MIT
----
+# Safe waitlist implementation
 
-Scaffold a complete waitlist — email capture, storage, confirmation email, and an admin view. Reads the project first, wires into existing stack.
+Adapt this design to the detected stack. It defines invariants and failure handling rather than paste-ready framework code.
 
-## Phase 1: Detect the Project
+## Contents
 
-```bash
-cat package.json | grep -E "next|supabase|prisma|drizzle|resend"
+- [Decisions](#decisions)
+- [Data model](#data-model)
+- [Signup transaction](#signup-transaction)
+- [Confirmation and consent](#confirmation-and-consent)
+- [Referrals](#referrals)
+- [Admin access](#admin-access)
+- [Abuse and privacy](#abuse-and-privacy)
+- [Verification](#verification)
+
+## Decisions
+
+Infer from the product and ask only unresolved choices:
+
+- fields strictly required for launch;
+- single or double opt-in and jurisdiction/product rationale;
+- confirmation email and sender setup;
+- referral program and fraud tolerance;
+- queue position semantics, if positions are shown at all;
+- admin/export users and retention/deletion policy.
+
+Email-only is often lower friction, but it is not a universal requirement.
+
+## Data model
+
+Preserve these logical fields as required by the chosen design:
+
+```text
+id: random opaque identifier
+normalized_email: unique under an explicit normalization policy
+display fields: optional, length-limited, safely encoded on output
+status: pending | confirmed | unsubscribed | deleted
+consent_source / consent_version / consent_at: when required
+confirmation_token_hash / expiry: for double opt-in
+referral_code: cryptographically random and unique
+referred_by_id: validated foreign key
+created_at / confirmed_at / unsubscribed_at
+source and campaign fields: allowlisted, length-limited
 ```
 
-Check for:
-- **Database**: Supabase / Prisma / Drizzle / raw Postgres?
-- **Email**: Resend already installed?
-- **Auth**: Any auth provider? (Admin view needs it)
-- **Existing waitlist table?** Search for `waitlist` in schema files
+Do not expose sequential IDs or derive public referral codes from email. Avoid mutable queue positions unless the product has a clear, concurrency-safe ordering policy.
 
-## Phase 2: Ask the User
+Use database constraints for uniqueness and referential integrity. Treat the database as the authority under concurrent requests.
 
-```
-I'll scaffold a waitlist for [product name].
+## Signup transaction
 
-Quick decisions:
+The handler should:
 
-1. What info do you want to collect?
-   a) Email only (default — highest conversion)
-   b) Email + name
-   c) Email + name + "what are you building?" (optional field)
+1. enforce request size/content type and parse safely;
+2. validate and normalize the email under a documented policy;
+3. validate/limit optional text and attribution fields;
+4. apply rate limiting and bot/abuse controls appropriate to exposure;
+5. insert with an atomic upsert or catch the unique constraint;
+6. validate referral code and record attribution transactionally;
+7. return a generic success response that does not reveal whether an arbitrary address is registered;
+8. enqueue confirmation delivery after durable storage;
+9. emit privacy-minimized success/failure events.
 
-2. Referral tracking?
-   a) No — simple list
-   b) Yes — each signup gets a unique referral link, referred count tracked
+Do not perform “check then insert” as the uniqueness mechanism. Do not increment referral counters separately from the referral record; derive or update them transactionally.
 
-3. Confirmation email?
-   a) Yes — send a "you're on the list" email via Resend (default)
-   b) No
+## Confirmation and consent
 
-4. Do you have Resend and a verified sending domain? (yes / need to set up)
-```
+- Use a cryptographically random, single-use, expiring token; store only its hash.
+- Encode user-supplied content in HTML and provide a text version.
+- Use a verified sending domain and current provider guidance.
+- Handle provider failure asynchronously with retries and idempotency.
+- Include required sender identity and preference/opt-out controls.
+- Do not activate referrals, queue movement, or campaigns until the chosen confirmation rule is satisfied.
+- Keep consent evidence separate from marketing assumptions. Joining a product waitlist does not automatically authorize unrelated messages.
 
-## Phase 3: Database Schema
+## Referrals
 
-Adapt to the detected database. Create a `waitlist` table:
+Model each accepted referral as an idempotent relationship. Prevent:
 
-**Supabase / raw SQL:**
-```sql
-create table public.waitlist (
-  id uuid primary key default gen_random_uuid(),
-  email text not null unique,
-  name text,
-  note text,                              -- optional "what are you building?" field
-  referral_code text unique,              -- their shareable code (if referral enabled)
-  referred_by text references public.waitlist(referral_code),  -- who sent them
-  referral_count integer default 0,       -- how many they've referred
-  position integer,                       -- queue position (set by trigger)
-  confirmed_at timestamptz,               -- null = unconfirmed
-  created_at timestamptz default now()
-);
+- self-referral;
+- repeated credit for the same confirmed signup;
+- credit before confirmation when confirmation is required;
+- arbitrary client-supplied referrer IDs;
+- easily enumerable or guessable codes;
+- unbounded rewards without fraud review.
 
--- Auto-increment position on insert
-create or replace function set_waitlist_position()
-returns trigger as $$
-begin
-  new.position = (select coalesce(max(position), 0) + 1 from public.waitlist);
-  return new;
-end;
-$$ language plpgsql;
+Define what happens when a referrer unsubscribes or a referred user is deleted.
 
-create trigger waitlist_position_trigger
-  before insert on public.waitlist
-  for each row execute function set_waitlist_position();
-```
+## Admin access
 
-If no referral tracking needed, drop `referral_code`, `referred_by`, `referral_count`.
+Use the application's real authorization system with a least-privilege admin role. A static secret header is not a substitute for an admin surface.
 
-**Prisma:**
-```prisma
-model Waitlist {
-  id           String    @id @default(cuid())
-  email        String    @unique
-  name         String?
-  note         String?
-  referralCode String?   @unique
-  referredBy   String?
-  referralCount Int      @default(0)
-  position     Int
-  confirmedAt  DateTime?
-  createdAt    DateTime  @default(now())
-}
-```
+Admin/export behavior should include:
 
-## Phase 4: The Signup API Route
+- server-side authorization on every request;
+- pagination and field minimization;
+- audit logging for view/export/delete;
+- CSV/formula-injection protection on export;
+- rate limits and short-lived download links where applicable;
+- retention, deletion, unsubscribe, and data-subject workflows;
+- no raw PII in application logs or analytics.
 
-```typescript
-// app/api/waitlist/route.ts
-import { NextResponse } from 'next/server';
+## Abuse and privacy
 
-export async function POST(req: Request) {
-  const { email, name, note, referredBy } = await req.json();
+Document data purpose, fields, processors, retention, access, deletion, consent basis, and incident path. Add CSRF protection when cookie-authenticated state changes require it. Review spam traps, disposable addresses, automated signups, and referral gaming in proportion to risk.
 
-  // Validate email
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ error: 'Valid email required' }, { status: 400 });
-  }
+## Verification
 
-  // Normalize
-  const normalizedEmail = email.toLowerCase().trim();
+Test locally and in the deployed environment:
 
-  // Check for duplicate
-  const existing = await db.query.waitlist.findFirst({
-    where: eq(waitlist.email, normalizedEmail),
-  });
-
-  if (existing) {
-    // Return success — don't tell spammers which emails are registered
-    return NextResponse.json({
-      success: true,
-      position: existing.position,
-      alreadyRegistered: true,
-    });
-  }
-
-  // Generate referral code if enabled
-  const referralCode = generateReferralCode(normalizedEmail);  // e.g., first 8 chars of email hash
-
-  // Insert
-  const entry = await db.insert(waitlistTable).values({
-    email: normalizedEmail,
-    name: name?.trim() || null,
-    note: note?.trim() || null,
-    referralCode,
-    referredBy: referredBy || null,
-  }).returning();
-
-  // Increment referrer's count
-  if (referredBy) {
-    await db.update(waitlistTable)
-      .set({ referralCount: sql`referral_count + 1` })
-      .where(eq(waitlistTable.referralCode, referredBy));
-  }
-
-  // Send confirmation email (if Resend is set up)
-  if (process.env.RESEND_API_KEY) {
-    await sendWaitlistConfirmation({
-      email: normalizedEmail,
-      name: name || 'there',
-      position: entry[0].position,
-      referralCode,
-    });
-  }
-
-  return NextResponse.json({
-    success: true,
-    position: entry[0].position,
-    referralCode,
-  });
-}
-
-function generateReferralCode(email: string): string {
-  const { createHash } = require('crypto');
-  return createHash('sha256').update(email).digest('hex').slice(0, 8);
-}
-```
-
-## Phase 5: Confirmation Email
-
-```typescript
-// lib/emails/waitlist-confirmation.ts
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-export async function sendWaitlistConfirmation({
-  email, name, position, referralCode,
-}: { email: string; name: string; position: number; referralCode?: string }) {
-  const referralUrl = referralCode
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/?ref=${referralCode}`
-    : null;
-
-  await resend.emails.send({
-    from: `[Product Name] <hi@yourdomain.com>`,
-    to: email,
-    subject: `you're #${position} on the list`,
-    html: `
-      <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 20px; color: #111;">
-        <p>Hey ${name},</p>
-        <p>You're <strong>#${position}</strong> on the waitlist. We'll reach out when you're up.</p>
-        ${referralUrl ? `
-        <p style="margin-top: 24px;">
-          Move up the list — share your link:<br>
-          <a href="${referralUrl}" style="color: #000; font-weight: bold;">${referralUrl}</a>
-        </p>
-        ` : ''}
-        <p style="color: #666; font-size: 13px; margin-top: 40px;">— [Your Name]</p>
-      </div>
-    `,
-  });
-}
-```
-
-## Phase 6: The Signup Form Component
-
-```tsx
-// components/waitlist-form.tsx
-'use client';
-import { useState } from 'react';
-
-export function WaitlistForm({ referralCode }: { referralCode?: string }) {
-  const [email, setEmail] = useState('');
-  const [state, setState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [position, setPosition] = useState<number | null>(null);
-  const [userReferralCode, setUserReferralCode] = useState<string | null>(null);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setState('loading');
-
-    const res = await fetch('/api/waitlist', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, referredBy: referralCode }),
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      setState('success');
-      setPosition(data.position);
-      setUserReferralCode(data.referralCode);
-    } else {
-      setState('error');
-    }
-  }
-
-  if (state === 'success') {
-    return (
-      <div>
-        <p>you're #{position} on the list.</p>
-        {userReferralCode && (
-          <p>
-            share your link to move up:{' '}
-            <code>{`${window.location.origin}/?ref=${userReferralCode}`}</code>
-          </p>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="your@email.com"
-        required
-        disabled={state === 'loading'}
-      />
-      <button type="submit" disabled={state === 'loading'}>
-        {state === 'loading' ? 'joining...' : 'join waitlist'}
-      </button>
-      {state === 'error' && <p>something went wrong. try again.</p>}
-    </form>
-  );
-}
-```
-
-Read the referral code from URL params in the page:
-```tsx
-// app/page.tsx
-export default function Page({ searchParams }: { searchParams: { ref?: string } }) {
-  return <WaitlistForm referralCode={searchParams.ref} />;
-}
-```
-
-## Phase 7: Admin View
-
-Simple route that requires a secret header — no full auth needed for a waitlist admin:
-
-```typescript
-// app/api/admin/waitlist/route.ts
-export async function GET(req: Request) {
-  if (req.headers.get('x-admin-secret') !== process.env.ADMIN_SECRET) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const signups = await db.select().from(waitlistTable).orderBy(asc(waitlistTable.position));
-
-  return Response.json({
-    total: signups.length,
-    signups,
-  });
-}
-```
-
-Fetch with: `curl -H "x-admin-secret: $ADMIN_SECRET" https://yoursite.com/api/admin/waitlist`
-
-## Verify
-
-```
-[ ] Duplicate email returns success with alreadyRegistered: true (no error, no leak)
-[ ] Email normalized to lowercase before storage
-[ ] Position increments correctly — first signup is #1
-[ ] Confirmation email arrives in inbox, not spam
-[ ] Referral code in URL (?ref=) is captured and stored on signup
-[ ] Referrer's count increments when referred signup completes
-[ ] Admin route requires x-admin-secret header
-[ ] ADMIN_SECRET and RESEND_API_KEY in .env.example
-[ ] Form disables input during submission
-[ ] Success state shows position and referral link
-```
+- valid, invalid, Unicode, case, whitespace, and maximum-length addresses;
+- concurrent duplicate submissions;
+- generic response for existing and new addresses;
+- rate-limit and bot-control behavior;
+- confirmation token expiry, reuse, and wrong-token cases;
+- email HTML/text encoding and deliverability;
+- referral validation, idempotency, self-referral, and confirmation gate;
+- admin authorization, pagination, export safety, audit log, and deletion;
+- analytics events without PII;
+- provider outage, retry, and recovery;
+- accessibility, loading, error, success, and offline states.

@@ -1,140 +1,71 @@
-# Cheatsheet
+# Remotion implementation cheatsheet
 
-## Spring Configs
+Read this reference only when implementing animation, responsive composition, font loading, or render commands. Confirm every API against the versions installed in the target repository.
 
-| Use case | damping | stiffness | mass |
-|---|---|---|---|
-| SlamText words | 13-14 | 130-140 | 0.8 |
-| Subtitle fade-in | 16-18 | 80-100 | 1.0 |
-| Button bounce | 8-12 | 120-200 | 0.6-0.8 |
-| Card entrance | 14-16 | 100-120 | 0.8-0.9 |
-| Label slide-up | 16-20 | 80 | 1.0 |
-| "done." slam | 10-11 | 150-160 | 0.7-0.9 |
-| Feature grid items | 14 | 110 | 0.8 |
+## Animation parameters
 
-Lower damping = more bounce. Higher stiffness = snappier. Lower mass = faster.
-
-## Responsive Sizes
-
-| Element | Desktop | Phone (portrait) |
-|---|---|---|
-| Headlines | 88px | 148px |
-| Subtext | 46px | 72px |
-| Terminal commands | 48px | 72px |
-| UI panels width | 800px | 920px |
-| Padding | 0 40px | 0 56px |
-| Gap | 8px | 14px |
-| Border radius | 14px | 20px |
-| Cursor width | 3px | 4px |
-| Cursor height | 28px | 44px |
-
-Phone sizes are roughly 1.4-2x desktop. Visually calibrated, not a linear scale.
-
-## Font Loading
-
-If using custom fonts (Geist, Inter, etc.) with local `.woff2` files:
+Start from the interaction's meaning, then tune while watching at normal speed.
 
 ```typescript
-// src/fonts.ts
-import { staticFile } from "remotion";
-import { loadFont } from "@remotion/fonts";
-
-export const loadGeist = () => {
-  const weights = [
-    { file: "Geist-Regular.woff2", weight: "400" as const },
-    { file: "Geist-Medium.woff2", weight: "500" as const },
-    { file: "Geist-SemiBold.woff2", weight: "600" as const },
-    { file: "Geist-Bold.woff2", weight: "700" as const },
-    { file: "Geist-Black.woff2", weight: "900" as const },
-  ];
-  for (const w of weights) {
-    loadFont({
-      family: "Geist",
-      url: staticFile(`fonts/${w.file}`),
-      weight: w.weight,
-    });
-  }
-};
-```
-
-Call at module level in `Root.tsx`:
-
-```typescript
-import { loadGeist } from "./fonts";
-loadGeist();
-```
-
-Place `.woff2` files in `public/fonts/`.
-
-Add `@remotion/fonts: "^4.0.434"` to package.json when using local fonts.
-
-## Render Commands
-
-```bash
-# Preview with live scrubber
-npx remotion studio
-
-# Render desktop (default composition)
-npx remotion render [Name]Demo out/video.mp4
-
-# Render mobile portrait
-npx remotion render [Name]DemoMobile out/mobile.mp4
-
-# Render mobile landscape
-npx remotion render [Name]DemoMobileLandscape out/landscape.mp4
-
-# If font loading times out (frames >700)
-npx remotion render [Name]Demo out/video.mp4 --timeout=60000
-```
-
-25 seconds at 1080p renders in ~40-60 seconds locally.
-
-## Common Animation Patterns
-
-### Staggered Entrance
-```typescript
-items.map((item, i) => {
-  const prog = spring({
-    frame: frame - (delay + i * 5),  // 5 frames between each item
-    fps,
-    config: { damping: 14, stiffness: 110, mass: 0.8 },
-  });
-  // use prog for opacity + transform
+const progress = spring({
+  frame: localFrame,
+  fps,
+  config: { damping: 18, stiffness: 120, mass: 1 },
 });
 ```
 
-### Glow Pulse (completion states)
-```typescript
-const glowOpacity = interpolate(
-  Math.sin(frame * 0.1),
-  [-1, 1],
-  [0.03, 0.12]
-);
-```
+- Increase damping to reduce oscillation.
+- Increase stiffness for a faster response.
+- Increase mass for a heavier response.
+- Prefer non-oscillating timing for routine UI, data, and instructions.
+- Review at final scale; a movement visible in Studio may disappear in a feed.
 
-### Subtle Zoom Drift
+Use `interpolate()` clamping when the input can precede or exceed its range:
+
 ```typescript
-const zoom = interpolate(frame, [0, duration], [1, 1.03], {
+const opacity = interpolate(localFrame, [0, enterFrames], [0, 1], {
   extrapolateLeft: "clamp",
   extrapolateRight: "clamp",
 });
-// Apply as transform: `scale(${zoom})`
 ```
 
-### Shake Effect
+## Responsive composition
+
+Derive layout from composition dimensions and safe areas. Do not scale a desktop frame uniformly into portrait.
+
 ```typescript
-const shakeX = Math.sin(frame * 0.5) * intensity;
-const shakeY = Math.cos(frame * 0.5) * intensity * 0.6;
-// Apply as transform: `translate(${shakeX}px, ${shakeY}px)`
+const { width, height } = useVideoConfig();
+const orientation = height > width ? "portrait" : "landscape";
+const shortEdge = Math.min(width, height);
 ```
 
-### "done." Payoff Moment
-```typescript
-const doneProg = spring({
-  frame: frame - doneAppearFrame,
-  fps,
-  config: { damping: 10, stiffness: 155, mass: 0.8 },
-});
-const doneScale = interpolate(doneProg, [0, 1], [1.6, 1]);
-// Render with accent color + glow pulse behind it
+Branch composition when the information hierarchy changes. Test long copy, product UI, captions, and platform overlays independently in every requested format.
+
+## Font loading
+
+Use the font mechanism supported by the installed Remotion version. Load fonts before rendering dependent frames, bundle only licensed files, and provide a predictable fallback. Test missing and slow font paths rather than masking them with an arbitrary renderer timeout.
+
+## Render workflow
+
+Inspect project scripts first. Typical commands may include:
+
+```bash
+npx remotion compositions
+npx remotion studio
+npx remotion still <composition-id> --frame=<frame> out/review.png
+npx remotion render <composition-id> out/video.mp4
 ```
+
+Use composition IDs, props, codecs, and timeouts defined by the project. Render representative stills around transitions before paying the cost of a full render.
+
+## Determinism checks
+
+- Seek directly to a frame and compare it with playback reaching the same frame.
+- Avoid wall-clock time, random values without stable seeds, and mutable module state.
+- Pass local frame values to scene-relative animation.
+- Verify asynchronous media and data use Remotion's supported render-delay mechanism.
+- Test the first and last frame of every sequence for flashes or stale layers.
+
+## Review checklist
+
+Check the final encoded file, not only Studio: resolution, frame rate, duration, safe areas, text rendering, media presence, audio sync, caption sync, and representative device playback.

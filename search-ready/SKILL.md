@@ -1,39 +1,64 @@
 ---
 name: search-ready
-description: Audit and improve technical SEO, content, structured data, social previews, and AI-search visibility. Use when preparing or maintaining a site for discovery.
+description: Audit, implement, or verify technical SEO, indexation, content, schema, social previews, and AI discovery. Use when preparing or maintaining a live site for search and answer engines.
 license: MIT
 ---
 
 # Search readiness
 
-Make a real site easier to crawl, understand, rank, cite, and share. Work from live evidence and the repository. Do not produce a generic checklist detached from the implementation.
+Make a real site easier to crawl, index, understand, serve, cite, and share. Work from live behavior, repository intent, and search data as separate evidence classes.
+
+## Choose a mode
+
+- **Audit:** diagnose live and repository issues without changing files.
+- **Implement:** apply approved fixes and verify deployment behavior.
+- **Content opportunity:** research current queries, competitors, and audience questions.
+- **Structured data:** select, implement, and validate eligible markup.
+- **AI discovery:** evaluate crawler policy, answer-ready content, entity clarity, and experimental aids.
+- **Maintenance:** compare current state with prior evidence and define recurring checks.
+
+Route by site type when relevant: SaaS/docs, editorial, commerce, local, or international. Do not use an equal-weight generic score across unlike sites.
 
 ## Workflow
 
-1. Confirm the canonical production URL, important routes, audience, conversion action, and access to the codebase.
-2. Fetch the live site and inspect the rendered HTML, response headers, redirects, robots rules, sitemap, canonicals, metadata, structured data, internal links, and status codes.
-3. Search the web for branded queries, category queries, direct competitors, current search-result formats, and sources that answer the audience's questions. Treat rankings and snippets as time-sensitive evidence.
-4. Inventory indexable routes and assign each a search job. Identify duplicates, thin pages, orphaned pages, accidental noindex rules, and missing content.
-5. Fix technical blockers before content polish: crawlability, canonicalization, metadata, schema validity, rendering, performance, and sitemap coverage.
-6. Improve page content around real questions and claims. Put the direct answer near the top, keep terminology consistent, cite primary sources, and add proof the project can support.
-7. Add AI-discovery support where useful: explicit entity descriptions, answer-shaped sections, accessible HTML, crawler policy, and `llms.txt`. Never present `llms.txt` as a ranking guarantee.
-8. Verify social previews for important routes. If the project needs new preview artwork or dynamic images, follow the `social-sharing` skill.
-9. Re-fetch the deployed result, validate structured data, compare metadata route by route, and report what changed, what remains blocked, and what should be checked monthly.
+1. Confirm canonical production host, important routes/templates, audience, conversion action, locales, site type, and repository access. Inspect available Search Console/Bing, analytics, logs, prior audits, and deployment configuration before asking questions.
+2. Fetch representative live URLs and inspect rendered HTML, source HTML where useful, headers, redirects, robots, sitemap/indexes, canonicals, hreflang, metadata, structured data, internal links, status behavior, and rendering dependencies.
+3. Compare live behavior with repository intent. Label observed live behavior, source intent, search-platform data, and recommendation separately.
+4. Inventory indexable route classes and assign each a search job. Diagnose duplicates, soft 404s, thin/orphaned pages, faceted/paginated states, accidental noindex, canonical conflicts, redirect chains, and sitemap coverage.
+5. Prioritize blockers by likely impact on crawl, index, serve, comprehension, user experience, and business value—not character counts or checklist totals.
+6. Research current result formats, branded/category queries, competitors, and source ecosystems when the task needs content or citation evidence. Treat rankings and snippets as time-sensitive.
+7. Improve content around real questions and defensible claims. Preserve natural structure; do not force question headings, FAQs, word counts, or statistics at arbitrary intervals.
+8. Add structured data only when it matches visible content, applicable schema, and current search-feature policies. Validate syntax and eligibility separately.
+9. Treat AI-search practices by confidence: provider-documented crawler controls, standard accessible content, experimental conventions such as `llms.txt`, and unsupported speculation. Never promise rankings or citations.
+10. Re-fetch the deployed result, run relevant validators and performance checks, compare route samples, and report remaining blockers and maintenance needs.
 
-## Load deeper guidance
+## Load conditional references
 
-- Read [technical SEO](references/technical-seo.md) for the repository audit, implementation patterns, scoring model, and verification commands.
-- Read [AI-search workflow](references/ai-search-workflow.md) when the task includes answer engines, citations, authority building, or current web research.
-- Read [AI-search reference](references/ai-search-reference.md) for schema, crawler, directory, and outreach details.
+- Read [technical SEO](references/technical-seo.md) for route sampling, diagnostics, implementation patterns, and validation.
+- Read [AI-search workflow](references/ai-search-workflow.md) only for answer engines, citations, crawler policy, or entity/content work.
+- Read [AI-search reference](references/ai-search-reference.md) only for conditional schema, crawler, `llms.txt`, and outreach patterns.
 
-## Output
+This file controls prioritization, safety, output, and verification.
 
-Return:
+## Output contract
 
-- a prioritized findings table with evidence, affected URLs, severity, and fix;
+Return mode-relevant sections:
+
+- scope and evidence sources;
+- prioritized findings with affected URLs/templates, severity, confidence, and fix;
+- live-vs-repository discrepancies;
+- route-level metadata/schema/indexation matrix;
 - implemented changes with file paths;
-- a route-level metadata and schema matrix;
-- content opportunities grounded in live queries and competitors;
-- verification results and a short maintenance cadence.
+- content opportunities grounded in current evidence;
+- validator and deployed verification results;
+- unresolved blockers and maintenance cadence.
 
-Do not invent traffic, rankings, authority, or indexation. Distinguish observed live behavior from repository intent and from recommendations.
+## Verify
+
+- Representative templates and edge states were sampled, not just the homepage.
+- Live response, rendered content, and repository intent are distinguished.
+- Indexation claims use search-platform evidence when available and are otherwise qualified.
+- Schema matches visible content and passes relevant validation.
+- Redirects, canonicals, robots, sitemap, hreflang, status codes, and rendering agree.
+- Performance claims identify lab versus field data.
+- AI-search recommendations state evidence confidence and do not treat experimental conventions as guarantees.

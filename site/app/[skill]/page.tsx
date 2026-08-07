@@ -4,7 +4,8 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { SkillDetail } from "@/components/skill-detail";
 import { getAllSkills, getSkill } from "@/lib/skills";
-import { renderMarkdown } from "@/lib/markdown";
+import { packageFileAnchor, renderMarkdown } from "@/lib/markdown";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const siteUrl = "https://www.slashskills.xyz";
 
@@ -59,7 +60,14 @@ export default async function SkillPage({
   const skill = getSkill(slug);
   if (!skill) notFound();
 
-  const contentHtml = renderMarkdown(skill.content);
+  const availableFiles = new Set(["SKILL.md", ...skill.files.map((file) => file.path)]);
+  const renderOptions = { availableFiles, skillSlug: skill.slug };
+  const contentHtml = renderMarkdown(skill.content, { ...renderOptions, sourcePath: "SKILL.md" });
+  const renderedFiles = skill.files.map((file) => ({
+    ...file,
+    anchor: packageFileAnchor(file.path),
+    contentHtml: renderMarkdown(file.content, { ...renderOptions, sourcePath: file.path }),
+  }));
   const skillUrl = `${siteUrl}/${skill.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
@@ -79,7 +87,7 @@ export default async function SkillPage({
     <div className="flex min-h-screen flex-col">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <Header />
       <main id="main-content" className="flex-1 px-6 py-12">
@@ -94,7 +102,7 @@ export default async function SkillPage({
             </svg>
             back
           </Link>
-          <SkillDetail skill={skill} contentHtml={contentHtml} />
+          <SkillDetail skill={skill} contentHtml={contentHtml} renderedFiles={renderedFiles} />
         </div>
       </main>
       <Footer />

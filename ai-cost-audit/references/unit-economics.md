@@ -1,164 +1,131 @@
----
-name: economics
-description: Calculate per-action AI product economics, margins, free-tier costs, caching savings, and batch discounts. Use when evaluating models, credits, or pricing.
-license: MIT
----
+# Unit economics and reconciliation
 
-Calculate the current unit economics for your AI product.
+Use these formulas after the main skill establishes scope and evidence. Fetch all prices from current official provider sources; this reference intentionally contains no model prices or universal margin benchmarks.
 
-## Before you start
+## Contents
 
-Ask the founder:
+- [Evidence hierarchy](#evidence-hierarchy)
+- [Per-operation cost](#per-operation-cost)
+- [Product economics](#product-economics)
+- [Cache analysis](#cache-analysis)
+- [Batch and routing analysis](#batch-and-routing-analysis)
+- [Reconciliation](#reconciliation)
+- [Scenario design](#scenario-design)
+- [Recommendation record](#recommendation-record)
 
-> "What do you think your gross margin is on each action? Take a guess."
+## Evidence hierarchy
 
-Wait for the answer. Write it down. Then run the calculation. Founders almost always overestimate margin. Showing the real number after they've committed to a guess lands harder.
+Prefer, in order:
 
-If they say "I have no idea" — proceed. But get the guess first if there is one.
+1. provider invoice/billing export;
+2. provider-metered usage attached to requests;
+3. application traces with token/media counts;
+4. tokenizer or file-duration/dimension calculations;
+5. code-derived limits and observed volume;
+6. explicitly labeled generic assumptions.
 
----
+Never blend classes without showing which inputs are estimated.
 
-## Current model pricing (June 2026)
+## Per-operation cost
 
-### Anthropic Claude
+For a token-priced operation:
 
-| Model | Input $/MTok | Output $/MTok | Cache read $/MTok | Batch (50% off) |
-|-------|-------------|---------------|------------------|-----------------|
-| Opus 4.8 | $5.00 | $25.00 | $0.50 | $2.50 / $12.50 |
-| Sonnet 4.6 | $3.00 | $15.00 | $0.30 | $1.50 / $7.50 |
-| Haiku 4.5 | $1.00 | $5.00 | $0.10 | $0.50 / $2.50 |
-
-Cache write cost: 1.25× input rate for 5-min TTL, 2.0× for 1-hr TTL.
-
-### OpenAI
-
-| Model | Input $/MTok | Output $/MTok |
-|-------|-------------|---------------|
-| GPT-4.1 | $2.00 | $8.00 |
-| GPT-4o | $2.50 | $10.00 |
-
-### Google Gemini
-
-| Model | Input $/MTok | Output $/MTok |
-|-------|-------------|---------------|
-| Gemini 2.5 Pro | $1.00 | $10.00 |
-| Gemini 2.5 Flash | $0.30 | $2.50 |
-
----
-
-## Steps
-
-### 1. Get pricing from the codebase
-
-```bash
-grep -rn "CREDIT\|credit_cost\|COST\|FREE_CREDITS\|signup_bonus\|price\|PRICE" --include="*.py" --include="*.ts" -i
+```text
+input_cost       = uncached_input_units × input_rate
+cache_read_cost  = cached_input_units × cache_read_rate
+cache_write_cost = cache_write_units × cache_write_rate
+output_cost      = output_units × output_rate
+reasoning_cost   = billed_reasoning_units × reasoning_rate
+request_cost     = sum(components) + tool/media/minimum fees
 ```
 
-Find:
-- How much users pay (e.g. $5 = 100 credits → $0.05/credit)
-- Credits per action (generation, image, regen, etc.)
-- Free credits on signup
+Normalize rates and units before arithmetic. For media, use the provider's billed duration, resolution, characters, images, or other current unit.
 
-### 2. Estimate tokens per action
+Expected feature cost:
 
-Read the actual prompt files if they exist. Otherwise use these baselines:
-
-| Action type | Input tokens | Output tokens |
-|-------------|-------------|---------------|
-| Short generation (tweet, subject line) | 500–1,000 | 100–200 |
-| Medium generation (email, summary) | 1,000–3,000 | 300–800 |
-| Long generation (article, report) | 2,000–6,000 | 800–2,000 |
-| Classification / extraction | 500–2,000 | 50–150 |
-| Chat turn (with history) | 2,000–8,000 | 200–500 |
-
-### 3. Calculate cost per action
-
-```
-API cost = (input_tokens / 1,000,000 × input_price)
-         + (output_tokens / 1,000,000 × output_price)
-
-Revenue  = credits_charged × price_per_credit
-Margin   = (revenue - api_cost) / revenue × 100
+```text
+base_paths    = Σ(path_probability × path_cost)
+retry_cost    = Σ(retry_probability × retry_path_cost)
+fallback_cost = Σ(fallback_probability × fallback_path_cost)
+feature_cost  = base_paths + retry_cost + fallback_cost + storage + egress + gateway
 ```
 
-### 4. Calculate cache impact (if using prompt caching)
+Report a distribution where request shapes vary materially.
 
-Cache only helps when you have a large repeated prefix (system prompt, document context, few-shot examples).
+## Product economics
 
-```
-Standard cost     = input_tokens / 1M × input_price
-Cached cost       = cached_tokens / 1M × cache_read_price
-                  + uncached_tokens / 1M × input_price
+```text
+variable_cost_per_action = AI + non-AI variable infrastructure + payment-variable cost
+contribution_per_action  = allocated_revenue - variable_cost_per_action
+contribution_margin      = contribution_per_action / allocated_revenue
 
-Savings per call  = standard_cost - cached_cost
-Break-even calls  = cache_write_cost / savings_per_call
-```
-
-Example with Sonnet 4.6 and a 10,000-token system prompt:
-- Standard: 10,000 / 1M × $3.00 = $0.030 per call
-- Cache read: 10,000 / 1M × $0.30 = $0.003 per call
-- Cache write (5min): 10,000 / 1M × $3.75 = $0.0375
-- Break-even: $0.0375 / $0.027 savings = 1.4 calls
-
-Any repeated system prompt over ~2,000 tokens with more than 2 calls per session: cache it.
-
-### 5. Check batch eligibility
-
-Anthropic's Batch API is 50% off all models. Use it for:
-- Bulk processing (document analysis, content moderation, bulk generation)
-- Anything that doesn't need a real-time response (under 24hr turnaround)
-- Background jobs, nightly processing, bulk exports
-
-If more than 20% of your API spend is on non-real-time work, batch processing alone could halve that portion.
-
-### 6. Output the table
-
-```
-UNIT ECONOMICS — [your product]
-════════════════════════════════════════════════════════════════
-USER PRICING
-  [price] = [credits] credits → $X.XX per credit
-  Signup bonus: [N] free credits
-
-ACTION ECONOMICS
-────────────────────────────────────────────────────────────────
-Action              Credits   Revenue   API Cost   Margin
-────────────────────────────────────────────────────────────────
-[action name]         [N]     $X.XX     $X.XXX     XX%
-[action name]         [N]     $X.XX     $X.XXX     XX%
-────────────────────────────────────────────────────────────────
-
-CACHE SAVINGS (if applicable)
-  System prompt tokens: [N]
-  Savings per call: $X.XXX
-  Monthly savings at [volume] calls: $XXX
-
-FREE TIER DAMAGE (N signup credits)
-  Conservative user:   costs you ~$X.XX
-  Typical user:        costs you ~$X.XX
-  Heavy user:          costs you ~$X.XX
-
-PAYBACK POINT
-  One paying user covers ~X non-converting free users
-════════════════════════════════════════════════════════════════
+monthly_variable_cost = Σ(action_volume × expected_action_cost)
+gross_profit          = recognized_revenue - cost_of_revenue
+break_even_usage      = available_contribution / marginal_action_cost
 ```
 
-### 7. Flag anything concerning
+State the accounting boundary. Gross margin, contribution margin, and cash spend answer different questions.
 
-**Red flags:**
-- Any action with margin below 50% — flag it prominently
-- Free tier cost above $1 per signup — flag it
-- Large repeated system prompt with no caching — calculate the monthly savings they're leaving on the table
-- Non-real-time work running on live API instead of batch — flag the cost delta
+For free allowances:
 
-**Margin benchmarks (2026):**
-- >70% gross margin — healthy for an AI product
-- 60–70% — acceptable, industry average for AI-augmented SaaS
-- 50–60% — watch this closely, leaves little room for infra and support costs
-- <50% — pricing problem or model choice problem, fix before scaling
+```text
+expected_free_cost = signup_count × activation_rate × E[cost | activated free user]
+payback_ratio      = contribution_per_payer / expected_cost_per_nonpayer
+```
 
-### 8. Pricing sensitivity (if asked)
+Do not invent activation, conversion, or usage distributions.
 
-Show margins at ±20% credit price. Helps decide whether to reprice without rebuilding the whole spreadsheet.
+## Cache analysis
 
-Also show the "upgrade model" scenario: what margin looks like if they move one tier up or down (e.g. Sonnet → Haiku, GPT-4.1 → Gemini 2.5 Flash). The cheapest model that meets quality bar is often not the one they're using.
+Model provider-specific write/read rules, TTLs, minimum cacheable length, invalidation, and privacy boundaries from current documentation.
+
+```text
+uncached_cost  = repeated_units × normal_input_rate
+cached_cost    = write_cost + expected_reads × read_cost + uncached_remainder
+cache_savings  = comparable_uncached_cost - cached_cost
+break_even_reads = incremental_write_cost / savings_per_read
+```
+
+Use observed prefix stability and hit rate. Include latency and quality effects when context must be restructured.
+
+## Batch and routing analysis
+
+For batch, verify current eligibility, completion window, cancellation behavior, quota, and discount. Compare with the workload's real deadline and retry policy.
+
+For routing, calculate expected savings using observed task mix, then gate the proposal with representative evaluations. Include false-success cost, retry amplification, latency, and operational complexity.
+
+## Reconciliation
+
+Reconcile by provider, account/project, model/operation, environment, and day where possible.
+
+```text
+variance = billed_total - modeled_total
+variance_pct = variance / billed_total
+```
+
+Investigate taxes, credits, tiers, minimums, storage, fine-tuning, deleted logs, untagged environments, retries, external tools, currency conversion, and billing-period boundaries. Leave a residual unexplained amount if evidence cannot resolve it.
+
+## Scenario design
+
+Include only decision-relevant scenarios:
+
+- measured baseline;
+- high-usage or tail request shape;
+- abuse/retry incident;
+- price or volume sensitivity;
+- proposed cache/batch/routing change;
+- quality failure or fallback amplification.
+
+Show formulas, input values, provenance, and a range rather than false precision.
+
+## Recommendation record
+
+For each change, report:
+
+- affected path and evidence;
+- monthly savings range and confidence;
+- engineering effort and owner;
+- quality, latency, privacy, and reliability risk;
+- evaluation/canary design;
+- rollback trigger;
+- post-change measurement window.
