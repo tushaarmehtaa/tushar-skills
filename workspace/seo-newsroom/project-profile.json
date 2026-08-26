@@ -1,0 +1,12 @@
+{
+  "project": "Slashskills",
+  "canonical_host": "https://www.slashskills.xyz",
+  "timezone": "Asia/Kolkata",
+  "site_type": "Agent Skills catalog and implementation documentation",
+  "audience": ["people creating Agent Skills", "developers installing or operating skills", "teams evaluating runtime compatibility and safety"],
+  "editorial_territory": "Help people create, evaluate, install, distribute, and safely operate reliable Agent Skills across Codex, Claude Code, Cursor, and compatible runtimes.",
+  "conversion_action": "select a skill and copy or run its runtime-specific install command",
+  "owned_evidence": ["skill packages and bundled references", "runtime-verification.json", "skill-evals.json", "validator rules", "repository history and CHANGELOG.md", "controlled cross-runtime tests"],
+  "preferred_surfaces": ["existing skill detail pages", "runtime installation guides", "compatibility evidence", "evidence-backed evaluations", "changelog updates"],
+  "excluded_surface": "generic AI news blog"
+}

@@ -1,0 +1,17 @@
+{
+  "retrieved_policy_date": "2026-08-27",
+  "tiers": {
+    "primary": [
+      {"name":"OpenAI documentation and announcements","url":"https://developers.openai.com/codex/skills/","jobs":["Codex skill behavior","installation","runtime changes"]},
+      {"name":"Anthropic Claude Code documentation","url":"https://docs.anthropic.com/en/docs/claude-code","jobs":["Claude Code behavior","installation","runtime changes"]},
+      {"name":"Cursor documentation and changelog","url":"https://cursor.com/changelog","jobs":["Cursor Agent Skills support","runtime changes"]},
+      {"name":"Agent Skills specification","url":"https://agentskills.io","jobs":["portable package standard","ecosystem changes"]},
+      {"name":"Slashskills repository","url":"https://github.com/tushaarmehtaa/tushar-skills","jobs":["owned implementation evidence","history","issues and releases"]}
+    ],
+    "discovery_only": [
+      {"name":"Hacker News","url":"https://news.ycombinator.com/","rule":"Use only when materially relevant; verify claims at primary sources."},
+      {"name":"Product Hunt","url":"https://www.producthunt.com/","rule":"Use only for relevant ecosystem discovery; never treat launch copy as independent evidence."},
+      {"name":"Current search results","rule":"Use to assess intent and overlap; snippets are not evidence and volume must not be invented."}
+    ]
+  }
+}
