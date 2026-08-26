@@ -7,6 +7,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "changelog",
   description: "What's changed in slashskills — new skills, updates, and fixes.",
+  alternates: { canonical: "/changelog" },
+  openGraph: {
+    title: "changelog — slashskills",
+    description: "What's changed in slashskills — new skills, updates, and fixes.",
+    url: "/changelog",
+  },
 };
 
 type EntryType = "skill" | "update" | "fix" | "site";

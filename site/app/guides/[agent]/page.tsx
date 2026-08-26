@@ -49,6 +49,12 @@ export async function generateMetadata({
   return {
     title: `${agent.label} Agent Skills guide`,
     description: `Install, invoke, update, and remove slashskills in ${agent.label}.`,
+    alternates: { canonical: agent.guideRoute },
+    openGraph: {
+      title: `${agent.label} Agent Skills guide — slashskills`,
+      description: `Install, invoke, update, and remove slashskills in ${agent.label}.`,
+      url: agent.guideRoute,
+    },
   };
 }
 

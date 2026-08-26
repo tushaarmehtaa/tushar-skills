@@ -9,6 +9,12 @@ import { supportsClaudeApp } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "Claude app skill upload guide",
   description: "Use chat-capable slashskills in the Claude web, desktop, or mobile app without confusing them with local coding workflows.",
+  alternates: { canonical: "/guides/claude-app" },
+  openGraph: {
+    title: "Claude app skill upload guide — slashskills",
+    description: "Use chat-capable slashskills in the Claude web, desktop, or mobile app without confusing them with local coding workflows.",
+    url: "/guides/claude-app",
+  },
 };
 
 export default function ClaudeAppGuide() {

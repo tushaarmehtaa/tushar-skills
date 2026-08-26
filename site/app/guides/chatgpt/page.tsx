@@ -9,6 +9,12 @@ import { supportsChatGPT } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "ChatGPT Skills upload guide",
   description: "Use chat-capable slashskills in ChatGPT without conflating ChatGPT Skills, Codex local skills, and plugins.",
+  alternates: { canonical: "/guides/chatgpt" },
+  openGraph: {
+    title: "ChatGPT Skills upload guide — slashskills",
+    description: "Use chat-capable slashskills in ChatGPT without conflating ChatGPT Skills, Codex local skills, and plugins.",
+    url: "/guides/chatgpt",
+  },
 };
 
 export default function ChatGPTGuide() {

@@ -10,6 +10,12 @@ import { getAllSkills } from "@/lib/skills";
 export const metadata: Metadata = {
   title: "Agent Skills compatibility",
   description: "Compare slashskills support, required capabilities, and surfaces across Codex, Claude Code, Cursor, and the Claude app.",
+  alternates: { canonical: "/compatibility" },
+  openGraph: {
+    title: "Agent Skills compatibility — slashskills",
+    description: "Compare slashskills support, required capabilities, and surfaces across Codex, Claude Code, Cursor, and the Claude app.",
+    url: "/compatibility",
+  },
 };
 
 const STATUS_MARKS: Record<SupportStatus, string> = {

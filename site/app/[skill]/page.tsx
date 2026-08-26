@@ -9,6 +9,10 @@ import { serializeJsonLd } from "@/lib/json-ld";
 
 const siteUrl = "https://www.slashskills.xyz";
 
+// Every catalog entry is built ahead of time. Unknown slugs must be a real 404,
+// not a runtime filesystem lookup in the deployed function.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return getAllSkills().map((skill) => ({ skill: skill.slug }));
 }
