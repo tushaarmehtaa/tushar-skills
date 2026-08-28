@@ -37,6 +37,21 @@ test("install commands are generated centrally for every runtime", () => {
   );
 });
 
+test("documented install paths match observed skills CLI destinations", async () => {
+  const { AGENTS } = await import("../lib/agents.ts");
+  assert.deepEqual(
+    Object.fromEntries(Object.entries(AGENTS).map(([id, agent]) => [id, [agent.globalDirectory, agent.projectDirectory]])),
+    {
+      codex: ["~/.agents/skills", ".agents/skills"],
+      "claude-code": ["~/.claude/skills", ".claude/skills"],
+      cursor: ["~/.agents/skills", ".agents/skills"],
+    },
+  );
+  for (const agent of Object.values(AGENTS)) {
+    assert.match(agent.installVerification, /skills CLI 1\.5\.23/);
+  }
+});
+
 test("support labels distinguish evidence from installability", () => {
   const tested = createAgentPanelViewModel({
     slug: "remove-ai-slop",

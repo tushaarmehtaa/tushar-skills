@@ -25,12 +25,12 @@ const LIMITATIONS: Record<AgentId, readonly string[]> = {
   codex: [
     "Tool availability and approvals depend on the Codex environment. A skill can request a capability but cannot grant it.",
     "A skill can be disabled in ~/.codex/config.toml if you need to keep it installed but out of discovery.",
-    "OpenAI plugin packaging is outside this library's v1; Codex support here uses local Agent Skills.",
+    "OpenAI recommends plugins for reusable distribution. Slashskills v1 intentionally uses direct local Agent Skills instead of plugin packaging.",
   ],
   cursor: [
     "Agent Skills require Cursor 2.4 or newer. Use Agent mode when a workflow needs files, commands, or browser tools.",
     "A skill can describe required tools but cannot bypass Cursor approvals or workspace trust.",
-    "Support status refers to this skill package, not every model or tool configuration available inside Cursor.",
+    "Cursor also supports .cursor/skills and compatibility locations, but the generated Slashskills installer currently targets the shared .agents/skills path.",
   ],
 };
 
@@ -87,6 +87,9 @@ export default async function CodingAgentGuide({
       <GuideSection number="02" title="Choose global or project scope">
         <p>
           Global skills are available across projects from <code className="text-[var(--color-heading)]">{agent.globalDirectory}</code>. Project skills live in <code className="text-[var(--color-heading)]">{agent.projectDirectory}</code> and can be reviewed with the repository.
+        </p>
+        <p>
+          These are the runtime-facing destinations observed from the generated <code className="text-[var(--color-heading)]">npx skills</code> commands: {agent.installVerification}
         </p>
         <p>Omit <code className="text-[var(--color-heading)]">-g</code> for project scope:</p>
         <CommandLine command={oneProject} agent={agentId} skill={EXAMPLE_SKILL} trackInstall />

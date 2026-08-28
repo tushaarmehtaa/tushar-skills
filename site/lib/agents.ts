@@ -11,6 +11,7 @@ export interface AgentDefinition {
   officialDocsUrl: string;
   projectDirectory: string;
   globalDirectory: string;
+  installVerification: string;
   reload: string;
 }
 
@@ -21,10 +22,11 @@ export const AGENTS = {
     cliTarget: "codex",
     invocation: "$<skill> or /skills",
     guideRoute: "/guides/codex",
-    officialDocsUrl: "https://developers.openai.com/codex/skills",
+    officialDocsUrl: "https://learn.chatgpt.com/docs/build-skills",
     projectDirectory: ".agents/skills",
-    globalDirectory: "~/.codex/skills",
-    reload: "Skills reload automatically; restart Codex if a newly added skill is missing.",
+    globalDirectory: "~/.agents/skills",
+    installVerification: "skills CLI 1.5.23 installed the project and global package into the shared .agents/skills location on August 28, 2026.",
+    reload: "Codex detects skill changes and newly installed skills automatically. Restart Codex only if an update does not appear.",
   },
   "claude-code": {
     id: "claude-code",
@@ -35,7 +37,8 @@ export const AGENTS = {
     officialDocsUrl: "https://code.claude.com/docs/en/skills",
     projectDirectory: ".claude/skills",
     globalDirectory: "~/.claude/skills",
-    reload: "Edits are live. Restart only after adding a new top-level skill directory.",
+    installVerification: "skills CLI 1.5.23 installed the project and global runtime copy into .claude/skills on August 28, 2026.",
+    reload: "Claude Code detects changes within the current session. Restart only if the top-level skills directory did not exist when the session started.",
   },
   cursor: {
     id: "cursor",
@@ -45,8 +48,9 @@ export const AGENTS = {
     guideRoute: "/guides/cursor",
     officialDocsUrl: "https://cursor.com/docs/skills",
     projectDirectory: ".agents/skills",
-    globalDirectory: "~/.cursor/skills",
-    reload: "Start a new agent conversation if a newly installed skill does not appear.",
+    globalDirectory: "~/.agents/skills",
+    installVerification: "skills CLI 1.5.23 installed the project and global package into the shared .agents/skills location on August 28, 2026.",
+    reload: "Cursor discovers skills when Agent starts. Start a new Agent conversation if a newly installed skill does not appear.",
   },
 } as const satisfies Record<AgentId, AgentDefinition>;
 
