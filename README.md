@@ -4,7 +4,7 @@
 
 Reusable SKILL.md workflows from real projects. Install them in Codex, Claude Code, or Cursor; see what each skill needs and where it has been tested.
 
-The directory contains 30 focused skills. Each one owns a meaningful outcome rather than a single code snippet.
+The directory contains 33 focused skills. Each one owns a meaningful outcome rather than a single code snippet.
 
 **[Browse the directory →](https://www.slashskills.xyz)**
 
@@ -72,8 +72,11 @@ This table is generated from the same catalog and frontmatter used by the site. 
 | [`deploy-check`](./deploy-check/SKILL.md) | devops | Run a production preflight across release scope, tests, builds, secrets, migrations, dependencies, configuration, observability, and rollback. Use when deploying, pushing, or approving a release. |
 | [`email-with-resend`](./email-with-resend/SKILL.md) | infrastructure | Implement or audit Resend email with templates, queues, preferences, audiences, campaigns, webhooks, and delivery safety. Use when an app needs consent-aware email or Resend repair. |
 | [`fundraising`](./fundraising/SKILL.md) | planning | Assess venture fit, pitches, investors, round plans, meetings, and diligence. Use when founders are deciding whether to raise, preparing a raise, or improving an active fundraising process. |
+| [`humanize`](./humanize/SKILL.md) | workflow | Edit or audit prose for generic AI patterns while preserving voice, meaning, uncertainty, and format. Use when writing sounds synthetic, repetitive, over-polished, or unlike its author. |
 | [`interface-design`](./interface-design/SKILL.md) | design | Design and implement production web interfaces from product, content, brand, and interaction evidence. Use when creating or redesigning pages, dashboards, workflows, or components. |
 | [`landing-copy`](./landing-copy/SKILL.md) | marketing | Research, audit, or write evidence-backed landing-page messaging, proof, objections, and calls to action. Use when product, pricing, campaign, or waitlist pages need clearer positioning. |
+| [`landing-page`](./landing-page/SKILL.md) | marketing | Design, build, audit, or repair evidence-led landing pages by coordinating message, proof, structure, interface, and verification. Use when a marketing page must perform a clear job. |
+| [`mobile-first`](./mobile-first/SKILL.md) | design | Audit and repair responsive interfaces from measured narrow-screen evidence without changing product intent. Use when a page clips, overflows, stacks poorly, or fails on touch. |
 | [`payments-with-dodo`](./payments-with-dodo/SKILL.md) | payments | Implement or repair Dodo Payments checkout, subscriptions, webhooks, entitlements, billing UI, refunds, and verification. Use when adding Dodo billing or auditing its full lifecycle. |
 | [`performance-diagnosis`](./performance-diagnosis/SKILL.md) | devops | Diagnose web-app performance across build, server, browser, database, and network paths. Use when investigating slowness, resource spikes, reload loops, regressions, bloat, or poor Web Vitals. |
 | [`product-experiments`](./product-experiments/SKILL.md) | analytics | Design, implement, validate, analyze, and conclude experiments or safe rollouts. Use when testing product behavior with flags, exposure tracking, metrics, staged releases, or A/B tests. |

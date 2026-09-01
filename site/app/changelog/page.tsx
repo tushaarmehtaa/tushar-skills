@@ -29,6 +29,15 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-09-01",
+    entries: [
+      { type: "skill", text: "added /humanize for voice-preserving prose edits and evidence-based AI-pattern detection" },
+      { type: "skill", text: "added /landing-page for evidence-led page architecture, proof selection, implementation, and conversion verification" },
+      { type: "skill", text: "added /mobile-first for measured responsive audits and repairs across reflow, touch, zoom, focus, and reduced motion" },
+      { type: "fix", text: "replaced missing references and universal layout or writing rules with complete packages, interactive decisions, primary sources, and behavioral evals" },
+    ],
+  },
+  {
     date: "2026-08-08",
     entries: [
       { type: "update", text: "reconstructed all 30 skills with adaptive workflows, safety boundaries, concrete outputs, and outcome-level verification" },

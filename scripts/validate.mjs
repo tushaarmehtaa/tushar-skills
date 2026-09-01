@@ -17,7 +17,7 @@ import {
   readCatalog,
 } from "./repository.mjs";
 
-const EXPECTED_SKILL_COUNT = 30;
+const EXPECTED_SKILL_COUNT = 33;
 const ALLOWED_FRONTMATTER = new Set([
   "name",
   "description",
@@ -52,6 +52,7 @@ const CLAUDE_APP_SKILLS = new Set([
   "cold-outreach",
   "decision-doc",
   "fundraising",
+  "humanize",
   "landing-copy",
   "product-spec",
   "product-teardown",

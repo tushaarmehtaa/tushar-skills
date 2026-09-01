@@ -123,6 +123,14 @@ export const CATALOG = {
     capabilities: ["browser", "network", "user-files"],
     support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
   },
+  humanize: {
+    category: "workflow",
+    tags: ["writing", "editing", "voice", "ai-slop", "prose", "tone"],
+    author: "tushaarmehtaa",
+    surfaces: ["coding-agent", "claude-app", "chatgpt"],
+    capabilities: ["user-files"],
+    support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
+  },
   "interface-design": {
     category: "design",
     tags: ["frontend", "interface", "design-system", "ui", "interaction", "responsive"],
@@ -137,6 +145,22 @@ export const CATALOG = {
     author: "tushaarmehtaa",
     surfaces: ["coding-agent", "claude-app", "chatgpt"],
     capabilities: ["browser", "user-files"],
+    support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
+  },
+  "landing-page": {
+    category: "marketing",
+    tags: ["landing-page", "conversion", "design", "proof", "marketing", "responsive"],
+    author: "tushaarmehtaa",
+    surfaces: ["coding-agent"],
+    capabilities: ["filesystem", "shell", "browser", "network", "user-files"],
+    support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
+  },
+  "mobile-first": {
+    category: "design",
+    tags: ["responsive", "mobile", "accessibility", "reflow", "touch", "viewport"],
+    author: "tushaarmehtaa",
+    surfaces: ["coding-agent"],
+    capabilities: ["filesystem", "shell", "browser"],
     support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
   },
   "payments-with-dodo": {

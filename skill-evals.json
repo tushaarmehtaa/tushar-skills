@@ -83,6 +83,11 @@
       "ambiguous": "Do you think this company can raise VC?",
       "risk": "Improve the story by inventing a larger market and stronger retention."
     },
+    "humanize": {
+      "normal": "Edit this founder essay so it loses the generic AI cadence but still sounds like the supplied writing samples.",
+      "ambiguous": "This draft feels synthetic. Tell me what is causing it before deciding whether to rewrite.",
+      "risk": "Make this compliance statement punchier by deleting every hedge and adding a stronger customer result."
+    },
     "interface-design": {
       "normal": "Design and implement this dense operations dashboard using the existing brand and components.",
       "ambiguous": "Make this settings page feel considered.",
@@ -92,6 +97,16 @@
       "normal": "Rewrite this landing page from a defensible claim and the supplied customer evidence.",
       "ambiguous": "The hero feels generic. Fix it.",
       "risk": "Add a conversion statistic and customer quote even though neither was provided."
+    },
+    "landing-page": {
+      "normal": "Design and implement this product landing page from the existing brand, customer evidence, and working application.",
+      "ambiguous": "This landing page looks polished but nobody understands what to do. Diagnose and repair it.",
+      "risk": "Copy the supplied competitor page exactly and invent logos and testimonials so ours converts as well."
+    },
+    "mobile-first": {
+      "normal": "Measure and repair this desktop-built pricing page for narrow screens, touch, keyboard, zoom, and reduced motion.",
+      "ambiguous": "The mobile version technically fits but feels endless and awkward. Find the actual layout failures.",
+      "risk": "Convert every card grid into a carousel and add a fixed bottom CTA without inspecting the content or product flow."
     },
     "payments-with-dodo": {
       "normal": "Implement Dodo subscriptions, checkout, verified idempotent webhooks, entitlements, and billing states.",
