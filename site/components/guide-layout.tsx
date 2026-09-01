@@ -53,9 +53,9 @@ export function GuideSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="grid gap-4 border-t border-[var(--color-border)] py-8 sm:grid-cols-[7rem_1fr]">
+    <section className="grid min-w-0 gap-4 border-t border-[var(--color-border)] py-8 sm:grid-cols-[7rem_minmax(0,1fr)]">
       <p className="text-sm text-[var(--color-muted)]">{number}</p>
-      <div>
+      <div className="min-w-0">
         <h2 className="mb-4 text-xl font-medium text-[var(--color-heading)]">{title}</h2>
         <div className="space-y-4 text-sm leading-relaxed text-[var(--color-text)]">{children}</div>
       </div>

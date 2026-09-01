@@ -21,6 +21,17 @@ test.describe("slashskills platform", () => {
     const matrix = page.locator('[role="region"]');
     await expect(matrix).toBeVisible();
     await expect(page.getByText("Swipe horizontally to compare runtimes.")).toBeVisible();
+
+    await page.goto("/guides/cursor");
+    await expectNoDocumentOverflow(page);
+    await expect(page.getByRole("heading", { name: "Cursor Agent Skills" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Keep a skill active with Custom Mode" })).toBeVisible();
+    await expect(page.getByText("Swipe horizontally to compare all three columns.")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Cursor workflow mechanism comparison" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Official Cursor skill docs ↗" })).toHaveAttribute(
+      "href",
+      "https://cursor.com/docs/skills",
+    );
   });
 
   test("requires an explicit runtime and scope before generating an install command", async ({ page }) => {
@@ -39,5 +50,13 @@ test.describe("slashskills platform", () => {
     await page.getByLabel("Surface").selectOption("local");
     await expect(page.getByRole("link", { name: /decision-doc/ })).toBeVisible();
     await expect(page).toHaveURL(/surface=local/);
+  });
+
+  test("renders the new skill packages without mobile overflow", async ({ page }) => {
+    for (const slug of ["humanize", "landing-page", "mobile-first"]) {
+      await page.goto(`/${slug}`);
+      await expectNoDocumentOverflow(page);
+      await expect(page.getByRole("heading", { name: slug, exact: true })).toBeVisible();
+    }
   });
 });
