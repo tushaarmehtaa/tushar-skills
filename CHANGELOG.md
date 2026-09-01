@@ -6,7 +6,8 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
-- added `humanize`, `landing-page`, and `mobile-first` as evidence-led, interactive workflows with distinct ownership, complete references, behavioral evals, and honest untested runtime support
+- simplified skill pages and the requirements table to focus on installation, surfaces, and required access
+- added `humanize`, `landing-page`, and `mobile-first` as evidence-led, interactive workflows with distinct ownership, complete references, and behavioral evals
 - reconstructed all 30 skills around adaptive modes, consequential questions, safety boundaries, concrete outputs, and outcome-level verification; removed forced questionnaires, personal house styles, false precision, static prices, and stale provider folklore
 - rebuilt specialist references as conditional package knowledge instead of hidden standalone skills, including current auth, Supabase, Resend, Dodo, AI streaming, experimentation, analytics, search, copy, interface, and video workflows
 - added a repository quality contract and normal, ambiguous, and risk eval prompts for every catalog skill, then cross-reviewed representative high-risk cases across independent audit lanes

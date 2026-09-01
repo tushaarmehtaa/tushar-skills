@@ -1,4 +1,4 @@
-import type { AgentId, Capability, SupportStatus } from "./catalog.ts";
+import type { AgentId, Capability } from "./catalog.ts";
 
 const REPOSITORY = "tushaarmehtaa/tushar-skills";
 
@@ -93,12 +93,6 @@ export function generateRemoveCommand(
 export function invocationFor(agent: AgentId, skill: string): string {
   return AGENTS[agent].invocation.replace("<skill>", skill);
 }
-
-export const SUPPORT_LABELS: Record<SupportStatus, string> = {
-  tested: "runtime tested",
-  untested: "available to install",
-  unsupported: "unsupported",
-};
 
 export const CAPABILITY_LABELS: Record<Capability, string> = {
   filesystem: "project files",

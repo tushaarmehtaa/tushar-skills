@@ -3,25 +3,18 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { RuntimeLogo, RuntimeLogoTile } from "@/components/runtime-logo";
-import { AGENTS, AGENT_IDS, CAPABILITY_LABELS, SUPPORT_LABELS } from "@/lib/agents";
-import type { SupportStatus } from "@/lib/catalog";
+import { AGENTS, AGENT_IDS, CAPABILITY_LABELS } from "@/lib/agents";
 import { getAllSkills } from "@/lib/skills";
 
 export const metadata: Metadata = {
-  title: "Agent Skills compatibility",
-  description: "Compare slashskills support, required capabilities, and surfaces across Codex, Claude Code, Cursor, and the Claude app.",
+  title: "Agent Skills requirements",
+  description: "Compare required access and supported surfaces for slashskills across local coding agents and chat apps.",
   alternates: { canonical: "/compatibility" },
   openGraph: {
-    title: "Agent Skills compatibility — slashskills",
-    description: "Compare slashskills support, required capabilities, and surfaces across Codex, Claude Code, Cursor, and the Claude app.",
+    title: "Agent Skills requirements — slashskills",
+    description: "Compare required access and supported surfaces for slashskills across local coding agents and chat apps.",
     url: "/compatibility",
   },
-};
-
-const STATUS_MARKS: Record<SupportStatus, string> = {
-  tested: "text-emerald-300",
-  untested: "text-amber-200",
-  unsupported: "text-rose-300",
 };
 
 export default function CompatibilityPage() {
@@ -41,10 +34,10 @@ export default function CompatibilityPage() {
 
           <header className="animate-fade-up mb-12 max-w-4xl">
             <h1 className="text-4xl font-semibold leading-tight tracking-[-0.03em] text-[var(--color-heading)] sm:text-6xl">
-              Compatibility
+              Requirements
             </h1>
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">
-              Compare runtime support and required access for every skill. Codex leads the local-agent path; installation does not grant tools or permissions.
+              Compare the access and execution surfaces each workflow needs. Local packages install in Codex, Claude Code, or Cursor; installation does not grant tools or permissions.
             </p>
           </header>
 
@@ -71,25 +64,10 @@ export default function CompatibilityPage() {
             ))}
           </section>
 
-          <section className="mb-12 grid gap-4 border-y border-[var(--color-border)] py-7 md:grid-cols-3">
-            <div>
-              <p className="mb-2 text-sm font-medium text-emerald-300">Tested</p>
-              <p className="text-sm leading-relaxed text-[var(--color-muted)]">Installed and exercised in that runtime using the representative workflow checks.</p>
-            </div>
-            <div>
-              <p className="mb-2 text-sm font-medium text-amber-200">Available</p>
-              <p className="text-sm leading-relaxed text-[var(--color-muted)]">The package has a documented install path. Runtime verification is published when available.</p>
-            </div>
-            <div>
-              <p className="mb-2 text-sm font-medium text-rose-300">Unsupported</p>
-              <p className="text-sm leading-relaxed text-[var(--color-muted)]">Intentionally tied to another runtime or incompatible with this one.</p>
-            </div>
-          </section>
-
           <section aria-labelledby="matrix-heading">
             <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
               <div>
-                <h2 id="matrix-heading" className="text-lg font-medium text-[var(--color-heading)]">Skill compatibility</h2>
+                <h2 id="matrix-heading" className="text-lg font-medium text-[var(--color-heading)]">Skill requirements</h2>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-2">
                 <Link href="/guides/claude-app" className="inline-flex items-center gap-2 text-sm text-[var(--color-accent)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]">
@@ -102,25 +80,17 @@ export default function CompatibilityPage() {
                 </Link>
               </div>
             </div>
-            <p className="mb-2 text-xs text-[var(--color-muted)] sm:hidden">Swipe horizontally to compare runtimes.</p>
+            <p className="mb-2 text-xs text-[var(--color-muted)] sm:hidden">Swipe horizontally to compare requirements.</p>
             <div
               role="region"
               aria-labelledby="matrix-heading"
-              aria-label="Skill compatibility table. Scroll horizontally to compare runtimes."
+              aria-label="Skill requirements table. Scroll horizontally to compare access and surfaces."
               className="overflow-x-auto rounded border border-[var(--color-border)]"
             >
-              <table className="w-full min-w-[58rem] border-collapse text-left">
+              <table className="w-full min-w-[42rem] border-collapse text-left">
                 <thead className="bg-[var(--color-surface)] text-xs text-[var(--color-muted)]">
                   <tr>
                     <th className="sticky left-0 z-20 border-r border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-3 font-normal">skill</th>
-                    {AGENT_IDS.map((agentId) => (
-                      <th key={agentId} className="px-3 py-3 font-normal">
-                        <span className="inline-flex items-center gap-2 whitespace-nowrap">
-                          <RuntimeLogo runtime={agentId} decorative className="h-3.5 w-3.5" />
-                          <span translate="no">{AGENTS[agentId].label}</span>
-                        </span>
-                      </th>
-                    ))}
                     <th className="px-3 py-3 font-normal">surface</th>
                     <th className="px-3 py-3 font-normal">required access</th>
                   </tr>
@@ -131,14 +101,6 @@ export default function CompatibilityPage() {
                       <th className="sticky left-0 z-10 border-r border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-3 font-[family-name:var(--font-mono)] text-xs font-semibold text-[var(--color-heading)] transition-colors group-hover:bg-[var(--color-surface)]">
                         <Link href={`/${skill.slug}`} className="hover:text-[var(--color-accent)]">{skill.name}</Link>
                       </th>
-                      {AGENT_IDS.map((agentId) => {
-                        const status = skill.support[agentId];
-                        return (
-                          <td key={agentId} className={`px-3 py-3 font-[family-name:var(--font-mono)] text-[10px] ${STATUS_MARKS[status]}`}>
-                            {SUPPORT_LABELS[status]}
-                          </td>
-                        );
-                      })}
                       <td className="px-3 py-3 font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text)]">
                         {skill.surfaces.includes("claude-app") ? "local + chat" : "local"}
                       </td>

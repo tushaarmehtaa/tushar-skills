@@ -2,7 +2,7 @@
 
 **workflows saved as Agent Skills.**
 
-Reusable SKILL.md workflows from real projects. Install them in Codex, Claude Code, or Cursor; see what each skill needs and where it has been tested.
+Reusable SKILL.md workflows from real projects. Install them in Codex, Claude Code, or Cursor; see what each skill needs before installing.
 
 The directory contains 33 focused skills. Each one owns a meaningful outcome rather than a single code snippet.
 
@@ -14,13 +14,7 @@ Each directory is a self-contained [Agent Skills](https://agentskills.io) packag
 
 Skill pages render the complete package, including every bundled Markdown reference. Links from `SKILL.md` into specialist guidance stay on the corresponding file and heading, so the directory view is not a shortened preview of the installed skill.
 
-The catalog records those differences explicitly:
-
-- `tested` means a checked-in runtime verification record substantiates the smoke test.
-- `untested` means the package is installable but has not completed that test yet.
-- `unsupported` means the workflow has a real runtime dependency that prevents equivalent execution elsewhere.
-
-[`CONTRIBUTING.md`](./CONTRIBUTING.md) defines the runtime smoke test and the required verification record. Skills remain `untested` until that evidence is committed.
+The public catalog shows required access and supported surfaces.
 
 [`QUALITY.md`](./QUALITY.md) defines the interaction, evidence, execution, and evaluation standard every package is expected to meet.
 

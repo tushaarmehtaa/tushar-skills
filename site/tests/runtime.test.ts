@@ -52,18 +52,14 @@ test("documented install paths match observed skills CLI destinations", async ()
   }
 });
 
-test("support labels distinguish evidence from installability", () => {
+test("internal support evidence controls installability without a public badge", () => {
   const tested = createAgentPanelViewModel({
     slug: "remove-ai-slop",
     agentId: "cursor",
     support: { "claude-code": "tested", codex: "tested", cursor: "tested" },
     capabilities: CATALOG["remove-ai-slop"].capabilities,
   });
-  assert.deepEqual(tested.supportBadge, {
-    status: "tested",
-    label: "runtime tested",
-    tone: "success",
-  });
+  assert.equal("supportBadge" in tested, false);
   assert.equal(tested.install.visible, true);
   assert.match(tested.install.command ?? "", /-a cursor -y$/);
 
@@ -73,11 +69,8 @@ test("support labels distinguish evidence from installability", () => {
     support: CATALOG["email-with-resend"].support,
     capabilities: CATALOG["email-with-resend"].capabilities,
   });
-  assert.deepEqual(untested.supportBadge, {
-    status: "untested",
-    label: "available to install",
-    tone: "warning",
-  });
+  assert.equal("supportBadge" in untested, false);
+  assert.equal(untested.install.visible, true);
 });
 
 test("capability labels render user-facing access requirements", () => {

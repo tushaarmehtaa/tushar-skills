@@ -9,14 +9,7 @@ import type { AgentId, Capability, SupportStatus } from "@/lib/catalog";
 import {
   createAgentPanelViewModels,
   type AgentPanelViewModel,
-  type SupportTone,
 } from "@/lib/skill-presentation";
-
-const STATUS_STYLES: Record<SupportTone, string> = {
-  success: "border-emerald-400/25 bg-emerald-400/5 text-emerald-300",
-  warning: "border-amber-400/25 bg-amber-400/5 text-amber-200",
-  danger: "border-rose-400/25 bg-rose-400/5 text-rose-300",
-};
 
 function RequiredAccess({
   section,
@@ -60,7 +53,7 @@ function AgentPanel({
       hidden={!selected}
       className="p-4 sm:p-5"
     >
-      <div className="mb-5 grid gap-3 sm:flex sm:flex-wrap sm:items-start sm:justify-between">
+      <div className="mb-5">
         <div className="flex items-center gap-3">
           <RuntimeLogoTile runtime={panel.id} size="sm" decorative />
           <div>
@@ -74,12 +67,6 @@ function AgentPanel({
             ) : null}
           </div>
         </div>
-        <span
-          data-status={panel.supportBadge.status}
-          className={`w-fit border px-2 py-1 text-xs ${STATUS_STYLES[panel.supportBadge.tone]}`}
-        >
-          {panel.supportBadge.label}
-        </span>
       </div>
 
       {panel.install.visible && panel.install.command ? (

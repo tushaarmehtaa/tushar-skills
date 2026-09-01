@@ -35,6 +35,7 @@ const RELEASES: Release[] = [
       { type: "skill", text: "added /landing-page for evidence-led page architecture, proof selection, implementation, and conversion verification" },
       { type: "skill", text: "added /mobile-first for measured responsive audits and repairs across reflow, touch, zoom, focus, and reduced motion" },
       { type: "fix", text: "replaced missing references and universal layout or writing rules with complete packages, interactive decisions, primary sources, and behavioral evals" },
+      { type: "site", text: "simplified skill pages and the requirements table around installation, surfaces, and required access" },
     ],
   },
   {

@@ -2,7 +2,6 @@ import {
   AGENTS,
   AGENT_IDS,
   CAPABILITY_LABELS,
-  SUPPORT_LABELS,
   generateInstallCommand,
   invocationFor,
 } from "./agents.ts";
@@ -14,14 +13,6 @@ import {
   type Surface,
 } from "./catalog.ts";
 
-export type SupportTone = "success" | "warning" | "danger";
-
-const SUPPORT_TONES: Record<SupportStatus, SupportTone> = {
-  tested: "success",
-  untested: "warning",
-  unsupported: "danger",
-};
-
 export interface AgentPanelViewModel {
   id: AgentId;
   tabId: string;
@@ -30,11 +21,6 @@ export interface AgentPanelViewModel {
   globalDirectory: string;
   guideRoute: string;
   officialDocsUrl: string;
-  supportBadge: {
-    status: SupportStatus;
-    label: string;
-    tone: SupportTone;
-  };
   install: {
     visible: boolean;
     command: string | null;
@@ -74,11 +60,6 @@ export function createAgentPanelViewModel({
     globalDirectory: agent.globalDirectory,
     guideRoute: agent.guideRoute,
     officialDocsUrl: agent.officialDocsUrl,
-    supportBadge: {
-      status,
-      label: SUPPORT_LABELS[status],
-      tone: SUPPORT_TONES[status],
-    },
     install: {
       visible: canInstall,
       command: canInstall ? generateInstallCommand({ skill: slug, agent: agentId }) : null,
@@ -94,7 +75,7 @@ export function createAgentPanelViewModel({
     },
     unsupportedMessage: canInstall
       ? null
-      : `${slug} is intentionally unsupported in ${agent.label}.`,
+      : `${slug} does not offer an install path for ${agent.label}.`,
   };
 }
 

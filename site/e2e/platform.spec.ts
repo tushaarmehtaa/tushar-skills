@@ -15,12 +15,15 @@ test.describe("slashskills platform", () => {
     await page.goto("/cold-outreach");
     await expectNoDocumentOverflow(page);
     await expect(page.getByRole("heading", { name: "cold-outreach" })).toBeVisible();
+    await expect(page.locator("[data-status]")).toHaveCount(0);
 
     await page.goto("/compatibility");
     await expectNoDocumentOverflow(page);
+    await expect(page.getByRole("heading", { name: "Requirements", exact: true })).toBeVisible();
     const matrix = page.locator('[role="region"]');
     await expect(matrix).toBeVisible();
-    await expect(page.getByText("Swipe horizontally to compare runtimes.")).toBeVisible();
+    await expect(page.getByText("Swipe horizontally to compare requirements.")).toBeVisible();
+    await expect(page.getByText(/^(Tested|Untested|Available|Unsupported)$/)).toHaveCount(0);
 
     await page.goto("/guides/cursor");
     await expectNoDocumentOverflow(page);

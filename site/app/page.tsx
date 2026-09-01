@@ -72,7 +72,7 @@ export default function Home() {
                   <RuntimeLogoTile key={agentId} runtime={agentId} size="sm" decorative />
                 ))}
               </span>
-              and see what each skill needs and where it has been tested.
+              and see what each workflow needs before installing.
             </p>
           </section>
 
