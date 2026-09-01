@@ -2,11 +2,16 @@
   "project": "Slashskills",
   "canonical_host": "https://www.slashskills.xyz",
   "timezone": "Asia/Kolkata",
-  "site_type": "Agent Skills catalog and implementation documentation",
-  "audience": ["people creating Agent Skills", "developers installing or operating skills", "teams evaluating runtime compatibility and safety"],
-  "editorial_territory": "Help people create, evaluate, install, distribute, and safely operate reliable Agent Skills across Codex, Claude Code, Cursor, and compatible runtimes.",
+  "site_type": "Agent Skills catalog and implementation documentation with agent-tool ecosystem intelligence",
+  "audience": ["people creating Agent Skills", "developers installing or operating skills", "developers connecting agents to tools and resources through MCP", "teams evaluating runtime compatibility, interoperability, and safety"],
+  "editorial_territory": "Help people create, evaluate, install, distribute, and safely operate reliable Agent Skills; connect agents to tools and resources through MCP; and understand material interoperability changes across Codex, Claude Code, Cursor, and compatible runtimes.",
   "conversion_action": "select a skill and copy or run its runtime-specific install command",
   "owned_evidence": ["skill packages and bundled references", "runtime-verification.json", "skill-evals.json", "validator rules", "repository history and CHANGELOG.md", "controlled cross-runtime tests"],
-  "preferred_surfaces": ["existing skill detail pages", "runtime installation guides", "compatibility evidence", "evidence-backed evaluations", "changelog updates"],
-  "excluded_surface": "generic AI news blog"
+  "preferred_surfaces": ["existing skill detail pages", "runtime installation guides", "compatibility evidence", "evidence-backed evaluations", "changelog updates", "reviewed ecosystem research briefs"],
+  "news_watch": {
+    "core": ["Agent Skills specifications and runtimes", "MCP specification, SEPs, registry, SDKs, security, and client adoption", "material Codex, Claude Code, Cursor, and compatible-runtime changes"],
+    "adjacent": ["A2A and other open interoperability standards when they change agent-to-tool or agent-to-agent workflows"],
+    "inclusion_rule": "Surface material official changes even when they are not ready for SEO production; score ecosystem importance separately from editorial readiness."
+  },
+  "excluded_surface": "generic AI news blog or release-note rewrite feed"
 }

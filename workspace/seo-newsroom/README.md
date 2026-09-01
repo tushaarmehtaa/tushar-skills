@@ -1,10 +1,10 @@
 # Slashskills SEO newsroom
 
-This is the durable operating record for research about reliable Agent Skills. It helps people create, evaluate, install, distribute, and safely operate skills across Codex, Claude Code, Cursor, and compatible runtimes. Research is daily; publishing is optional.
+This is the durable operating record for research about reliable Agent Skills and the agent-tool ecosystem around them. It helps people create, evaluate, install, distribute, and safely operate skills; connect agents to tools and resources through MCP; and understand material interoperability changes across Codex, Claude Code, Cursor, and compatible runtimes. Research is daily; publishing is optional.
 
 ## Editorial constitution
 
-1. A candidate must materially change one of those reader jobs. Reject generic AI news, prompt lists, agent roundups, rewritten release notes, and search-first variations without original evidence.
+1. Scout Agent Skills, MCP, material agent-runtime changes, and adjacent interoperability standards such as A2A. A candidate must materially change a reader job: building or operating skills, connecting agents to tools and resources, evaluating compatibility, or managing security and distribution. Reject generic model news, prompt lists, agent roundups, rewritten release notes, and search-first variations without original evidence.
 2. Prefer an existing skill, guide, compatibility page, or changelog update when it satisfies the intent. A new URL requires distinct intent and a useful original contribution.
 3. Owned evidence is strongest: checked-in packages, references, validation rules, behavioral evals, runtime verification records, controlled tests, repository history, and implementation lessons.
 4. Important claims require a primary source or a dated verification record. Search snippets are discovery aids, not sources. Never invent firsthand experience, compatibility, benchmarks, demand, traffic, rankings, or product behavior.
@@ -27,7 +27,11 @@ Scout decisions are exactly: `reject`, `hold`, `social-only`, `update existing`,
 - Durable usefulness: 10
 - Distribution fit: 5
 
-Thresholds: 0–39 reject; 40–59 hold; 60–74 social-only or update existing; 75–84 research brief or needs Tushar; 85–100 eligible for production. A timely subject without owned evidence or a distinct Slashskills contribution cannot score above 59.
+Thresholds: 0–39 reject; 40–59 hold; 60–74 social-only or update existing; 75–84 research brief or needs Tushar; 85–100 eligible for production. This score measures editorial and production readiness, not whether a development matters. A timely subject without owned evidence or a distinct Slashskills contribution cannot score above 59 for production readiness.
+
+## Ecosystem signal importance
+
+Classify material news separately as `critical`, `high`, `medium`, or `low` based on compatibility breakage, security exposure, user action required, breadth of runtime adoption, and durability. A critical or high signal must appear in the daily ecosystem watch even when its editorial decision is `hold`, `social-only`, or `reject`. Newsworthiness never bypasses evidence, originality, cannibalization, or publishing gates.
 
 ## Attribution and evidence
 

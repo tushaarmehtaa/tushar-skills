@@ -40,11 +40,17 @@ PROJECT POSITIONING
 Slashskills is not a generic AI-news blog. Its editorial territory is:
 
 “Help people create, evaluate, install, distribute, and safely operate reliable
-Agent Skills across Codex, Claude Code, Cursor, and compatible runtimes.”
+Agent Skills; connect agents to tools and resources through MCP; and understand
+material interoperability changes across Codex, Claude Code, Cursor, and
+compatible runtimes.”
 
 A story is relevant only when it materially changes one of those jobs. Reject
 generic model news, prompt listicles, generic AI-agent roundups, rewritten release
 notes, and search-first variations with no original evidence.
+
+Coverage is broader than publishing. The scout must surface material Agent Skills,
+MCP, agent-runtime, security, and adjacent interoperability developments even when
+the correct decision is hold, social-only, update existing, or no publication.
 
 The strongest owned evidence is already in the repo:
    - real skill packages and bundled references;
@@ -100,6 +106,10 @@ The scout should inspect current, authoritative sources such as:
    - official Anthropic/Claude Code documentation and announcements;
    - official Cursor documentation and changelog;
    - the Agent Skills specification/ecosystem;
+   - official MCP documentation, specification, SEPs, maintainer blog, roadmap,
+     registry, SDK releases, security advisories, and client adoption changes;
+   - official A2A specification and releases when they materially affect agent
+     interoperability or the boundary between agent-to-tool and agent-to-agent work;
    - relevant GitHub releases and repositories;
    - Hacker News and Product Hunt only when materially relevant;
    - this repository’s open work, changelog, runtime records, validation rules,

@@ -4,7 +4,7 @@ Read this file at the start of every Slashskills SEO session. Do not rely on cha
 
 ## Current system
 
-- Daily read-only scout: 08:20 Asia/Kolkata via local cron.
+- Daily read-only Agent Skills, MCP, runtime, and interoperability scout: 08:20 Asia/Kolkata via local cron.
 - Missed-run catch-up: periodic local cron check, at most once per IST date and never overlapping.
 - Runner: `scripts/run_seo_newsroom_scout.sh`; catch-up: `scripts/run_seo_newsroom_catchup.sh`.
 - Raw report: `workspace/seo-newsroom/runs/YYYY-MM-DD.md`; durable log: `/private/tmp/slashskills-seo-newsroom-scout.log`.
