@@ -29,6 +29,11 @@ function resultMarker(index) {
   return `${manifest.synthetic_result_prefix}${String(index).padStart(3, "0")}`;
 }
 
+function skillName(index) {
+  const label = String(index).padStart(3, "0");
+  return manifest.selection_probe_names[label] ?? `${manifest.synthetic_name_prefix}${label}`;
+}
+
 function fitDescription(index, profile) {
   const token = marker(index);
   const front = `${token}. Use when asked to identify catalog probe ${String(index).padStart(3, "0")}.`;
@@ -48,7 +53,7 @@ function buildEntries(size) {
   for (let index = 1; entries.length < size; index += 1) {
     const profile = manifest.description_profiles[(index - 1) % manifest.description_profiles.length];
     entries.push({
-      name: `${manifest.synthetic_name_prefix}${String(index).padStart(3, "0")}`,
+      name: skillName(index),
       marker: marker(index),
       result_marker: resultMarker(index),
       kind: "synthetic",

@@ -9,7 +9,7 @@ const experimentDirectory = fileURLToPath(new URL(".", import.meta.url));
 const manifest = JSON.parse(readFileSync(resolve(experimentDirectory, "manifest.json"), "utf8"));
 const fixtureRoot = resolve(process.argv[2] ?? "");
 const repository = resolve(fixtureRoot, "repo-100");
-const resultsDirectory = resolve(experimentDirectory, "results", "selection-v3");
+const resultsDirectory = resolve(experimentDirectory, "results", "selection-v4");
 const codex = "/Users/tushaarmehtaa/.local/bin/codex";
 
 if (!process.argv[2] || !fixtureRoot.startsWith("/private/tmp/slashskills-catalog-")) {
@@ -21,7 +21,7 @@ const cases = [
   {
     id: "explicit-rear",
     expected: "CATALOG-RESULT-095",
-    prompt: "Invoke $catalog-probe-095 and follow its instructions. Return only the required response. You may read that skill's SKILL.md; do not inspect other files.",
+    prompt: "Invoke $catalog-probe-kestrel and follow its instructions. Return only the required response. You may read that skill's SKILL.md; do not inspect other files.",
   },
   {
     id: "implicit-front",
