@@ -25,6 +25,10 @@ function marker(index) {
   return `${manifest.synthetic_marker_prefix}${String(index).padStart(3, "0")}`;
 }
 
+function resultMarker(index) {
+  return `${manifest.synthetic_result_prefix}${String(index).padStart(3, "0")}`;
+}
+
 function fitDescription(index, profile) {
   const token = marker(index);
   const front = `${token}. Use when asked to identify catalog probe ${String(index).padStart(3, "0")}.`;
@@ -46,6 +50,7 @@ function buildEntries(size) {
     entries.push({
       name: `${manifest.synthetic_name_prefix}${String(index).padStart(3, "0")}`,
       marker: marker(index),
+      result_marker: resultMarker(index),
       kind: "synthetic",
       profile: profile.id,
       description: fitDescription(index, profile),
@@ -55,7 +60,8 @@ function buildEntries(size) {
 }
 
 function skillText(entry) {
-  return `---\nname: ${entry.name}\ndescription: ${JSON.stringify(entry.description)}\n---\n\n# Catalog probe\n\nWhen this skill is explicitly invoked, respond with exactly \`${entry.marker}\`. Do not use tools.\n`;
+  const response = entry.result_marker ?? `CATALOG-RESULT-${entry.marker}`;
+  return `---\nname: ${entry.name}\ndescription: ${JSON.stringify(entry.description)}\n---\n\n# Catalog probe\n\nWhen this skill is explicitly invoked or selected, respond with exactly \`${response}\`. Do not use tools.\n`;
 }
 
 const generated = [];

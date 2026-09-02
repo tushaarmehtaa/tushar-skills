@@ -2,9 +2,17 @@
   "experiment_id": "codex-skill-catalog-budget-2026-09-02",
   "official_source": "https://learn.chatgpt.com/docs/build-skills",
   "model": "gpt-5.6-sol",
+  "protocol_version": 2,
+  "amendments": [
+    {
+      "date": "2026-09-02",
+      "reason": "Separate description trigger markers from required response markers so an implicit-selection check cannot pass by echoing its prompt. This does not change catalog descriptions or the completed catalog-capture comparison."
+    }
+  ],
   "sizes": [10, 25, 50, 100],
   "synthetic_name_prefix": "catalog-probe-",
   "synthetic_marker_prefix": "QUARTZ-PROBE-",
+  "synthetic_result_prefix": "CATALOG-RESULT-",
   "description_profiles": [
     {"id": "short-front", "target_length": 120, "marker_position": "front"},
     {"id": "medium-front", "target_length": 320, "marker_position": "front"},
