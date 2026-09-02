@@ -1,0 +1,46 @@
+{
+  "experiment_id": "codex-skill-catalog-budget-2026-09-02",
+  "official_source": "https://learn.chatgpt.com/docs/build-skills",
+  "model": "gpt-5.6-sol",
+  "sizes": [10, 25, 50, 100],
+  "synthetic_name_prefix": "catalog-probe-",
+  "synthetic_marker_prefix": "QUARTZ-PROBE-",
+  "description_profiles": [
+    {"id": "short-front", "target_length": 120, "marker_position": "front"},
+    {"id": "medium-front", "target_length": 320, "marker_position": "front"},
+    {"id": "medium-rear", "target_length": 640, "marker_position": "rear"},
+    {"id": "long-rear", "target_length": 960, "marker_position": "rear"}
+  ],
+  "real_description_probes": [
+    {
+      "name": "slashskills-probe-humanize",
+      "source": "humanize/SKILL.md",
+      "marker": "SLASHSKILLS-HUMANIZE",
+      "description": "Edit or audit prose for generic AI patterns while preserving voice, meaning, uncertainty, and format. Use when writing sounds synthetic, repetitive, over-polished, or unlike its author."
+    },
+    {
+      "name": "slashskills-probe-landing-page",
+      "source": "landing-page/SKILL.md",
+      "marker": "SLASHSKILLS-LANDING-PAGE",
+      "description": "Design, build, audit, or repair evidence-led landing pages by coordinating message, proof, structure, interface, and verification. Use when a marketing page must perform a clear job."
+    },
+    {
+      "name": "slashskills-probe-mobile-first",
+      "source": "mobile-first/SKILL.md",
+      "marker": "SLASHSKILLS-MOBILE-FIRST",
+      "description": "Audit and repair responsive interfaces from measured narrow-screen evidence without changing product intent. Use when a page clips, overflows, stacks poorly, or fails on touch."
+    },
+    {
+      "name": "slashskills-probe-remove-ai-slop",
+      "source": "remove-ai-slop/SKILL.md",
+      "marker": "SLASHSKILLS-REMOVE-AI-SLOP",
+      "description": "Audit and remove AI-like design and copy defaults using rendered evidence and confidence scoring. Use when reviewing an interface for generic or repetitive patterns."
+    },
+    {
+      "name": "slashskills-probe-skill-creator",
+      "source": "skill-creator/SKILL.md",
+      "marker": "SLASHSKILLS-SKILL-CREATOR",
+      "description": "Create, improve, merge, and validate portable Agent Skill packages with adaptive workflows and behavioral evals. Use when authoring or reconstructing SKILL.md packages."
+    }
+  ]
+}
