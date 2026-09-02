@@ -55,7 +55,6 @@ for (const testCase of cases) {
       "--ignore-user-config",
       "--ignore-rules",
       "--sandbox", "read-only",
-      "--ask-for-approval", "never",
       "-c", `model=${JSON.stringify(manifest.model)}`,
       "--json",
       "-C", repository,
