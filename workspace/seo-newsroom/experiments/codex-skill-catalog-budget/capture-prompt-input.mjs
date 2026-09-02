@@ -36,6 +36,11 @@ function parseVisibleSkills(skillsText) {
   const availableIndex = lines.indexOf("### Available skills");
   const availableLines = lines.slice(availableIndex + 1);
   const allSkillLines = availableLines.filter((line) => line.startsWith("- ") && line.includes("(file: "));
+  const allDescriptions = allSkillLines.map((line) => {
+    const fileIndex = line.lastIndexOf(" (file: ");
+    const separatorIndex = line.indexOf(": ");
+    return separatorIndex === -1 ? "" : line.slice(separatorIndex + 2, fileIndex);
+  });
   const probes = [];
   for (const line of allSkillLines) {
     const match = line.match(/^- ((?:slashskills|catalog)-probe-[a-z0-9-]+): (.*) \(file: (.+)\)$/);
@@ -44,7 +49,7 @@ function parseVisibleSkills(skillsText) {
   const notices = availableLines.filter(
     (line) => !line.startsWith("- ") && /truncat|omit|budget|not shown|more skills/i.test(line),
   );
-  return { allSkillLines, probes, notices };
+  return { allSkillLines, allDescriptions, probes, notices };
 }
 
 const summaries = [];
@@ -60,7 +65,7 @@ for (const size of [0, ...manifest.sizes]) {
   const skillsText = extractSkillsText(promptItems);
   writeFileSync(resolve(rawDirectory, `${label}-skills-instructions.txt`), skillsText + "\n");
 
-  const { allSkillLines, probes, notices } = parseVisibleSkills(skillsText);
+  const { allSkillLines, allDescriptions, probes, notices } = parseVisibleSkills(skillsText);
   const expected = size === 0
     ? []
     : JSON.parse(readFileSync(resolve(repository, "fixture-manifest.json"), "utf8")).files;
@@ -87,7 +92,11 @@ for (const size of [0, ...manifest.sizes]) {
   summaries.push({
     size,
     repository,
+    skill_instructions_characters: skillsText.length,
     total_visible_skills: allSkillLines.length,
+    total_visible_description_characters: allDescriptions.reduce((sum, description) => sum + description.length, 0),
+    shortest_visible_description: Math.min(...allDescriptions.map((description) => description.length)),
+    longest_visible_description: Math.max(...allDescriptions.map((description) => description.length)),
     expected_probes: expected.length,
     visible_probes: probes.length,
     omitted_probes: omitted,
@@ -117,16 +126,17 @@ const markdown = [
   `- Model: ${manifest.model}`,
   `- Fixture sizes: ${manifest.sizes.join(", ")}`,
   "",
-  "| Project probes | Total visible skills | Visible probes | Exact descriptions | Shortened | Omitted | Visible markers |",
-  "| ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
-  ...summaries.map((item) => `| ${item.size} | ${item.total_visible_skills} | ${item.visible_probes} | ${item.exact_descriptions} | ${item.shortened_descriptions} | ${item.omitted_probes.length} | ${item.markers_visible} |`),
+  "| Project probes | Total visible skills | Skill-section chars | Visible probes | Exact descriptions | Shortened | Omitted | Visible markers |",
+  "| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+  ...summaries.map((item) => `| ${item.size} | ${item.total_visible_skills} | ${item.skill_instructions_characters} | ${item.visible_probes} | ${item.exact_descriptions} | ${item.shortened_descriptions} | ${item.omitted_probes.length} | ${item.markers_visible} |`),
   "",
   "Notices are preserved verbatim in `catalog-summary.json`; model-visible skill sections are under `results/raw/`.",
   "",
 ];
 writeFileSync(resolve(resultsDirectory, "catalog-summary.md"), markdown.join("\n"));
-console.log(JSON.stringify(summaries.map(({ size, total_visible_skills, visible_probes, exact_descriptions, shortened_descriptions, omitted_probes, markers_visible, notices }) => ({
+console.log(JSON.stringify(summaries.map(({ size, skill_instructions_characters, total_visible_skills, visible_probes, exact_descriptions, shortened_descriptions, omitted_probes, markers_visible, notices }) => ({
   size,
+  skill_instructions_characters,
   total_visible_skills,
   visible_probes,
   exact_descriptions,

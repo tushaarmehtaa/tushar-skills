@@ -9,7 +9,7 @@ const experimentDirectory = fileURLToPath(new URL(".", import.meta.url));
 const manifest = JSON.parse(readFileSync(resolve(experimentDirectory, "manifest.json"), "utf8"));
 const fixtureRoot = resolve(process.argv[2] ?? "");
 const repository = resolve(fixtureRoot, "repo-100");
-const resultsDirectory = resolve(experimentDirectory, "results", "selection");
+const resultsDirectory = resolve(experimentDirectory, "results", "selection-v3");
 const codex = "/Users/tushaarmehtaa/.local/bin/codex";
 
 if (!process.argv[2] || !fixtureRoot.startsWith("/private/tmp/slashskills-catalog-")) {
@@ -20,18 +20,18 @@ mkdirSync(resultsDirectory, { recursive: true });
 const cases = [
   {
     id: "explicit-rear",
-    expected: "CATALOG-RESULT-096",
-    prompt: "Invoke $catalog-probe-096 and follow its instructions. Return only the required response. Do not use tools.",
+    expected: "CATALOG-RESULT-095",
+    prompt: "Invoke $catalog-probe-095 and follow its instructions. Return only the required response. You may read that skill's SKILL.md; do not inspect other files.",
   },
   {
     id: "implicit-front",
     expected: "CATALOG-RESULT-094",
-    prompt: "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+    prompt: "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
   },
   {
     id: "implicit-rear",
     expected: "CATALOG-RESULT-095",
-    prompt: "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+    prompt: "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
   },
 ];
 
@@ -41,9 +41,12 @@ function parseRun(stdout) {
     .filter((event) => event.type === "item.completed" && event.item?.type === "agent_message")
     .map((event) => event.item.text);
   const toolEvents = events.filter((event) =>
-    event.type?.startsWith("item.") && !["agent_message", "reasoning"].includes(event.item?.type),
+    event.type?.startsWith("item.") && ["command_execution", "mcp_tool_call", "web_search"].includes(event.item?.type),
   );
-  return { events, final_response: messages.at(-1) ?? "", tool_event_count: toolEvents.length };
+  const warnings = events
+    .filter((event) => event.type === "item.completed" && event.item?.type === "error")
+    .map((event) => event.item.message);
+  return { events, final_response: messages.at(-1) ?? "", tool_event_count: toolEvents.length, warnings };
 }
 
 const runs = [];
@@ -72,6 +75,7 @@ for (const testCase of cases) {
       final_response: parsed.final_response,
       passed: parsed.final_response.trim() === testCase.expected,
       tool_event_count: parsed.tool_event_count,
+      warnings: parsed.warnings,
     };
     runs.push(record);
     writeFileSync(
