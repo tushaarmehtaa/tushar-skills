@@ -1,12 +1,12 @@
 {
-  "audited_at": "2026-08-27T00:00:00+05:30",
+  "audited_at": "2026-09-02T20:28:12+05:30",
   "canonical_host": "https://www.slashskills.xyz",
   "classes": [
     {"class":"home","example":"/","indexable":true,"search_job":"define Slashskills and lead to skill installation","source":"site/app/page.tsx"},
-    {"class":"skill detail","example":"/search-ready","indexable":true,"count":30,"search_job":"show a complete installable workflow, evidence and requirements","source":"site/app/[skill]/page.tsx"},
+    {"class":"skill detail","example":"/search-ready","indexable":true,"count":33,"search_job":"show a complete installable workflow, evidence and requirements","source":"site/app/[skill]/page.tsx"},
     {"class":"runtime guide","example":"/guides/codex","indexable":true,"count":3,"search_job":"install, invoke, update and remove skills in one local runtime","source":"site/app/guides/[agent]/page.tsx"},
     {"class":"chat guide","example":"/guides/chatgpt","indexable":true,"count":2,"search_job":"explain capability-gated chat uploads","source":"site/app/guides/chatgpt and claude-app"},
-    {"class":"compatibility","example":"/compatibility","indexable":true,"search_job":"compare support, surfaces and required capabilities","source":"site/app/compatibility/page.tsx"},
+    {"class":"requirements","example":"/compatibility","indexable":true,"search_job":"compare supported surfaces and required access without exposing internal verification state","source":"site/app/compatibility/page.tsx"},
     {"class":"changelog","example":"/changelog","indexable":true,"search_job":"document shipped library changes","source":"site/app/changelog/page.tsx","note":"Path collides with the changelog skill slug; resolve deliberately before exposing a separate skill URL."},
     {"class":"machine files","examples":["/robots.txt","/sitemap.xml","/llms.txt"],"indexable":false,"search_job":"crawler discovery and experimental AI-readable navigation"},
     {"class":"OG endpoint","example":"/api/og","indexable":false,"search_job":"social preview image","robots_disallowed":true},
