@@ -46,6 +46,8 @@ The v2 and v3 pilot traces are retained because they exposed two test-design def
 
 The evidence clears the preregistered straightforward-results gate: update `/guides/codex` and `/skill-creator`; create no new URL.
 
+Production verification on 2026-09-03 confirmed the existing `/guides/codex` route returned HTTP 200 with the new catalog-pressure section and measured markers, self-canonical metadata, and `index, follow`.
+
 Artifacts: [`catalog-summary.md`](../experiments/codex-skill-catalog-budget/results/catalog-summary.md), [`catalog-summary.json`](../experiments/codex-skill-catalog-budget/results/catalog-summary.json), [`selection-summary.json`](../experiments/codex-skill-catalog-budget/results/selection-v4/selection-summary.json), and the raw prompt/JSONL captures under the same experiment directory. Machine-specific paths in committed raw artifacts are normalized to `$HOME` and `$FIXTURE_ROOT`.
 
 ## Preregistered protocol
