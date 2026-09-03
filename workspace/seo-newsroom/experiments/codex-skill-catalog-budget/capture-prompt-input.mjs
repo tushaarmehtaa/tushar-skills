@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -10,12 +11,14 @@ const manifest = JSON.parse(readFileSync(resolve(experimentDirectory, "manifest.
 const fixtureRoot = resolve(process.argv[2] ?? "");
 const resultsDirectory = resolve(experimentDirectory, "results");
 const rawDirectory = resolve(resultsDirectory, "raw");
+const fixtureManifestDirectory = resolve(resultsDirectory, "fixture-manifests");
 const codex = "/Users/tushaarmehtaa/.local/bin/codex";
 
 if (!process.argv[2] || !fixtureRoot.startsWith("/private/tmp/slashskills-catalog-")) {
   throw new Error("Pass the generated /private/tmp/slashskills-catalog-* directory.");
 }
 mkdirSync(rawDirectory, { recursive: true });
+mkdirSync(fixtureManifestDirectory, { recursive: true });
 
 function extractSkillsText(promptItems) {
   for (const item of promptItems) {
@@ -63,12 +66,26 @@ for (const size of [0, ...manifest.sizes]) {
   );
   const promptItems = JSON.parse(stdout);
   const skillsText = extractSkillsText(promptItems);
-  writeFileSync(resolve(rawDirectory, `${label}-skills-instructions.txt`), skillsText + "\n");
+  const sanitizedSkillsText = skillsText
+    .replaceAll("/Users/tushaarmehtaa", "$HOME")
+    .replaceAll(fixtureRoot, "$FIXTURE_ROOT");
+  writeFileSync(resolve(rawDirectory, `${label}-skills-instructions.txt`), sanitizedSkillsText + "\n");
 
   const { allSkillLines, allDescriptions, probes, notices } = parseVisibleSkills(skillsText);
-  const expected = size === 0
-    ? []
-    : JSON.parse(readFileSync(resolve(repository, "fixture-manifest.json"), "utf8")).files;
+  const fixtureManifestText = readFileSync(resolve(repository, "fixture-manifest.json"), "utf8");
+  const fixtureManifest = JSON.parse(fixtureManifestText);
+  const sanitizedFixtureManifest = {
+    ...fixtureManifest,
+    files: fixtureManifest.files.map((entry) => ({
+      ...entry,
+      path: entry.path.replace(fixtureRoot, "$FIXTURE_ROOT"),
+    })),
+  };
+  writeFileSync(
+    resolve(fixtureManifestDirectory, `${label}.json`),
+    JSON.stringify(sanitizedFixtureManifest, null, 2) + "\n",
+  );
+  const expected = size === 0 ? [] : fixtureManifest.files;
   const expectedByName = new Map(expected.map((entry) => [entry.name, entry]));
   const visibleByName = new Map(probes.map((entry) => [entry.name, entry]));
   const comparisons = probes.map((entry) => {
@@ -91,7 +108,8 @@ for (const size of [0, ...manifest.sizes]) {
   const omitted = expected.filter((entry) => !visibleByName.has(entry.name)).map((entry) => entry.name);
   summaries.push({
     size,
-    repository,
+    repository: repository.replace(fixtureRoot, "$FIXTURE_ROOT"),
+    fixture_manifest_sha256: createHash("sha256").update(fixtureManifestText).digest("hex"),
     skill_instructions_characters: skillsText.length,
     total_visible_skills: allSkillLines.length,
     total_visible_description_characters: allDescriptions.reduce((sum, description) => sum + description.length, 0),

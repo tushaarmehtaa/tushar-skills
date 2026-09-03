@@ -80,7 +80,9 @@ for (const testCase of cases) {
     runs.push(record);
     writeFileSync(
       resolve(resultsDirectory, `${testCase.id}-${repetition}.jsonl`),
-      result.stdout,
+      result.stdout
+        .replaceAll("/Users/tushaarmehtaa", "$HOME")
+        .replaceAll(fixtureRoot, "$FIXTURE_ROOT"),
     );
   }
 }

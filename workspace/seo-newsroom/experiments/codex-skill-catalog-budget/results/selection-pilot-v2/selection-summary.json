@@ -1,0 +1,114 @@
+{
+  "experiment_id": "codex-skill-catalog-budget-2026-09-02",
+  "protocol_version": 2,
+  "captured_at": "2026-09-02T15:38:01.952Z",
+  "codex_version": "codex-cli 0.152.1",
+  "model": "gpt-5.6-sol",
+  "fixture_size": 100,
+  "runs": [
+    {
+      "case": "explicit-rear",
+      "repetition": 1,
+      "prompt": "Invoke $catalog-probe-096 and follow its instructions. Return only the required response. Do not use tools.",
+      "expected": "CATALOG-RESULT-096",
+      "final_response": "Skill `catalog-probe-096` is not available.",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "explicit-rear",
+      "repetition": 2,
+      "prompt": "Invoke $catalog-probe-096 and follow its instructions. Return only the required response. Do not use tools.",
+      "expected": "CATALOG-RESULT-096",
+      "final_response": "catalog-probe-096 is not available.",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "explicit-rear",
+      "repetition": 3,
+      "prompt": "Invoke $catalog-probe-096 and follow its instructions. Return only the required response. Do not use tools.",
+      "expected": "CATALOG-RESULT-096",
+      "final_response": "catalog-probe-096 is not available.",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "implicit-front",
+      "repetition": 1,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+      "expected": "CATALOG-RESULT-094",
+      "final_response": "QUARTZ-PROBE-094",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "implicit-front",
+      "repetition": 2,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+      "expected": "CATALOG-RESULT-094",
+      "final_response": "QUARTZ-PROBE-094",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "implicit-front",
+      "repetition": 3,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+      "expected": "CATALOG-RESULT-094",
+      "final_response": "QUARTZ-PROBE-094",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "implicit-rear",
+      "repetition": 1,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "QUARTZ-PROBE-095",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "implicit-rear",
+      "repetition": 2,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "QUARTZ-PROBE-095",
+      "passed": false,
+      "tool_event_count": 1
+    },
+    {
+      "case": "implicit-rear",
+      "repetition": 3,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. Do not use tools to inspect files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "QUARTZ-PROBE-095",
+      "passed": false,
+      "tool_event_count": 1
+    }
+  ],
+  "cases": [
+    {
+      "case": "explicit-rear",
+      "expected": "CATALOG-RESULT-096",
+      "passes": 0,
+      "repetitions": 3,
+      "tool_events": 3
+    },
+    {
+      "case": "implicit-front",
+      "expected": "CATALOG-RESULT-094",
+      "passes": 0,
+      "repetitions": 3,
+      "tool_events": 3
+    },
+    {
+      "case": "implicit-rear",
+      "expected": "CATALOG-RESULT-095",
+      "passes": 0,
+      "repetitions": 3,
+      "tool_events": 3
+    }
+  ]
+}

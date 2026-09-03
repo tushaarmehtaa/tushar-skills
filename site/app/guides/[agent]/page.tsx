@@ -60,6 +60,8 @@ export async function generateMetadata({
     : `${agent.label} Agent Skills guide`;
   const description = agentId === "cursor"
     ? "Install Cursor Agent Skills, choose project or global scope, invoke a skill once or keep it active as a Custom Mode, and understand skills versus rules."
+    : agentId === "codex"
+      ? "Install and invoke Codex Agent Skills, choose project or global scope, and keep skill descriptions discoverable in a crowded catalog."
     : `Install, invoke, update, and remove slashskills in ${agent.label}.`;
   return {
     title,
@@ -177,6 +179,59 @@ function CursorGuideSections() {
   );
 }
 
+function CodexCatalogSection() {
+  const measurements = [
+    { added: 10, total: 119, visible: "118–120" },
+    { added: 25, total: 134, visible: "98–100" },
+    { added: 50, total: 159, visible: "72–76" },
+    { added: 100, total: 209, visible: "40–44" },
+  ] as const;
+
+  return (
+    <GuideSection number="04" title="Keep descriptions discoverable under catalog pressure">
+      <p>
+        Codex initially exposes each skill&apos;s name, description, and path. OpenAI caps that catalog at 2% of the model context window, or 8,000 characters when the context size is unknown. Codex shortens descriptions first and may eventually omit skills.
+      </p>
+      <p>
+        In our September 2–3, 2026 controlled run with Codex CLI 0.152.1 and <code>gpt-5.6-sol</code>, the final capture started with 109 visible skills. Adding up to 100 project probes kept all 209 names visible, but progressively shortened their descriptions:
+      </p>
+      <div
+        role="region"
+        aria-label="Codex skill catalog description measurements"
+        tabIndex={0}
+        className="overflow-x-auto border border-[var(--color-border)]"
+      >
+        <table className="w-full min-w-[32rem] border-collapse text-left">
+          <thead className="bg-[var(--color-surface)] text-[var(--color-heading)]">
+            <tr>
+              <th className="px-4 py-3 font-medium">Project skills added</th>
+              <th className="px-4 py-3 font-medium">Total visible</th>
+              <th className="px-4 py-3 font-medium">Visible description length</th>
+              <th className="px-4 py-3 font-medium">Omitted</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[var(--color-border)]">
+            {measurements.map((measurement) => (
+              <tr key={measurement.added}>
+                <td className="px-4 py-3">{measurement.added}</td>
+                <td className="px-4 py-3">{measurement.total}</td>
+                <td className="px-4 py-3">{measurement.visible} characters</td>
+                <td className="px-4 py-3">0</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Put the distinctive capability and strongest trigger in the opening clause. Do not rely on qualifiers near the end. In a small exploratory check at the 100-probe condition, an opaque front-loaded trigger selected the intended skill in 3/3 runs; the same trigger at the shortened-away tail succeeded in only 1/3 and twice selected the wrong skill. Explicit invocation succeeded in 3/3.
+      </p>
+      <p>
+        If Codex warns that descriptions were shortened, disable unused skills or plugins and invoke important workflows explicitly. The full <code>SKILL.md</code> still loads after selection. See <TrackedLink href={AGENTS.codex.officialDocsUrl} eventName="guide_open" agent="codex" skill="all" target="_blank" rel="noopener noreferrer" className="text-[var(--color-accent)] underline decoration-[var(--color-border)] underline-offset-4 hover:text-[var(--color-heading)]">OpenAI&apos;s skill documentation</TrackedLink> for the catalog policy.
+      </p>
+    </GuideSection>
+  );
+}
+
 export default async function CodingAgentGuide({
   params,
 }: {
@@ -195,6 +250,8 @@ export default async function CodingAgentGuide({
       title={agentId === "cursor" ? "Cursor Agent Skills" : agent.label}
       intro={agentId === "cursor"
         ? "Install Cursor skills, choose the right scope, invoke a workflow once or keep it active for a full session, and know when a rule or command fits better."
+        : agentId === "codex"
+          ? "Install Codex skills, choose the right scope, invoke workflows reliably, and keep descriptions discoverable as your catalog grows."
         : `Install, invoke, update, and remove Agent Skills in ${agent.label}.`}
       mark={<RuntimeLogo runtime={agentId} decorative className="h-7 w-7 sm:h-9 sm:w-9" />}
     >
@@ -237,21 +294,23 @@ export default async function CodingAgentGuide({
 
       {agentId === "cursor" ? <CursorGuideSections /> : null}
 
-      <GuideSection number={agentId === "cursor" ? "07" : "04"} title="Update and remove">
+      {agentId === "codex" ? <CodexCatalogSection /> : null}
+
+      <GuideSection number={agentId === "cursor" ? "07" : agentId === "codex" ? "05" : "04"} title="Update and remove">
         <p>Update the global copy:</p>
         <CommandLine command={generateUpdateCommand(EXAMPLE_SKILL)} agent={agentId} skill={EXAMPLE_SKILL} />
         <p>Remove it only from {agent.label}:</p>
         <CommandLine command={generateRemoveCommand(EXAMPLE_SKILL, agentId)} agent={agentId} skill={EXAMPLE_SKILL} />
       </GuideSection>
 
-      <GuideSection number={agentId === "cursor" ? "08" : "05"} title="Reload after changes">
+      <GuideSection number={agentId === "cursor" ? "08" : agentId === "codex" ? "06" : "05"} title="Reload after changes">
         <p>{agent.reload}</p>
         <p>
           If discovery still looks stale, verify the folder contains <code className="text-[var(--color-heading)]">SKILL.md</code> at its top level before restarting the runtime.
         </p>
       </GuideSection>
 
-      <GuideSection number={agentId === "cursor" ? "09" : "06"} title="Known runtime limits">
+      <GuideSection number={agentId === "cursor" ? "09" : agentId === "codex" ? "07" : "06"} title="Known runtime limits">
         <ul className="space-y-2 pl-4">
           {LIMITATIONS[agentId].map((limitation) => (
             <li key={limitation} className="list-disc marker:text-[var(--color-accent)]">{limitation}</li>

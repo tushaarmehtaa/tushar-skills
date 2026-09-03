@@ -6,6 +6,8 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- expanded the Codex guide with controlled catalog-pressure measurements across 119 to 209 visible skills
+- updated `skill-creator` to front-load distinctive capability and trigger language after controlled selection checks
 - simplified skill pages and the requirements table to focus on installation, surfaces, and required access
 - added `humanize`, `landing-page`, and `mobile-first` as evidence-led, interactive workflows with distinct ownership, complete references, and behavioral evals
 - reconstructed all 30 skills around adaptive modes, consequential questions, safety boundaries, concrete outputs, and outcome-level verification; removed forced questionnaires, personal house styles, false precision, static prices, and stale provider folklore

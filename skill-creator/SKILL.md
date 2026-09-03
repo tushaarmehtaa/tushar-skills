@@ -63,6 +63,8 @@ Do not duplicate the same rule in the main file and a reference. Test added scri
 
 Use the repository's frontmatter contract. The description must state both capability and trigger context in concrete language. Include important modes when they affect discovery, but do not turn the description into a workflow summary.
 
+Front-load the distinctive capability and strongest trigger in the opening clause. Runtimes may shorten catalog descriptions as more skills are installed, so do not depend on a qualifier or disambiguating phrase near the end. Keep the whole description concise enough to preserve useful routing detail under pressure.
+
 Check the trigger against:
 
 1. positive examples;

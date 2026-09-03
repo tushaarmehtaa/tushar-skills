@@ -1,0 +1,111 @@
+{
+  "experiment_id": "codex-skill-catalog-budget-2026-09-02",
+  "size": 10,
+  "files": [
+    {
+      "name": "slashskills-probe-humanize",
+      "source": "humanize/SKILL.md",
+      "marker": "SLASHSKILLS-HUMANIZE",
+      "description": "Edit or audit prose for generic AI patterns while preserving voice, meaning, uncertainty, and format. Use when writing sounds synthetic, repetitive, over-polished, or unlike its author.",
+      "kind": "real",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/slashskills-probe-humanize/SKILL.md",
+      "bytes": 389,
+      "sha256": "6e4643dde1e800861b1abd50b16e6996654da677eec8e125813e40a55ef853b9"
+    },
+    {
+      "name": "slashskills-probe-landing-page",
+      "source": "landing-page/SKILL.md",
+      "marker": "SLASHSKILLS-LANDING-PAGE",
+      "description": "Design, build, audit, or repair evidence-led landing pages by coordinating message, proof, structure, interface, and verification. Use when a marketing page must perform a clear job.",
+      "kind": "real",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/slashskills-probe-landing-page/SKILL.md",
+      "bytes": 394,
+      "sha256": "d4e3937f9891e51fd195c4fe986126fa3a5cdc18c0133cee4e70515422138e7f"
+    },
+    {
+      "name": "slashskills-probe-mobile-first",
+      "source": "mobile-first/SKILL.md",
+      "marker": "SLASHSKILLS-MOBILE-FIRST",
+      "description": "Audit and repair responsive interfaces from measured narrow-screen evidence without changing product intent. Use when a page clips, overflows, stacks poorly, or fails on touch.",
+      "kind": "real",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/slashskills-probe-mobile-first/SKILL.md",
+      "bytes": 388,
+      "sha256": "3c91cdcbbc87aa43d1d5299b669d9cacfbbc423873a55639aca98d1001f8a0ae"
+    },
+    {
+      "name": "slashskills-probe-remove-ai-slop",
+      "source": "remove-ai-slop/SKILL.md",
+      "marker": "SLASHSKILLS-REMOVE-AI-SLOP",
+      "description": "Audit and remove AI-like design and copy defaults using rendered evidence and confidence scoring. Use when reviewing an interface for generic or repetitive patterns.",
+      "kind": "real",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/slashskills-probe-remove-ai-slop/SKILL.md",
+      "bytes": 381,
+      "sha256": "35c88f597ec89f20b892fc749d1c755230c77a8b8e745c6f47d4b9cc49addae5"
+    },
+    {
+      "name": "slashskills-probe-skill-creator",
+      "source": "skill-creator/SKILL.md",
+      "marker": "SLASHSKILLS-SKILL-CREATOR",
+      "description": "Create, improve, merge, and validate portable Agent Skill packages with adaptive workflows and behavioral evals. Use when authoring or reconstructing SKILL.md packages.",
+      "kind": "real",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/slashskills-probe-skill-creator/SKILL.md",
+      "bytes": 382,
+      "sha256": "0e8ba2c5c2482f880d5f718669552cd14e1835d2e06207ea1e61f70df24959cc"
+    },
+    {
+      "name": "catalog-probe-001",
+      "marker": "QUARTZ-PROBE-001",
+      "result_marker": "CATALOG-RESULT-001",
+      "kind": "synthetic",
+      "profile": "short-front",
+      "description": "QUARTZ-PROBE-001. Use when asked to identify catalog probe 001. This deterministic sentence pads the description so cata",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/catalog-probe-001/SKILL.md",
+      "bytes": 298,
+      "sha256": "c18d36d538a40c451dd119344f1becfa9248947bcf38a33c5baaf63ee2ec2e86"
+    },
+    {
+      "name": "catalog-probe-002",
+      "marker": "QUARTZ-PROBE-002",
+      "result_marker": "CATALOG-RESULT-002",
+      "kind": "synthetic",
+      "profile": "medium-front",
+      "description": "QUARTZ-PROBE-002. Use when asked to identify catalog probe 002. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe ",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/catalog-probe-002/SKILL.md",
+      "bytes": 498,
+      "sha256": "e185d19b26dcd8119827f88f695a090f67c6aeb93f4da199dc96da650bd66394"
+    },
+    {
+      "name": "catalog-probe-003",
+      "marker": "QUARTZ-PROBE-003",
+      "result_marker": "CATALOG-RESULT-003",
+      "kind": "synthetic",
+      "profile": "medium-rear",
+      "description": "Catalog-budget fixture for deterministic description-shortening and omission measurements. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be me Use only for catalog probe 003; its exact marker is QUARTZ-PROBE-003.",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/catalog-probe-003/SKILL.md",
+      "bytes": 818,
+      "sha256": "37c2a6e6ceed075e8bfb5699e60d378c9010b07549328af48717b7413e06be59"
+    },
+    {
+      "name": "catalog-probe-004",
+      "marker": "QUARTZ-PROBE-004",
+      "result_marker": "CATALOG-RESULT-004",
+      "kind": "synthetic",
+      "profile": "long-rear",
+      "description": "Catalog-budget fixture for deterministic description-shortening and omission measurements. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. This deterministic sentence pads the description so catalog shortening can be measured without changing the harmless probe behavior. T Use only for catalog probe 004; its exact marker is QUARTZ-PROBE-004.",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/catalog-probe-004/SKILL.md",
+      "bytes": 1138,
+      "sha256": "59c346565ed400d1b25262e74e55b75521b459f595faa2913a3305239e3451d1"
+    },
+    {
+      "name": "catalog-probe-005",
+      "marker": "QUARTZ-PROBE-005",
+      "result_marker": "CATALOG-RESULT-005",
+      "kind": "synthetic",
+      "profile": "short-front",
+      "description": "QUARTZ-PROBE-005. Use when asked to identify catalog probe 005. This deterministic sentence pads the description so cata",
+      "path": "$FIXTURE_ROOT/repo-010/.agents/skills/catalog-probe-005/SKILL.md",
+      "bytes": 298,
+      "sha256": "17b0ec707abefc156606c241082ca26c9a1e9276e42a1b0c4bdba7963cb7e6f3"
+    }
+  ]
+}

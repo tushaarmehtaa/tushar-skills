@@ -1,0 +1,141 @@
+{
+  "experiment_id": "codex-skill-catalog-budget-2026-09-02",
+  "protocol_version": 4,
+  "captured_at": "2026-09-02T15:53:25.971Z",
+  "codex_version": "codex-cli 0.152.1",
+  "model": "gpt-5.6-sol",
+  "fixture_size": 100,
+  "runs": [
+    {
+      "case": "explicit-rear",
+      "repetition": 1,
+      "prompt": "Invoke $catalog-probe-kestrel and follow its instructions. Return only the required response. You may read that skill's SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "CATALOG-RESULT-095",
+      "passed": true,
+      "tool_event_count": 0,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "explicit-rear",
+      "repetition": 2,
+      "prompt": "Invoke $catalog-probe-kestrel and follow its instructions. Return only the required response. You may read that skill's SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "CATALOG-RESULT-095",
+      "passed": true,
+      "tool_event_count": 0,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "explicit-rear",
+      "repetition": 3,
+      "prompt": "Invoke $catalog-probe-kestrel and follow its instructions. Return only the required response. You may read that skill's SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "CATALOG-RESULT-095",
+      "passed": true,
+      "tool_event_count": 0,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "implicit-front",
+      "repetition": 1,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-094",
+      "final_response": "CATALOG-RESULT-094",
+      "passed": true,
+      "tool_event_count": 2,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "implicit-front",
+      "repetition": 2,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-094",
+      "final_response": "CATALOG-RESULT-094",
+      "passed": true,
+      "tool_event_count": 2,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "implicit-front",
+      "repetition": 3,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-094. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-094",
+      "final_response": "CATALOG-RESULT-094",
+      "passed": true,
+      "tool_event_count": 2,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "implicit-rear",
+      "repetition": 1,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "CATALOG-RESULT-095",
+      "passed": true,
+      "tool_event_count": 2,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "implicit-rear",
+      "repetition": 2,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "CATALOG-RESULT-SLASHSKILLS-HUMANIZE",
+      "passed": false,
+      "tool_event_count": 2,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    },
+    {
+      "case": "implicit-rear",
+      "repetition": 3,
+      "prompt": "A workflow in your available skills is intended for QUARTZ-PROBE-095. Use the relevant skill and return only its required response. You may read the matching SKILL.md; do not inspect other files.",
+      "expected": "CATALOG-RESULT-095",
+      "final_response": "The disposable installation-path probe loaded.",
+      "passed": false,
+      "tool_event_count": 2,
+      "warnings": [
+        "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "case": "explicit-rear",
+      "expected": "CATALOG-RESULT-095",
+      "passes": 3,
+      "repetitions": 3,
+      "tool_events": 0
+    },
+    {
+      "case": "implicit-front",
+      "expected": "CATALOG-RESULT-094",
+      "passes": 3,
+      "repetitions": 3,
+      "tool_events": 6
+    },
+    {
+      "case": "implicit-rear",
+      "expected": "CATALOG-RESULT-095",
+      "passes": 1,
+      "repetitions": 3,
+      "tool_events": 6
+    }
+  ]
+}

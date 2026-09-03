@@ -1,0 +1,1597 @@
+{
+  "experiment_id": "codex-skill-catalog-budget-2026-09-02",
+  "captured_at": "2026-09-03T10:49:36.122Z",
+  "codex_version": "codex-cli 0.152.1",
+  "model": "gpt-5.6-sol",
+  "summaries": [
+    {
+      "size": 0,
+      "repository": "$FIXTURE_ROOT/repo-000",
+      "fixture_manifest_sha256": "061ca45aa193adf1d9f8759265507a6e9c7397e30ff70a0937a401d8c6622be4",
+      "skill_instructions_characters": 22229,
+      "total_visible_skills": 109,
+      "total_visible_description_characters": 15153,
+      "shortest_visible_description": 53,
+      "longest_visible_description": 146,
+      "expected_probes": 0,
+      "visible_probes": 0,
+      "omitted_probes": [],
+      "exact_descriptions": 0,
+      "shortened_descriptions": 0,
+      "altered_descriptions": 0,
+      "original_probe_description_characters": 0,
+      "visible_probe_description_characters": 0,
+      "markers_visible": 0,
+      "notices": [],
+      "comparisons": []
+    },
+    {
+      "size": 10,
+      "repository": "$FIXTURE_ROOT/repo-010",
+      "fixture_manifest_sha256": "cabd46031eb32f3a956b332e7b8ec4d3371af9e1310b8755d2ba99bd9a9d32ab",
+      "skill_instructions_characters": 22232,
+      "total_visible_skills": 119,
+      "total_visible_description_characters": 14350,
+      "shortest_visible_description": 53,
+      "longest_visible_description": 124,
+      "expected_probes": 10,
+      "visible_probes": 10,
+      "omitted_probes": [],
+      "exact_descriptions": 2,
+      "shortened_descriptions": 8,
+      "altered_descriptions": 0,
+      "original_probe_description_characters": 3036,
+      "visible_probe_description_characters": 1224,
+      "markers_visible": 3,
+      "notices": [],
+      "comparisons": [
+        {
+          "name": "catalog-probe-001",
+          "profile": "short-front",
+          "state": "exact",
+          "original_length": 120,
+          "visible_length": 120,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-002",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 124,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-003",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 124,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-004",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 124,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-005",
+          "profile": "short-front",
+          "state": "exact",
+          "original_length": 120,
+          "visible_length": 120,
+          "marker_visible": true
+        },
+        {
+          "name": "slashskills-probe-humanize",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 185,
+          "visible_length": 122,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-landing-page",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 182,
+          "visible_length": 122,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-mobile-first",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 176,
+          "visible_length": 122,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-remove-ai-slop",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 165,
+          "visible_length": 122,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-skill-creator",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 168,
+          "visible_length": 124,
+          "marker_visible": false
+        }
+      ]
+    },
+    {
+      "size": 25,
+      "repository": "$FIXTURE_ROOT/repo-025",
+      "fixture_manifest_sha256": "4a99f7370a2d19509dfc1d9ea0eb752bfa5ac18c43a8f39806a0fa61d2b76ca8",
+      "skill_instructions_characters": 22238,
+      "total_visible_skills": 134,
+      "total_visible_description_characters": 13456,
+      "shortest_visible_description": 53,
+      "longest_visible_description": 104,
+      "expected_probes": 25,
+      "visible_probes": 25,
+      "omitted_probes": [],
+      "exact_descriptions": 0,
+      "shortened_descriptions": 25,
+      "altered_descriptions": 0,
+      "original_probe_description_characters": 11076,
+      "visible_probe_description_characters": 2572,
+      "markers_visible": 10,
+      "notices": [],
+      "comparisons": [
+        {
+          "name": "catalog-probe-001",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-002",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-003",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-004",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-005",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-006",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-007",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-008",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-009",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-010",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-011",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-012",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-013",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-014",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 104,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-015",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-016",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 104,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-017",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 100,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-018",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 100,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-019",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 100,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-020",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 100,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-humanize",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 185,
+          "visible_length": 102,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-landing-page",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 182,
+          "visible_length": 102,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-mobile-first",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 176,
+          "visible_length": 102,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-remove-ai-slop",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 165,
+          "visible_length": 102,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-skill-creator",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 168,
+          "visible_length": 100,
+          "marker_visible": false
+        }
+      ]
+    },
+    {
+      "size": 50,
+      "repository": "$FIXTURE_ROOT/repo-050",
+      "fixture_manifest_sha256": "cf81b427b4123b4e42b5660e7fc4908e0bf8a51d31706fe884ce8f47b73ac1b6",
+      "skill_instructions_characters": 22241,
+      "total_visible_skills": 159,
+      "total_visible_description_characters": 11959,
+      "shortest_visible_description": 53,
+      "longest_visible_description": 78,
+      "expected_probes": 50,
+      "visible_probes": 50,
+      "omitted_probes": [],
+      "exact_descriptions": 0,
+      "shortened_descriptions": 50,
+      "altered_descriptions": 0,
+      "original_probe_description_characters": 23436,
+      "visible_probe_description_characters": 3796,
+      "markers_visible": 23,
+      "notices": [],
+      "comparisons": [
+        {
+          "name": "catalog-probe-001",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-002",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-003",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-004",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-005",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-006",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-007",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-008",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-009",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-010",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-011",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-012",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-013",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-014",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-015",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-016",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-017",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-018",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-019",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-020",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-021",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-022",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-023",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-024",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-025",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-026",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-027",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-028",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-029",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-030",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-031",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-032",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-033",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-034",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-035",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-036",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-037",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-038",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-039",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-040",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-041",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-042",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-043",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-044",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 76,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-045",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 76,
+          "marker_visible": true
+        },
+        {
+          "name": "slashskills-probe-humanize",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 185,
+          "visible_length": 78,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-landing-page",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 182,
+          "visible_length": 74,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-mobile-first",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 176,
+          "visible_length": 74,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-remove-ai-slop",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 165,
+          "visible_length": 74,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-skill-creator",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 168,
+          "visible_length": 76,
+          "marker_visible": false
+        }
+      ]
+    },
+    {
+      "size": 100,
+      "repository": "$FIXTURE_ROOT/repo-100",
+      "fixture_manifest_sha256": "86e3c465bda8b8eebfb76cdb346672d68649d3abf87efddfc71c56b92edd72e0",
+      "skill_instructions_characters": 22253,
+      "total_visible_skills": 209,
+      "total_visible_description_characters": 8955,
+      "shortest_visible_description": 40,
+      "longest_visible_description": 44,
+      "expected_probes": 100,
+      "visible_probes": 100,
+      "omitted_probes": [],
+      "exact_descriptions": 0,
+      "shortened_descriptions": 100,
+      "altered_descriptions": 0,
+      "original_probe_description_characters": 48876,
+      "visible_probe_description_characters": 4392,
+      "markers_visible": 48,
+      "notices": [],
+      "comparisons": [
+        {
+          "name": "catalog-probe-001",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-002",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-003",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-004",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-005",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-006",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-007",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-008",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-009",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-010",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-011",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-012",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-013",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-014",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-015",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-016",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-017",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-018",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-019",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-020",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-021",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-022",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-023",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-024",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-025",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-026",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-027",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-028",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-029",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-030",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-031",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-032",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-033",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-034",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-035",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-036",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-037",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-038",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-039",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-040",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-041",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-042",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-043",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-044",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-045",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-046",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-047",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-048",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-049",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-050",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-051",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-052",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-053",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-054",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-055",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-056",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-057",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-058",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-059",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-060",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-061",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-062",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-063",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-064",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-065",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-066",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-067",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-068",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-069",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-070",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-071",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-072",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-073",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-074",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-075",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-076",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-077",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-078",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-079",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-080",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-081",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-082",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-083",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-084",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-085",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-086",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-087",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-088",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-089",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-090",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-091",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-092",
+          "profile": "long-rear",
+          "state": "shortened",
+          "original_length": 960,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-093",
+          "profile": "short-front",
+          "state": "shortened",
+          "original_length": 120,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "catalog-probe-kestrel",
+          "profile": "medium-rear",
+          "state": "shortened",
+          "original_length": 640,
+          "visible_length": 44,
+          "marker_visible": false
+        },
+        {
+          "name": "catalog-probe-saffron",
+          "profile": "medium-front",
+          "state": "shortened",
+          "original_length": 320,
+          "visible_length": 44,
+          "marker_visible": true
+        },
+        {
+          "name": "slashskills-probe-humanize",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 185,
+          "visible_length": 42,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-landing-page",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 182,
+          "visible_length": 42,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-mobile-first",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 176,
+          "visible_length": 42,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-remove-ai-slop",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 165,
+          "visible_length": 42,
+          "marker_visible": false
+        },
+        {
+          "name": "slashskills-probe-skill-creator",
+          "profile": "real",
+          "state": "shortened",
+          "original_length": 168,
+          "visible_length": 44,
+          "marker_visible": false
+        }
+      ]
+    }
+  ]
+}

@@ -29,6 +29,13 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-09-03",
+    entries: [
+      { type: "site", text: "expanded the Codex guide with controlled catalog-pressure measurements across 119 to 209 visible skills" },
+      { type: "update", text: "front-loaded /skill-creator description guidance after rear-loaded discovery selected the wrong skill in controlled checks" },
+    ],
+  },
+  {
     date: "2026-09-01",
     entries: [
       { type: "skill", text: "added /humanize for voice-preserving prose edits and evidence-based AI-pattern detection" },
