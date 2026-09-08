@@ -277,7 +277,16 @@ export default async function CodingAgentGuide({
               Cursor also reads project skills from <code>.cursor/skills</code> and global skills from <code>~/.cursor/skills</code>. Slashskills uses <code>.agents/skills</code> so the same package can serve multiple compatible runtimes.
             </p>
             <p>
-              Local global skills are not copied to Cloud Agents, remote SSH sessions, or managed workers. Commit a project-scoped skill to the repository when remote agents need it.
+              Cursor does not copy <code>~/.agents/skills</code> or unsynced local skills to Cloud Agents, remote SSH sessions, or self-hosted workers. Commit project skills to the repository so self-hosted workers can use them, or include them in the worker image.
+            </p>
+            <p>
+              For personal skills in <code>~/.cursor/skills</code>, you can enable Sync Skills for Cloud Agents under Settings → Agents → Context and Tools. This opt-in sync covers only that directory; it does not sync <code>~/.agents/skills</code>. Team admins can disable it. See <a href="https://cursor.com/docs/skills" target="_blank" rel="noreferrer" className="text-[var(--color-accent)] hover:underline">Cursor’s skill scope and sync documentation</a>.
+            </p>
+            <p>
+              Self-Hosted Machines run file edits, terminal commands, and local tools on your worker. Cursor still runs the agent loop, inference, and planning, and receives the file content and tool output needed for the task. See <a href="https://cursor.com/docs/cloud-agent/self-hosted" target="_blank" rel="noreferrer" className="text-[var(--color-accent)] hover:underline">Cursor’s self-hosted data-flow documentation</a>.
+            </p>
+            <p>
+              MCP transport also determines where connections run: command-based (stdio) servers run on your machine, while HTTP/SSE servers connect from Cursor’s backend. For an MCP server that needs your worker’s private network, use stdio. See <a href="https://cursor.com/docs/cloud-agent/self-hosted/my-machines#MCP-servers" target="_blank" rel="noreferrer" className="text-[var(--color-accent)] hover:underline">Cursor’s MCP transport guidance</a>.
             </p>
           </>
         ) : null}
