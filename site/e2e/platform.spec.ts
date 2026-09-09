@@ -51,7 +51,9 @@ test.describe("slashskills platform", () => {
 
   test("keeps chat-capable skills in the local-agent filter", async ({ page }) => {
     await page.goto("/");
-    await page.getByLabel("Runs in").selectOption("local");
+    await page.getByText("Platform", { exact: true }).click();
+    await page.getByRole("radio", { name: "Local agents", exact: true }).click();
+    await expect(page.getByRole("radio", { name: "Local agents", exact: true })).toBeChecked();
     await expect(page.getByRole("link", { name: /decision-doc/ })).toBeVisible();
     await expect(page).toHaveURL(/surface=local/);
   });

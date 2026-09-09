@@ -65,57 +65,60 @@ export function SkillDirectory({ skills }: { skills: readonly DirectorySkill[] }
     <section className="pb-20" aria-labelledby="skill-index-heading">
       <h2 id="skill-index-heading" className="mb-5 text-xl font-semibold text-[var(--color-heading)]">Skills</h2>
 
-      <div className="mb-4 grid grid-cols-2 gap-3 border-y border-[var(--color-border)] py-4 sm:grid-cols-[minmax(0,1fr)_11rem_11rem_auto] sm:items-end">
-        <label className="col-span-2 block sm:col-span-1">
-          <span className="mb-2 block text-xs text-[var(--color-muted)]">Search skills</span>
+      <div className="mb-3 border-y border-[var(--color-border)]">
+        <label className="flex items-center gap-4 py-2">
+          <span className="sr-only">Search skills</span>
           <input
             ref={searchRef}
             type="search"
             value={filters.query}
             onChange={(event) => updateFilters({ ...filters, query: event.target.value })}
-            placeholder="Name, workflow, or category"
-            className="min-h-11 w-full border-0 border-b border-[var(--color-border)] bg-transparent px-0 py-2 text-sm text-[var(--color-heading)] outline-none placeholder:text-[var(--color-muted)] focus-visible:border-[var(--color-heading)]"
+            placeholder="Find a skill…"
+            className="min-h-11 min-w-0 flex-1 bg-transparent py-2 text-base text-[var(--color-heading)] outline-none placeholder:text-[var(--color-muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--color-accent)]"
           />
+          <kbd aria-hidden="true" className="hidden text-xs text-[var(--color-muted)] sm:block">/</kbd>
         </label>
-        <label className="block">
-          <span className="mb-2 block text-xs text-[var(--color-muted)]">Category</span>
-          <select
-            value={filters.category}
-            onChange={(event) => updateFilters({ ...filters, category: event.target.value })}
-            className="min-h-11 w-full border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-xs text-[var(--color-heading)] outline-none focus-visible:border-[var(--color-heading)]"
-          >
-            <option value="all">All categories</option>
-            {categories.map((value) => <option key={value} value={value}>{value}</option>)}
-          </select>
-        </label>
-        <label className="block">
-          <span className="mb-2 block text-xs text-[var(--color-muted)]">Runs in</span>
-          <select
-            value={filters.surface}
-            onChange={(event) => updateFilters({ ...filters, surface: event.target.value as SurfaceFilter })}
-            className="min-h-11 w-full border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-xs text-[var(--color-heading)] outline-none focus-visible:border-[var(--color-heading)]"
-          >
-            <option value="all">All platforms</option>
-            <option value="local">Local agents</option>
-            <option value="chat">Chat + local</option>
-          </select>
-        </label>
-        <button
-          type="button"
-          onClick={clearFilters}
-          disabled={!hasFilters}
-          hidden={!hasFilters}
-          className="col-span-2 min-h-11 w-fit border sm:col-span-1 border-[var(--color-border)] px-3 text-xs text-[var(--color-muted)] transition-colors enabled:hover:border-[var(--color-border-hover)] enabled:hover:text-[var(--color-heading)] enabled:focus-visible:outline enabled:focus-visible:outline-2 enabled:focus-visible:outline-offset-2 enabled:focus-visible:outline-[var(--color-accent)] disabled:cursor-default disabled:opacity-40"
-        >
-          Clear
-        </button>
+        <div role="group" aria-label="Skill categories" className="flex gap-5 overflow-x-auto border-t border-[var(--color-border)]">
+          {["all", ...categories].map((category) => (
+            <button
+              key={category}
+              type="button"
+              aria-pressed={filters.category === category}
+              onClick={(event) => {
+                updateFilters({ ...filters, category });
+                event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
+              }}
+              className={`min-h-11 shrink-0 border-b-2 py-3 text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-accent)] ${filters.category === category ? "border-[var(--color-accent)] text-[var(--color-heading)]" : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-heading)]"}`}
+            >
+              {category === "all" ? "All skills" : category}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="mb-3 flex items-center justify-between gap-3 px-1">
-        <p aria-live="polite" aria-atomic="true" className="text-xs text-[var(--color-muted)]">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-x-5 text-xs text-[var(--color-muted)]">
+        <p aria-live="polite" aria-atomic="true" className="py-3">
           {filteredSkills.length} {filteredSkills.length === 1 ? "skill" : "skills"}
         </p>
-        {hasFilters ? <p className="text-xs text-[var(--color-muted)]">Filtered from {skills.length}</p> : null}
+        <div className="flex items-start gap-5">
+          {hasFilters ? (
+            <button type="button" onClick={clearFilters} className="min-h-11 hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-[var(--color-accent)]">Clear filters</button>
+          ) : null}
+          <details className="max-w-56">
+            <summary className="min-h-11 cursor-pointer py-3 hover:text-[var(--color-heading)]">
+              {filters.surface === "all" ? "Platform" : filters.surface === "local" ? "Local agents" : "Chat + local"}
+            </summary>
+            <fieldset className="flex flex-col gap-1 pb-3">
+              <legend className="sr-only">Runs in</legend>
+              {([ ["all", "All platforms"], ["local", "Local agents"], ["chat", "Chat + local"] ] as const).map(([value, label]) => (
+                <label key={value} className="flex min-h-11 cursor-pointer items-center gap-3">
+                  <input type="radio" name="platform" value={value} checked={filters.surface === value} onChange={() => updateFilters({ ...filters, surface: value })} className="accent-[var(--color-accent)]" />
+                  {label}
+                </label>
+              ))}
+            </fieldset>
+          </details>
+        </div>
       </div>
 
       <div className="terminal-rule mb-3 hidden grid-cols-[minmax(11rem,1fr)_8rem_minmax(15rem,1.5fr)_5rem] gap-4 px-3 pt-3 text-xs text-[var(--color-muted)] sm:grid">
