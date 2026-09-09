@@ -2,6 +2,10 @@
 
 Read this file at the start of every Slashskills SEO session. Do not rely on chat history.
 
+## Product benchmark
+
+Read [product-principles.md](../product-principles.md) before making product or content-placement decisions. Tushar selected https://www.skills.sh/ as the gold-standard reference, combined with our own judgment. The homepage is for skills; guides remain separate.
+
 ## Current system
 
 - Daily read-only Agent Skills, MCP, runtime, and interoperability scout: 08:20 Asia/Kolkata via local cron.
