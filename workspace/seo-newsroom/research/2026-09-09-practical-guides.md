@@ -39,3 +39,9 @@ Recheck provider statements after model/API changes. Add comparative claims only
 Published and verified September 9, 2026, commit `c4f3e8a`. GitHub validation run `34369793144` succeeded; Vercel deployment `6eNzowobydqKy8PAS4p4KTkZ21Jo` succeeded. Live HTTP 200 checks passed for the homepage, both guides, image skill, sitemap and ZIP. Canonicals and index/follow metadata match the three new routes. Both guides expose TechArticle schema and one H1; the skill uses the existing package renderer and CreativeWork schema. The downloaded ZIP contains SKILL.md and the revision reference. Homepage discovery and sitemap links verified. All three URLs recorded in the publishing ledger (3/3 for September 9).
 
 Measurement windows: September 23 and October 7, 2026. Search indexation and performance remain unknown. Existing Cursor/Codex windows are unchanged.
+
+## UX revision after user review
+
+Replaced the guide presentation with an editorial reading layout: larger proportional headings and body text, top-of-page skill action, deterministic Guides breadcrumb, desktop contents sidebar, mobile expandable contents, and code-example copy controls with a manual-copy fallback. Homepage guide entries now use compact linked rows. Existing URLs and article claims are unchanged.
+
+Validation: production build and 23 unit tests passed. All six browser checks passed, including the top action appearing in the initial viewport at 390px and 1440px, contents-anchor navigation, clipboard contents matching the displayed example, and breadcrumb return to homepage guides. Reviewed desktop/mobile guide and homepage screenshots. No new URL or publication-ledger entry is required for this correction.
