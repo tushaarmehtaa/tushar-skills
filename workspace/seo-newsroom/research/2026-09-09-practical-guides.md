@@ -45,3 +45,9 @@ Measurement windows: September 23 and October 7, 2026. Search indexation and per
 Replaced the guide presentation with an editorial reading layout: larger proportional headings and body text, top-of-page skill action, deterministic Guides breadcrumb, desktop contents sidebar, mobile expandable contents, and code-example copy controls with a manual-copy fallback. Homepage guide entries now use compact linked rows. Existing URLs and article claims are unchanged.
 
 Validation: production build and 23 unit tests passed. All six browser checks passed, including the top action appearing in the initial viewport at 390px and 1440px, contents-anchor navigation, clipboard contents matching the displayed example, and breadcrumb return to homepage guides. Reviewed desktop/mobile guide and homepage screenshots. No new URL or publication-ledger entry is required for this correction.
+
+## User correction: keep the homepage focused on skills
+
+The user explicitly rejected guides ahead of skills and guides on the main page. Removed the guide section entirely from `/` and restored the prior skill ordering. Guides now live at `/guides`, reached from the header; article breadcrumbs return there. Related guides remain on their relevant skill pages. This is the durable product preference: the homepage is for discovering and installing skills, not an editorial feed.
+
+The new `/guides` route is a non-indexable navigation hub with follow enabled, excluded from the sitemap. Individual article routes remain indexable; this adds no new indexable URL beyond the day's three recorded publications. Browser regression checks assert no Latest guides heading on the homepage and exercise navigation to the separate directory.

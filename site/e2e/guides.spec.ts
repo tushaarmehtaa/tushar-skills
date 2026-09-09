@@ -4,9 +4,12 @@ for (const width of [390, 1440]) {
   test(`guide discovery and package download at ${width}px`, async ({ page, request }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
+    await expect(page.getByRole("heading", { name: "Skills", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Latest guides", exact: true })).toHaveCount(0);
+    await page.screenshot({ path: testInfo.outputPath("homepage-skills.png") });
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "guides", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Latest guides" })).toBeInViewport();
-    await page.screenshot({ path: testInfo.outputPath("homepage-guides.png") });
+    await page.screenshot({ path: testInfo.outputPath("guides-index.png") });
     await page.locator("#guides").getByRole("link").filter({ hasText: "Build an image-editing skill" }).click();
     await expect(page).toHaveURL(/\/guides\/image-editing-skills$/);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.slashskills.xyz/guides/image-editing-skills");
@@ -21,7 +24,7 @@ for (const width of [390, 1440]) {
     await expect(page.getByRole("status").filter({ hasText: "Example copied" })).toBeVisible();
     expect(await page.evaluate(() => navigator.clipboard.readText())).toContain("Edit the attached product photograph.");
     await page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("link", { name: "Guides" }).click();
-    await expect(page).toHaveURL(/\/#guides$/);
+    await expect(page).toHaveURL(/\/guides$/);
     await page.goto("/guides/image-editing-skills");
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await page.screenshot({ path: testInfo.outputPath("image-guide.png"), fullPage: true });

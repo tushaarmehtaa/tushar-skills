@@ -1,4 +1,3 @@
-import { LatestGuides } from "@/components/latest-guides";
 import { Suspense } from "react";
 import { Header } from "@/components/header";
 import { PageFrame } from "@/components/page-frame";
@@ -11,7 +10,6 @@ import { AGENT_IDS } from "@/lib/agents";
 import { getAllSkills, type Skill } from "@/lib/skills";
 
 const SKILL_ORDER = [
-  "image-editing",
   "remove-ai-slop",
   "ai-product-development",
   "interface-design",
@@ -111,8 +109,6 @@ export default function Home() {
               </div>
             </div>
           </section>
-
-          <LatestGuides />
 
           <Suspense
             fallback={<section className="pb-20" aria-labelledby="skill-index-heading"><h2 id="skill-index-heading" className="mb-5 text-xl font-semibold text-[var(--color-heading)]">Skills</h2></section>}

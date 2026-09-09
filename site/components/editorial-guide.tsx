@@ -47,7 +47,7 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
       <main id="main-content" className="flex-1 px-6 pb-16 pt-8 sm:pt-12">
         <PageFrame>
           <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-3 text-sm text-[var(--color-muted)]">
-            <Link href="/#guides" className="inline-flex min-h-11 items-center hover:text-[var(--color-accent)]">← Guides</Link>
+            <Link href="/guides" className="inline-flex min-h-11 items-center hover:text-[var(--color-accent)]">← Guides</Link>
             <span aria-hidden="true">/</span><span>{guide.category}</span>
           </nav>
           <header className="max-w-3xl">
