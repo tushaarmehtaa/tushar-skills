@@ -1,3 +1,4 @@
+import { LatestGuides } from "./latest-guides";
 import { AgentTabs } from "./agent-tabs";
 import { RuntimeLogo } from "./runtime-logo";
 import { TrackedLink } from "./tracked-link";
@@ -190,6 +191,8 @@ export function SkillDetail({
           </div>
         </section>
       ) : null}
+
+      <LatestGuides skill={skill.slug} />
 
       <div className="mt-16 border-t border-[var(--color-border)] pt-8">
         <a

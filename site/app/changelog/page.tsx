@@ -29,6 +29,13 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-09-09",
+    entries: [
+      { type: "site", text: "added Latest guides on the homepage, with image-editing and Astra instruction recipes linked to reusable skills" },
+      { type: "skill", text: "added /image-editing for reference-based revisions, preservation checks, and bounded retries; runtime evaluation remains pending" },
+    ],
+  },
+  {
     date: "2026-09-03",
     entries: [
       { type: "site", text: "expanded the Codex guide with controlled catalog-pressure measurements across 119 to 209 visible skills" },

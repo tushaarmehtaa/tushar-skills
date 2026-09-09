@@ -1,0 +1,35 @@
+# Practical guides — September 9, 2026
+
+Owner: Tushar Mehta. User authorized implementation of the proposed homepage → guide → skill journey in an active reviewed session.
+
+## Publication scope
+
+Three new URLs: `/guides/image-editing-skills`, `/guides/astra-skill-instructions`, and `/image-editing`. Homepage discovery and related-guide links update existing URLs. This is a narrower implementation-recipe scope than the scout's proposed comparative studies. Those studies remain unperformed; the pages explicitly disclose this and contain no claimed outcomes, generated examples, or compatibility measurements.
+
+The image guide provides a checked-in skill package, revision record, illustrative edit brief and acceptance method. The Astra guide provides original before/after instruction examples and a three-case audit procedure, linked to existing authoring workflows. These reader jobs differ from runtime installation guides and skill source pages. The new image package owns successive reference-based edits; ai-product-development owns application integration.
+
+## Evidence map
+
+Primary sources retrieved September 9, 2026:
+
+- https://developers.openai.com/api/docs/models/gpt-image-2.5-flare — documented model identity, text/image input, Images API and Responses tool selection; provider positioning, not our benchmark.
+- https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst — documented editing model and supported surfaces; provider positioning, not our benchmark.
+- https://developers.openai.com/api/docs/guides/latest-model — Astra guidance on conflicting skill instructions, clarification and steering.
+
+Owned artifacts: `image-editing/SKILL.md`, `image-editing/references/edit-record.md`, three behavioral case prompts in `skill-evals.json`, and guide instruction examples. Case prompts are not passing evaluations. All image-editing runtime statuses remain untested.
+
+## Validation
+
+- Root tests: 4 passed. Site unit tests: 19 passed.
+- Repository/package/README/ZIP validation passed for 34 skills; skill-creator frontmatter validation passed.
+- Production build passed, including statically rendered guide routes.
+- Six Playwright tests passed, including new mobile (390px) and desktop (1440px) guide navigation, self-canonical, single H1, viewport overflow, reference-fragment resolution, real ZIP response, related-skill navigation and sitemap presence.
+- Homepage guide section and full image-guide screenshots inspected on mobile and desktop.
+- Pages use TechArticle metadata matching visible author/date/content, with individual canonicals and share metadata.
+- Publishing guard reports 0/3 used before deployment. Production verification and ledger entries follow only after live checks.
+
+## Measurement
+
+Track impressions and clicks per new URL, guide_open, guide_skill_open, ZIP downloads and existing install interactions. Clicks are not confirmed installations. Establish the deployment baseline after verification; compare at 14 and 28 complete days. No fresh Search Console data, indexation finding or traffic forecast is available.
+
+Recheck provider statements after model/API changes. Add comparative claims only after the corresponding recorded experiments have passed review.

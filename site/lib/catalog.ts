@@ -19,6 +19,14 @@ export interface CatalogEntry {
 }
 
 export const CATALOG = {
+  "image-editing": {
+    category: "design",
+    tags: ["images", "editing", "references", "visual-qa"],
+    author: "tushaarmehtaa",
+    surfaces: ["coding-agent"],
+    capabilities: ["filesystem", "network", "user-files"],
+    support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
+  },
   analytics: {
     category: "analytics",
     tags: ["analytics", "posthog", "google-analytics", "sentry", "health-check", "dashboard"],

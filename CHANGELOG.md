@@ -6,6 +6,9 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- added homepage guide discovery, practical GPT Image 2.5 and Astra instruction guides, and linked skill workflows
+- added `image-editing` with reference tracking, bounded revisions, and explicit untested runtime support
+
 - expanded the Codex guide with controlled catalog-pressure measurements across 119 to 209 visible skills
 - updated `skill-creator` to front-load distinctive capability and trigger language after controlled selection checks
 - simplified skill pages and the requirements table to focus on installation, surfaces, and required access

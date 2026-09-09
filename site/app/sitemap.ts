@@ -1,3 +1,4 @@
+import { EDITORIAL_GUIDES } from "@/lib/guides";
 import type { MetadataRoute } from "next";
 import { getAllSkills } from "@/lib/skills";
 import { AGENTS, AGENT_IDS } from "@/lib/agents";
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/changelog`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${siteUrl}/guides/chatgpt`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/guides/claude-app`, changeFrequency: "monthly", priority: 0.8 },
+    ...EDITORIAL_GUIDES.map((guide) => ({ url: `${siteUrl}/guides/${guide.slug}`, lastModified: guide.date, changeFrequency: "monthly" as const, priority: 0.8 })),
     ...AGENT_IDS.map((agent) => ({
       url: `${siteUrl}${AGENTS[agent].guideRoute}`,
       changeFrequency: "monthly" as const,
