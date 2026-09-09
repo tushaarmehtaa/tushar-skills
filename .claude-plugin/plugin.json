@@ -1,0 +1,24 @@
+{
+  "name": "slashskills",
+  "version": "0.1.0",
+  "description": "Review software releases, record decisions, and write changelogs with explicit evidence and tool requirements.",
+  "author": {
+    "name": "Tushar Mehta",
+    "url": "https://github.com/tushaarmehtaa"
+  },
+  "homepage": "https://www.slashskills.xyz",
+  "repository": "https://github.com/tushaarmehtaa/tushar-skills",
+  "license": "MIT",
+  "keywords": [
+    "release-review",
+    "decision-records",
+    "changelog",
+    "agent-skills"
+  ],
+  "skills": [
+    "./decision-doc",
+    "./deploy-check",
+    "./changelog",
+    "./readme"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "slashskills",
+  "owner": {
+    "name": "Tushar Mehta"
+  },
+  "metadata": {
+    "description": "Software workflow skills maintained by Tushar Mehta."
+  },
+  "plugins": [
+    {
+      "name": "slashskills",
+      "source": "./",
+      "description": "Review software releases, record decisions, and write changelogs with explicit evidence and tool requirements.",
+      "category": "productivity",
+      "tags": [
+        "release-review",
+        "documentation"
+      ]
+    }
+  ]
+}

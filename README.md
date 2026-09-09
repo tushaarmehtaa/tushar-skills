@@ -4,7 +4,7 @@
 
 Reusable SKILL.md workflows from real projects. Install them in Codex, Claude Code, or Cursor; see what each skill needs before installing.
 
-The directory contains 33 focused skills. Each one owns a meaningful outcome rather than a single code snippet.
+The directory contains 34 focused skills. Each one owns a meaningful outcome rather than a single code snippet.
 
 **[Browse the directory →](https://www.slashskills.xyz)**
 
@@ -17,6 +17,12 @@ Skill pages render the complete package, including every bundled Markdown refere
 The public catalog shows required access and supported surfaces.
 
 [`QUALITY.md`](./QUALITY.md) defines the interaction, evidence, execution, and evaluation standard every package is expected to meet.
+
+## Developer tools
+
+- [Claude Code plugin](docs/claude-plugin.md): a focused release-review and documentation bundle.
+- [Skill package checker](docs/skill-check.md): inspect your own SKILL.md packages locally.
+- [Machine-readable catalog](https://www.slashskills.xyz/skills.json) and [agent-readable index](https://www.slashskills.xyz/llms.txt).
 
 ## Install
 

@@ -2,15 +2,25 @@
   "name": "tushar-skills",
   "private": true,
   "license": "MIT",
-  "devDependencies": {
-    "gray-matter": "^4.0.3"
-  },
   "scripts": {
     "test": "node --test scripts/*.test.mjs",
     "catalog:sync": "node scripts/sync-readme-catalog.mjs --write",
     "catalog:check": "node scripts/sync-readme-catalog.mjs --check",
     "zips:build": "node site/scripts/build-zips.mjs",
     "validate": "node scripts/validate.mjs",
-    "check": "npm test && npm run zips:build && npm run validate"
+    "check": "npm test && npm run zips:build && npm run validate",
+    "skills:check": "node scripts/check-skill.mjs . --collection"
+  },
+  "version": "0.1.0",
+  "bin": {
+    "slashskills-check": "scripts/check-skill.mjs"
+  },
+  "files": [
+    "scripts/check-skill.mjs",
+    "scripts/markdown-links.mjs",
+    "docs/skill-check.md"
+  ],
+  "dependencies": {
+    "gray-matter": "^4.0.3"
   }
 }
