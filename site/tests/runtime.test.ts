@@ -259,3 +259,13 @@ test("skill directory filters preserve repository order and combine criteria", (
     ["remove-ai-slop", "demo-video"],
   );
 });
+
+ test("search ranks names before description matches and preserves curated order without a query", () => {
+  const base = { category: "design", localAvailable: true, claudeAppReady: false };
+  const skills = [
+    { ...base, slug: "audit", name: "audit", description: "Review interface-design output." },
+    { ...base, slug: "interface-design", name: "interface-design", description: "Build interfaces." },
+  ];
+  assert.deepEqual(filterDirectorySkills(skills, { query: "interface-design", category: "all", surface: "all" }).map(skill => skill.slug), ["interface-design", "audit"]);
+  assert.deepEqual(filterDirectorySkills(skills, { query: "", category: "all", surface: "all" }).map(skill => skill.slug), ["audit", "interface-design"]);
+});

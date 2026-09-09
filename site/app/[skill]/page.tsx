@@ -94,17 +94,17 @@ export default async function SkillPage({
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <Header />
-      <main id="main-content" className="flex-1 px-6 py-12">
+      <main id="main-content" className="flex-1 px-6 py-6 sm:py-10">
         <div className="mx-auto w-full max-w-5xl min-w-0">
           <Link
             href="/"
-            className="back-link mb-10 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
+            className="back-link mb-6 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />
             </svg>
-            back
+            All skills
           </Link>
           <SkillDetail skill={skill} contentHtml={contentHtml} renderedFiles={renderedFiles} />
         </div>

@@ -29,22 +29,20 @@ export function InteractiveInstaller({
     : null;
 
   return (
-    <section className="terminal-panel install-box overflow-hidden" aria-labelledby="installer-heading">
-      <div className="border-b border-[var(--color-border)] px-4 py-3">
-        <h2 id="installer-heading" className="text-sm font-medium text-[var(--color-heading)]">
-          Install
-        </h2>
-      </div>
+    <section className="terminal-panel install-box overflow-hidden" aria-label="Install skills">
       <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 font-[family-name:var(--font-mono)] text-xs sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:text-sm">
         <span className="select-none text-[var(--color-accent)]">$</span>
         <code className="min-w-0 break-all leading-relaxed text-[var(--color-heading)]">{allSkillsCommand}</code>
         <CopyButton
           text={allSkillsCommand}
           label="Copy all skills"
-          className="col-start-2 w-fit shrink-0 sm:col-start-auto"
+          wrapperClassName="col-start-2 sm:col-start-auto"
+          className="w-fit shrink-0"
           analytics={{ name: "install_copy", properties: { agent: "all", skill: "all" } }}
         />
       </div>
+      <details>
+        <summary className="cursor-pointer px-4 py-3 text-xs text-[var(--color-muted)]">Installation options</summary>
       <div className="grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_10rem_9rem] sm:items-end">
         <label className="block min-w-0">
           <span className="mb-2 block text-xs text-[var(--color-muted)]">Package</span>
@@ -95,7 +93,8 @@ export function InteractiveInstaller({
             <CopyButton
               text={command}
               label="Copy install command"
-              className="col-start-2 w-fit shrink-0 sm:col-start-auto"
+              wrapperClassName="col-start-2 sm:col-start-auto"
+          className="w-fit shrink-0"
               analytics={{
                 name: "install_copy",
                 properties: { agent: selectedAgent, skill: selectedSkill || "all" },
@@ -106,6 +105,7 @@ export function InteractiveInstaller({
           <p className="text-sm text-[var(--color-muted)]">Choose a runtime and scope to generate an install command.</p>
         )}
       </div>
+      </details>
     </section>
   );
 }

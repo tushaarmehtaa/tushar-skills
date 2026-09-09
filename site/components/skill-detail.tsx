@@ -3,6 +3,7 @@ import { AgentTabs } from "./agent-tabs";
 import { RuntimeLogo } from "./runtime-logo";
 import { TrackedLink } from "./tracked-link";
 import { createClaudeAppViewModel } from "@/lib/skill-presentation";
+import { CAPABILITY_LABELS } from "@/lib/agents";
 import { supportsChatGPT } from "@/lib/catalog";
 import type { Skill } from "@/lib/skills";
 import { githubFileUrl } from "@/lib/markdown";
@@ -30,45 +31,32 @@ export function SkillDetail({
 
   return (
     <article className="min-w-0">
-      <div className="animate-fade-up mb-10">
+      <div className="animate-fade-up mb-6">
         <h1 className="terminal-heading mb-4 break-words text-3xl font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
           {skill.name}
         </h1>
         <p className="max-w-3xl text-base leading-relaxed text-[var(--color-text)]">
-          {skill.description}
+          {skill.description.split(/\s+Use when\b/)[0]}
         </p>
 
-        <dl className="mt-6 grid gap-x-5 gap-y-3 border-t border-[var(--color-border)] pt-5 text-xs sm:grid-cols-[8rem_1fr]">
-          <dt className="text-[var(--color-muted)]">Category</dt>
-          <dd className="text-[var(--color-text)]">{skill.category}</dd>
-          <dt className="text-[var(--color-muted)]">Package</dt>
-          <dd className="break-all font-[family-name:var(--font-mono)] text-[var(--color-heading)]">{skill.slug}/SKILL.md</dd>
-          <dt className="text-[var(--color-muted)]">License</dt>
-          <dd className="text-[var(--color-text)]">{skill.license}</dd>
-          <dt className="text-[var(--color-muted)]">Author</dt>
-          <dd className="text-[var(--color-text)]">@{skill.author}</dd>
-          {skill.compatibility ? (
-            <>
-              <dt className="text-[var(--color-muted)]">Compatibility</dt>
-              <dd className="text-[var(--color-text)]">{skill.compatibility}</dd>
-            </>
-          ) : null}
-          <dt className="text-[var(--color-muted)]">Tags</dt>
-          <dd className="flex flex-wrap gap-2">
-            {skill.tags.map((tag) => (
-              <span
-                key={tag}
-                className="tag border border-[var(--color-border)] px-2 py-0.5 text-[11px] text-[var(--color-muted)]"
-              >
-                {tag}
-              </span>
-            ))}
-          </dd>
-        </dl>
+        <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
+          {skill.slug === "image-editing" ? "Requires an image-editing tool or configured API and your reference images. Model access is separate." : skill.surfaces.includes("coding-agent") ? `Needs a coding agent. Required tools: ${skill.capabilities.map((capability) => CAPABILITY_LABELS[capability]).join(", ") || "none beyond the agent"}.` : null}
+        </p>
+
       </div>
 
       <AgentTabs slug={skill.slug} support={skill.support} capabilities={skill.capabilities} />
 
+      {skill.slug === "interface-design" ? (
+        <section className="mb-8 border-l-2 border-[var(--color-accent)] pl-4">
+          <h2 className="text-sm font-medium text-[var(--color-heading)]">Try asking</h2>
+          <p className="mt-3 text-sm leading-relaxed">“Redesign this dashboard so I can find overdue tasks quickly. Keep our existing components and check the mobile layout.”</p>
+          <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">The workflow guides the agent through the task, layout, implementation, and interaction checks.</p>
+        </section>
+      ) : null}
+      <details className="mb-8 border-y border-[var(--color-border)] py-4">
+        <summary className="cursor-pointer text-sm text-[var(--color-heading)]">Other platforms and downloads</summary>
+        <div className="pt-5">
       <section
         data-claude-app={claudeApp.state}
         className="mb-12 overflow-hidden terminal-panel"
@@ -138,6 +126,9 @@ export function SkillDetail({
         </div>
       </section>
 
+        </div>
+      </details>
+
       <div className="divider mb-10" />
 
       <div id="package-skill-md">
@@ -192,6 +183,36 @@ export function SkillDetail({
         </section>
       ) : null}
 
+      <details className="mt-10 border-y border-[var(--color-border)] py-4">
+        <summary className="cursor-pointer text-sm text-[var(--color-heading)]">Package details</summary>
+        <dl className="mt-6 grid gap-x-5 gap-y-3 border-t border-[var(--color-border)] pt-5 text-xs sm:grid-cols-[8rem_1fr]">
+          <dt className="text-[var(--color-muted)]">Category</dt>
+          <dd className="text-[var(--color-text)]">{skill.category}</dd>
+          <dt className="text-[var(--color-muted)]">Package</dt>
+          <dd className="break-all font-[family-name:var(--font-mono)] text-[var(--color-heading)]">{skill.slug}/SKILL.md</dd>
+          <dt className="text-[var(--color-muted)]">License</dt>
+          <dd className="text-[var(--color-text)]">{skill.license}</dd>
+          <dt className="text-[var(--color-muted)]">Author</dt>
+          <dd className="text-[var(--color-text)]">@{skill.author}</dd>
+          {skill.compatibility ? (
+            <>
+              <dt className="text-[var(--color-muted)]">Compatibility</dt>
+              <dd className="text-[var(--color-text)]">{skill.compatibility}</dd>
+            </>
+          ) : null}
+          <dt className="text-[var(--color-muted)]">Tags</dt>
+          <dd className="flex flex-wrap gap-2">
+            {skill.tags.map((tag) => (
+              <span
+                key={tag}
+                className="tag border border-[var(--color-border)] px-2 py-0.5 text-[11px] text-[var(--color-muted)]"
+              >
+                {tag}
+              </span>
+            ))}
+          </dd>
+        </dl>
+      </details>
       <LatestGuides skill={skill.slug} />
 
       <div className="mt-16 border-t border-[var(--color-border)] pt-8">

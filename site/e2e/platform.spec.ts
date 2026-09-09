@@ -39,6 +39,7 @@ test.describe("slashskills platform", () => {
 
   test("requires an explicit runtime and scope before generating an install command", async ({ page }) => {
     await page.goto("/");
+    await page.getByText("Installation options", { exact: true }).click();
     await expect(page.getByText("Choose a runtime and scope to generate an install command.")).toBeVisible();
     await expect(page.getByRole("button", { name: "Copy install command" })).toHaveCount(0);
 
@@ -50,7 +51,7 @@ test.describe("slashskills platform", () => {
 
   test("keeps chat-capable skills in the local-agent filter", async ({ page }) => {
     await page.goto("/");
-    await page.getByLabel("Surface").selectOption("local");
+    await page.getByLabel("Runs in").selectOption("local");
     await expect(page.getByRole("link", { name: /decision-doc/ })).toBeVisible();
     await expect(page).toHaveURL(/surface=local/);
   });

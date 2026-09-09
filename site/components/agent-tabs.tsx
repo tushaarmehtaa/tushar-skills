@@ -2,7 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { CopyButton } from "./copy-button";
-import { RuntimeLogo, RuntimeLogoTile } from "./runtime-logo";
+import { RuntimeLogo } from "./runtime-logo";
 import { TrackedLink } from "./tracked-link";
 import { AGENT_IDS } from "@/lib/agents";
 import type { AgentId, Capability, SupportStatus } from "@/lib/catalog";
@@ -53,22 +53,6 @@ function AgentPanel({
       hidden={!selected}
       className="p-4 sm:p-5"
     >
-      <div className="mb-5">
-        <div className="flex items-center gap-3">
-          <RuntimeLogoTile runtime={panel.id} size="sm" decorative />
-          <div>
-            <p translate="no" className="font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-heading)]">
-              {panel.label}
-            </p>
-            {panel.install.visible ? (
-              <p className="mt-1 text-xs text-[var(--color-muted)]">
-                Skills directory: <code className="text-[var(--color-text)]">{panel.globalDirectory}</code>
-              </p>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
       {panel.install.visible && panel.install.command ? (
         <div>
           <p className="mb-2 text-xs font-medium text-[var(--color-heading)]">Install globally</p>
@@ -77,11 +61,13 @@ function AgentPanel({
             <code className="min-w-0 break-all leading-relaxed text-[var(--color-heading)]">{panel.install.command}</code>
             <CopyButton
               text={panel.install.command}
-              className="col-start-2 w-fit shrink-0 sm:col-start-auto"
+              wrapperClassName="col-start-2 sm:col-start-auto"
+              className="w-fit shrink-0"
               analytics={{ name: "install_copy", properties: { agent: panel.id, skill: slug } }}
             />
           </div>
 
+          <details className="mt-4"><summary className="cursor-pointer text-xs text-[var(--color-muted)]">Usage and required access</summary>
           <div className={`mt-5 grid gap-5 ${panel.capabilitySection.visible ? "sm:grid-cols-2" : ""}`}>
             <div>
               <p className="mb-2 text-xs font-medium text-[var(--color-heading)]">Invoke</p>
@@ -94,6 +80,7 @@ function AgentPanel({
             </div>
             <RequiredAccess section={panel.capabilitySection} />
           </div>
+          </details>
         </div>
       ) : (
         <div className="space-y-5">
@@ -171,7 +158,6 @@ export function AgentTabs({
             Install
           </h2>
         </div>
-        <p className="mb-2 text-xs text-[var(--color-muted)] sm:hidden">Swipe for more runtimes.</p>
         <div role="tablist" aria-label="Coding agent. Scroll horizontally for more runtimes." className="-mx-1 flex max-w-full gap-1 overflow-x-auto px-1">
           {panels.map((panel) => {
             const isSelected = selected === panel.id;

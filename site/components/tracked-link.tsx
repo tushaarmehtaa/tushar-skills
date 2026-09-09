@@ -13,7 +13,7 @@ export function TrackedLink({
   onClick,
   ...props
 }: LinkProps & {
-  eventName: "guide_open" | "zip_download" | "guide_skill_open";
+  eventName: "skill_open" | "guide_open" | "zip_download" | "guide_skill_open";
   agent: string;
   skill: string;
 }) {

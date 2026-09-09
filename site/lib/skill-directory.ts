@@ -25,7 +25,7 @@ export function filterDirectorySkills(
 ): DirectorySkill[] {
   const normalizedQuery = filters.query.trim().toLowerCase();
 
-  return skills.filter((skill) => {
+  const matches = skills.filter((skill) => {
     const matchesQuery =
       normalizedQuery.length === 0 ||
       `${skill.name} ${skill.description} ${skill.category}`.toLowerCase().includes(normalizedQuery);
@@ -36,4 +36,13 @@ export function filterDirectorySkills(
 
     return matchesQuery && matchesCategory && matchesSurface;
   });
+  if (!normalizedQuery) return matches;
+  function relevance(skill: DirectorySkill) {
+    const name = skill.name.toLowerCase();
+    if (name === normalizedQuery || skill.slug === normalizedQuery) return 4;
+    if (name.startsWith(normalizedQuery)) return 3;
+    if (name.includes(normalizedQuery)) return 2;
+    return skill.category.toLowerCase().includes(normalizedQuery) ? 1 : 0;
+  }
+  return matches.sort((a, b) => relevance(b) - relevance(a));
 }

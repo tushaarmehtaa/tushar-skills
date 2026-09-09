@@ -17,11 +17,13 @@ export function CopyButton({
   text,
   label = "Copy command",
   className,
+  wrapperClassName,
   analytics,
 }: {
   text: string;
   label?: string;
   className?: string;
+  wrapperClassName?: string;
   analytics?: AnalyticsEvent;
 }) {
   const [status, setStatus] = useState<CopyStatus>("idle");
@@ -56,7 +58,7 @@ export function CopyButton({
       : "";
 
   return (
-    <span className="inline-flex items-center">
+    <span className={`inline-flex items-center ${wrapperClassName || ""}`}>
       <button
         type="button"
         ref={buttonRef}
