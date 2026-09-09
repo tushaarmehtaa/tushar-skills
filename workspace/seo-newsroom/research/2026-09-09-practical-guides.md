@@ -33,3 +33,9 @@ Owned artifacts: `image-editing/SKILL.md`, `image-editing/references/edit-record
 Track impressions and clicks per new URL, guide_open, guide_skill_open, ZIP downloads and existing install interactions. Clicks are not confirmed installations. Establish the deployment baseline after verification; compare at 14 and 28 complete days. No fresh Search Console data, indexation finding or traffic forecast is available.
 
 Recheck provider statements after model/API changes. Add comparative claims only after the corresponding recorded experiments have passed review.
+
+## Production verification
+
+Published and verified September 9, 2026, commit `c4f3e8a`. GitHub validation run `34369793144` succeeded; Vercel deployment `6eNzowobydqKy8PAS4p4KTkZ21Jo` succeeded. Live HTTP 200 checks passed for the homepage, both guides, image skill, sitemap and ZIP. Canonicals and index/follow metadata match the three new routes. Both guides expose TechArticle schema and one H1; the skill uses the existing package renderer and CreativeWork schema. The downloaded ZIP contains SKILL.md and the revision reference. Homepage discovery and sitemap links verified. All three URLs recorded in the publishing ledger (3/3 for September 9).
+
+Measurement windows: September 23 and October 7, 2026. Search indexation and performance remain unknown. Existing Cursor/Codex windows are unchanged.

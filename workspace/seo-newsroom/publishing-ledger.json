@@ -1,5 +1,24 @@
 {
   "timezone": "Asia/Kolkata",
   "max_new_indexable_urls_per_day": 3,
-  "publications": []
+  "publications": [
+    {
+      "content_id": "image-editing-guide-20260909",
+      "path": "/guides/image-editing-skills",
+      "url": "https://www.slashskills.xyz/guides/image-editing-skills",
+      "published_at": "2026-09-09T20:54:03+05:30"
+    },
+    {
+      "content_id": "astra-instruction-recipe-20260909",
+      "path": "/guides/astra-skill-instructions",
+      "url": "https://www.slashskills.xyz/guides/astra-skill-instructions",
+      "published_at": "2026-09-09T20:54:03+05:30"
+    },
+    {
+      "content_id": "image-editing-skill-20260909",
+      "path": "/image-editing",
+      "url": "https://www.slashskills.xyz/image-editing",
+      "published_at": "2026-09-09T20:54:03+05:30"
+    }
+  ]
 }
