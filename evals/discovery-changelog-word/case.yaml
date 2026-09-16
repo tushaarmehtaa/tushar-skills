@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: discovery-changelog-word
+description: >-
+  Automatic discovery probe. The request uses the word "changelog", which appears
+  in the skill name and description. Measures whether the skill is selected
+  without an explicit slash invocation. The only grader is whether Skill fired.
+tags: [discovery]
+runs: 5
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Read, Glob, Grep, Bash, Skill]
+expected_outcome: The Skill tool is invoked without the user naming the skill.

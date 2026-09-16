@@ -73,7 +73,7 @@ export const CATALOG = {
     author: "tushaarmehtaa",
     surfaces: ["coding-agent"],
     capabilities: ["filesystem", "shell"],
-    support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
+    support: { "claude-code": "tested", codex: "untested", cursor: "untested" },
   },
   "cold-outreach": {
     category: "marketing",

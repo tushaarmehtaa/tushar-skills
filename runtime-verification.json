@@ -1,3 +1,13 @@
 {
-  "verifications": []
+  "verifications": [
+    {
+      "skill": "changelog",
+      "runtime": "claude-code",
+      "verifiedAt": "2026-09-16",
+      "environment": "Claude Code 2.1.271 and 2.1.272, macOS 15.5 (darwin 25.5.0), npx skills 1.5.26, project-scope install at ./.claude/skills/changelog",
+      "smokeTest": "Install via documented command; automatic discovery 15/15 across three phrasings including one using neither 'changelog' nor 'release notes'; explicit invocation 5/5; SKILL.md byte-identical to repository source with no unresolved relative references; workflow requests only the declared filesystem and shell capabilities; complete changelog workflow with handoff contract 3/3 against a no-plugin baseline of 0.43 (delta +0.57); reload after update restored the canonical package after simulated local drift; removal emptied the lockfile and left no residue.",
+      "verifiedBy": "workspace/seo-newsroom/research/2026-09-15-changelog-plugin-eval.md",
+      "result": "passed"
+    }
+  ]
 }

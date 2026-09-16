@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: changelog-normal
+description: >-
+  A clean, fully specified range in a seeded repo. Tests whether the skill groups
+  commits by user-visible behavior, surfaces the breaking change, excludes churn,
+  and emits the output contract without claiming an unverified deployment.
+tags: [changelog, normal]
+runs: 3
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Read, Glob, Grep, Bash, Skill]
+expected_outcome: >-
+  Four to six user-facing items grouped by behavior, the page_size break called out
+  as breaking with the required caller action, prettier/typo/logging churn excluded,
+  the full output contract present, and release status reported as unverified.
