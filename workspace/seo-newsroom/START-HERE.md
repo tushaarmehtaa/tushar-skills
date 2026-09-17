@@ -15,6 +15,12 @@ Read [product-principles.md](../product-principles.md) before making product or 
 - Rules: `workspace/seo-newsroom/README.md`; playbook: `workspace/playbooks/seo-newsroom.md`.
 - Reviewed state: `queue.json`, `publishing-ledger.json`, newest `daily/` report, and newest baseline.
 
+## Latest resume point
+
+`checkpoints/2026-09-17-resume.md` carries the current state: what is committed,
+the open work ranked by value, and exact commands for the scout and the eval
+suite. Read it after this file.
+
 ## Recovery sequence
 
 1. Run `git status --short --branch` and inspect the latest three commits.
