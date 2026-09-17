@@ -1,0 +1,1 @@
+Karan and Composio drafts were superseded by submitted PRs #291 and #1871. See ../2026-09-10-submissions.md and ../claude-test/assessment.md. Other files here are preparation history, not current blocking status.

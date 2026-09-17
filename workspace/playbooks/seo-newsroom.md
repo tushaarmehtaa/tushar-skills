@@ -4,7 +4,7 @@ The daily cron starts `scripts/run_seo_newsroom_scout.sh` at 08:20 Asia/Kolkata.
 
 ## Daily review
 
-Read the newest raw report, verify primary sources, save the reviewed result in `daily/YYYY-MM-DD.md`, and update `queue.json`. The scheduled process cannot do this. Reject weak or overlapping candidates; no publication is the normal outcome.
+Read the newest raw report, verify primary sources, save the reviewed result in `daily/YYYY-MM-DD.md`, and update `queue.json`. The scheduled process cannot do this. Assess opportunity priority before publication readiness. Turn promising model/capability changes into concrete skill artifacts and small experiment briefs even when owned evidence is missing. Reject redundant reader jobs, not every topic that overlaps a runtime. Zero publications is acceptable; it does not imply zero useful experiments.
 
 ## Active production
 

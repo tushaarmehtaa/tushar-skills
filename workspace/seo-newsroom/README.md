@@ -4,7 +4,7 @@ This is the durable operating record for research about reliable Agent Skills an
 
 ## Editorial constitution
 
-1. Scout Agent Skills, MCP, material agent-runtime changes, and adjacent interoperability standards such as A2A. A candidate must materially change a reader job: building or operating skills, connecting agents to tools and resources, evaluating compatibility, or managing security and distribution. Reject generic model news, prompt lists, agent roundups, rewritten release notes, and search-first variations without original evidence.
+1. Scout Agent Skills, MCP, material agent-runtime changes, and adjacent interoperability standards such as A2A. A candidate must materially change a reader job: building or operating skills, connecting agents to tools and resources, evaluating compatibility, or managing security and distribution. Include model and multimodal launches when they enable a concrete skill-building workflow or evaluation. Reject announcement rewrites, prompt lists, generic agent roundups, and search-first variations without an original contribution or a feasible plan to create one.
 2. Prefer an existing skill, guide, compatibility page, or changelog update when it satisfies the intent. A new URL requires distinct intent and a useful original contribution.
 3. Owned evidence is strongest: checked-in packages, references, validation rules, behavioral evals, runtime verification records, controlled tests, repository history, and implementation lessons.
 4. Important claims require a primary source or a dated verification record. Search snippets are discovery aids, not sources. Never invent firsthand experience, compatibility, benchmarks, demand, traffic, rankings, or product behavior.
@@ -27,7 +27,7 @@ Scout decisions are exactly: `reject`, `hold`, `social-only`, `update existing`,
 - Durable usefulness: 10
 - Distribution fit: 5
 
-Thresholds: 0–39 reject; 40–59 hold; 60–74 social-only or update existing; 75–84 research brief or needs Tushar; 85–100 eligible for production. This score measures editorial and production readiness, not whether a development matters. A timely subject without owned evidence or a distinct Slashskills contribution cannot score above 59 for production readiness.
+Production-readiness bands: 0–59 not ready; 60–74 partial evidence; 75–84 near ready; 85–100 potentially eligible for production, subject to publishing gates. These bands do not determine discovery decisions. Assess opportunity priority separately as high, medium, or low based on reader consequence, a concrete skill artifact, and experiment feasibility. A high-priority opportunity with a feasible evidence plan becomes a research brief even when production readiness is below 60. Missing evidence triggers the smallest useful experiment; hold requires a named blocker and revisit trigger. This score measures editorial and production readiness, not whether a development matters. A timely subject without owned evidence or a distinct Slashskills contribution cannot score above 59 for production readiness.
 
 ## Ecosystem signal importance
 

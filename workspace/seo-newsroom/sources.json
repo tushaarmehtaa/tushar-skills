@@ -1,23 +1,143 @@
 {
-  "retrieved_policy_date": "2026-08-30",
-  "coverage_policy": "Monitor Agent Skills and the wider agent-tool interoperability layer. Surface material official changes even when the correct editorial decision is hold, social-only, update existing, or no publication.",
+  "retrieved_policy_date": "2026-09-09",
+  "coverage_policy": "Monitor skills, agent-tool interoperability, and model/multimodal capabilities that enable concrete skill workflows. Separate opportunity discovery from publication readiness; turn promising evidence gaps into experiment briefs.",
   "tiers": {
     "primary": [
-      {"name":"OpenAI documentation and announcements","url":"https://learn.chatgpt.com/docs/build-skills","jobs":["Codex skill behavior","installation","MCP support and client behavior","runtime changes"]},
-      {"name":"Anthropic Claude Code documentation","url":"https://docs.anthropic.com/en/docs/claude-code","jobs":["Claude Code behavior","installation","MCP support and client behavior","runtime changes"]},
-      {"name":"Cursor documentation and changelog","url":"https://cursor.com/changelog","jobs":["Cursor Agent Skills support","MCP support and client behavior","runtime changes"]},
-      {"name":"Agent Skills specification","url":"https://agentskills.io","jobs":["portable package standard","ecosystem changes"]},
-      {"name":"Model Context Protocol documentation and specification","url":"https://modelcontextprotocol.io/","jobs":["protocol versions and changelogs","SEPs and extensions","authorization and security guidance","Agent Skills integration"]},
-      {"name":"Model Context Protocol maintainer blog","url":"https://blog.modelcontextprotocol.io/","jobs":["release announcements","roadmap changes","official ecosystem developments"]},
-      {"name":"Model Context Protocol specification releases","url":"https://github.com/modelcontextprotocol/modelcontextprotocol/releases","jobs":["stable and release-candidate protocol revisions","breaking changes","migration consequences"]},
-      {"name":"Official MCP Registry","url":"https://github.com/modelcontextprotocol/registry","also_check":["https://github.com/modelcontextprotocol/registry/releases","https://github.com/modelcontextprotocol/registry/security/advisories"],"jobs":["server discovery and publishing","schema changes","registry releases","security advisories"]},
-      {"name":"A2A Protocol documentation and release notes","url":"https://a2a-protocol.org/latest/","also_check":["https://github.com/a2aproject/A2A/releases"],"jobs":["agent-to-agent interoperability","MCP and A2A boundaries","material specification and SDK changes"]},
-      {"name":"Slashskills repository","url":"https://github.com/tushaarmehtaa/tushar-skills","jobs":["owned implementation evidence","history","issues and releases"]}
+      {
+        "name": "OpenAI model and capability announcements",
+        "url": "https://openai.com/news/",
+        "jobs": [
+          "new model capabilities",
+          "image and multimodal workflows",
+          "skill-building experiments"
+        ],
+        "rule": "Verify exact model names, availability and capabilities in official announcements and API documentation."
+      },
+      {
+        "name": "Anthropic model announcements",
+        "url": "https://www.anthropic.com/news",
+        "jobs": [
+          "model capability changes",
+          "reasoning and tool-use workflows",
+          "skill evaluation opportunities"
+        ]
+      },
+      {
+        "name": "OpenAI documentation and announcements",
+        "url": "https://learn.chatgpt.com/docs/build-skills",
+        "jobs": [
+          "Codex skill behavior",
+          "installation",
+          "MCP support and client behavior",
+          "runtime changes"
+        ]
+      },
+      {
+        "name": "Anthropic Claude Code documentation",
+        "url": "https://docs.anthropic.com/en/docs/claude-code",
+        "jobs": [
+          "Claude Code behavior",
+          "installation",
+          "MCP support and client behavior",
+          "runtime changes"
+        ]
+      },
+      {
+        "name": "Cursor documentation and changelog",
+        "url": "https://cursor.com/changelog",
+        "jobs": [
+          "Cursor Agent Skills support",
+          "MCP support and client behavior",
+          "runtime changes"
+        ]
+      },
+      {
+        "name": "Agent Skills specification",
+        "url": "https://agentskills.io",
+        "jobs": [
+          "portable package standard",
+          "ecosystem changes"
+        ]
+      },
+      {
+        "name": "Model Context Protocol documentation and specification",
+        "url": "https://modelcontextprotocol.io/",
+        "jobs": [
+          "protocol versions and changelogs",
+          "SEPs and extensions",
+          "authorization and security guidance",
+          "Agent Skills integration"
+        ]
+      },
+      {
+        "name": "Model Context Protocol maintainer blog",
+        "url": "https://blog.modelcontextprotocol.io/",
+        "jobs": [
+          "release announcements",
+          "roadmap changes",
+          "official ecosystem developments"
+        ]
+      },
+      {
+        "name": "Model Context Protocol specification releases",
+        "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/releases",
+        "jobs": [
+          "stable and release-candidate protocol revisions",
+          "breaking changes",
+          "migration consequences"
+        ]
+      },
+      {
+        "name": "Official MCP Registry",
+        "url": "https://github.com/modelcontextprotocol/registry",
+        "also_check": [
+          "https://github.com/modelcontextprotocol/registry/releases",
+          "https://github.com/modelcontextprotocol/registry/security/advisories"
+        ],
+        "jobs": [
+          "server discovery and publishing",
+          "schema changes",
+          "registry releases",
+          "security advisories"
+        ]
+      },
+      {
+        "name": "A2A Protocol documentation and release notes",
+        "url": "https://a2a-protocol.org/latest/",
+        "also_check": [
+          "https://github.com/a2aproject/A2A/releases"
+        ],
+        "jobs": [
+          "agent-to-agent interoperability",
+          "MCP and A2A boundaries",
+          "material specification and SDK changes"
+        ]
+      },
+      {
+        "name": "Slashskills repository",
+        "url": "https://github.com/tushaarmehtaa/tushar-skills",
+        "jobs": [
+          "owned implementation evidence",
+          "history",
+          "issues and releases"
+        ]
+      }
     ],
     "discovery_only": [
-      {"name":"Hacker News","url":"https://news.ycombinator.com/","rule":"Use only when materially relevant; verify claims at primary sources."},
-      {"name":"Product Hunt","url":"https://www.producthunt.com/","rule":"Use only for relevant ecosystem discovery; never treat launch copy as independent evidence."},
-      {"name":"Current search results","rule":"Use to assess intent and overlap; snippets are not evidence and volume must not be invented."}
+      {
+        "name": "Hacker News",
+        "url": "https://news.ycombinator.com/",
+        "rule": "Use only when materially relevant; verify claims at primary sources."
+      },
+      {
+        "name": "Product Hunt",
+        "url": "https://www.producthunt.com/",
+        "rule": "Use only for relevant ecosystem discovery; never treat launch copy as independent evidence."
+      },
+      {
+        "name": "Current search results",
+        "rule": "Use to assess intent and overlap; snippets are not evidence and volume must not be invented."
+      }
     ]
   }
 }
