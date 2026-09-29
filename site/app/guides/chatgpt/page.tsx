@@ -5,14 +5,15 @@ import { RuntimeLogo } from "@/components/runtime-logo";
 import { TrackedLink } from "@/components/tracked-link";
 import { getAllSkills } from "@/lib/skills";
 import { supportsChatGPT } from "@/lib/catalog";
+import { GuideCode } from "@/components/guide-code";
 
 export const metadata: Metadata = {
-  title: "ChatGPT Skills upload guide",
-  description: "Use chat-capable slashskills in ChatGPT without conflating ChatGPT Skills, Codex local skills, and plugins.",
+  title: "ChatGPT Skills and plugin packaging guide",
+  description: "Choose a ChatGPT skill, upload it, or package a reusable workflow as a plugin with a checked decision-doc example and sharing guidance.",
   alternates: { canonical: "/guides/chatgpt" },
   openGraph: {
-    title: "ChatGPT Skills upload guide — slashskills",
-    description: "Use chat-capable slashskills in ChatGPT without conflating ChatGPT Skills, Codex local skills, and plugins.",
+    title: "ChatGPT Skills and plugin packaging guide — slashskills",
+    description: "Choose a ChatGPT skill, upload it, or package a reusable workflow as a plugin with a checked decision-doc example and sharing guidance.",
     url: "/guides/chatgpt",
   },
 };
@@ -22,8 +23,8 @@ export default function ChatGPTGuide() {
 
   return (
     <GuideLayout
-      title="ChatGPT Skills"
-      intro="Use chat-capable workflows in ChatGPT with the files and context you provide."
+      title="ChatGPT Skills and plugins"
+      intro="Choose a workflow for the context you provide, then upload it as a Skill or package it as a plugin to share."
       mark={<RuntimeLogo runtime="chatgpt" decorative className="h-7 w-7 sm:h-9 sm:w-9" />}
     >
       <GuideSection number="01" title="Choose a chat-capable skill">
@@ -56,6 +57,34 @@ export default function ChatGPTGuide() {
           <RuntimeLogo runtime="chatgpt" decorative className="h-3.5 w-3.5" />
           <span>Official ChatGPT Skills guide ↗</span>
         </TrackedLink>
+      </GuideSection>
+
+      <GuideSection number="05" title="Package a workflow as a plugin">
+        <p>A skill can be distributed inside a plugin with its instructions and supporting files. For a workflow that uses only supplied context, start with a skill-only package. Add an MCP server when the workflow needs connected data or controlled actions.</p>
+        <p>The portable package has a root <code>plugin.json</code> and a <code>skills/</code> directory. Here is a minimal manifest for our <Link href="/decision-doc" className="text-[var(--color-accent)] underline underline-offset-4">decision-doc workflow</Link>:</p>
+        <div className="guide-prose">
+        <GuideCode language="json" html={`{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "slashskills-decision-doc",
+  "version": "0.1.0",
+  "description": "Write a decision record from supplied context."
+}`} />
+        </div>
+        <p>Place the complete decision-doc package at <code>skills/decision-doc/</code>, keeping <code>SKILL.md</code> and its supporting files together. We built and checked this layout locally; installation and activation in ChatGPT remain untested.</p>
+        <GuideCode language="text" html={`slashskills-decision-doc/
+├── plugin.json
+├── LICENSE
+└── skills/
+    └── decision-doc/
+        └── SKILL.md`} />
+        <p>Use our <a href="https://github.com/tushaarmehtaa/tushar-skills/tree/main/workspace/seo-newsroom/experiments/devday-skill-plugin" target="_blank" rel="noopener noreferrer" className="text-[var(--color-accent)] underline underline-offset-4">package builder and three-case test fixture ↗</a> to reproduce the package from the original skill.</p>
+        <p><a href="https://developers.openai.com/plugins/build/plugins" target="_blank" rel="noopener noreferrer" className="text-[var(--color-accent)] underline underline-offset-4">Follow OpenAI&apos;s packaging and local-testing instructions ↗</a> to add the package to a local marketplace and test it in a new session. Check direct invocation, an indirect request, and missing evidence before sharing it.</p>
+      </GuideSection>
+
+      <GuideSection number="06" title="Choose how to share it">
+        <p>Share an individual Skill with people or groups in your workspace from its Skills menu. Use a local or repository marketplace to test a plugin bundle. Workspace plugin publishing requires an administrator; public directory submission is a separate review process.</p>
+        <p>A workspace share does not make a package publicly installable. Confirm the recipient&apos;s access and test the installed copy before treating it as available to your team.</p>
+        <p className="text-[var(--color-muted)]">Packaging guidance checked September 29, 2026. <a href="https://developers.openai.com/plugins/build/skills" target="_blank" rel="noopener noreferrer" className="text-[var(--color-accent)] underline underline-offset-4">Official skill authoring documentation ↗</a></p>
       </GuideSection>
     </GuideLayout>
   );

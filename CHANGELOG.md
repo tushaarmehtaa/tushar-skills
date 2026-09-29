@@ -6,6 +6,7 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- expanded the ChatGPT guide with plugin packaging and sharing instructions, a checked decision-doc fixture, and explicit runtime verification limits
 - added homepage guide discovery, practical GPT Image 2.5 and Astra instruction guides, and linked skill workflows
 - added `image-editing` with reference tracking, bounded revisions, and explicit untested runtime support
 

@@ -1,0 +1,14 @@
+{
+  "observed_at": "2026-09-30",
+  "scope": "local-package-structure",
+  "source_skill": "decision-doc",
+  "manifest_schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "manifest_schema_validation": "passed",
+  "copied_skill_bytes": "identical",
+  "skill_structure_and_local_references": "passed",
+  "skill_errors": 0,
+  "skill_warnings": 0,
+  "runtime_installation": "not performed",
+  "runtime_activation": "not performed",
+  "runtime_output_quality": "not performed"
+}
