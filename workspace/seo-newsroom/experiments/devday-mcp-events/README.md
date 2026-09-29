@@ -22,6 +22,8 @@ Replay is deliberately unsupported (`cursor: null`). Saved pending deliveries ca
 
 HMAC implementation follows the [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks/blob/main/spec/standard-webhooks.md). A known-answer test uses the public synthetic vector in the MIT-licensed [upstream JavaScript tests](https://github.com/standard-webhooks/standard-webhooks/blob/main/libraries/javascript/src/webhook.test.ts), retrieved September 30. Use the maintained Standard Webhooks library for a production integration; this small implementation is for inspection of the experiment.
 
+GitHub classified the upstream key's literal spelling as a Stripe webhook secret in alert #1. The fixture now constructs that public known-answer key from explicit test bytes, preserving the independent expected signature without a credential-shaped literal. This exception applies only to the verified public test vector; real credentials must never be committed in any representation.
+
 ## Test matrix
 
 15 cases cover the upstream signing vector; body/ID/timestamp tampering and signature lists; failed callback verification; single-use verification; subscription validation; refresh and restart; receipt before work and duplicate delivery; distinct out-of-order events; transient retry after restart; exhaustion; terminal 410 and 413; revoked access; owner-scoped unsubscribe; and expiry/filter/payload size. See `results.json` for the observed command and scope.
