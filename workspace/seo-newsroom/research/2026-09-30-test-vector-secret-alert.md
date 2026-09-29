@@ -11,3 +11,5 @@ All local Git-history text patches were compared privately against 15 configured
 ## Remediation
 
 Replace the credential-shaped literal with explicitly declared public test bytes and construct the Standard Webhooks key during the test. Preserve the upstream expected signature. All 15 fixture cases still pass. Preserve unrelated MCP SDK work. Resolve alert #1 using GitHub's `used_in_tests` classification after the fix is pushed; retain history because this is public test material rather than an exposed project credential. Do not disable secret scanning or bypass its rules globally.
+
+Fix `d3f2042` was pushed. GitHub confirmed alert #1 resolved as `used_in_tests` at `2026-09-29T20:07:12Z` (September 30 IST); the subsequent open-alert query returned an empty list. Secret scanning remains enabled.
