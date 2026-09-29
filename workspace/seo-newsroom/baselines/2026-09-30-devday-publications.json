@@ -1,0 +1,120 @@
+{
+  "verified_at": "2026-09-30T01:31:55.925143+05:30",
+  "evidence_class": "live production observation",
+  "indexation": "not observed",
+  "routes": [
+    {
+      "path": "/guides/chatgpt",
+      "status": 200,
+      "canonical": "https://www.slashskills.xyz/guides/chatgpt",
+      "robots": "index, follow",
+      "one_h1": true,
+      "markers": [
+        "Package a workflow as a plugin",
+        "slashskills-decision-doc"
+      ],
+      "modified_schema_checked": false
+    },
+    {
+      "path": "/guides/mcp-event-automation",
+      "status": 200,
+      "canonical": "https://www.slashskills.xyz/guides/mcp-event-automation",
+      "robots": "index, follow",
+      "one_h1": true,
+      "markers": [
+        "All 15 tests passed",
+        "Test the host separately"
+      ],
+      "modified_schema_checked": true
+    },
+    {
+      "path": "/guides/astra-skill-instructions",
+      "status": 200,
+      "canonical": "https://www.slashskills.xyz/guides/astra-skill-instructions",
+      "robots": "index, follow",
+      "one_h1": true,
+      "markers": [
+        "What our Sol and Astra comparison measured",
+        "Invalid service_tier argument",
+        "14.8 seconds"
+      ],
+      "modified_schema_checked": true
+    }
+  ],
+  "discovery": {
+    "sitemap_with_dated_lastmod": true,
+    "guide_index": true,
+    "contextual_skill_links": true
+  },
+  "browser_verification": {
+    "checked_on": "2026-09-30",
+    "results": [
+      {
+        "slug": "chatgpt",
+        "width": 390,
+        "status": 200,
+        "canonical": true,
+        "no_horizontal_overflow": true,
+        "contents_and_dates": false,
+        "copy_checked": true
+      },
+      {
+        "slug": "mcp-event-automation",
+        "width": 390,
+        "status": 200,
+        "canonical": true,
+        "no_horizontal_overflow": true,
+        "contents_and_dates": true,
+        "copy_checked": true
+      },
+      {
+        "slug": "astra-skill-instructions",
+        "width": 390,
+        "status": 200,
+        "canonical": true,
+        "no_horizontal_overflow": true,
+        "contents_and_dates": true,
+        "copy_checked": false
+      },
+      {
+        "slug": "chatgpt",
+        "width": 1440,
+        "status": 200,
+        "canonical": true,
+        "no_horizontal_overflow": true,
+        "contents_and_dates": false,
+        "copy_checked": true
+      },
+      {
+        "slug": "mcp-event-automation",
+        "width": 1440,
+        "status": 200,
+        "canonical": true,
+        "no_horizontal_overflow": true,
+        "contents_and_dates": true,
+        "copy_checked": true
+      },
+      {
+        "slug": "astra-skill-instructions",
+        "width": 1440,
+        "status": 200,
+        "canonical": true,
+        "no_horizontal_overflow": true,
+        "contents_and_dates": true,
+        "copy_checked": false
+      }
+    ],
+    "contextual_journeys": "passed at both widths"
+  },
+  "ci": "https://github.com/tushaarmehtaa/tushar-skills/actions/runs/36623334871",
+  "content_commits": [
+    "d7e46ef",
+    "09f9dc3"
+  ],
+  "measure_on": [
+    "2026-10-14",
+    "2026-10-28"
+  ],
+  "traffic_baseline": "No analytics or Search Console data gathered in this session",
+  "billing": "Usage-based token estimate only; no invoice verification"
+}

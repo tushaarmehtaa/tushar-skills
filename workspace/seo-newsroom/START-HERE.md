@@ -17,7 +17,7 @@ Read [product-principles.md](../product-principles.md) before making product or 
 
 ## Latest resume point
 
-`checkpoints/2026-09-17-resume.md` carries the current state: what is committed,
+`checkpoints/2026-09-30-resume.md` carries the current state: what is committed,
 the open work ranked by value, and exact commands for the scout and the eval
 suite. Read it after this file.
 

@@ -4,6 +4,8 @@ Add one item per line. Supplying an item does not imply publication.
 
 ## URLs
 
+- 2026-09-29 — Tushar requested OpenAI DevDay coverage in scout and newsroom. Official recap: https://openai.com/index/devday-2026-recap/. Today's raw scout missed the event; active-session initial triage: research/2026-09-29-openai-devday.md. Review the complete launch ledger and verify linked documentation before promoting candidates or making compatibility claims.
+
 ## Customer questions
 
 ## Skill ideas

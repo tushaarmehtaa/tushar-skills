@@ -1,5 +1,5 @@
 {
-  "audited_at": "2026-09-09",
+  "audited_at": "2026-09-30",
   "canonical_host": "https://www.slashskills.xyz",
   "classes": [
     {
@@ -30,8 +30,9 @@
       "example": "/guides/chatgpt",
       "indexable": true,
       "count": 2,
-      "search_job": "explain capability-gated chat uploads",
-      "source": "site/app/guides/chatgpt and claude-app"
+      "search_job": "explain gated skill uploads and plugin packaging/distribution",
+      "source": "site/app/guides/chatgpt and claude-app",
+      "verified_at": "2026-09-30"
     },
     {
       "class": "requirements",
@@ -75,13 +76,14 @@
       "class": "workflow guide",
       "examples": [
         "/guides/image-editing-skills",
-        "/guides/astra-skill-instructions"
+        "/guides/astra-skill-instructions",
+        "/guides/mcp-event-automation"
       ],
       "indexable": true,
-      "count": 2,
+      "count": 3,
       "search_job": "apply a concrete model capability or instruction workflow using examples and linked skill packages",
       "source": "site/lib/guides.ts",
-      "verified_at": "2026-09-09"
+      "verified_at": "2026-09-30"
     }
   ]
 }

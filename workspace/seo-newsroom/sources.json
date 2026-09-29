@@ -1,5 +1,5 @@
 {
-  "retrieved_policy_date": "2026-09-09",
+  "retrieved_policy_date": "2026-09-30",
   "coverage_policy": "Monitor skills, agent-tool interoperability, and model/multimodal capabilities that enable concrete skill workflows. Separate opportunity discovery from publication readiness; turn promising evidence gaps into experiment briefs.",
   "tiers": {
     "primary": [
@@ -12,6 +12,26 @@
           "skill-building experiments"
         ],
         "rule": "Verify exact model names, availability and capabilities in official announcements and API documentation."
+      },
+      {
+        "name": "OpenAI developer API changelog",
+        "url": "https://developers.openai.com/api/docs/changelog",
+        "jobs": [
+          "API model and tool releases",
+          "Agents API and Responses API behavior",
+          "availability and migration timing"
+        ],
+        "rule": "Review entries since the previous scout, especially after developer events; confirm consequential behavior in linked docs."
+      },
+      {
+        "name": "OpenAI DevDay and major developer-event recaps",
+        "url": "https://devday.openai.com/",
+        "jobs": [
+          "multi-product launch coverage",
+          "new skill creation and distribution surfaces",
+          "event-triggered and persistent agent workflows"
+        ],
+        "rule": "Use the current event page to locate the current recap; do not reuse a prior year's recap. Account for every announcement and verify shortlisted claims against linked product docs."
       },
       {
         "name": "Anthropic model announcements",

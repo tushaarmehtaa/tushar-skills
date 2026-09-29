@@ -8,6 +8,7 @@ This is the durable operating record for research about reliable Agent Skills an
 2. Prefer an existing skill, guide, compatibility page, or changelog update when it satisfies the intent. A new URL requires distinct intent and a useful original contribution.
 3. Owned evidence is strongest: checked-in packages, references, validation rules, behavioral evals, runtime verification records, controlled tests, repository history, and implementation lessons.
 4. Important claims require a primary source or a dated verification record. Search snippets are discovery aids, not sources. Never invent firsthand experience, compatibility, benchmarks, demand, traffic, rankings, or product behavior.
+   Match evidence to the deliverable: a practical recipe can publish from current primary documentation and a checked original example. Controlled runtime results are required for claims about observed compatibility, performance, reliability, or outcomes. An unperformed comparison does not block a separately supported recipe. Report recommended existing-page publications as well as new URLs; zero new URLs can still mean useful coverage is ready to publish.
 5. Scheduled work is report-only. It may not edit, publish, deploy, commit, push, request indexing, contact anyone, or mutate an external service.
 6. Active reviewed sessions may research, implement, test, commit, push to `main`, and verify production. A production URL is recorded only after verification.
 7. Maximum three new indexable URLs per Asia/Kolkata calendar day. This is a hard ceiling, never a quota.
