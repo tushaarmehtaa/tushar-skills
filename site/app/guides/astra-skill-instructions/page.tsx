@@ -7,7 +7,7 @@ const content = `## Audit the instructions before rewriting the skill
 
 When a model changes, an existing skill can expose ambiguities that previously went unnoticed. Start with one real stopping point: what did the user authorize, which instruction was loaded, and why did the agent stop?
 
-OpenAI's [GPT-6 Astra guidance](https://developers.openai.com/api/docs/guides/latest-model), checked September 9, 2026, describes sensitivity to unclear or conflicting skill instructions and recommends making instruction priority explicit. It also discusses clarification and mid-turn steering. This is provider guidance. **Slashskills has not completed an Astra-versus-Sol evaluation.** The examples here are proposed instruction edits and a reproducible test method, not claims of improved performance.
+OpenAI's [GPT-6 Astra guidance](https://developers.openai.com/api/docs/guides/latest-model), checked September 9, 2026, describes sensitivity to unclear or conflicting skill instructions and recommends making instruction priority explicit. It also discusses clarification and mid-turn steering. This is provider guidance. The examples here are proposed instruction edits, not claims of improved performance. Our September 30 changelog comparison below tests an unchanged skill on two models; it does not test these revisions.
 
 ## Separate a preference from a requirement
 
@@ -69,6 +69,27 @@ Run three cases:
 3. **Mid-task correction:** after implementation starts, supply one predetermined change. Record whether the agent incorporates it without discarding unrelated work.
 
 For each case, save the complete trace, resulting artifact, model identifier, runtime version, loaded instructions, and tool availability. Repeat the cases to catch inconsistent behavior. If comparing models, keep the rest of the setup identical and confirm that both model versions are actually available.
+
+## What our Sol and Astra comparison measured
+
+On September 30, we ran the unchanged [changelog skill](https://github.com/tushaarmehtaa/tushar-skills/tree/main/changelog) through the Responses API with the same synthetic repository evidence. Each model received the complete skill explicitly, used medium reasoning, and completed three HTTP streaming runs. There were no tools or runtime skill-discovery steps. The [method, runner and complete outputs](https://github.com/tushaarmehtaa/tushar-skills/tree/main/workspace/seo-newsroom/experiments/devday-model-eval) make the comparison inspectable.
+
+| Observed sample | GPT-6.1 Sol Standard | GPT-6 Astra Standard |
+| --- | --- | --- |
+| Completed runs | 3 | 3 |
+| Median completion time | 14.8 seconds | 24.4 seconds |
+| Median time to first text | 5.65 seconds | 9.38 seconds |
+| Median estimated token cost per run | $0.0083 | $0.0441 |
+
+Client timings include network and HTTP overhead. Cost estimates use recorded input, cached-input, cache-write and output usage with [September 30 prices](https://developers.openai.com/api/docs/pricing); no billing invoice was checked. First runs wrote the cache and later runs read it. Across all six completed calls, the token estimate was about $0.19. This small sample cannot establish production tail latency or a general model ranking.
+
+An unblinded review by the Codex assistant found that all six outputs surfaced the breaking migration, included five meaningful changes, excluded churn from customer bullets, supplied provenance and kept deployment unverified. All six caught a discrepancy: a commit described five webhook attempts, while its code allowed an initial attempt plus five retries.
+
+There was a useful publication-review difference. Astra omitted or attributed a commit-only HTTP 400 claim in all three customer-facing drafts. Sol stated it without attribution in all three customer bullets, then disclosed the missing validation code in the handoff. This was an exploratory observation, not a preset quality score. Review the publication text as well as its limitations section.
+
+We requested Astra Ultrafast separately. Although [OpenAI documents HTTP support](https://developers.openai.com/api/docs/guides/ultrafast-mode), this API project returned **Invalid service_tier argument** and completed no Ultrafast run. Its speed, quality and cost remain unmeasured here. Record the returned tier in your own evaluation; do not relabel Standard output as Ultrafast.
+
+Use these results to design your own paired evaluation. They establish behavior for one supplied changelog task; they do not show that an instruction revision improves Astra or that either model installs, discovers or executes skills in a host.
 
 ## Judge completion and boundaries together
 

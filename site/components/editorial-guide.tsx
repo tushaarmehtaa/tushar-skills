@@ -17,7 +17,7 @@ export function guideMetadata(guide: Guide): Metadata {
     openGraph: {
       title: guide.title, description: guide.description,
       images: [{ url: `/api/og?skill=${encodeURIComponent(guide.title)}&description=${encodeURIComponent(guide.description)}`, width: 1200, height: 630, alt: guide.title }],
-      type: "article", url: `/guides/${guide.slug}`, publishedTime: guide.date, authors: ["Tushar Mehta"],
+      type: "article", url: `/guides/${guide.slug}`, publishedTime: guide.date, modifiedTime: guide.updatedDate ?? guide.date, authors: ["Tushar Mehta"],
     },
   };
 }
@@ -30,7 +30,7 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
   const schema = {
     "@context": "https://schema.org", "@type": "TechArticle",
     headline: guide.title, description: guide.description,
-    datePublished: `${guide.date}T00:00:00+05:30`, dateModified: "2026-09-09T00:00:00+05:30",
+    datePublished: `${guide.date}T00:00:00+05:30`, dateModified: `${guide.updatedDate ?? guide.date}T00:00:00+05:30`,
     author: { "@type": "Person", name: "Tushar Mehta", url: "https://tushaarmehtaa.xyz" },
     mainEntityOfPage: `https://www.slashskills.xyz/guides/${guide.slug}`,
   };
@@ -51,7 +51,7 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
             <span aria-hidden="true">/</span><span>{guide.category}</span>
           </nav>
           <header className="max-w-3xl">
-            <p className="mb-4 text-xs text-[var(--color-muted)]">Tushar Mehta <span aria-hidden="true"> · </span><time dateTime={guide.date}>9 Sep 2026</time><span aria-hidden="true"> · </span>{minutes} min read</p>
+            <p className="mb-4 text-xs text-[var(--color-muted)]">Tushar Mehta <span aria-hidden="true"> · </span>{guide.updatedDate ? "Updated " : ""}<time dateTime={guide.updatedDate ?? guide.date}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${guide.updatedDate ?? guide.date}T00:00:00Z`))}</time><span aria-hidden="true"> · </span>{minutes} min read</p>
             <h1 className="text-[2.25rem] font-semibold leading-[1.13] tracking-[-0.04em] text-[var(--color-heading)] sm:text-[3.5rem]">{guide.title}</h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">{guide.description}</p>
             <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">

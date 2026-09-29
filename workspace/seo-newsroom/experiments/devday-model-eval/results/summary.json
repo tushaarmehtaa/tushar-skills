@@ -1,0 +1,36 @@
+{
+  "scope": "skill explicitly supplied; captured evidence; no tools",
+  "percentile_method": "nearest rank; with n=3 p95 is the maximum, not a population estimate",
+  "price_date": "2026-09-30",
+  "estimated_completed_run_cost_usd": 0.1909688,
+  "billing_verified": false,
+  "arms": [
+    {
+      "model": "gpt-6.1-sol",
+      "service_tier": "default",
+      "completed": 3,
+      "completion_p50_ms": 14817.845458,
+      "completion_p95_ms": 15152.601292,
+      "first_text_p50_ms": 5651.523707999993,
+      "estimated_cost_p50_usd": 0.0083049
+    },
+    {
+      "model": "gpt-6-astra",
+      "service_tier": "default",
+      "completed": 3,
+      "completion_p50_ms": 24363.642832999998,
+      "completion_p95_ms": 25253.925625000003,
+      "first_text_p50_ms": 9375.399707999997,
+      "estimated_cost_p50_usd": 0.044119
+    },
+    {
+      "model": "gpt-6-astra",
+      "service_tier": "ultrafast",
+      "completed": 0,
+      "completion_p50_ms": null,
+      "completion_p95_ms": null,
+      "first_text_p50_ms": null,
+      "estimated_cost_p50_usd": null
+    }
+  ]
+}

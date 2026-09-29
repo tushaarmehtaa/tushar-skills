@@ -1,0 +1,10 @@
+{
+  "observed_on": "2026-09-30",
+  "command": "node --test workspace/seo-newsroom/experiments/devday-mcp-events/fixture.test.mjs",
+  "passed": 15,
+  "failed": 0,
+  "scope": "Local single-process broker and receiver; injected transport, clock and authorization; deterministic drafts",
+  "signature_reference": "https://github.com/standard-webhooks/standard-webhooks/blob/main/libraries/javascript/src/webhook.test.ts",
+  "observations": ["Upstream signing vector matched", "Tampered and stale signatures rejected", "Wrong callback challenge did not activate delivery", "Duplicate receipt across reconstruction produced one draft", "Transient retry after reconstruction retained event ID and refreshed signing time", "410 and 413 stopped after one attempt", "Persistent failures stopped after four fixture-configured attempts", "Revocation and unsubscribe prevented queued draft creation"],
+  "not_tested": ["ChatGPT", "Real HTTP or TLS", "OAuth", "DNS and redirects", "Multi-worker storage", "Power-loss durability", "LLM output", "Secret rotation", "Batching", "Replay history"]
+}

@@ -16,7 +16,7 @@ export function LatestGuides({ skill }: { skill?: string }) {
             <span className="text-[11px] text-[var(--color-muted)] sm:text-xs">{guide.category}</span>
             <div className="min-w-0">
               <h3 className="text-lg font-medium leading-snug tracking-tight text-[var(--color-heading)] group-hover:text-[var(--color-accent)] sm:text-xl">{guide.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--color-text)]">{guide.slug === "image-editing-skills" ? "Reference images, copyable edit prompts, and a reusable skill." : "Clearer instructions, fewer unnecessary stops, and a test plan."}</p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--color-text)]">{guide.description}</p>
             </div>
             <span aria-hidden="true" className="hidden text-xl text-[var(--color-accent)] sm:block">↗</span>
             <span className="mt-2 text-xs text-[var(--color-accent)] sm:hidden">Read guide →</span>

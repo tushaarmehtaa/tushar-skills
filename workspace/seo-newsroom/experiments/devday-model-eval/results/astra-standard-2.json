@@ -1,0 +1,29 @@
+{
+  "id": "astra-standard-2",
+  "requested_model": "gpt-6-astra",
+  "returned_model": "gpt-6-astra",
+  "requested_tier": "default",
+  "returned_tier": "default",
+  "tier_verified": true,
+  "response_id": "resp_0bd8b54327981362016abc0e900fe087d199e3e54f3a965abe",
+  "request_id": "req_5595165698f34e0fb07feccb39b2b029",
+  "status": "completed",
+  "first_text_ms": 5117.9553750000005,
+  "completion_ms": 21367.316333000002,
+  "usage": {
+    "input_tokens": 2192,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 2189
+    },
+    "output_tokens": 830,
+    "output_tokens_details": {
+      "reasoning_tokens": 109
+    },
+    "total_tokens": 3022
+  },
+  "estimated_token_cost_usd": 0.043719,
+  "conservative_cache_write_cost_usd": 0.043719,
+  "billing_verified": false,
+  "cache_write_accounting": "reported"
+}

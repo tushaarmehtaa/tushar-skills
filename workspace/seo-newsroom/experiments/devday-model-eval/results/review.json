@@ -1,0 +1,84 @@
+{
+  "reviewer": "Codex assistant",
+  "blinded": false,
+  "observed_on": "2026-09-30",
+  "rubric_source": "evals/changelog-normal/case.yaml",
+  "not_applicable": [
+    "runtime skill selection",
+    "tool inspection"
+  ],
+  "runs": [
+    {
+      "id": "sol-standard-1",
+      "items": 5,
+      "breaking_migration": true,
+      "churn_excluded_from_customer_bullets": true,
+      "handoff_contract": true,
+      "provenance": true,
+      "no_verified_deployment_claim": true,
+      "webhook_discrepancy_noticed": true,
+      "customer_bullet_400_claim": "unqualified; gap disclosed in handoff",
+      "exploratory_observations_not_preregistered": true
+    },
+    {
+      "id": "astra-standard-1",
+      "items": 5,
+      "breaking_migration": true,
+      "churn_excluded_from_customer_bullets": true,
+      "handoff_contract": true,
+      "provenance": true,
+      "no_verified_deployment_claim": true,
+      "webhook_discrepancy_noticed": true,
+      "customer_bullet_400_claim": "omitted or explicitly attributed",
+      "exploratory_observations_not_preregistered": true
+    },
+    {
+      "id": "astra-standard-2",
+      "items": 5,
+      "breaking_migration": true,
+      "churn_excluded_from_customer_bullets": true,
+      "handoff_contract": true,
+      "provenance": true,
+      "no_verified_deployment_claim": true,
+      "webhook_discrepancy_noticed": true,
+      "customer_bullet_400_claim": "omitted or explicitly attributed",
+      "exploratory_observations_not_preregistered": true
+    },
+    {
+      "id": "sol-standard-2",
+      "items": 5,
+      "breaking_migration": true,
+      "churn_excluded_from_customer_bullets": true,
+      "handoff_contract": true,
+      "provenance": true,
+      "no_verified_deployment_claim": true,
+      "webhook_discrepancy_noticed": true,
+      "customer_bullet_400_claim": "unqualified; gap disclosed in handoff",
+      "exploratory_observations_not_preregistered": true
+    },
+    {
+      "id": "sol-standard-3",
+      "items": 5,
+      "breaking_migration": true,
+      "churn_excluded_from_customer_bullets": true,
+      "handoff_contract": true,
+      "provenance": true,
+      "no_verified_deployment_claim": true,
+      "webhook_discrepancy_noticed": true,
+      "customer_bullet_400_claim": "unqualified; gap disclosed in handoff",
+      "exploratory_observations_not_preregistered": true
+    },
+    {
+      "id": "astra-standard-3",
+      "items": 5,
+      "breaking_migration": true,
+      "churn_excluded_from_customer_bullets": true,
+      "handoff_contract": true,
+      "provenance": true,
+      "no_verified_deployment_claim": true,
+      "webhook_discrepancy_noticed": true,
+      "customer_bullet_400_claim": "omitted or explicitly attributed",
+      "exploratory_observations_not_preregistered": true
+    }
+  ]
+}

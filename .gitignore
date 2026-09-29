@@ -9,3 +9,4 @@ site/test-results/
 
 # plugin eval run output
 evals/results/
+.vercel/

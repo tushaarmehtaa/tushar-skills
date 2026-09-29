@@ -1,0 +1,29 @@
+{
+  "id": "sol-standard-2",
+  "requested_model": "gpt-6.1-sol",
+  "returned_model": "gpt-6.1-sol",
+  "requested_tier": "default",
+  "returned_tier": "default",
+  "tier_verified": true,
+  "response_id": "resp_07bd8c2a1f64b81a016abc0ea5732887d1b500e1f1659e075a",
+  "request_id": "req_8384f85091924803a15ea59f6933f765",
+  "status": "completed",
+  "first_text_ms": 6204.401999999998,
+  "completion_ms": 14817.845458,
+  "usage": {
+    "input_tokens": 2192,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 2189
+    },
+    "output_tokens": 776,
+    "output_tokens_details": {
+      "reasoning_tokens": 153
+    },
+    "total_tokens": 2968
+  },
+  "estimated_token_cost_usd": 0.0079849,
+  "conservative_cache_write_cost_usd": 0.0079849,
+  "billing_verified": false,
+  "cache_write_accounting": "reported"
+}
