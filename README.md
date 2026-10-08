@@ -8,6 +8,8 @@ The directory contains 34 focused skills. Each one owns a meaningful outcome rat
 
 **[Browse the directory →](https://www.slashskills.xyz)**
 
+[![skills.sh installs](https://skills.sh/b/tushaarmehtaa/tushar-skills)](https://www.skills.sh/tushaarmehtaa/tushar-skills)
+
 ## Agent Skills, not runtime-specific prompts
 
 Each directory is a self-contained [Agent Skills](https://agentskills.io) package: a standard `SKILL.md` plus any references needed to run the workflow. The package format is shared, while installation, invocation, and available tools still differ by runtime.

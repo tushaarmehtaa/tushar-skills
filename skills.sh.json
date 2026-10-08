@@ -1,0 +1,70 @@
+{
+  "$schema": "https://www.skills.sh/schema/skills.sh.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Build",
+      "description": "Implement product infrastructure with the failure modes already handled.",
+      "skills": [
+        "auth-implementation",
+        "supabase",
+        "payments-with-dodo",
+        "credit-metering",
+        "rate-limit",
+        "email-with-resend",
+        "analytics",
+        "ai-product-development",
+        "product-experiments"
+      ]
+    },
+    {
+      "title": "Ship",
+      "description": "Get a release out and keep it healthy.",
+      "skills": [
+        "deploy-check",
+        "performance-diagnosis",
+        "changelog",
+        "readme",
+        "agent-instructions",
+        "skill-creator"
+      ]
+    },
+    {
+      "title": "Design",
+      "description": "Interfaces and copy that do not read as generated.",
+      "skills": [
+        "interface-design",
+        "landing-page",
+        "mobile-first",
+        "remove-ai-slop",
+        "ui-copy",
+        "humanize",
+        "image-editing",
+        "demo-video"
+      ]
+    },
+    {
+      "title": "Grow",
+      "description": "Launch, get found, and reach people.",
+      "skills": [
+        "product-launch",
+        "landing-copy",
+        "search-ready",
+        "social-sharing",
+        "cold-outreach",
+        "user-insights"
+      ]
+    },
+    {
+      "title": "Decide",
+      "description": "Specs, teardowns, costs, and money decisions with evidence attached.",
+      "skills": [
+        "product-spec",
+        "decision-doc",
+        "product-teardown",
+        "ai-cost-audit",
+        "fundraising"
+      ]
+    }
+  ]
+}
