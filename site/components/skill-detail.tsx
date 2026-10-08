@@ -1,5 +1,6 @@
 import { LatestGuides } from "./latest-guides";
 import { AgentTabs } from "./agent-tabs";
+import { formatInstalls } from "@/lib/installs";
 import { RuntimeLogo } from "./runtime-logo";
 import { TrackedLink } from "./tracked-link";
 import { createClaudeAppViewModel } from "@/lib/skill-presentation";
@@ -12,9 +13,11 @@ export function SkillDetail({
   skill,
   contentHtml,
   renderedFiles,
+  installs = null,
 }: {
   skill: Skill;
   contentHtml: string;
+  installs?: number | null;
   renderedFiles: Array<{
     path: string;
     lineCount: number;
@@ -35,6 +38,17 @@ export function SkillDetail({
         <h1 className="terminal-heading mb-4 break-words text-3xl font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
           {skill.name}
         </h1>
+        {installs !== null && installs > 0 && (
+          <a
+            href={`https://www.skills.sh/tushaarmehtaa/tushar-skills/${skill.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Installs tracked by skills.sh"
+            className="mb-4 inline-flex items-center gap-1 rounded border border-[var(--color-border)] px-2 py-0.5 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
+          >
+            <span className="tabular-nums text-[var(--color-accent)]">{formatInstalls(installs)}</span> installs
+          </a>
+        )}
         <p className="max-w-3xl text-base leading-relaxed text-[var(--color-text)]">
           {skill.description.split(/\s+Use when\b/)[0]}
         </p>

@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { GithubStars } from "./github-stars";
 import { PageFrame } from "./page-frame";
+import { formatInstalls, getInstallStats } from "@/lib/installs";
 
-export function Header() {
+export async function Header() {
+  const stats = await getInstallStats();
+  const installs = stats ? formatInstalls(stats.total) : null;
   return (
     <header className="animate-fade-in px-6 py-5">
       <PageFrame className="flex items-center justify-between">
@@ -29,6 +32,17 @@ export function Header() {
           >
             changelog
           </Link>
+          {installs && (
+            <a
+              href="https://www.skills.sh/tushaarmehtaa/tushar-skills"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Installs tracked by skills.sh"
+              className="-my-2 inline-flex min-h-11 items-center gap-1 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
+            >
+              <span className="tabular-nums text-[var(--color-accent)]">{installs}</span> installs
+            </a>
+          )}
           <a
             href="https://github.com/tushaarmehtaa/tushar-skills"
             target="_blank"

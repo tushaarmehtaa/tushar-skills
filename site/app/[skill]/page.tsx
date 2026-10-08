@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { SkillDetail } from "@/components/skill-detail";
+import { getInstallStats } from "@/lib/installs";
 import { getAllSkills, getSkill } from "@/lib/skills";
 import { packageFileAnchor, renderMarkdown } from "@/lib/markdown";
 import { serializeJsonLd } from "@/lib/json-ld";
@@ -87,6 +88,7 @@ export default async function SkillPage({
     about: skill.tags.map((name) => ({ "@type": "Thing", name })),
   };
 
+  const installs = (await getInstallStats())?.bySlug[skill.slug] ?? null;
   return (
     <div className="flex min-h-screen flex-col">
       <script
@@ -106,7 +108,7 @@ export default async function SkillPage({
             </svg>
             All skills
           </Link>
-          <SkillDetail skill={skill} contentHtml={contentHtml} renderedFiles={renderedFiles} />
+          <SkillDetail skill={skill} contentHtml={contentHtml} renderedFiles={renderedFiles} installs={installs} />
         </div>
       </main>
       <Footer />
