@@ -114,7 +114,7 @@ export function InstallBox({
           <>
             <CommandBlock command={command} analytics={{ agent, skill: slug }} />
             <p className="install-note">
-              Then type <code>{invocationFor(agent, slug)}</code> in {AGENTS[agent].label}, or describe the task and let it pick the skill.
+              Then type <code>{invocationFor(agent, slug).split(" or ")[0]}</code> in {AGENTS[agent].label}, or describe the task and let it pick the skill.
             </p>
           </>
         )}

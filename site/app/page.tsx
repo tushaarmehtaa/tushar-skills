@@ -34,7 +34,10 @@ export default function Home() {
       <main id="main-content" className="page">
         <section className="hero">
           <h1>
-            Good work starts with a <span>useful skill.</span>
+            <span className="hero-line">Good work starts</span>
+            <span className="hero-line">
+              with a <em>useful skill.</em>
+            </span>
           </h1>
           <div className="hero-side">
             <p>

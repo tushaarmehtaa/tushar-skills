@@ -79,7 +79,6 @@
   padding: 56px 0 40px;
 }
 .hero h1 {
-  max-width: 11ch;
   font-size: clamp(44px, 4.4vw, 62px);
   line-height: 1.03;
   font-weight: 600;
@@ -87,7 +86,8 @@
   color: var(--color-heading);
   text-wrap: balance;
 }
-.hero h1 span { color: var(--color-accent); }
+.hero-line { display: block; white-space: nowrap; }
+.hero h1 em { font-style: normal; color: var(--color-accent); }
 .hero-side { display: grid; gap: 16px; max-width: 580px; justify-self: end; width: 100%; }
 .hero-side > p:first-child { font-size: 17px; line-height: 27px; }
 .hero-hint { font-size: 13px; line-height: 18px; }
@@ -312,7 +312,7 @@
 /* Phone */
 @media (max-width: 639px) {
   .hero { padding: 24px 0 20px; gap: 14px; }
-  .hero h1 { font-size: 36px; line-height: 38px; }
+  .hero h1 { font-size: min(56px, calc((100vw - 40px) / 7.7)); line-height: 1.02; letter-spacing: -0.055em; }
   .hero-side > p:first-child { font-size: 15px; line-height: 22px; }
   .hero-hint { display: none; }
   .command { font-size: 12.5px; line-height: 19px; padding-left: 14px; gap: 10px; }
@@ -388,4 +388,53 @@
 .installer > * { min-width: 0; }
 @media (max-width: 359px) {
   .segment { padding: 0 8px; font-size: 12px; }
+}
+
+/* Mobile alignment pass, 9 Oct */
+.facts-more { display: none; }
+.facts dd { max-width: 70%; }
+@media (max-width: 1023px) {
+  .facts .fact-extra { display: none; }
+  .facts:has(.facts-toggle:checked) .fact-extra { display: flex; }
+  .facts-more {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-heading);
+    cursor: pointer;
+  }
+  .facts:has(.facts-toggle:checked) .facts-more svg { transform: rotate(180deg); }
+  .facts-toggle:focus-visible + .facts-more { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+}
+@media (max-width: 639px) {
+  /* Every command block: text on top, one full-width copy bar under it. */
+  .command,
+  .hero .command { flex-wrap: wrap; padding: 14px 14px 10px; gap: 12px; }
+  .command .command-prompt,
+  .hero .command .command-prompt { display: none; }
+  .command .command-text,
+  .hero .command .command-text { flex-basis: 100%; padding: 0; }
+  .command .command-copy,
+  .hero .command .command-copy {
+    flex-basis: 100%;
+    width: auto;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 14px;
+    margin-left: 0;
+    background: #e9ece8;
+    color: var(--color-heading);
+  }
+  .command .command-copy span,
+  .hero .command .command-copy span { display: inline; }
+  .command .command-copy:hover { background: #ffffff; }
+}
+@media (max-width: 639px) {
+  /* One left edge on phones: the installer drops its card and sits on the page grid. */
+  .installer { padding: 0; border: 0; background: transparent; gap: 12px; }
+  .install-note { margin-top: 10px; }
 }

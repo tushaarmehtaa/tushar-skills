@@ -95,12 +95,12 @@ export function SkillDetail({
               </dd>
             </div>
             {!verified.length && proof && (
-              <div>
+              <div className="fact-extra">
                 <dt>Full verification</dt>
                 <dd>Not yet</dd>
               </div>
             )}
-            <div>
+            <div className="fact-extra">
               <dt>Works in</dt>
               <dd>
                 {[
@@ -114,19 +114,19 @@ export function SkillDetail({
               <dd>{skill.capabilities.map((c) => CAPABILITY_LABELS[c]).join(", ") || "Nothing beyond the agent"}</dd>
             </div>
             {history && (
-              <div>
+              <div className="fact-extra">
                 <dt>Updated</dt>
                 <dd>{formatDate(history.updated)}</dd>
               </div>
             )}
-            <div>
+            <div className="fact-extra">
               <dt>Package</dt>
               <dd>
                 SKILL.md · {skillLines} lines
                 {renderedFiles.length > 0 && ` + ${renderedFiles.length} reference${renderedFiles.length === 1 ? "" : "s"}`} · {skill.license}
               </dd>
             </div>
-            <div>
+            <div className="fact-extra">
               <dt>Source</dt>
               <dd>
                 <a href={githubFileUrl(skill.slug, "SKILL.md")} target="_blank" rel="noopener noreferrer">
@@ -135,6 +135,13 @@ export function SkillDetail({
               </dd>
             </div>
           </dl>
+          <input type="checkbox" id="facts-all" className="facts-toggle sr-only" />
+          <label htmlFor="facts-all" className="facts-more">
+            All facts
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </label>
         </aside>
       </div>
 

@@ -43,3 +43,43 @@ No uppercase eyebrows, no logo dot, no "menu+", no ambiguous input-like headings
 ## Git
 
 Work happens on `redesign-v2`. Baseline commit = the redesign worktree as of 9 Oct (excluding `workspace/seo-newsroom/`). Main and the live site stay untouched until gate 5.
+
+## Status (updated 9 Oct, late evening)
+
+Legend: [x] done and checked · [~] partly done · [ ] not started
+
+### Audit findings
+- [x] 1. Skill names lead every row and title (`/rate-limit`), verb phrases moved to the description
+- [x] 2. All 31 placeholder visuals removed; 21 skills show a real Claude Code run, 13 show their verbatim output section
+- [~] 3. Trust copy: "unverified" removed from the installer, facts list added, Verified badge only where a full verification exists. Default tab stays Codex (Tushar's July decision). Full verification of more skills not done (see Definition of done)
+- [x] 4. Homepage: install-all in the hero, one taxonomy (site + skills.sh.json), grouped rows, chips, generic icons removed
+- [~] 5. Voice: first-person hero line live; 34 "why" lines drafted from repo evidence, **waiting for Tushar's approval**
+- [~] 6. Consistency debt
+  - [x] one breadcrumb style replaces three back links
+  - [x] "1 installs" bug gone (installs now a facts row)
+  - [x] one list for browse and search (inspector removed)
+  - [x] tablet duplicate category controls gone
+  - [ ] CHANGELOG entry for guides leaving the homepage; CHANGELOG still says "30 skills"
+  - [ ] skills.sh still lists 64 skills including retired names
+  - [ ] CSS still in three layers (globals, canvas, visual-direction) plus library.css
+
+### Definition of done
+- [x] Zero placeholder visuals
+- [~] 34/34 skill profiles (why lines pending approval)
+- [x] Install-all and first skill row in the first screen at 390×844 and 1440×900 (tested)
+- [x] One-tap mobile install, command fully visible at 320px (tested)
+- [x] No horizontal overflow 320–1440 on core pages (tested)
+- [ ] ≥15 skills fully verified in Claude Code (21 single real runs done; full verification method not yet run)
+- [ ] Lighthouse mobile ≥95 performance and accessibility
+- [ ] One CSS file
+- [x] Tests green (31 browser, 21 unit), validation and production build pass
+- [ ] skills.sh retired names cleared
+
+### In progress
+- [x] Mobile alignment pass (Tushar's feedback 9 Oct): headline is two lines sized to fill the width (320–430px); one full-width copy bar on every command; installer sits on the page edge instead of nested cards; facts collapse to 3 rows + "All facts" on phones; "Then type" shows one command. Checked at 390 and 320, 31/31 browser tests pass
+
+### Remaining
+- [ ] Guides, Requirements, Changelog pages brought into the v2 look
+- [ ] Small repo fixes: humanize "article-development workflow", product-experiments "if present", em dashes in two output contracts
+- [ ] Voice-line review table for Tushar
+- [ ] Merge `redesign-v2` to main (needs Tushar's go-ahead)
