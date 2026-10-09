@@ -6,6 +6,11 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- rebuilt the site around skill names: every row and page leads with its /name, grouped into shape, build, ship and grow, with one taxonomy shared with skills.sh.json
+- added real Claude Code runs on sample projects for 21 skills, shown on their pages with the request, before and after, and verbatim excerpts; the other 13 show their output contract verbatim
+- moved the install-all command into the homepage hero, added an inline installer that remembers the agent and copies a prompt, and moved guides off the homepage
+- added generated skill history and validation that keeps profiles, proof, skills.sh groupings and package directories in sync
+
 - added six controlled Sol/Astra changelog runs to the instruction guide, with measured latency, usage-based cost estimates and the observed Ultrafast API rejection
 
 - added an MCP event workflow guide and reproducible local callback, retry and permission fixture; all 15 tests pass, with host integration explicitly untested

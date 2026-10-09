@@ -1,6 +1,5 @@
 import { Crumb } from "@/components/crumb";
 import { Header } from "@/components/header";
-import { PageFrame } from "@/components/page-frame";
 import { Footer } from "@/components/footer";
 import type { Metadata } from "next";
 
@@ -28,6 +27,44 @@ interface Release {
 }
 
 const RELEASES: Release[] = [
+  {
+    date: "2026-10-09",
+    entries: [
+      { type: "site", text: "rebuilt the library around skill names: every row and page leads with its /name, grouped into shape, build, ship and grow" },
+      { type: "site", text: "21 skill pages now show a real Claude Code run on a sample project: the request, the before and after, and the reply word for word" },
+      { type: "site", text: "moved the install-all command into the homepage hero; skill pages install inline, remember your agent, and can copy the install as a prompt" },
+      { type: "site", text: "moved guides off the homepage to /guides, linked from the header and footer" },
+      { type: "fix", text: "install commands no longer break mid-word on phones, and the mobile header fits at 320px" },
+    ],
+  },
+  {
+    date: "2026-10-08",
+    entries: [
+      { type: "site", text: "install counts from skills.sh now show in the header and on skill pages" },
+      { type: "site", text: "grouped the library on skills.sh and added an install badge to the README" },
+    ],
+  },
+  {
+    date: "2026-09-30",
+    entries: [
+      { type: "site", text: "published the MCP event workflow guide with a local callback, retry and permission fixture" },
+      { type: "site", text: "expanded the ChatGPT guide with a checked skill plugin recipe" },
+      { type: "site", text: "added controlled Sol and Astra changelog runs to the instruction guide" },
+      { type: "fix", text: "replaced a secret-shaped string in a public webhook test vector" },
+    ],
+  },
+  {
+    date: "2026-09-16",
+    entries: [
+      { type: "update", text: "verified /changelog in Claude Code: discovery 15 of 15, explicit invocation 5 of 5, and the full workflow 3 of 3 against a 0.43 baseline" },
+    ],
+  },
+  {
+    date: "2026-09-10",
+    entries: [
+      { type: "site", text: "added a Claude Code plugin marketplace, a skill checker script, and agent discovery endpoints at /llms.txt and /skills.json" },
+    ],
+  },
   {
     date: "2026-09-09",
     entries: [
@@ -190,72 +227,49 @@ const RELEASES: Release[] = [
   },
 ];
 
-const TYPE_STYLES: Record<EntryType, { label: string; color: string }> = {
-  skill:  { label: "new",    color: "text-[var(--color-accent)]" },
-  update: { label: "update", color: "text-[var(--color-accent)]" },
-  fix:    { label: "fix",    color: "text-[var(--color-heading)]" },
-  site:   { label: "site",   color: "text-[var(--color-muted)]" },
+const TYPE_LABELS: Record<EntryType, string> = {
+  skill: "New",
+  update: "Update",
+  fix: "Fix",
+  site: "Site",
 };
 
 function formatDate(dateStr: string) {
-  const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  return new Date(`${dateStr}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 export default function ChangelogPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main id="main-content" className="flex-1 px-6 py-12">
-        <PageFrame>
-          <div className="max-w-3xl">
-          <Crumb className="mb-8" items={[{ label: "Skills", href: "/" }, { label: "Changelog" }]} />
-
-          <div className="animate-fade-up mb-12">
-            <h1 className="terminal-heading text-[32px] font-medium text-[var(--color-heading)] sm:text-5xl">
-              Changelog
-            </h1>
-            <p className="mt-4 text-sm leading-relaxed text-[var(--color-text)]">
-              Every skill added, updated, or fixed.
-            </p>
-          </div>
-
-          <div className="relative space-y-10">
-            {RELEASES.map((release) => (
-              <div key={release.date} className="grid grid-cols-1 gap-3 sm:grid-cols-[9rem_1fr] sm:gap-6">
-                {/* Date */}
-                <div className="pt-0.5">
-                  <time
-                    dateTime={release.date}
-                    className="font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-muted)]"
-                  >
-                    {formatDate(release.date)}
-                  </time>
-                </div>
-
-                {/* Entries */}
-                <div className="terminal-panel divide-y divide-[var(--color-border)]">
-                  {release.entries.map((entry, j) => {
-                    const style = TYPE_STYLES[entry.type];
-                    return (
-                      <div key={j} className="flex items-start gap-3 px-4 py-3">
-                        <span
-                          className={`mt-0.5 w-10 shrink-0 text-xs ${style.color}`}
-                        >
-                          {style.label}
-                        </span>
-                        <p className="text-sm leading-relaxed text-[var(--color-text)]">
-                          {entry.text}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-          </div>
-        </PageFrame>
+      <main id="main-content" className="page changelog">
+        <Crumb className="crumb-page" items={[{ label: "Skills", href: "/" }, { label: "Changelog" }]} />
+        <header className="page-head">
+          <h1>Changelog</h1>
+          <p>Every skill added, updated or fixed, newest first.</p>
+        </header>
+        <ol className="releases">
+          {RELEASES.map((release) => (
+            <li key={release.date} className="release">
+              <h2>
+                <time dateTime={release.date}>{formatDate(release.date)}</time>
+              </h2>
+              <ul>
+                {release.entries.map((entry, j) => (
+                  <li key={j} data-type={entry.type}>
+                    <span className="release-type">{TYPE_LABELS[entry.type]}</span>
+                    <span className="release-text">{entry.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
       </main>
       <Footer />
     </div>

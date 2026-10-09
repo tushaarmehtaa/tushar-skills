@@ -438,3 +438,27 @@
   .installer { padding: 0; border: 0; background: transparent; gap: 12px; }
   .install-note { margin-top: 10px; }
 }
+
+/* Secondary pages share the skill page grid */
+.crumb-page { padding-top: 36px; }
+.page-head { padding: 16px 0 32px; max-width: 840px; }
+.page-head h1 { font-size: clamp(36px, 4vw, 52px); line-height: 1.05; font-weight: 600; letter-spacing: -0.045em; color: var(--color-heading); }
+.page-head p { margin-top: 12px; max-width: 64ch; font-size: 17px; line-height: 27px; }
+
+.releases { list-style: none; margin: 0; padding: 0; max-width: 840px; }
+.release { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; padding: 20px 0; border-top: 1px solid var(--color-border); }
+.release:first-child { border-top-color: var(--color-heading); }
+.release h2 { font-size: 15px; line-height: 24px; font-weight: 600; color: var(--color-heading); }
+.release ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.release li[data-type] { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; font-size: 15px; line-height: 24px; }
+.release-type { font-size: 12px; line-height: 24px; color: var(--color-text); }
+.release li[data-type="skill"] .release-type { color: var(--color-accent); font-weight: 600; }
+.release-text { color: var(--color-heading); }
+@media (max-width: 639px) {
+  .crumb-page { padding-top: 20px; }
+  .page-head { padding-bottom: 20px; }
+  .page-head p { font-size: 15px; line-height: 23px; }
+  .release { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 16px 0; }
+  .release li[data-type] { grid-template-columns: 52px minmax(0, 1fr); font-size: 14px; line-height: 22px; }
+  .release-type { line-height: 22px; }
+}
