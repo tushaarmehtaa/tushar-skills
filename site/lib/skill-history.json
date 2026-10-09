@@ -1,0 +1,172 @@
+{
+  "agent-instructions": {
+    "added": "2026-06-16",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "ai-cost-audit": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "ai-product-development": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "analytics": {
+    "added": "2026-03-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "auth-implementation": {
+    "added": "2026-03-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "changelog": {
+    "added": "2026-03-01",
+    "updated": "2026-08-08",
+    "changes": 5
+  },
+  "cold-outreach": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "credit-metering": {
+    "added": "2026-03-06",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "decision-doc": {
+    "added": "2026-03-22",
+    "updated": "2026-08-08",
+    "changes": 5
+  },
+  "demo-video": {
+    "added": "2026-03-15",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "deploy-check": {
+    "added": "2026-03-01",
+    "updated": "2026-08-08",
+    "changes": 5
+  },
+  "email-with-resend": {
+    "added": "2026-03-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "fundraising": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "humanize": {
+    "added": "2026-09-01",
+    "updated": "2026-09-01",
+    "changes": 1
+  },
+  "image-editing": {
+    "added": "2026-09-09",
+    "updated": "2026-09-09",
+    "changes": 1
+  },
+  "interface-design": {
+    "added": "2026-06-22",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "landing-copy": {
+    "added": "2026-03-07",
+    "updated": "2026-08-08",
+    "changes": 9
+  },
+  "landing-page": {
+    "added": "2026-09-01",
+    "updated": "2026-09-01",
+    "changes": 1
+  },
+  "mobile-first": {
+    "added": "2026-09-01",
+    "updated": "2026-09-01",
+    "changes": 1
+  },
+  "payments-with-dodo": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "performance-diagnosis": {
+    "added": "2026-06-16",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "product-experiments": {
+    "added": "2026-06-20",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "product-launch": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "product-spec": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "product-teardown": {
+    "added": "2026-03-22",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "rate-limit": {
+    "added": "2026-06-20",
+    "updated": "2026-08-08",
+    "changes": 3
+  },
+  "readme": {
+    "added": "2026-03-22",
+    "updated": "2026-08-08",
+    "changes": 4
+  },
+  "remove-ai-slop": {
+    "added": "2026-06-16",
+    "updated": "2026-08-08",
+    "changes": 5
+  },
+  "search-ready": {
+    "added": "2026-08-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "skill-creator": {
+    "added": "2026-03-07",
+    "updated": "2026-09-03",
+    "changes": 3
+  },
+  "social-sharing": {
+    "added": "2026-03-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "supabase": {
+    "added": "2026-06-16",
+    "updated": "2026-08-08",
+    "changes": 4
+  },
+  "ui-copy": {
+    "added": "2026-03-22",
+    "updated": "2026-08-08",
+    "changes": 2
+  },
+  "user-insights": {
+    "added": "2026-03-07",
+    "updated": "2026-08-08",
+    "changes": 2
+  }
+}

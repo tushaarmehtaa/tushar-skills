@@ -704,11 +704,32 @@ function validateZipArchives(skillDirectories) {
   }
 }
 
+function validateSkillHistory(skillDirectories) {
+  const historyPath = path.join(REPO_ROOT, "site", "lib", "skill-history.json");
+  if (!fs.existsSync(historyPath)) {
+    addError("site/lib/skill-history.json: missing; run node scripts/skill-history.mjs");
+    return;
+  }
+  const history = JSON.parse(fs.readFileSync(historyPath, "utf8"));
+  const expected = sorted(skillDirectories);
+  if (!sameValues(sorted(Object.keys(history)), expected)) {
+    addError("site/lib/skill-history.json: skills differ from package directories; run node scripts/skill-history.mjs");
+  }
+  for (const [slug, entry] of Object.entries(history)) {
+    for (const field of ["added", "updated"]) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(entry?.[field] ?? "")) {
+        addError(`site/lib/skill-history.json: ${slug}.${field} must be an ISO date`);
+      }
+    }
+  }
+}
+
 validateRootLicense();
 validatePackageLicenses();
 
 const skillDirectories = getSkillDirectories();
 validateSkillEvals(skillDirectories);
+validateSkillHistory(skillDirectories);
 const parsedSkills = loadParsedSkills(skillDirectories);
 for (const slug of skillDirectories) {
   validateFrontmatter(slug, parsedSkills.get(slug));
