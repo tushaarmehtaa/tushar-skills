@@ -204,8 +204,8 @@ test("every product surface has a local runtime brand mark", () => {
   ]);
 
   for (const brand of Object.values(RUNTIME_BRANDS)) {
-    const hasSvgPath = "path" in brand.icon && brand.icon.path.length > 20;
-    const hasLocalImage = "imageSrc" in brand.icon && brand.icon.imageSrc.startsWith("/");
+    const hasSvgPath = "path" in brand.icon && typeof brand.icon.path === "string" && brand.icon.path.length > 20;
+    const hasLocalImage = "imageSrc" in brand.icon && typeof brand.icon.imageSrc === "string" && brand.icon.imageSrc.startsWith("/");
     assert.ok(hasSvgPath || hasLocalImage, `${brand.id} has a local runtime mark`);
     assert.match(brand.icon.viewBox, /^[-.\d ]+$/);
     assert.match(brand.colorOnDark, /^#[0-9A-F]{6}$/i);
@@ -269,3 +269,8 @@ test("skill directory filters preserve repository order and combine criteria", (
   assert.deepEqual(filterDirectorySkills(skills, { query: "interface-design", category: "all", surface: "all" }).map(skill => skill.slug), ["interface-design", "audit"]);
   assert.deepEqual(filterDirectorySkills(skills, { query: "", category: "all", surface: "all" }).map(skill => skill.slug), ["audit", "interface-design"]);
 });
+
+ test("discovery matches visible task titles while preserving package-name priority", () => {
+  const skills = [{slug:"cold-outreach",name:"cold-outreach",displayName:"Start a conversation",description:"Write an email",category:"marketing",localAvailable:true,claudeAppReady:false}];
+  assert.equal(filterDirectorySkills(skills,{query:"start a conversation",category:"all",surface:"all"})[0]?.slug,"cold-outreach");
+ });

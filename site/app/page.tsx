@@ -1,3 +1,4 @@
+import { TASK_TITLES } from "@/lib/canvas";
 import { Suspense } from "react";
 import { Header } from "@/components/header";
 import { PageFrame } from "@/components/page-frame";
@@ -7,15 +8,16 @@ import { SkillDirectory } from "@/components/skill-directory";
 import { getAllSkills, type Skill } from "@/lib/skills";
 
 const SKILL_ORDER = [
-  "remove-ai-slop",
-  "ai-product-development",
   "interface-design",
+  "ai-product-development",
+  "user-insights",
+  "auth-implementation",
+  "remove-ai-slop",
   "deploy-check",
   "demo-video",
   "search-ready",
   "analytics",
   "payments-with-dodo",
-  "auth-implementation",
   "credit-metering",
   "email-with-resend",
   "product-experiments",
@@ -29,7 +31,6 @@ const SKILL_ORDER = [
   "fundraising",
   "product-teardown",
   "ai-cost-audit",
-  "user-insights",
   "changelog",
   "cold-outreach",
   "rate-limit",
@@ -57,32 +58,52 @@ export default function Home() {
 
       <main id="main-content" className="flex-1 px-6">
         <PageFrame>
-          <section className="animate-fade-up pt-10 pb-6 sm:pt-14 sm:pb-8">
-            <h1 className="terminal-heading max-w-4xl text-[2rem] font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
-              workflows saved as <span className="text-[var(--color-accent)]">Agent Skills.</span>
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed sm:text-base">
-              Find a workflow for your next task. Install it in Codex, Claude Code, or Cursor.
-            </p>
+          <section className="canvas-hero">
+            <div className="hero-copy">
+              <h1>Good work starts<br />with a <span>useful skill.</span></h1>
+              <p>Give your agent a better way to work. Pick a workflow, install it, and make it yours.</p>
+            </div>
           </section>
-          <section className="mb-8" aria-label="Install a skill">
-            <InteractiveInstaller skills={skills.map(({ slug, name }) => ({ slug, name }))} />
-          </section>
-
           <Suspense
-            fallback={<section className="pb-20" aria-labelledby="skill-index-heading"><h2 id="skill-index-heading" className="mb-5 text-xl font-semibold text-[var(--color-heading)]">Skills</h2></section>}
+            fallback={
+              <section className="pb-20" aria-labelledby="skill-index-heading">
+                <h2
+                  id="skill-index-heading"
+                  className="mb-5 text-xl font-semibold text-[var(--color-heading)]"
+                >
+                  Skills
+                </h2>
+              </section>
+            }
           >
             <SkillDirectory
-              skills={skills.map(({ slug, name, category, description, surfaces }) => ({
-                slug,
-                name,
-                category,
-                description,
-                localAvailable: surfaces.includes("coding-agent"),
-                claudeAppReady: surfaces.includes("claude-app"),
-              }))}
+              skills={skills.map(
+                ({ slug, name, category, description, surfaces }) => ({
+                  slug,
+                  name,
+                  displayName: TASK_TITLES[slug],
+                  category,
+                  description,
+                  localAvailable: surfaces.includes("coding-agent"),
+                  claudeAppReady: surfaces.includes("claude-app"),
+                }),
+              )}
             />
           </Suspense>
+          <section
+            id="library-install"
+            tabIndex={-1}
+            className="library-install"
+            aria-labelledby="library-heading"
+          >
+            <div>
+              <h2 id="library-heading">Want the whole collection?</h2>
+              <p>Install the library, or choose a single skill and scope.</p>
+            </div>
+            <InteractiveInstaller
+              skills={skills.map(({ slug, name }) => ({ slug, name }))}
+            />
+          </section>
         </PageFrame>
       </main>
 

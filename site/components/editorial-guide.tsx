@@ -1,3 +1,5 @@
+import { WorkflowStrip } from "./workflow-strip";
+import { skillHref } from "@/lib/canvas";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "./header";
@@ -52,10 +54,10 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
           </nav>
           <header className="max-w-3xl">
             <p className="mb-4 text-xs text-[var(--color-muted)]">Tushar Mehta <span aria-hidden="true"> · </span>{guide.updatedDate ? "Updated " : ""}<time dateTime={guide.updatedDate ?? guide.date}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${guide.updatedDate ?? guide.date}T00:00:00Z`))}</time><span aria-hidden="true"> · </span>{minutes} min read</p>
-            <h1 className="text-[2.25rem] font-semibold leading-[1.13] tracking-[-0.04em] text-[var(--color-heading)] sm:text-[3.5rem]">{guide.title}</h1>
+            <h1 className="text-[2rem] font-medium leading-[1.13] tracking-[-0.04em] text-[var(--color-heading)] sm:text-[3rem]">{guide.title}</h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">{guide.description}</p>
             <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <TrackedLink href={`/${guide.relatedSkills[0]}`} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">{guide.action}<span aria-hidden="true">↗</span></TrackedLink>
+              <TrackedLink href={skillHref(guide.relatedSkills[0])} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">{guide.action}<span aria-hidden="true">↗</span></TrackedLink>
               <a href={`#${headings[0]?.id ?? "guide-body"}`} className="inline-flex min-h-11 items-center text-sm text-[var(--color-muted)] hover:text-[var(--color-heading)]">Read the guide ↓</a>
             </div>
           </header>
@@ -65,6 +67,7 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
                 <summary>In this guide <span>{headings.length} sections</span></summary>
                 <nav aria-label="Guide contents">{contents}</nav>
               </details>
+              <WorkflowStrip steps={guide.slug === "image-editing-skills" ? ["Reference image", "Targeted edit", "Review the result"] : guide.slug === "astra-skill-instructions" ? ["Define the task", "Compare approaches", "Record evidence"] : ["Receive an event", "Run the workflow", "Check the result"]} />
               <article id="guide-body" className="guide-prose prose">
                 {blocks.map((block, index) => {
                   const example = block.match(/^<pre><code(?: class="language-([^"]+)")?>([\s\S]*?)<\/code><\/pre>$/);
@@ -75,15 +78,15 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
                 <p className="mb-2 text-xs text-[var(--color-muted)]">Next step</p>
                 <h2 className="mb-3 text-2xl font-medium text-[var(--color-heading)]">Make it part of your workflow.</h2>
                 <p className="mb-5 text-sm text-[var(--color-text)]">The skill includes the instructions and references. Check the required tools before installing.</p>
-                <TrackedLink href={`/${guide.relatedSkills[0]}`} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">View /{guide.relatedSkills[0]}<span aria-hidden="true">→</span></TrackedLink>
+                <TrackedLink href={skillHref(guide.relatedSkills[0])} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">View /{guide.relatedSkills[0]}<span aria-hidden="true">→</span></TrackedLink>
               </section>
             </div>
             <aside className="hidden self-start lg:sticky lg:top-8 lg:block" aria-label="On this page">
-              <p className="mb-3 text-xs font-medium text-[var(--color-muted)]">IN THIS GUIDE</p>
+              <p className="mb-3 text-xs font-medium text-[var(--color-muted)]">In this guide</p>
               <nav aria-label="Guide contents">{contents}</nav>
               <div className="mt-8 border-t border-[var(--color-border)] pt-5">
                 <p className="text-xs text-[var(--color-muted)]">Related skills</p>
-                {guide.relatedSkills.map((skill) => <TrackedLink key={skill} href={`/${skill}`} eventName="guide_skill_open" agent="all" skill={skill} className="mt-1 flex min-h-11 items-center text-sm text-[var(--color-text)] hover:text-[var(--color-accent)]">/{skill} →</TrackedLink>)}
+                {guide.relatedSkills.map((skill) => <TrackedLink key={skill} href={skillHref(skill)} eventName="guide_skill_open" agent="all" skill={skill} className="mt-1 flex min-h-11 items-center text-sm text-[var(--color-text)] hover:text-[var(--color-accent)]">/{skill} →</TrackedLink>)}
               </div>
             </aside>
           </div>

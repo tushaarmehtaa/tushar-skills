@@ -4,200 +4,96 @@ import type { NextRequest } from "next/server";
 export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = request.nextUrl;
-  const skill = searchParams.get("skill");
-  const description = searchParams.get("description") || "";
-
-  const isHomepage = !skill;
-
+  const skill = request.nextUrl.searchParams.get("skill");
+  const description = request.nextUrl.searchParams.get("description");
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: 1200,
+        height: 630,
+        display: "flex",
+        flexDirection: "column",
+        background: "#FFFFFF",
+        color: "#17191C",
+        padding: "56px 64px",
+        fontFamily: "sans-serif",
+      }}
+    >
       <div
         style={{
-          width: 1200,
-          height: 630,
           display: "flex",
-          backgroundColor: "#0a0a0a",
+          justifyContent: "space-between",
+          alignItems: "center",
+          fontSize: 28,
+          fontWeight: 700,
         }}
       >
+        <span>/skills</span>
+        <span style={{ fontSize: 18, color: "#345847", fontWeight: 400 }}>
+          A workflow worth following.
+        </span>
+      </div>
+      <div style={{ display: "flex", flex: 1, alignItems: "center", gap: 40 }}>
         <div
           style={{
-            flex: 1,
             display: "flex",
             flexDirection: "column",
-            margin: "1px",
-            border: "1px solid #1e1e1e",
-            padding: "56px 68px",
-            fontFamily: "monospace",
+            width: 700,
+            gap: 24,
           }}
         >
-          {/* Logo */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              marginBottom: "auto",
+              fontSize: skill && skill.length > 40 ? 44 : 60,
+              lineHeight: 1.08,
+              letterSpacing: "-0.04em",
+              fontWeight: 500,
             }}
           >
-            <span
-              style={{
-                color: "#f59e0b",
-                fontSize: "20px",
-                fontWeight: 700,
-                lineHeight: 1,
-              }}
-            >
-              /
-            </span>
-            <span
-              style={{
-                color: "#fafafa",
-                fontSize: "20px",
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
-                lineHeight: 1,
-              }}
-            >
-              slashskills
-            </span>
+            {skill || "Good work starts with a useful skill."}
           </div>
-
-          {/* Main content */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-            }}
-          >
-            {/* Title */}
-            {isHomepage ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0px",
-                }}
-              >
-                <span
-                  style={{
-                    color: "#fafafa",
-                    fontSize: "80px",
-                    fontWeight: 600,
-                    lineHeight: 1.08,
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  workflows
-                </span>
-                <span
-                  style={{
-                    color: "#fafafa",
-                    fontSize: "80px",
-                    fontWeight: 600,
-                    lineHeight: 1.08,
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  saved as
-                </span>
-                <span
-                  style={{
-                    color: "#f59e0b",
-                    fontSize: "80px",
-                    fontWeight: 600,
-                    lineHeight: 1.08,
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  Agent Skills.
-                </span>
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  color: "#fafafa",
-                  fontSize: skill && skill.length > 16 ? "60px" : "72px",
-                  fontWeight: 600,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                {`/${skill}`}
-              </div>
-            )}
-
-            {/* Description */}
-            {!isHomepage && description && (
-              <div
-                style={{
-                  display: "flex",
-                  color: "#6b6b6b",
-                  fontSize: "22px",
-                  lineHeight: 1.5,
-                  maxWidth: "820px",
-                }}
-              >
-                {description}
-              </div>
-            )}
-
-            {/* Homepage sub */}
-            {isHomepage && (
-              <div
-                style={{
-                  display: "flex",
-                  color: "#6b6b6b",
-                  fontSize: "22px",
-                  lineHeight: 1.5,
-                }}
-              >
-                Reusable SKILL.md workflows for Codex, Claude Code, and Cursor.
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div
-            style={{
-              marginTop: "48px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderTop: "1px solid #1e1e1e",
-              paddingTop: "24px",
-            }}
-          >
-            <span
-              style={{
-                color: "#4a4a4a",
-                fontSize: "14px",
-                letterSpacing: "0.08em",
-                textTransform: "lowercase",
-              }}
-            >
-              {isHomepage
-                ? "npx skills add tushaarmehtaa/tushar-skills"
-                : "portable Agent Skill"}
-            </span>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-              }}
-            >
-              <span style={{ color: "#f59e0b", fontSize: "14px" }}>/</span>
-              <span style={{ color: "#4a4a4a", fontSize: "14px" }}>
-                slashskills
-              </span>
-            </div>
+          <div style={{ fontSize: 21, lineHeight: 1.5, color: "#60646C" }}>
+            {(
+              description ||
+              "Give your agent a workflow worth following. Find a skill, make it yours, and get to work."
+            ).slice(0, 210)}
           </div>
         </div>
+        <svg width="320" height="260" viewBox="0 0 620 250">
+          {Array.from({ length: 34 }, (_, j) => (
+            <path
+              key={j}
+              d={`M30 ${28 + j * 5} C180 ${28 + j * 5} 270 ${217 - j * 5} 590 ${217 - j * 5}`}
+              fill="none"
+              stroke={j % 4 === 0 ? "#4F7061" : "#A5B6AC"}
+              strokeWidth="1"
+            />
+          ))}
+          {Array.from({ length: 34 }, (_, j) => (
+            <path
+              key={`c${j}`}
+              d={`M${95 + j * 12} 10 Q${220 + j * 4} 115 ${490 - j * 9} 225`}
+              fill="none"
+              stroke="#9BA7A0"
+              strokeWidth="0.8"
+            />
+          ))}
+        </svg>
       </div>
-    ),
-    { width: 1200, height: 630 }
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          borderTop: "1px solid #DCDDE1",
+          paddingTop: 24,
+          fontSize: 17,
+          color: "#60646C",
+        }}
+      >
+        <span>For Codex, Claude Code, and Cursor</span>
+        <span>slashskills.xyz</span>
+      </div>
+    </div>,
+    { width: 1200, height: 630 },
   );
 }

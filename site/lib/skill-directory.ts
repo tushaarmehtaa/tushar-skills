@@ -1,6 +1,7 @@
 export interface DirectorySkill {
   slug: string;
   name: string;
+  displayName?: string;
   category: string;
   description: string;
   localAvailable: boolean;
@@ -15,7 +16,9 @@ export interface DirectoryFilters {
   surface: SurfaceFilter;
 }
 
-export function getDirectoryCategories(skills: readonly DirectorySkill[]): string[] {
+export function getDirectoryCategories(
+  skills: readonly DirectorySkill[],
+): string[] {
   return [...new Set(skills.map((skill) => skill.category))].sort();
 }
 
@@ -28,11 +31,16 @@ export function filterDirectorySkills(
   const matches = skills.filter((skill) => {
     const matchesQuery =
       normalizedQuery.length === 0 ||
-      `${skill.name} ${skill.description} ${skill.category}`.toLowerCase().includes(normalizedQuery);
-    const matchesCategory = filters.category === "all" || skill.category === filters.category;
+      `${skill.name} ${skill.slug} ${skill.displayName ?? ""} ${skill.description} ${skill.category}`
+        .toLowerCase()
+        .includes(normalizedQuery);
+    const matchesCategory =
+      filters.category === "all" || skill.category === filters.category;
     const matchesSurface =
       filters.surface === "all" ||
-      (filters.surface === "chat" ? skill.claudeAppReady : skill.localAvailable);
+      (filters.surface === "chat"
+        ? skill.claudeAppReady
+        : skill.localAvailable);
 
     return matchesQuery && matchesCategory && matchesSurface;
   });
@@ -41,7 +49,11 @@ export function filterDirectorySkills(
     const name = skill.name.toLowerCase();
     if (name === normalizedQuery || skill.slug === normalizedQuery) return 4;
     if (name.startsWith(normalizedQuery)) return 3;
-    if (name.includes(normalizedQuery)) return 2;
+    if (
+      name.includes(normalizedQuery) ||
+      skill.displayName?.toLowerCase().includes(normalizedQuery)
+    )
+      return 2;
     return skill.category.toLowerCase().includes(normalizedQuery) ? 1 : 0;
   }
   return matches.sort((a, b) => relevance(b) - relevance(a));

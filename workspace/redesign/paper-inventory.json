@@ -1,0 +1,575 @@
+{
+  "fileName": "Redesign",
+  "pageName": "/skills",
+  "pageId": "p-1-0",
+  "url": "https://app.paper.design/file/01M45F1ZJ3W8T4ZH2T9BNE9E20/p-1-0",
+  "rootNodeId": "root_node_p-1-0",
+  "nodeCount": 3753,
+  "artboardCount": 61,
+  "artboards": [
+    {
+      "id": "GF-0",
+      "name": "02.1 · Another category · Desktop",
+      "childCount": 6,
+      "width": 1440,
+      "height": 1166,
+      "worldX": 0,
+      "worldY": 1850
+    },
+    {
+      "id": "KV-0",
+      "name": "06.2 · Catalog coverage reference",
+      "childCount": 4,
+      "width": 1440,
+      "height": 913,
+      "worldX": 2400,
+      "worldY": 9700
+    },
+    {
+      "id": "MC-0",
+      "name": "01.2 · Search · Desktop",
+      "childCount": 6,
+      "width": 1440,
+      "height": 1124,
+      "worldX": 2400,
+      "worldY": 0
+    },
+    {
+      "id": "670-0",
+      "name": "02.6 · Platform filters · Desktop",
+      "childCount": 7,
+      "width": 1440,
+      "height": 1124,
+      "worldX": 4800,
+      "worldY": 17600
+    },
+    {
+      "id": "63Q-0",
+      "name": "02.5 · No results · Desktop",
+      "childCount": 6,
+      "width": 1440,
+      "height": 771,
+      "worldX": 4800,
+      "worldY": 14600
+    },
+    {
+      "id": "OP-0",
+      "name": "01.3 · Understand & install · Desktop",
+      "childCount": 5,
+      "width": 1440,
+      "height": 1411,
+      "worldX": 4800,
+      "worldY": 0
+    },
+    {
+      "id": "QU-0",
+      "name": "03.1 · Read source · Desktop",
+      "childCount": 4,
+      "width": 1440,
+      "height": 1013,
+      "worldX": 0,
+      "worldY": 3500
+    },
+    {
+      "id": "QV-0",
+      "name": "04.1 · Guides index · Desktop",
+      "childCount": 8,
+      "width": 1440,
+      "height": 948,
+      "worldX": 0,
+      "worldY": 5400
+    },
+    {
+      "id": "QW-0",
+      "name": "04.2 · Agent setup · Desktop",
+      "childCount": 4,
+      "width": 1440,
+      "height": 1447,
+      "worldX": 2400,
+      "worldY": 5400
+    },
+    {
+      "id": "UX-0",
+      "name": "01.2 · Search · Mobile",
+      "childCount": 2,
+      "width": 390,
+      "height": 666,
+      "worldX": 3920,
+      "worldY": 0
+    },
+    {
+      "id": "UY-0",
+      "name": "02.2 · Platform filters · Mobile",
+      "childCount": 3,
+      "width": 390,
+      "height": 777,
+      "worldX": 2400,
+      "worldY": 1850
+    },
+    {
+      "id": "UZ-0",
+      "name": "01.3 · Understand · Mobile",
+      "childCount": 3,
+      "width": 390,
+      "height": 1525,
+      "worldX": 6320,
+      "worldY": 0
+    },
+    {
+      "id": "V0-0",
+      "name": "01.4 · Install sheet · Mobile",
+      "childCount": 3,
+      "width": 390,
+      "height": 840,
+      "worldX": 6790,
+      "worldY": 0
+    },
+    {
+      "id": "V1-0",
+      "name": "04.1 · Guides index · Mobile",
+      "childCount": 2,
+      "width": 390,
+      "height": 1164,
+      "worldX": 1520,
+      "worldY": 5400
+    },
+    {
+      "id": "V2-0",
+      "name": "04.2 · Agent setup · Mobile",
+      "childCount": 2,
+      "width": 390,
+      "height": 1377,
+      "worldX": 3920,
+      "worldY": 5400
+    },
+    {
+      "id": "12X-0",
+      "name": "02.3 · No results · Mobile",
+      "childCount": 4,
+      "width": 390,
+      "height": 844,
+      "worldX": 2870,
+      "worldY": 1850
+    },
+    {
+      "id": "12Y-0",
+      "name": "02.4 · Navigation menu · Mobile",
+      "childCount": 4,
+      "width": 390,
+      "height": 844,
+      "worldX": 3920,
+      "worldY": 1850
+    },
+    {
+      "id": "12Z-0",
+      "name": "03.1 · Read source · Mobile",
+      "childCount": 2,
+      "width": 390,
+      "height": 863,
+      "worldX": 1520,
+      "worldY": 3500
+    },
+    {
+      "id": "130-0",
+      "name": "06.1 · Interaction & feedback reference",
+      "childCount": 5,
+      "width": 1440,
+      "height": 1298,
+      "worldX": 0,
+      "worldY": 9700
+    },
+    {
+      "id": "18N-0",
+      "name": "00 — START HERE · How to review the design",
+      "childCount": 2,
+      "width": 2400,
+      "height": 378,
+      "worldX": 0,
+      "worldY": -850
+    },
+    {
+      "id": "1ML-0",
+      "name": "02.1 · Category picker · Mobile",
+      "childCount": 3,
+      "width": 390,
+      "height": 844,
+      "worldX": 1520,
+      "worldY": 1850
+    },
+    {
+      "id": "1TR-0",
+      "name": "05.1 · Requirements · Desktop",
+      "childCount": 12,
+      "width": 1440,
+      "height": 1175,
+      "worldX": 0,
+      "worldY": 7800
+    },
+    {
+      "id": "1TZ-0",
+      "name": "05.1 · Requirements · Mobile",
+      "childCount": 12,
+      "width": 390,
+      "height": 1392,
+      "worldX": 1520,
+      "worldY": 7800
+    },
+    {
+      "id": "1U6-0",
+      "name": "05.2 · Changelog · Desktop",
+      "childCount": 15,
+      "width": 1440,
+      "height": 1032,
+      "worldX": 2400,
+      "worldY": 7800
+    },
+    {
+      "id": "1UE-0",
+      "name": "05.2 · Changelog · Mobile",
+      "childCount": 15,
+      "width": 390,
+      "height": 1136,
+      "worldX": 3920,
+      "worldY": 7800
+    },
+    {
+      "id": "1UL-0",
+      "name": "04.3 · Editorial template · Desktop",
+      "childCount": 11,
+      "width": 1440,
+      "height": 1415,
+      "worldX": 4800,
+      "worldY": 5400
+    },
+    {
+      "id": "1UT-0",
+      "name": "04.3 · Editorial template · Mobile",
+      "childCount": 11,
+      "width": 390,
+      "height": 1825,
+      "worldX": 6320,
+      "worldY": 5400
+    },
+    {
+      "id": "1V0-0",
+      "name": "03.2 · Package & platforms · Desktop",
+      "childCount": 9,
+      "width": 1440,
+      "height": 1284,
+      "worldX": 2400,
+      "worldY": 3500
+    },
+    {
+      "id": "1V8-0",
+      "name": "03.2 · Package & platforms · Mobile",
+      "childCount": 9,
+      "width": 390,
+      "height": 1360,
+      "worldX": 3920,
+      "worldY": 3500
+    },
+    {
+      "id": "1VF-0",
+      "name": "03.3 · Whole library · Desktop",
+      "childCount": 8,
+      "width": 1440,
+      "height": 987,
+      "worldX": 4800,
+      "worldY": 3500
+    },
+    {
+      "id": "1VN-0",
+      "name": "03.3 · Whole library · Mobile",
+      "childCount": 8,
+      "width": 390,
+      "height": 1027,
+      "worldX": 6320,
+      "worldY": 3500
+    },
+    {
+      "id": "2P3-0",
+      "name": "01 · Review row · Find a skill → Understand it → Install",
+      "childCount": 2,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": -200
+    },
+    {
+      "id": "2P7-0",
+      "name": "02 · Review row · Discovery branches",
+      "childCount": 2,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 1650
+    },
+    {
+      "id": "2PB-0",
+      "name": "03 · Review row · Inspect the package → Choose an install path",
+      "childCount": 2,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 3300
+    },
+    {
+      "id": "2PF-0",
+      "name": "04 · Review row · Get help → Follow a guide → Return to a skill",
+      "childCount": 2,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 5200
+    },
+    {
+      "id": "2PJ-0",
+      "name": "05 · Review row · Check requirements and what changed",
+      "childCount": 2,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 7600
+    },
+    {
+      "id": "2PN-0",
+      "name": "06 · Review row · Design reference",
+      "childCount": 2,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 9500
+    },
+    {
+      "id": "3O0-0",
+      "name": "01.1 · Browse · Desktop · Canvas Structure",
+      "childCount": 8,
+      "width": 1440,
+      "height": 1140,
+      "worldX": 0,
+      "worldY": 0
+    },
+    {
+      "id": "3RU-0",
+      "name": "01.1 · Browse · Mobile · Canvas Structure",
+      "childCount": 9,
+      "width": 390,
+      "height": 943,
+      "worldX": 1520,
+      "worldY": 0
+    },
+    {
+      "id": "6IU-0",
+      "name": "10.1 · Narrow layout check · 320 px",
+      "childCount": 9,
+      "width": 320,
+      "height": 983,
+      "worldX": 2480,
+      "worldY": 20800
+    },
+    {
+      "id": "532-0",
+      "name": "06.3 · Canvas Structure · Visual language",
+      "childCount": 4,
+      "width": 1440,
+      "height": 772,
+      "worldX": 4800,
+      "worldY": 9700
+    },
+    {
+      "id": "55V-0",
+      "name": "07.1 · ChatGPT Skills and plugins · Desktop",
+      "childCount": 9,
+      "width": 1440,
+      "height": 1685,
+      "worldX": 0,
+      "worldY": 11600
+    },
+    {
+      "id": "57N-0",
+      "name": "07.1 · ChatGPT Skills and plugins · Mobile",
+      "childCount": 10,
+      "width": 390,
+      "height": 1888,
+      "worldX": 1520,
+      "worldY": 11600
+    },
+    {
+      "id": "59G-0",
+      "name": "07.2 · Claude app · Desktop",
+      "childCount": 8,
+      "width": 1440,
+      "height": 1323,
+      "worldX": 2400,
+      "worldY": 11600
+    },
+    {
+      "id": "5AX-0",
+      "name": "07.2 · Claude app · Mobile",
+      "childCount": 9,
+      "width": 390,
+      "height": 1494,
+      "worldX": 3920,
+      "worldY": 11600
+    },
+    {
+      "id": "5CF-0",
+      "name": "08.1 · Claude Code setup · Desktop",
+      "childCount": 9,
+      "width": 1440,
+      "height": 1805,
+      "worldX": 0,
+      "worldY": 14600
+    },
+    {
+      "id": "5EA-0",
+      "name": "08.1 · Claude Code setup · Mobile",
+      "childCount": 10,
+      "width": 390,
+      "height": 2079,
+      "worldX": 1520,
+      "worldY": 14600
+    },
+    {
+      "id": "5G6-0",
+      "name": "08.2 · Cursor setup · Desktop",
+      "childCount": 9,
+      "width": 1440,
+      "height": 1830,
+      "worldX": 2400,
+      "worldY": 14600
+    },
+    {
+      "id": "5I1-0",
+      "name": "08.2 · Cursor setup · Mobile",
+      "childCount": 10,
+      "width": 390,
+      "height": 2101,
+      "worldX": 3920,
+      "worldY": 14600
+    },
+    {
+      "id": "5JX-0",
+      "name": "05.3 · Missing page · Desktop",
+      "childCount": 4,
+      "width": 1440,
+      "height": 900,
+      "worldX": 4800,
+      "worldY": 7800
+    },
+    {
+      "id": "5KG-0",
+      "name": "05.3 · Missing page · Mobile",
+      "childCount": 5,
+      "width": 390,
+      "height": 844,
+      "worldX": 6320,
+      "worldY": 7800
+    },
+    {
+      "id": "5L0-0",
+      "name": "09.1 · Astra instruction guide · Desktop",
+      "childCount": 14,
+      "width": 1440,
+      "height": 2120,
+      "worldX": 0,
+      "worldY": 17600
+    },
+    {
+      "id": "5NE-0",
+      "name": "09.1 · Astra instruction guide · Mobile",
+      "childCount": 15,
+      "width": 390,
+      "height": 2381,
+      "worldX": 1520,
+      "worldY": 17600
+    },
+    {
+      "id": "5PT-0",
+      "name": "09.2 · MCP event workflow · Desktop",
+      "childCount": 12,
+      "width": 1440,
+      "height": 2012,
+      "worldX": 2400,
+      "worldY": 17600.001
+    },
+    {
+      "id": "5RO-0",
+      "name": "09.2 · MCP event workflow · Mobile",
+      "childCount": 13,
+      "width": 390,
+      "height": 2452,
+      "worldX": 3920,
+      "worldY": 17600.001
+    },
+    {
+      "id": "5TK-0",
+      "name": "06.4 · Original icons and usage",
+      "childCount": 6,
+      "width": 1440,
+      "height": 1063,
+      "worldX": 4800,
+      "worldY": 11600
+    },
+    {
+      "id": "6AC-0",
+      "name": "10 · Flow and implementation contract",
+      "childCount": 7,
+      "width": 2400,
+      "height": 849,
+      "worldX": 0,
+      "worldY": 20800.001
+    },
+    {
+      "id": "6DB-0",
+      "name": "07 · Review row · Chat workflows and original icons",
+      "childCount": 1,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 11400
+    },
+    {
+      "id": "6DG-0",
+      "name": "08 · Review row · Runtime setup and recovery states",
+      "childCount": 1,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 14400
+    },
+    {
+      "id": "6DL-0",
+      "name": "09 · Review row · Research guides and filter behavior",
+      "childCount": 1,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 17400
+    },
+    {
+      "id": "6DQ-0",
+      "name": "10 · Review row · Follow the flow",
+      "childCount": 1,
+      "width": 7180,
+      "height": 120,
+      "worldX": 0,
+      "worldY": 20600.001
+    }
+  ],
+  "pages": [
+    {
+      "id": "p-1-0",
+      "name": "/skills",
+      "isActive": true
+    }
+  ],
+  "fontFamilies": [
+    "System Sans-Serif",
+    "Geist",
+    "Geist Mono"
+  ],
+  "tokens": {
+    "items": []
+  }
+}

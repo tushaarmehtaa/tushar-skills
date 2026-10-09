@@ -1,3 +1,4 @@
+import { skillHref } from "@/lib/canvas";
 import { getAllSkills } from '@/lib/skills';
 export const dynamic = 'force-static';
 export function GET() {
@@ -9,7 +10,7 @@ export function GET() {
     note: 'Catalog metadata and installation paths. Listed support is not evidence of successful task execution.',
     skills: getAllSkills().map(({ slug, name, description, category, capabilities, surfaces, support }) => ({
       slug, name, description, category, capabilities, surfaces, support,
-      url: `https://www.slashskills.xyz/${slug}`,
+      url: `https://www.slashskills.xyz${skillHref(slug)}`,
       source: `https://github.com/tushaarmehtaa/tushar-skills/tree/main/${slug}`,
       instructions: `https://raw.githubusercontent.com/tushaarmehtaa/tushar-skills/main/${slug}/SKILL.md`,
       install: `npx skills add tushaarmehtaa/tushar-skills --skill ${slug}`,

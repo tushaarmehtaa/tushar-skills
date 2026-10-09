@@ -10,12 +10,12 @@ test.describe("slashskills platform", () => {
   test("keeps core pages within the mobile viewport", async ({ page }) => {
     await page.goto("/");
     await expectNoDocumentOverflow(page);
-    await expect(page.getByRole("heading", { name: "workflows saved as Agent Skills." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Good work starts with a useful skill." })).toBeVisible();
 
     await page.goto("/cold-outreach");
     await expectNoDocumentOverflow(page);
-    await expect(page.getByRole("heading", { name: "cold-outreach" })).toBeVisible();
-    await expect(page.locator("[data-status]")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Start a conversation" })).toBeVisible();
+    await expect(page.locator("main [data-status]")).toHaveCount(0);
 
     await page.goto("/compatibility");
     await expectNoDocumentOverflow(page);
@@ -51,9 +51,8 @@ test.describe("slashskills platform", () => {
 
   test("keeps chat-capable skills in the local-agent filter", async ({ page }) => {
     await page.goto("/");
-    await page.getByText("Platform", { exact: true }).click();
-    await page.getByRole("radio", { name: "Local agents", exact: true }).click();
-    await expect(page.getByRole("radio", { name: "Local agents", exact: true })).toBeChecked();
+    await page.getByRole("combobox", { name: "Platform", exact: true }).selectOption("local");
+    await expect(page.getByRole("combobox", { name: "Platform", exact: true })).toHaveValue("local");
     await expect(page.getByRole("link", { name: /decision-doc/ })).toBeVisible();
     await expect(page).toHaveURL(/surface=local/);
   });
@@ -62,7 +61,7 @@ test.describe("slashskills platform", () => {
     for (const slug of ["humanize", "landing-page", "mobile-first"]) {
       await page.goto(`/${slug}`);
       await expectNoDocumentOverflow(page);
-      await expect(page.getByRole("heading", { name: slug, exact: true })).toBeVisible();
+      await expect(page.locator(".skill-intro .skill-pill").first()).toBeVisible();
     }
   });
 });

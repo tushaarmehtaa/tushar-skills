@@ -1,26 +1,28 @@
 @import "tailwindcss";
+@import "./canvas.css";
+@import "./visual-direction.css";
 
 @theme {
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
 
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
-  --color-surface-raised: #181818;
-  --color-border: #262626;
-  --color-border-hover: #3a3a3a;
-  --color-muted: #858585;
-  --color-text: #a3a3a3;
-  --color-heading: #fafafa;
-  --color-accent: #f59e0b;
-  --color-accent-dim: rgba(245, 158, 11, 0.2);
+  --color-bg: #FFFFFF;
+  --color-surface: #F5F7F5;
+  --color-surface-raised: #EEF3EF;
+  --color-border: #DCDDE1;
+  --color-border-hover: #858B89;
+  --color-muted: #60646C;
+  --color-text: #60646C;
+  --color-heading: #17191C;
+  --color-accent: #345847;
+  --color-accent-dim: #EEF3EF;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* ═══════ BASE ═══════ */
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -66,15 +68,15 @@ body {
   to   { opacity: 1; }
 }
 
-.animate-fade-up  { animation: fade-up  0.35s var(--ease-out) both; }
-.animate-fade-in  { animation: fade-in  0.35s ease-out both; }
+.animate-fade-up { animation: none; }
+.animate-fade-in { animation: none; }
 
 /* ═══════ TYPE PRIMITIVES ═══════ */
 
 .terminal-heading {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   letter-spacing: -0.02em;
-  text-transform: lowercase;
+  text-transform: none;
 }
 
 .terminal-caption {
@@ -115,8 +117,8 @@ body {
   transition: background-color 130ms ease;
 }
 
-.skill-row:hover {
-  background-color: var(--color-surface-raised);
+@media (hover: hover) and (pointer: fine) {
+  .skill-row:hover { background-color: var(--color-surface-raised); }
 }
 
 .skill-row:hover .skill-row-command {
@@ -131,7 +133,7 @@ body {
   100% { opacity: 1; transform: scale(1); }
 }
 
-.copy-success { animation: copy-pulse 0.35s ease-out; }
+.copy-success { animation: none; }
 
 /* ═══════ DIVIDER ═══════ */
 
@@ -183,8 +185,8 @@ body {
 .prose h3,
 .prose h4 {
   color: var(--color-heading);
-  font-family: var(--font-mono);
-  font-weight: 600;
+  font-family: var(--font-sans);
+  font-weight: 500;
   margin-top: 2.5em;
   margin-bottom: 0.75em;
   letter-spacing: 0;
@@ -242,7 +244,7 @@ body {
 .prose a {
   color: var(--color-accent);
   text-decoration: none;
-  border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+  border-bottom: 1px solid #858B89;
   transition: border-color 0.15s ease;
 }
 

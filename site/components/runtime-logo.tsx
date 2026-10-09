@@ -22,7 +22,7 @@ export function RuntimeLogo({
   runtime,
   label,
   decorative = false,
-  tone = "brand",
+  tone = "current",
   className = "h-5 w-5",
   style,
   ...props
@@ -86,7 +86,7 @@ export function RuntimeLogoTile({
   runtime,
   label,
   decorative = false,
-  tone = "brand",
+  tone = "current",
   size = "md",
   className = "",
   style,

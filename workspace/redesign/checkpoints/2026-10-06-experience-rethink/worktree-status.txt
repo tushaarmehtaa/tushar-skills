@@ -1,0 +1,48 @@
+ M site/app/[skill]/page.tsx
+ M site/app/api/og/route.tsx
+ M site/app/changelog/page.tsx
+ M site/app/compatibility/page.tsx
+ M site/app/globals.css
+ M site/app/guides/page.tsx
+ M site/app/icon.svg
+ M site/app/layout.tsx
+ M site/app/llms.txt/route.ts
+ M site/app/page.tsx
+ M site/app/sitemap.ts
+ M site/app/skills.json/route.ts
+ M site/components/agent-tabs.tsx
+ M site/components/copy-button.tsx
+ M site/components/editorial-guide.tsx
+ M site/components/footer.tsx
+ M site/components/guide-code.tsx
+ M site/components/guide-layout.tsx
+ M site/components/header.tsx
+ M site/components/page-frame.tsx
+ M site/components/runtime-logo.tsx
+ M site/components/skill-detail.tsx
+ M site/components/skill-directory.tsx
+ M site/e2e/discovery.spec.ts
+ M site/e2e/guides.spec.ts
+ M site/e2e/platform.spec.ts
+ M site/lib/skill-directory.ts
+ M site/lib/skills.ts
+ M site/tests/runtime.test.ts
+ M workspace/seo-newsroom/queue.json
+?? site/app/canvas.css
+?? site/app/not-found.tsx
+?? site/app/skills/
+?? site/app/visual-direction.css
+?? site/components/canvas-art.tsx
+?? site/components/canvas-icon.tsx
+?? site/components/install-panel.tsx
+?? site/components/package-disclosure.tsx
+?? site/components/results-back.tsx
+?? site/components/skill-visual.tsx
+?? site/components/source-reader.tsx
+?? site/components/workflow-strip.tsx
+?? site/e2e/canvas.spec.ts
+?? site/e2e/detail-polish.spec.ts
+?? site/lib/canvas.ts
+?? workspace/redesign/
+?? workspace/seo-newsroom/experiments/mcp-sdk-security/
+?? workspace/seo-newsroom/research/2026-09-29-mcp-sdk-security-regression.md

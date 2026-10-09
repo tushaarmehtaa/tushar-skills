@@ -1,0 +1,2756 @@
+diff --git a/site/app/[skill]/page.tsx b/site/app/[skill]/page.tsx
+index fcb8afa..f30f4f0 100644
+--- a/site/app/[skill]/page.tsx
++++ b/site/app/[skill]/page.tsx
+@@ -1,5 +1,6 @@
+ import { notFound } from "next/navigation";
+-import Link from "next/link";
++import { ResultsBack } from "@/components/results-back";
++import { skillHref } from "@/lib/canvas";
+ import { Header } from "@/components/header";
+ import { Footer } from "@/components/footer";
+ import { SkillDetail } from "@/components/skill-detail";
+@@ -14,7 +15,7 @@ const siteUrl = "https://www.slashskills.xyz";
+ export const dynamicParams = false;
+ 
+ export function generateStaticParams() {
+-  return getAllSkills().map((skill) => ({ skill: skill.slug }));
++  return getAllSkills().filter(skill => skill.slug !== "changelog").map((skill) => ({ skill: skill.slug }));
+ }
+ 
+ export async function generateMetadata({
+@@ -50,7 +51,7 @@ export async function generateMetadata({
+       images: [ogImageUrl],
+     },
+     alternates: {
+-      canonical: `/${slug}`,
++      canonical: skillHref(slug),
+     },
+   };
+ }
+@@ -66,13 +67,13 @@ export default async function SkillPage({
+ 
+   const availableFiles = new Set(["SKILL.md", ...skill.files.map((file) => file.path)]);
+   const renderOptions = { availableFiles, skillSlug: skill.slug };
+-  const contentHtml = renderMarkdown(skill.content, { ...renderOptions, sourcePath: "SKILL.md" });
++  const contentHtml = renderMarkdown(skill.content, { ...renderOptions, sourcePath: "SKILL.md" }).replace(/<(\/?)h1(?=[ >])/g, "<$1h2");
+   const renderedFiles = skill.files.map((file) => ({
+     ...file,
+     anchor: packageFileAnchor(file.path),
+-    contentHtml: renderMarkdown(file.content, { ...renderOptions, sourcePath: file.path }),
++    contentHtml: renderMarkdown(file.content, { ...renderOptions, sourcePath: file.path }).replace(/<(\/?)h1(?=[ >])/g, "<$1h2"),
+   }));
+-  const skillUrl = `${siteUrl}/${skill.slug}`;
++  const skillUrl = `${siteUrl}${skillHref(skill.slug)}`;
+   const jsonLd = {
+     "@context": "https://schema.org",
+     "@type": "CreativeWork",
+@@ -88,24 +89,15 @@ export default async function SkillPage({
+   };
+ 
+   return (
+-    <div className="flex min-h-screen flex-col">
++    <div className="has-skill-installer flex min-h-screen flex-col">
+       <script
+         type="application/ld+json"
+         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+       />
+       <Header />
+       <main id="main-content" className="flex-1 px-6 py-6 sm:py-10">
+-        <div className="mx-auto w-full max-w-5xl min-w-0">
+-          <Link
+-            href="/"
+-            className="back-link mb-6 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
+-          >
+-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform">
+-              <line x1="19" y1="12" x2="5" y2="12" />
+-              <polyline points="12 19 5 12 12 5" />
+-            </svg>
+-            All skills
+-          </Link>
++        <div className="mx-auto w-full max-w-[1344px] min-w-0">
++          <ResultsBack />
+           <SkillDetail skill={skill} contentHtml={contentHtml} renderedFiles={renderedFiles} />
+         </div>
+       </main>
+diff --git a/site/app/api/og/route.tsx b/site/app/api/og/route.tsx
+index 84a0c4a..a6681d0 100644
+--- a/site/app/api/og/route.tsx
++++ b/site/app/api/og/route.tsx
+@@ -4,200 +4,96 @@ import type { NextRequest } from "next/server";
+ export const runtime = "edge";
+ 
+ export async function GET(request: NextRequest) {
+-  const { searchParams } = request.nextUrl;
+-  const skill = searchParams.get("skill");
+-  const description = searchParams.get("description") || "";
+-
+-  const isHomepage = !skill;
+-
++  const skill = request.nextUrl.searchParams.get("skill");
++  const description = request.nextUrl.searchParams.get("description");
+   return new ImageResponse(
+-    (
++    <div
++      style={{
++        width: 1200,
++        height: 630,
++        display: "flex",
++        flexDirection: "column",
++        background: "#FFFFFF",
++        color: "#17191C",
++        padding: "56px 64px",
++        fontFamily: "sans-serif",
++      }}
++    >
+       <div
+         style={{
+-          width: 1200,
+-          height: 630,
+           display: "flex",
+-          backgroundColor: "#0a0a0a",
++          justifyContent: "space-between",
++          alignItems: "center",
++          fontSize: 28,
++          fontWeight: 700,
+         }}
+       >
++        <span>/skills</span>
++        <span style={{ fontSize: 18, color: "#345847", fontWeight: 400 }}>
++          A workflow worth following.
++        </span>
++      </div>
++      <div style={{ display: "flex", flex: 1, alignItems: "center", gap: 40 }}>
+         <div
+           style={{
+-            flex: 1,
+             display: "flex",
+             flexDirection: "column",
+-            margin: "1px",
+-            border: "1px solid #1e1e1e",
+-            padding: "56px 68px",
+-            fontFamily: "monospace",
++            width: 700,
++            gap: 24,
+           }}
+         >
+-          {/* Logo */}
+           <div
+             style={{
+-              display: "flex",
+-              alignItems: "center",
+-              gap: "6px",
+-              marginBottom: "auto",
++              fontSize: skill && skill.length > 40 ? 44 : 60,
++              lineHeight: 1.08,
++              letterSpacing: "-0.04em",
++              fontWeight: 500,
+             }}
+           >
+-            <span
+-              style={{
+-                color: "#f59e0b",
+-                fontSize: "20px",
+-                fontWeight: 700,
+-                lineHeight: 1,
+-              }}
+-            >
+-              /
+-            </span>
+-            <span
+-              style={{
+-                color: "#fafafa",
+-                fontSize: "20px",
+-                fontWeight: 700,
+-                letterSpacing: "-0.02em",
+-                lineHeight: 1,
+-              }}
+-            >
+-              slashskills
+-            </span>
+-          </div>
+-
+-          {/* Main content */}
+-          <div
+-            style={{
+-              display: "flex",
+-              flexDirection: "column",
+-              gap: "20px",
+-            }}
+-          >
+-            {/* Title */}
+-            {isHomepage ? (
+-              <div
+-                style={{
+-                  display: "flex",
+-                  flexDirection: "column",
+-                  gap: "0px",
+-                }}
+-              >
+-                <span
+-                  style={{
+-                    color: "#fafafa",
+-                    fontSize: "80px",
+-                    fontWeight: 600,
+-                    lineHeight: 1.08,
+-                    letterSpacing: "-0.04em",
+-                  }}
+-                >
+-                  workflows
+-                </span>
+-                <span
+-                  style={{
+-                    color: "#fafafa",
+-                    fontSize: "80px",
+-                    fontWeight: 600,
+-                    lineHeight: 1.08,
+-                    letterSpacing: "-0.04em",
+-                  }}
+-                >
+-                  saved as
+-                </span>
+-                <span
+-                  style={{
+-                    color: "#f59e0b",
+-                    fontSize: "80px",
+-                    fontWeight: 600,
+-                    lineHeight: 1.08,
+-                    letterSpacing: "-0.04em",
+-                  }}
+-                >
+-                  Agent Skills.
+-                </span>
+-              </div>
+-            ) : (
+-              <div
+-                style={{
+-                  display: "flex",
+-                  color: "#fafafa",
+-                  fontSize: skill && skill.length > 16 ? "60px" : "72px",
+-                  fontWeight: 600,
+-                  lineHeight: 1.1,
+-                  letterSpacing: "-0.03em",
+-                }}
+-              >
+-                {`/${skill}`}
+-              </div>
+-            )}
+-
+-            {/* Description */}
+-            {!isHomepage && description && (
+-              <div
+-                style={{
+-                  display: "flex",
+-                  color: "#6b6b6b",
+-                  fontSize: "22px",
+-                  lineHeight: 1.5,
+-                  maxWidth: "820px",
+-                }}
+-              >
+-                {description}
+-              </div>
+-            )}
+-
+-            {/* Homepage sub */}
+-            {isHomepage && (
+-              <div
+-                style={{
+-                  display: "flex",
+-                  color: "#6b6b6b",
+-                  fontSize: "22px",
+-                  lineHeight: 1.5,
+-                }}
+-              >
+-                Reusable SKILL.md workflows for Codex, Claude Code, and Cursor.
+-              </div>
+-            )}
++            {skill || "Good work starts with a useful skill."}
+           </div>
+-
+-          {/* Footer */}
+-          <div
+-            style={{
+-              marginTop: "48px",
+-              display: "flex",
+-              alignItems: "center",
+-              justifyContent: "space-between",
+-              borderTop: "1px solid #1e1e1e",
+-              paddingTop: "24px",
+-            }}
+-          >
+-            <span
+-              style={{
+-                color: "#4a4a4a",
+-                fontSize: "14px",
+-                letterSpacing: "0.08em",
+-                textTransform: "lowercase",
+-              }}
+-            >
+-              {isHomepage
+-                ? "npx skills add tushaarmehtaa/tushar-skills"
+-                : "portable Agent Skill"}
+-            </span>
+-            <div
+-              style={{
+-                display: "flex",
+-                alignItems: "center",
+-                gap: "4px",
+-              }}
+-            >
+-              <span style={{ color: "#f59e0b", fontSize: "14px" }}>/</span>
+-              <span style={{ color: "#4a4a4a", fontSize: "14px" }}>
+-                slashskills
+-              </span>
+-            </div>
++          <div style={{ fontSize: 21, lineHeight: 1.5, color: "#60646C" }}>
++            {(
++              description ||
++              "Give your agent a workflow worth following. Find a skill, make it yours, and get to work."
++            ).slice(0, 210)}
+           </div>
+         </div>
++        <svg width="320" height="260" viewBox="0 0 620 250">
++          {Array.from({ length: 34 }, (_, j) => (
++            <path
++              key={j}
++              d={`M30 ${28 + j * 5} C180 ${28 + j * 5} 270 ${217 - j * 5} 590 ${217 - j * 5}`}
++              fill="none"
++              stroke={j % 4 === 0 ? "#4F7061" : "#A5B6AC"}
++              strokeWidth="1"
++            />
++          ))}
++          {Array.from({ length: 34 }, (_, j) => (
++            <path
++              key={`c${j}`}
++              d={`M${95 + j * 12} 10 Q${220 + j * 4} 115 ${490 - j * 9} 225`}
++              fill="none"
++              stroke="#9BA7A0"
++              strokeWidth="0.8"
++            />
++          ))}
++        </svg>
++      </div>
++      <div
++        style={{
++          display: "flex",
++          justifyContent: "space-between",
++          borderTop: "1px solid #DCDDE1",
++          paddingTop: 24,
++          fontSize: 17,
++          color: "#60646C",
++        }}
++      >
++        <span>For Codex, Claude Code, and Cursor</span>
++        <span>slashskills.xyz</span>
+       </div>
+-    ),
+-    { width: 1200, height: 630 }
++    </div>,
++    { width: 1200, height: 630 },
+   );
+ }
+diff --git a/site/app/changelog/page.tsx b/site/app/changelog/page.tsx
+index b3db47d..a0f048b 100644
+--- a/site/app/changelog/page.tsx
++++ b/site/app/changelog/page.tsx
+@@ -192,8 +192,8 @@ const RELEASES: Release[] = [
+ 
+ const TYPE_STYLES: Record<EntryType, { label: string; color: string }> = {
+   skill:  { label: "new",    color: "text-[var(--color-accent)]" },
+-  update: { label: "update", color: "text-[#60a5fa]" },
+-  fix:    { label: "fix",    color: "text-[#a78bfa]" },
++  update: { label: "update", color: "text-[var(--color-accent)]" },
++  fix:    { label: "fix",    color: "text-[var(--color-heading)]" },
+   site:   { label: "site",   color: "text-[var(--color-muted)]" },
+ };
+ 
+@@ -221,11 +221,11 @@ export default function ChangelogPage() {
+           </Link>
+ 
+           <div className="animate-fade-up mb-12">
+-            <h1 className="terminal-heading text-4xl font-semibold text-[var(--color-heading)] sm:text-5xl">
+-              changelog
++            <h1 className="terminal-heading text-[32px] font-medium text-[var(--color-heading)] sm:text-5xl">
++              Changelog
+             </h1>
+             <p className="mt-4 text-sm leading-relaxed text-[var(--color-text)]">
+-              every skill added, updated, or fixed.
++              Every skill added, updated, or fixed.
+             </p>
+           </div>
+ 
+diff --git a/site/app/compatibility/page.tsx b/site/app/compatibility/page.tsx
+index 9832f36..490e82f 100644
+--- a/site/app/compatibility/page.tsx
++++ b/site/app/compatibility/page.tsx
+@@ -1,3 +1,5 @@
++import { WorkflowStrip } from "@/components/workflow-strip";
++import { skillHref } from "@/lib/canvas";
+ import Link from "next/link";
+ import type { Metadata } from "next";
+ import { Footer } from "@/components/footer";
+@@ -24,16 +26,16 @@ export default function CompatibilityPage() {
+     <div className="flex min-h-screen flex-col">
+       <Header />
+       <main id="main-content" className="flex-1 px-6 py-12 sm:py-16">
+-        <div className="mx-auto w-full max-w-5xl">
++        <div className="mx-auto w-full max-w-[1344px]">
+           <Link
+             href="/"
+             className="back-link mb-10 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
+           >
+-            ← home
++            ← All skills
+           </Link>
+ 
+           <header className="animate-fade-up mb-12 max-w-4xl">
+-            <h1 className="text-4xl font-semibold leading-tight tracking-[-0.03em] text-[var(--color-heading)] sm:text-6xl">
++            <h1 className="text-[32px] font-medium leading-tight tracking-[-0.03em] text-[var(--color-heading)] sm:text-5xl">
+               Requirements
+             </h1>
+             <p className="mt-5 max-w-3xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">
+@@ -41,6 +43,7 @@ export default function CompatibilityPage() {
+             </p>
+           </header>
+ 
++          <WorkflowStrip steps={["Choose a runtime", "Check required tools", "Verify access"]} />
+           <section className="mb-10 grid gap-3 md:grid-cols-3" aria-label="Coding agent guides">
+             {AGENT_IDS.map((agentId) => (
+               <Link
+@@ -99,7 +102,7 @@ export default function CompatibilityPage() {
+                   {skills.map((skill) => (
+                     <tr key={skill.slug} className="group bg-[var(--color-bg)] transition-colors hover:bg-[var(--color-surface)]">
+                       <th className="sticky left-0 z-10 border-r border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-3 font-[family-name:var(--font-mono)] text-xs font-semibold text-[var(--color-heading)] transition-colors group-hover:bg-[var(--color-surface)]">
+-                        <Link href={`/${skill.slug}`} className="hover:text-[var(--color-accent)]">{skill.name}</Link>
++                        <Link href={skillHref(skill.slug)} className="hover:text-[var(--color-accent)]">{skill.name}</Link>
+                       </th>
+                       <td className="px-3 py-3 font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text)]">
+                         {skill.surfaces.includes("claude-app") ? "local + chat" : "local"}
+diff --git a/site/app/globals.css b/site/app/globals.css
+index 9ee10f6..ce11cdb 100644
+--- a/site/app/globals.css
++++ b/site/app/globals.css
+@@ -1,26 +1,28 @@
+ @import "tailwindcss";
++@import "./canvas.css";
++@import "./visual-direction.css";
+ 
+ @theme {
+   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+ 
+-  --color-bg: #0a0a0a;
+-  --color-surface: #111111;
+-  --color-surface-raised: #181818;
+-  --color-border: #262626;
+-  --color-border-hover: #3a3a3a;
+-  --color-muted: #858585;
+-  --color-text: #a3a3a3;
+-  --color-heading: #fafafa;
+-  --color-accent: #f59e0b;
+-  --color-accent-dim: rgba(245, 158, 11, 0.2);
++  --color-bg: #FFFFFF;
++  --color-surface: #F5F7F5;
++  --color-surface-raised: #EEF3EF;
++  --color-border: #DCDDE1;
++  --color-border-hover: #858B89;
++  --color-muted: #60646C;
++  --color-text: #60646C;
++  --color-heading: #17191C;
++  --color-accent: #345847;
++  --color-accent-dim: #EEF3EF;
+   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+ }
+ 
+ /* ═══════ BASE ═══════ */
+ 
+ html {
+-  color-scheme: dark;
++  color-scheme: light;
+ }
+ 
+ body {
+@@ -66,15 +68,15 @@ body {
+   to   { opacity: 1; }
+ }
+ 
+-.animate-fade-up  { animation: fade-up  0.35s var(--ease-out) both; }
+-.animate-fade-in  { animation: fade-in  0.35s ease-out both; }
++.animate-fade-up { animation: none; }
++.animate-fade-in { animation: none; }
+ 
+ /* ═══════ TYPE PRIMITIVES ═══════ */
+ 
+ .terminal-heading {
+-  font-family: var(--font-mono);
++  font-family: var(--font-sans);
+   letter-spacing: -0.02em;
+-  text-transform: lowercase;
++  text-transform: none;
+ }
+ 
+ .terminal-caption {
+@@ -115,8 +117,8 @@ body {
+   transition: background-color 130ms ease;
+ }
+ 
+-.skill-row:hover {
+-  background-color: var(--color-surface-raised);
++@media (hover: hover) and (pointer: fine) {
++  .skill-row:hover { background-color: var(--color-surface-raised); }
+ }
+ 
+ .skill-row:hover .skill-row-command {
+@@ -131,7 +133,7 @@ body {
+   100% { opacity: 1; transform: scale(1); }
+ }
+ 
+-.copy-success { animation: copy-pulse 0.35s ease-out; }
++.copy-success { animation: none; }
+ 
+ /* ═══════ DIVIDER ═══════ */
+ 
+@@ -183,8 +185,8 @@ body {
+ .prose h3,
+ .prose h4 {
+   color: var(--color-heading);
+-  font-family: var(--font-mono);
+-  font-weight: 600;
++  font-family: var(--font-sans);
++  font-weight: 500;
+   margin-top: 2.5em;
+   margin-bottom: 0.75em;
+   letter-spacing: 0;
+@@ -242,7 +244,7 @@ body {
+ .prose a {
+   color: var(--color-accent);
+   text-decoration: none;
+-  border-bottom: 1px solid rgba(245, 158, 11, 0.3);
++  border-bottom: 1px solid #858B89;
+   transition: border-color 0.15s ease;
+ }
+ 
+diff --git a/site/app/guides/page.tsx b/site/app/guides/page.tsx
+index 4188b0d..c8d7454 100644
+--- a/site/app/guides/page.tsx
++++ b/site/app/guides/page.tsx
+@@ -1,3 +1,5 @@
++import { CanvasIcon } from "@/components/canvas-icon";
++import { RuntimeLogo } from "@/components/runtime-logo";
+ import type { Metadata } from "next";
+ import Link from "next/link";
+ import { Header } from "@/components/header";
+@@ -11,8 +13,16 @@ export const metadata: Metadata = {
+   description: "Installation help and practical workflows for Agent Skills.",
+   alternates: { canonical: "/guides" },
+   // Navigation hub only; individual guides own indexable search destinations.
+-  robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
+-  openGraph: { title: "Guides — slashskills", description: "Installation help and practical workflows for Agent Skills.", url: "/guides" },
++  robots: {
++    index: false,
++    follow: true,
++    googleBot: { index: false, follow: true },
++  },
++  openGraph: {
++    title: "Guides — slashskills",
++    description: "Installation help and practical workflows for Agent Skills.",
++    url: "/guides",
++  },
+ };
+ 
+ export default function GuidesPage() {
+@@ -21,17 +31,50 @@ export default function GuidesPage() {
+       <Header />
+       <main id="main-content" className="flex-1 px-6 py-8 sm:py-12">
+         <PageFrame>
+-          <Link href="/" className="mb-7 inline-flex min-h-11 items-center text-sm text-[var(--color-muted)] hover:text-[var(--color-accent)]">← All skills</Link>
+-          <header className="mb-10 max-w-2xl">
+-            <h1 className="text-4xl font-semibold tracking-tight text-[var(--color-heading)] sm:text-5xl">Guides</h1>
+-            <p className="mt-4 text-base leading-relaxed text-[var(--color-text)]">Set up your agent and learn how to use the skills.</p>
++          <Link
++            href="/"
++            className="mb-7 inline-flex min-h-11 items-center text-sm text-[var(--color-muted)] hover:text-[var(--color-accent)]"
++          >
++            ← All skills
++          </Link>
++          <header className="guide-index-hero">
++            <div>
++              <h1>Make yourself at home.</h1>
++              <p>Set up your agent, add a skill, and put it to work.</p>
++            </div>
+           </header>
+-          <section aria-labelledby="installation-guides" className="mb-10 border-y border-[var(--color-border)] py-6">
+-            <h2 id="installation-guides" className="mb-4 text-lg font-medium text-[var(--color-heading)]">Installation</h2>
+-            <div className="flex flex-wrap gap-3">
+-              {AGENT_IDS.map((id) => <Link key={id} href={AGENTS[id].guideRoute} className="inline-flex min-h-11 items-center rounded border border-[var(--color-border)] px-4 text-sm text-[var(--color-text)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]">{AGENTS[id].label} →</Link>)}
+-              <Link href="/guides/chatgpt" className="inline-flex min-h-11 items-center rounded border border-[var(--color-border)] px-4 text-sm hover:text-[var(--color-accent)]">ChatGPT →</Link>
+-              <Link href="/guides/claude-app" className="inline-flex min-h-11 items-center rounded border border-[var(--color-border)] px-4 text-sm hover:text-[var(--color-accent)]">Claude app →</Link>
++          <section aria-labelledby="installation-guides">
++            <h2
++              id="installation-guides"
++              className="mb-6 text-lg font-medium text-[var(--color-heading)]"
++            >
++              Installation guides
++            </h2>
++            {AGENT_IDS.map((id) => (
++              <Link
++                key={id}
++                href={AGENTS[id].guideRoute}
++                className="runtime-guide-row"
++              >
++                <RuntimeLogo runtime={id} decorative className="h-7 w-7" />
++                <h3>{AGENTS[id].label}</h3>
++                <p>Install a skill, check the setup and start using it.</p>
++                <CanvasIcon name="arrow" />
++              </Link>
++            ))}
++          </section>
++          <section className="chat-guide-links">
++            <h2>Using a chat app?</h2>
++            <p>Check which skills work in your app and how to upload them.</p>
++            <div>
++              <Link href="/guides/chatgpt" className="text-button">
++                <RuntimeLogo runtime="chatgpt" decorative />
++                ChatGPT <CanvasIcon name="arrow" />
++              </Link>
++              <Link href="/guides/claude-app" className="text-button">
++                <RuntimeLogo runtime="claude-app" decorative />
++                Claude app <CanvasIcon name="arrow" />
++              </Link>
+             </div>
+           </section>
+           <LatestGuides />
+diff --git a/site/app/icon.svg b/site/app/icon.svg
+index 784abca..58e9c71 100644
+--- a/site/app/icon.svg
++++ b/site/app/icon.svg
+@@ -1,4 +1,4 @@
+ <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+-  <rect width="32" height="32" rx="5" fill="#0a0a0a"/>
+-  <path d="M10.5 24.5 L21.5 7.5" stroke="#f59e0b" stroke-width="2.8" stroke-linecap="round"/>
++  <rect width="32" height="32" rx="5" fill="#345847"/>
++  <path d="M10.5 24.5 L21.5 7.5" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round"/>
+ </svg>
+diff --git a/site/app/layout.tsx b/site/app/layout.tsx
+index 12f4429..2994a67 100644
+--- a/site/app/layout.tsx
++++ b/site/app/layout.tsx
+@@ -75,7 +75,7 @@ const jsonLd = {
+ export const viewport: Viewport = {
+   width: "device-width",
+   initialScale: 1,
+-  themeColor: "#0a0a0a",
++  themeColor: "#FFFFFF",
+ };
+ 
+ export default function RootLayout({
+diff --git a/site/app/llms.txt/route.ts b/site/app/llms.txt/route.ts
+index c75e9f9..97b10ff 100644
+--- a/site/app/llms.txt/route.ts
++++ b/site/app/llms.txt/route.ts
+@@ -1,3 +1,4 @@
++import { skillHref } from "@/lib/canvas";
+ import { getAllSkills } from '@/lib/skills';
+ export const dynamic = 'force-static';
+ export function GET() {
+@@ -17,7 +18,7 @@ export function GET() {
+     '',
+     '## Skills',
+     '',
+-    ...getAllSkills().map(skill => `- [${skill.name}](https://www.slashskills.xyz/${skill.slug}): ${skill.description}`),
++    ...getAllSkills().map(skill => `- [${skill.name}](https://www.slashskills.xyz${skillHref(skill.slug)}): ${skill.description}`),
+   ];
+   return new Response(lines.join('\n') + '\n', { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+ }
+diff --git a/site/app/page.tsx b/site/app/page.tsx
+index 741161e..c8a4284 100644
+--- a/site/app/page.tsx
++++ b/site/app/page.tsx
+@@ -1,3 +1,4 @@
++import { TASK_TITLES } from "@/lib/canvas";
+ import { Suspense } from "react";
+ import { Header } from "@/components/header";
+ import { PageFrame } from "@/components/page-frame";
+@@ -7,15 +8,16 @@ import { SkillDirectory } from "@/components/skill-directory";
+ import { getAllSkills, type Skill } from "@/lib/skills";
+ 
+ const SKILL_ORDER = [
+-  "remove-ai-slop",
+-  "ai-product-development",
+   "interface-design",
++  "ai-product-development",
++  "user-insights",
++  "auth-implementation",
++  "remove-ai-slop",
+   "deploy-check",
+   "demo-video",
+   "search-ready",
+   "analytics",
+   "payments-with-dodo",
+-  "auth-implementation",
+   "credit-metering",
+   "email-with-resend",
+   "product-experiments",
+@@ -29,7 +31,6 @@ const SKILL_ORDER = [
+   "fundraising",
+   "product-teardown",
+   "ai-cost-audit",
+-  "user-insights",
+   "changelog",
+   "cold-outreach",
+   "rate-limit",
+@@ -57,32 +58,52 @@ export default function Home() {
+ 
+       <main id="main-content" className="flex-1 px-6">
+         <PageFrame>
+-          <section className="animate-fade-up pt-10 pb-6 sm:pt-14 sm:pb-8">
+-            <h1 className="terminal-heading max-w-4xl text-[2rem] font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
+-              workflows saved as <span className="text-[var(--color-accent)]">Agent Skills.</span>
+-            </h1>
+-            <p className="mt-4 max-w-2xl text-sm leading-relaxed sm:text-base">
+-              Find a workflow for your next task. Install it in Codex, Claude Code, or Cursor.
+-            </p>
+-          </section>
+-          <section className="mb-8" aria-label="Install a skill">
+-            <InteractiveInstaller skills={skills.map(({ slug, name }) => ({ slug, name }))} />
++          <section className="canvas-hero">
++            <div className="hero-copy">
++              <h1>Good work starts<br />with a <span>useful skill.</span></h1>
++              <p>Give your agent a better way to work. Pick a workflow, install it, and make it yours.</p>
++            </div>
+           </section>
+-
+           <Suspense
+-            fallback={<section className="pb-20" aria-labelledby="skill-index-heading"><h2 id="skill-index-heading" className="mb-5 text-xl font-semibold text-[var(--color-heading)]">Skills</h2></section>}
++            fallback={
++              <section className="pb-20" aria-labelledby="skill-index-heading">
++                <h2
++                  id="skill-index-heading"
++                  className="mb-5 text-xl font-semibold text-[var(--color-heading)]"
++                >
++                  Skills
++                </h2>
++              </section>
++            }
+           >
+             <SkillDirectory
+-              skills={skills.map(({ slug, name, category, description, surfaces }) => ({
+-                slug,
+-                name,
+-                category,
+-                description,
+-                localAvailable: surfaces.includes("coding-agent"),
+-                claudeAppReady: surfaces.includes("claude-app"),
+-              }))}
++              skills={skills.map(
++                ({ slug, name, category, description, surfaces }) => ({
++                  slug,
++                  name,
++                  displayName: TASK_TITLES[slug],
++                  category,
++                  description,
++                  localAvailable: surfaces.includes("coding-agent"),
++                  claudeAppReady: surfaces.includes("claude-app"),
++                }),
++              )}
+             />
+           </Suspense>
++          <section
++            id="library-install"
++            tabIndex={-1}
++            className="library-install"
++            aria-labelledby="library-heading"
++          >
++            <div>
++              <h2 id="library-heading">Want the whole collection?</h2>
++              <p>Install the library, or choose a single skill and scope.</p>
++            </div>
++            <InteractiveInstaller
++              skills={skills.map(({ slug, name }) => ({ slug, name }))}
++            />
++          </section>
+         </PageFrame>
+       </main>
+ 
+diff --git a/site/app/sitemap.ts b/site/app/sitemap.ts
+index ae8626d..bf3565d 100644
+--- a/site/app/sitemap.ts
++++ b/site/app/sitemap.ts
+@@ -1,3 +1,4 @@
++import { skillHref } from "@/lib/canvas";
+ import { EDITORIAL_GUIDES } from "@/lib/guides";
+ import type { MetadataRoute } from "next";
+ import { getAllSkills } from "@/lib/skills";
+@@ -21,8 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
+   ];
+ 
+   const staticPaths = new Set(staticPages.map((page) => new URL(page.url).pathname));
+-  const skillPages = getAllSkills().filter((skill) => !staticPaths.has(`/${skill.slug}`)).map((skill) => ({
+-    url: `${siteUrl}/${skill.slug}`,
++  const skillPages = getAllSkills().filter((skill) => !staticPaths.has(skillHref(skill.slug))).map((skill) => ({
++    url: `${siteUrl}${skillHref(skill.slug)}`,
+     changeFrequency: "monthly" as const,
+     priority: 0.8,
+   }));
+diff --git a/site/app/skills.json/route.ts b/site/app/skills.json/route.ts
+index 44ced5c..2875eea 100644
+--- a/site/app/skills.json/route.ts
++++ b/site/app/skills.json/route.ts
+@@ -1,3 +1,4 @@
++import { skillHref } from "@/lib/canvas";
+ import { getAllSkills } from '@/lib/skills';
+ export const dynamic = 'force-static';
+ export function GET() {
+@@ -9,7 +10,7 @@ export function GET() {
+     note: 'Catalog metadata and installation paths. Listed support is not evidence of successful task execution.',
+     skills: getAllSkills().map(({ slug, name, description, category, capabilities, surfaces, support }) => ({
+       slug, name, description, category, capabilities, surfaces, support,
+-      url: `https://www.slashskills.xyz/${slug}`,
++      url: `https://www.slashskills.xyz${skillHref(slug)}`,
+       source: `https://github.com/tushaarmehtaa/tushar-skills/tree/main/${slug}`,
+       instructions: `https://raw.githubusercontent.com/tushaarmehtaa/tushar-skills/main/${slug}/SKILL.md`,
+       install: `npx skills add tushaarmehtaa/tushar-skills --skill ${slug}`,
+diff --git a/site/components/agent-tabs.tsx b/site/components/agent-tabs.tsx
+index c5a5c4b..2056e44 100644
+--- a/site/components/agent-tabs.tsx
++++ b/site/components/agent-tabs.tsx
+@@ -1,122 +1,17 @@
+ "use client";
+-
+-import { useRef, useState, type KeyboardEvent } from "react";
++import { useId, useRef, useState, type KeyboardEvent } from "react";
+ import { CopyButton } from "./copy-button";
+ import { RuntimeLogo } from "./runtime-logo";
+ import { TrackedLink } from "./tracked-link";
+-import { AGENT_IDS } from "@/lib/agents";
+-import type { AgentId, Capability, SupportStatus } from "@/lib/catalog";
+ import {
+-  createAgentPanelViewModels,
+-  type AgentPanelViewModel,
+-} from "@/lib/skill-presentation";
+-
+-function RequiredAccess({
+-  section,
+-}: {
+-  section: AgentPanelViewModel["capabilitySection"];
+-}) {
+-  if (!section.visible) return null;
+-
+-  return (
+-    <div>
+-      <p className="mb-2 text-xs font-medium text-[var(--color-heading)]">Required access</p>
+-      <div className="flex flex-wrap gap-1.5">
+-        {section.items.map((capability) => (
+-          <span
+-            key={capability.id}
+-            data-capability={capability.id}
+-            className="border border-[var(--color-border)] px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text)]"
+-          >
+-            {capability.label}
+-          </span>
+-        ))}
+-      </div>
+-    </div>
+-  );
+-}
+-
+-function AgentPanel({
+-  panel,
+-  slug,
+-  selected,
+-}: {
+-  panel: AgentPanelViewModel;
+-  slug: string;
+-  selected: boolean;
+-}) {
+-  return (
+-    <div
+-      role="tabpanel"
+-      id={panel.panelId}
+-      aria-labelledby={panel.tabId}
+-      hidden={!selected}
+-      className="p-4 sm:p-5"
+-    >
+-      {panel.install.visible && panel.install.command ? (
+-        <div>
+-          <p className="mb-2 text-xs font-medium text-[var(--color-heading)]">Install globally</p>
+-          <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-3 font-[family-name:var(--font-mono)] text-xs sm:grid-cols-[auto_minmax(0,1fr)_auto]">
+-            <span className="select-none text-[var(--color-accent)]">$</span>
+-            <code className="min-w-0 break-all leading-relaxed text-[var(--color-heading)]">{panel.install.command}</code>
+-            <CopyButton
+-              text={panel.install.command}
+-              wrapperClassName="col-start-2 sm:col-start-auto"
+-              className="w-fit shrink-0"
+-              analytics={{ name: "install_copy", properties: { agent: panel.id, skill: slug } }}
+-            />
+-          </div>
+-
+-          <details className="mt-4"><summary className="cursor-pointer text-xs text-[var(--color-muted)]">Usage and required access</summary>
+-          <div className={`mt-5 grid gap-5 ${panel.capabilitySection.visible ? "sm:grid-cols-2" : ""}`}>
+-            <div>
+-              <p className="mb-2 text-xs font-medium text-[var(--color-heading)]">Invoke</p>
+-              <code className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-accent)]">
+-                {panel.invocation}
+-              </code>
+-              <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">
+-                You can also describe the task naturally; runtimes may select the skill from its description.
+-              </p>
+-            </div>
+-            <RequiredAccess section={panel.capabilitySection} />
+-          </div>
+-          </details>
+-        </div>
+-      ) : (
+-        <div className="space-y-5">
+-          <div className="border-l-2 border-rose-400/60 bg-rose-400/5 px-4 py-3">
+-            <p className="text-sm leading-relaxed text-[var(--color-text)]">{panel.unsupportedMessage}</p>
+-          </div>
+-          <RequiredAccess section={panel.capabilitySection} />
+-        </div>
+-      )}
+-
+-      <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-[var(--color-border)] pt-4 font-[family-name:var(--font-mono)] text-xs">
+-        <TrackedLink
+-          href={panel.guideRoute}
+-          eventName="guide_open"
+-          agent={panel.id}
+-          skill={slug}
+-          className="text-[var(--color-accent)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+-        >
+-          Setup guide →
+-        </TrackedLink>
+-        <TrackedLink
+-          href={panel.officialDocsUrl}
+-          eventName="guide_open"
+-          agent={panel.id}
+-          skill={slug}
+-          target="_blank"
+-          rel="noopener noreferrer"
+-          className="text-[var(--color-muted)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+-        >
+-          Official docs ↗
+-        </TrackedLink>
+-      </div>
+-    </div>
+-  );
+-}
+-
++  AGENTS,
++  AGENT_IDS,
++  CAPABILITY_LABELS,
++  generateInstallCommand,
++  invocationFor,
++  type InstallScope,
++} from "@/lib/agents";
++import type { AgentId, Capability, SupportStatus } from "@/lib/catalog";
+ export function AgentTabs({
+   slug,
+   support,
+@@ -127,71 +22,138 @@ export function AgentTabs({
+   capabilities: readonly Capability[];
+ }) {
+   const [selected, setSelected] = useState<AgentId>("codex");
+-  const tabsRef = useRef<Record<string, HTMLButtonElement | null>>({});
+-  const panels = createAgentPanelViewModels({ slug, support, capabilities });
+-
+-  function selectAndFocus(next: AgentId) {
+-    setSelected(next);
+-    tabsRef.current[next]?.focus();
+-  }
+-
+-  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+-    const index = AGENT_IDS.indexOf(selected);
+-    let next: AgentId | undefined;
+-
+-    if (event.key === "ArrowRight") next = AGENT_IDS[(index + 1) % AGENT_IDS.length];
+-    if (event.key === "ArrowLeft") next = AGENT_IDS[(index - 1 + AGENT_IDS.length) % AGENT_IDS.length];
+-    if (event.key === "Home") next = AGENT_IDS[0];
+-    if (event.key === "End") next = AGENT_IDS[AGENT_IDS.length - 1];
+-
+-    if (next) {
+-      event.preventDefault();
+-      selectAndFocus(next);
++  const [scope, setScope] = useState<InstallScope>("global");
++  const refs = useRef<Record<string, HTMLButtonElement | null>>({});
++  const id = useId();
++  function keydown(e: KeyboardEvent<HTMLButtonElement>) {
++    const i = AGENT_IDS.indexOf(selected);
++    let n: AgentId | undefined;
++    if (e.key === "ArrowRight") n = AGENT_IDS[(i + 1) % AGENT_IDS.length];
++    if (e.key === "ArrowLeft")
++      n = AGENT_IDS[(i + AGENT_IDS.length - 1) % AGENT_IDS.length];
++    if (e.key === "Home") n = AGENT_IDS[0];
++    if (e.key === "End") n = AGENT_IDS.at(-1);
++    if (n) {
++      e.preventDefault();
++      setSelected(n);
++      refs.current[n]?.focus();
+     }
+   }
+-
+   return (
+-    <section className="mb-8 overflow-hidden terminal-panel" aria-labelledby="agent-install-heading">
+-      <div className="border-b border-[var(--color-border)] px-4 pt-4">
+-        <div className="mb-3">
+-          <h2 id="agent-install-heading" className="text-sm font-medium text-[var(--color-heading)]">
+-            Install
+-          </h2>
+-        </div>
+-        <div role="tablist" aria-label="Coding agent. Scroll horizontally for more runtimes." className="-mx-1 flex max-w-full gap-1 overflow-x-auto px-1">
+-          {panels.map((panel) => {
+-            const isSelected = selected === panel.id;
+-            return (
+-              <button
+-                key={panel.id}
+-                ref={(node) => { tabsRef.current[panel.id] = node; }}
+-                type="button"
+-                role="tab"
+-                id={panel.tabId}
+-                aria-controls={panel.panelId}
+-                aria-selected={isSelected}
+-                tabIndex={isSelected ? 0 : -1}
+-                onClick={() => setSelected(panel.id)}
+-                onKeyDown={handleKeyDown}
+-                className={`relative shrink-0 border-b-2 px-3 py-3 font-[family-name:var(--font-mono)] text-xs transition-colors focus-visible:z-10 focus-visible:bg-[rgba(245,158,11,0.08)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--color-accent)] ${
+-                  isSelected
+-                    ? "border-[var(--color-accent)] text-[var(--color-heading)]"
+-                    : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]"
+-                }`}
+-              >
+-                <span className="flex items-center gap-2">
+-                  <RuntimeLogo runtime={panel.id} decorative className="h-3.5 w-3.5" />
+-                  <span translate="no">{panel.label}</span>
+-                </span>
+-              </button>
+-            );
+-          })}
+-        </div>
++    <section className="agent-installer" aria-label="Install skill">
++      <h2>Install skill</h2>
++      <div role="tablist" aria-label="Coding agent" className="agent-tablist">
++        {AGENT_IDS.map((agent) => (
++          <button
++            key={agent}
++            ref={(n) => {
++              refs.current[agent] = n;
++            }}
++            type="button"
++            role="tab"
++            id={`${id}-${agent}-tab`}
++            aria-controls={`${id}-${agent}-panel`}
++            aria-selected={selected === agent}
++            tabIndex={selected === agent ? 0 : -1}
++            onClick={() => setSelected(agent)}
++            onKeyDown={keydown}
++          >
++            <RuntimeLogo runtime={agent} decorative />
++            {AGENTS[agent].label}
++          </button>
++        ))}
+       </div>
+-
+-      {panels.map((panel) => (
+-        <AgentPanel key={panel.id} panel={panel} slug={slug} selected={selected === panel.id} />
+-      ))}
++      {AGENT_IDS.map((agent) => {
++        const command = generateInstallCommand({ skill: slug, agent, scope });
++        return (
++          <div
++            key={agent}
++            role="tabpanel"
++            id={`${id}-${agent}-panel`}
++            aria-labelledby={`${id}-${agent}-tab`}
++            hidden={selected !== agent}
++            className="agent-panel"
++          >
++            {support[agent] !== "unsupported" ? (
++              <>
++                <label className="scope-label">
++                  Install for
++                  <select
++                    value={scope}
++                    onChange={(e) => setScope(e.target.value as InstallScope)}
++                  >
++                    <option value="global">All projects (global)</option>
++                    <option value="project">This project</option>
++                  </select>
++                </label>
++                <p className="text-xs">
++                  {scope === "global"
++                    ? "Available across your projects on this computer."
++                    : "Available in the current project directory."}
++                </p>
++                <code className="install-command">{command}</code>
++                <CopyButton
++                  key={command}
++                  text={command}
++                  className="install-copy"
++                  wrapperClassName="w-full"
++                  analytics={{
++                    name: "install_copy",
++                    properties: { agent, skill: slug },
++                  }}
++                />
++              </>
++            ) : (
++              <p>
++                This skill does not offer an install path for{" "}
++                {AGENTS[agent].label}.
++              </p>
++            )}
++            <div className="install-notes">
++              <p>Paste into your terminal to install.</p>
++              <p>
++                {AGENTS[agent].label} runtime testing:{" "}
++                {support[agent] === "tested"
++                  ? "tested"
++                  : support[agent] === "unsupported"
++                    ? "unsupported"
++                    : "unverified"}
++                .
++              </p>
++              <TrackedLink
++                href={AGENTS[agent].guideRoute}
++                eventName="guide_open"
++                agent={agent}
++                skill={slug}
++                className="text-button"
++              >
++                Setup guide →
++              </TrackedLink>
++              <details>
++                <summary>Usage and required access</summary>
++                <p>
++                  Invoke <code>{invocationFor(agent, slug)}</code>, or describe
++                  the task naturally.
++                </p>
++                <p className="mt-3">
++                  Required access:{" "}
++                  {capabilities.map((c) => CAPABILITY_LABELS[c]).join(", ") ||
++                    "none beyond the agent"}
++                  .
++                </p>
++                <a
++                  className="text-button"
++                  href={AGENTS[agent].officialDocsUrl}
++                  target="_blank"
++                  rel="noopener noreferrer"
++                >
++                  Official docs ↗
++                </a>
++              </details>
++            </div>
++          </div>
++        );
++      })}
+     </section>
+   );
+ }
+diff --git a/site/components/copy-button.tsx b/site/components/copy-button.tsx
+index ed5f750..f57f4b7 100644
+--- a/site/components/copy-button.tsx
++++ b/site/components/copy-button.tsx
+@@ -1,6 +1,7 @@
+ "use client";
+ 
+-import { useRef, useState } from "react";
++import { CanvasIcon } from "./canvas-icon";
++import { useEffect, useRef, useState } from "react";
+ import { track } from "@vercel/analytics";
+ 
+ interface AnalyticsEvent {
+@@ -19,21 +20,31 @@ export function CopyButton({
+   className,
+   wrapperClassName,
+   analytics,
++  successMessage = "Copied to clipboard.",
+ }: {
+   text: string;
+   label?: string;
+   className?: string;
+   wrapperClassName?: string;
+   analytics?: AnalyticsEvent;
++  successMessage?: string;
+ }) {
+   const [status, setStatus] = useState<CopyStatus>("idle");
+   const buttonRef = useRef<HTMLButtonElement>(null);
+   const resetTimer = useRef<number | null>(null);
+ 
++  useEffect(
++    () => () => {
++      if (resetTimer.current) window.clearTimeout(resetTimer.current);
++    },
++    [],
++  );
++
+   function showStatus(nextStatus: Exclude<CopyStatus, "idle">) {
+     if (resetTimer.current) window.clearTimeout(resetTimer.current);
+     setStatus(nextStatus);
+-    if (nextStatus === "copied") buttonRef.current?.classList.add("copy-success");
++    if (nextStatus === "copied")
++      buttonRef.current?.classList.add("copy-success");
+     resetTimer.current = window.setTimeout(() => {
+       setStatus("idle");
+       buttonRef.current?.classList.remove("copy-success");
+@@ -50,12 +61,18 @@ export function CopyButton({
+     }
+   }
+ 
+-  const buttonLabel = status === "copied" ? "Copied" : status === "failed" ? "Copy failed. Try again" : label;
+-  const statusMessage = status === "copied"
+-    ? "Command copied."
+-    : status === "failed"
+-      ? "Copy failed. Select the command and copy it manually."
+-      : "";
++  const buttonLabel =
++    status === "copied"
++      ? "Copied"
++      : status === "failed"
++        ? "Copy failed. Try again"
++        : label;
++  const statusMessage =
++    status === "copied"
++      ? successMessage
++      : status === "failed"
++        ? "Copy failed. Select the text and copy it manually."
++        : "";
+ 
+   return (
+     <span className={`inline-flex items-center ${wrapperClassName || ""}`}>
+@@ -68,13 +85,30 @@ export function CopyButton({
+           status === "copied"
+             ? "border-[var(--color-accent)] bg-[var(--color-accent-dim)] text-[var(--color-accent)]"
+             : status === "failed"
+-              ? "border-rose-400/60 text-rose-300 hover:border-rose-300"
++              ? "border-red-700 text-red-800 hover:border-red-800"
+               : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-heading)]"
+         } ${className || ""}`}
+       >
+-        {status === "copied" ? "copied" : status === "failed" ? "retry" : label}
++        <CanvasIcon
++          name={status === "copied" ? "check" : "copy"}
++          width="16"
++          height="16"
++        />
++        {status === "copied"
++          ? "Copied"
++          : status === "failed"
++            ? "Retry copy"
++            : label}
+       </button>
+-      <span aria-live="polite" className="sr-only">{statusMessage}</span>
++      <span
++        role="status"
++        aria-live="polite"
++        className={
++          status === "failed" ? "ml-3 text-xs text-red-800" : "sr-only"
++        }
++      >
++        {statusMessage}
++      </span>
+     </span>
+   );
+ }
+diff --git a/site/components/editorial-guide.tsx b/site/components/editorial-guide.tsx
+index 40eaeff..157208e 100644
+--- a/site/components/editorial-guide.tsx
++++ b/site/components/editorial-guide.tsx
+@@ -1,3 +1,5 @@
++import { WorkflowStrip } from "./workflow-strip";
++import { skillHref } from "@/lib/canvas";
+ import type { Metadata } from "next";
+ import Link from "next/link";
+ import { Header } from "./header";
+@@ -52,10 +54,10 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
+           </nav>
+           <header className="max-w-3xl">
+             <p className="mb-4 text-xs text-[var(--color-muted)]">Tushar Mehta <span aria-hidden="true"> · </span>{guide.updatedDate ? "Updated " : ""}<time dateTime={guide.updatedDate ?? guide.date}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${guide.updatedDate ?? guide.date}T00:00:00Z`))}</time><span aria-hidden="true"> · </span>{minutes} min read</p>
+-            <h1 className="text-[2.25rem] font-semibold leading-[1.13] tracking-[-0.04em] text-[var(--color-heading)] sm:text-[3.5rem]">{guide.title}</h1>
++            <h1 className="text-[2rem] font-medium leading-[1.13] tracking-[-0.04em] text-[var(--color-heading)] sm:text-[3rem]">{guide.title}</h1>
+             <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">{guide.description}</p>
+             <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+-              <TrackedLink href={`/${guide.relatedSkills[0]}`} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">{guide.action}<span aria-hidden="true">↗</span></TrackedLink>
++              <TrackedLink href={skillHref(guide.relatedSkills[0])} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">{guide.action}<span aria-hidden="true">↗</span></TrackedLink>
+               <a href={`#${headings[0]?.id ?? "guide-body"}`} className="inline-flex min-h-11 items-center text-sm text-[var(--color-muted)] hover:text-[var(--color-heading)]">Read the guide ↓</a>
+             </div>
+           </header>
+@@ -65,6 +67,7 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
+                 <summary>In this guide <span>{headings.length} sections</span></summary>
+                 <nav aria-label="Guide contents">{contents}</nav>
+               </details>
++              <WorkflowStrip steps={guide.slug === "image-editing-skills" ? ["Reference image", "Targeted edit", "Review the result"] : guide.slug === "astra-skill-instructions" ? ["Define the task", "Compare approaches", "Record evidence"] : ["Receive an event", "Run the workflow", "Check the result"]} />
+               <article id="guide-body" className="guide-prose prose">
+                 {blocks.map((block, index) => {
+                   const example = block.match(/^<pre><code(?: class="language-([^"]+)")?>([\s\S]*?)<\/code><\/pre>$/);
+@@ -75,15 +78,15 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
+                 <p className="mb-2 text-xs text-[var(--color-muted)]">Next step</p>
+                 <h2 className="mb-3 text-2xl font-medium text-[var(--color-heading)]">Make it part of your workflow.</h2>
+                 <p className="mb-5 text-sm text-[var(--color-text)]">The skill includes the instructions and references. Check the required tools before installing.</p>
+-                <TrackedLink href={`/${guide.relatedSkills[0]}`} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">View /{guide.relatedSkills[0]}<span aria-hidden="true">→</span></TrackedLink>
++                <TrackedLink href={skillHref(guide.relatedSkills[0])} eventName="guide_skill_open" agent="all" skill={guide.relatedSkills[0]} className="guide-primary-action">View /{guide.relatedSkills[0]}<span aria-hidden="true">→</span></TrackedLink>
+               </section>
+             </div>
+             <aside className="hidden self-start lg:sticky lg:top-8 lg:block" aria-label="On this page">
+-              <p className="mb-3 text-xs font-medium text-[var(--color-muted)]">IN THIS GUIDE</p>
++              <p className="mb-3 text-xs font-medium text-[var(--color-muted)]">In this guide</p>
+               <nav aria-label="Guide contents">{contents}</nav>
+               <div className="mt-8 border-t border-[var(--color-border)] pt-5">
+                 <p className="text-xs text-[var(--color-muted)]">Related skills</p>
+-                {guide.relatedSkills.map((skill) => <TrackedLink key={skill} href={`/${skill}`} eventName="guide_skill_open" agent="all" skill={skill} className="mt-1 flex min-h-11 items-center text-sm text-[var(--color-text)] hover:text-[var(--color-accent)]">/{skill} →</TrackedLink>)}
++                {guide.relatedSkills.map((skill) => <TrackedLink key={skill} href={skillHref(skill)} eventName="guide_skill_open" agent="all" skill={skill} className="mt-1 flex min-h-11 items-center text-sm text-[var(--color-text)] hover:text-[var(--color-accent)]">/{skill} →</TrackedLink>)}
+               </div>
+             </aside>
+           </div>
+diff --git a/site/components/footer.tsx b/site/components/footer.tsx
+index a84c461..0d88bba 100644
+--- a/site/components/footer.tsx
++++ b/site/components/footer.tsx
+@@ -1,14 +1,15 @@
++import { GithubStars } from "./github-stars";
+ import { RuntimeLogo } from "./runtime-logo";
+ import { PageFrame } from "./page-frame";
+ 
+ export function Footer() {
+   return (
+-    <footer className="px-6 py-10">
++    <footer className="site-footer px-6 py-10">
+       <PageFrame className="border-t border-[var(--color-border)] pt-8">
+         <div className="flex flex-wrap items-center justify-between gap-4">
+-          <div className="space-y-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
++          <div className="space-y-2 text-sm text-[var(--color-muted)]">
+             <p>
+-              built by{" "}
++              Built by{" "}
+               <a
+                 href="https://tushaarmehtaa.xyz"
+                 target="_blank"
+@@ -32,13 +33,21 @@ export function Footer() {
+               rel="noopener noreferrer"
+               className="-my-2 flex min-h-8 items-center gap-2 py-2 transition-colors hover:text-[var(--color-heading)]"
+             >
+-              <RuntimeLogo runtime="agent-skills" tone="current" decorative className="h-3.5 w-3.5" />
++              <RuntimeLogo
++                runtime="agent-skills"
++                tone="current"
++                decorative
++                className="h-3.5 w-3.5"
++              />
+               <span>Agent Skills specification ↗</span>
+             </a>
+           </div>
+-          <div className="flex items-center gap-4 font-[family-name:var(--font-mono)] text-xs">
+-            <a href="/compatibility" className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]">
+-              Compatibility
++          <div className="flex items-center gap-4 text-sm">
++            <a
++              href="/compatibility"
++              className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
++            >
++              Requirements
+             </a>
+             <a
+               href="https://github.com/tushaarmehtaa/tushar-skills"
+@@ -46,7 +55,10 @@ export function Footer() {
+               rel="noopener noreferrer"
+               className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
+             >
+-              MIT license · GitHub
++              MIT license · GitHub{" "}
++              <span className="ml-2" title="GitHub stars">
++                ☆ <GithubStars />
++              </span>
+             </a>
+           </div>
+         </div>
+diff --git a/site/components/guide-code.tsx b/site/components/guide-code.tsx
+index a7b4f8f..cfdbb4f 100644
+--- a/site/components/guide-code.tsx
++++ b/site/components/guide-code.tsx
+@@ -1,32 +1,33 @@
+ "use client";
+-
+-import { useRef, useState } from "react";
+-
+-export function GuideCode({ html, language }: { html: string; language: string }) {
++import { useEffect, useRef, useState } from "react";
++import { CopyButton } from "./copy-button";
++export function GuideCode({
++  html,
++  language,
++}: {
++  html: string;
++  language: string;
++}) {
+   const code = useRef<HTMLElement>(null);
+-  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+-
+-  async function copy() {
+-    try {
+-      await navigator.clipboard.writeText(code.current?.textContent ?? "");
+-      setStatus("copied");
+-    } catch {
+-      setStatus("failed");
+-    }
+-  }
+-
++  const [text, setText] = useState("");
++  useEffect(() => {
++    setText(code.current?.textContent ?? "");
++  }, [html]);
+   return (
+     <div className="guide-code not-prose">
+       <div className="guide-code-toolbar">
+-        <span>{language === "yaml" ? "Edit record · YAML" : "Instruction example"}</span>
+-        <button type="button" onClick={copy} aria-label="Copy example">
+-          {status === "copied" ? "Copied ✓" : "Copy"}
+-        </button>
++        <span>
++          {language === "yaml" ? "Edit record · YAML" : "Instruction example"}
++        </span>
++        <CopyButton
++          text={text}
++          label="Copy example"
++          successMessage="Example copied to clipboard."
++        />
+       </div>
+-      <pre tabIndex={0} aria-label="Code example"><code ref={code} dangerouslySetInnerHTML={{ __html: html }} /></pre>
+-      <span role="status" className={status === "failed" ? "block px-4 pb-3 text-sm" : "sr-only"}>
+-        {status === "failed" ? "Copy unavailable. Select and copy the example above." : status === "copied" ? "Example copied to clipboard." : ""}
+-      </span>
++      <pre tabIndex={0} aria-label="Code example">
++        <code ref={code} dangerouslySetInnerHTML={{ __html: html }} />
++      </pre>
+     </div>
+   );
+ }
+diff --git a/site/components/guide-layout.tsx b/site/components/guide-layout.tsx
+index 5b42b8a..e801454 100644
+--- a/site/components/guide-layout.tsx
++++ b/site/components/guide-layout.tsx
+@@ -1,3 +1,4 @@
++import { WorkflowStrip } from "./workflow-strip";
+ import { Header } from "./header";
+ import { Footer } from "./footer";
+ import { BackButton } from "./back-button";
+@@ -17,8 +18,8 @@ export function GuideLayout({
+     <div className="flex min-h-screen flex-col">
+       <Header />
+       <main id="main-content" className="flex-1 px-6 py-12 sm:py-16">
+-        <div className="mx-auto w-full max-w-5xl">
+-          <BackButton />
++        <div className="guide-layout">
++          <BackButton fallback="/guides" />
+           <header className="animate-fade-up mb-12 max-w-3xl">
+             <div className="flex items-center gap-4 sm:gap-5">
+               {mark ? (
+@@ -35,6 +36,7 @@ export function GuideLayout({
+             </div>
+             <p className="mt-5 text-base leading-relaxed text-[var(--color-text)] sm:text-lg">{intro}</p>
+           </header>
++          <WorkflowStrip steps={title.includes("ChatGPT") ? ["Choose a workflow", "Create or upload", "Check access"] : title === "Claude app" ? ["Choose a workflow", "Upload archive", "Enable and try"] : ["Install a skill", "Choose a scope", "Invoke and check"]} />
+           {children}
+         </div>
+       </main>
+@@ -53,7 +55,7 @@ export function GuideSection({
+   children: React.ReactNode;
+ }) {
+   return (
+-    <section className="grid min-w-0 gap-4 border-t border-[var(--color-border)] py-8 sm:grid-cols-[7rem_minmax(0,1fr)]">
++    <section className="guide-step grid min-w-0 gap-4 border-t border-[var(--color-border)] py-8 sm:grid-cols-[7rem_minmax(0,1fr)]">
+       <p className="text-sm text-[var(--color-muted)]">{number}</p>
+       <div className="min-w-0">
+         <h2 className="mb-4 text-xl font-medium text-[var(--color-heading)]">{title}</h2>
+diff --git a/site/components/header.tsx b/site/components/header.tsx
+index c933afd..d15030f 100644
+--- a/site/components/header.tsx
++++ b/site/components/header.tsx
+@@ -1,51 +1,79 @@
++"use client";
+ import Link from "next/link";
+-import { GithubStars } from "./github-stars";
+-import { PageFrame } from "./page-frame";
+-
++import { useEffect, useRef, useState } from "react";
++import { usePathname } from "next/navigation";
++import { CanvasIcon } from "./canvas-icon";
+ export function Header() {
++  const [open, setOpen] = useState(false);
++  const ref = useRef<HTMLDivElement>(null);
++  const trigger = useRef<HTMLButtonElement>(null);
++  const pathname = usePathname();
++  useEffect(() => {
++    setOpen(false);
++  }, [pathname]);
++  useEffect(() => {
++    if (!open) return;
++    const close = (e: KeyboardEvent) => {
++      if (e.key === "Escape") {
++        setOpen(false);
++        trigger.current?.focus();
++      }
++    };
++    const outside = (e: PointerEvent) => {
++      if (!ref.current?.contains(e.target as Node)) setOpen(false);
++    };
++    document.addEventListener("keydown", close);
++    document.addEventListener("pointerdown", outside);
++    return () => {
++      document.removeEventListener("keydown", close);
++      document.removeEventListener("pointerdown", outside);
++    };
++  }, [open]);
+   return (
+-    <header className="animate-fade-in px-6 py-5">
+-      <PageFrame className="flex items-center justify-between">
+-        <Link
+-          href="/"
+-          className="group -my-2 flex min-h-11 items-center gap-2 py-2"
+-        >
+-          <span className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-accent)]">/</span>
+-          <span className="font-[family-name:var(--font-mono)] text-sm font-semibold tracking-tight text-[var(--color-heading)] transition-colors group-hover:text-[var(--color-accent)]">
+-            slashskills
+-          </span>
++    <header className="site-header">
++      <div className="site-nav" ref={ref}>
++        <Link href="/" className="wordmark" aria-label="Slashskills home">
++          /skills
+         </Link>
+-        <nav aria-label="Primary" className="flex items-center gap-3 sm:gap-5">
+-          <Link href="/guides" className="-my-2 inline-flex min-h-11 items-center py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] hover:text-[var(--color-heading)]">guides</Link>
+-          <Link
+-            href="/compatibility"
+-            className="-my-2 inline-flex min-h-11 items-center py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
+-          >
+-            compatibility
+-          </Link>
+-          <Link
+-            href="/changelog"
+-            className="-my-2 hidden min-h-11 items-center py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)] sm:inline-flex"
+-          >
+-            changelog
+-          </Link>
++        <button
++          ref={trigger}
++          className="icon-button menu-toggle"
++          aria-label={open ? "Close menu" : "Open menu"}
++          aria-expanded={open}
++          aria-controls="primary-navigation"
++          onClick={() => setOpen(!open)}
++        >
++          <CanvasIcon name={open ? "close" : "menu"} />
++        </button>
++        <nav
++          id="primary-navigation"
++          aria-label="Primary"
++          className={open ? "primary-navigation is-open" : "primary-navigation"}
++        >
++          {[
++            ["/", "Skills"],
++            ["/guides", "Guides"],
++            ["/compatibility", "Requirements"],
++            ["/changelog", "Changelog"],
++          ].map(([href, label]) => (
++            <Link
++              key={href}
++              href={href}
++              aria-current={pathname === href ? "page" : undefined}
++              onClick={() => setOpen(false)}
++            >
++              {label}
++            </Link>
++          ))}
+           <a
+             href="https://github.com/tushaarmehtaa/tushar-skills"
+             target="_blank"
+             rel="noopener noreferrer"
+-            aria-label="slashskills on GitHub"
+-            className="-my-2 -mr-2 flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-2 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)] sm:-mr-2"
+           >
+-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+-            </svg>
+-            <span className="hidden sm:inline">github</span>
+-            <span className="hidden text-[var(--color-accent)] sm:inline">
+-              <GithubStars />
+-            </span>
++            GitHub <CanvasIcon name="external" width="15" height="15" />
+           </a>
+         </nav>
+-      </PageFrame>
++      </div>
+     </header>
+   );
+ }
+diff --git a/site/components/page-frame.tsx b/site/components/page-frame.tsx
+index bc983f6..28978dc 100644
+--- a/site/components/page-frame.tsx
++++ b/site/components/page-frame.tsx
+@@ -1,5 +1,5 @@
+ import type { ComponentProps } from "react";
+ 
+ export function PageFrame({ className, ...props }: ComponentProps<"div">) {
+-  return <div className={`mx-auto w-full min-w-0 max-w-5xl ${className ?? ""}`} {...props} />;
++  return <div className={`mx-auto w-full min-w-0 max-w-[1344px] ${className ?? ""}`} {...props} />;
+ }
+diff --git a/site/components/runtime-logo.tsx b/site/components/runtime-logo.tsx
+index a915cfb..cb29553 100644
+--- a/site/components/runtime-logo.tsx
++++ b/site/components/runtime-logo.tsx
+@@ -22,7 +22,7 @@ export function RuntimeLogo({
+   runtime,
+   label,
+   decorative = false,
+-  tone = "brand",
++  tone = "current",
+   className = "h-5 w-5",
+   style,
+   ...props
+@@ -86,7 +86,7 @@ export function RuntimeLogoTile({
+   runtime,
+   label,
+   decorative = false,
+-  tone = "brand",
++  tone = "current",
+   size = "md",
+   className = "",
+   style,
+diff --git a/site/components/skill-detail.tsx b/site/components/skill-detail.tsx
+index 1743700..7f509bf 100644
+--- a/site/components/skill-detail.tsx
++++ b/site/components/skill-detail.tsx
+@@ -1,12 +1,17 @@
++import { SkillVisual } from "./skill-visual";
++import { SourceReader } from "./source-reader";
++import { PackageDisclosure } from "./package-disclosure";
+ import { LatestGuides } from "./latest-guides";
+-import { AgentTabs } from "./agent-tabs";
++import { InstallPanel } from "./install-panel";
++import { CopyButton } from "./copy-button";
++import { SKILL_DISPLAY, TASK_TITLES } from "@/lib/canvas";
+ import { RuntimeLogo } from "./runtime-logo";
+ import { TrackedLink } from "./tracked-link";
+ import { createClaudeAppViewModel } from "@/lib/skill-presentation";
+ import { CAPABILITY_LABELS } from "@/lib/agents";
+ import { supportsChatGPT } from "@/lib/catalog";
+ import type { Skill } from "@/lib/skills";
+-import { githubFileUrl } from "@/lib/markdown";
++import { githubFileUrl, packageFileAnchor } from "@/lib/markdown";
+ 
+ export function SkillDetail({
+   skill,
+@@ -20,6 +25,7 @@ export function SkillDetail({
+     lineCount: number;
+     anchor: string;
+     contentHtml: string;
++    rawContent: string;
+   }>;
+ }) {
+   const claudeApp = createClaudeAppViewModel({
+@@ -30,166 +36,202 @@ export function SkillDetail({
+   const chatgptAvailable = supportsChatGPT(skill.surfaces);
+ 
+   return (
+-    <article className="min-w-0">
+-      <div className="animate-fade-up mb-6">
+-        <h1 className="terminal-heading mb-4 break-words text-3xl font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
+-          {skill.name}
+-        </h1>
+-        <p className="max-w-3xl text-base leading-relaxed text-[var(--color-text)]">
+-          {skill.description.split(/\s+Use when\b/)[0]}
+-        </p>
++    <article className="min-w-0 skill-page">
++      <div className="skill-overview" id="overview">
++        <div className="skill-intro">
++          <div className="skill-title-block">
++            <span className="skill-pill">{skill.slug}</span>
++            <h1 className="terminal-heading mb-4 break-words text-3xl font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
++              {TASK_TITLES[skill.slug] ?? skill.name}
++            </h1>
++            <p className="intro-description">
++              {SKILL_DISPLAY[skill.slug]?.summary ?? skill.description.split(/\s+Use when\b/)[0]}
++            </p>
+ 
+-        <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
+-          {skill.slug === "image-editing" ? "Requires an image-editing tool or configured API and your reference images. Model access is separate." : skill.surfaces.includes("coding-agent") ? `Needs a coding agent. Required tools: ${skill.capabilities.map((capability) => CAPABILITY_LABELS[capability]).join(", ") || "none beyond the agent"}.` : null}
+-        </p>
++          </div>
+ 
+-      </div>
++        </div>
++        <InstallPanel
++          slug={skill.slug}
++          support={skill.support}
++          capabilities={skill.capabilities}
++        />
++        <figure className="skill-outcome">
++          <SkillVisual slug={skill.slug} detail />
++          <figcaption>Illustrative concept · Your brief sets the direction.</figcaption>
++          <div className="outcome-requirements">            <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
++              {skill.slug === "image-editing"
++                ? "Requires an image-editing tool or configured API and your reference images. Model access is separate."
++                : skill.surfaces.includes("coding-agent")
++                  ? `Needs a coding agent. Required tools: ${skill.capabilities.map((capability) => CAPABILITY_LABELS[capability]).join(", ") || "none beyond the agent"}.`
++                  : null}
++            </p>
+ 
+-      <AgentTabs slug={skill.slug} support={skill.support} capabilities={skill.capabilities} />
++          <p className="skill-provenance">
++            By {skill.author} · {skill.license} license ·{" "}
++            {skill.surfaces.includes("claude-app")
++              ? "Local + chat"
++              : "Local agent"}
++          </p>
++          <nav className="skill-section-links" aria-label="Skill sections">
++            <a href="#overview">Overview</a>
++            <a href="#package-skill-md">Instructions</a>
++            <a href="#package-details">Package details</a>
++          </nav></div>
++        </figure>
++      </div>
++      <div className="skill-explanation">
++          <section>
++            <h2>When it’s useful</h2>
++            <p>
++              {skill.description.includes("Use when")
++                ? "Use this when " +
++                  skill.description.split("Use when")[1].trim()
++                : skill.description}
++            </p>
++          </section>
++          {skill.slug === "interface-design" && (
++            <div className="skill-steps">
++              {[
++                [
++                  "01 · Understand",
++                  "Clarify the task, audience and constraints.",
++                ],
++                [
++                  "02 · Structure",
++                  "Shape the layout, visual system and interaction states.",
++                ],
++                [
++                  "03 · Check",
++                  "Build and check the result across screen sizes.",
++                ],
++              ].map(([title, body]) => (
++                <div key={title} className="skill-step">
++                  <strong>{title}</strong>
++                  {body}
++                </div>
++              ))}
++            </div>
++          )}
+ 
+-      {skill.slug === "interface-design" ? (
+-        <section className="mb-8 border-l-2 border-[var(--color-accent)] pl-4">
+-          <h2 className="text-sm font-medium text-[var(--color-heading)]">Try asking</h2>
+-          <p className="mt-3 text-sm leading-relaxed">“Redesign this dashboard so I can find overdue tasks quickly. Keep our existing components and check the mobile layout.”</p>
+-          <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">The workflow guides the agent through the task, layout, implementation, and interaction checks.</p>
+-        </section>
+-      ) : null}
+-      <details className="mb-8 border-y border-[var(--color-border)] py-4">
+-        <summary className="cursor-pointer text-sm text-[var(--color-heading)]">Other platforms and downloads</summary>
++          {skill.slug === "interface-design" ? (
++            <section className="starter-prompt">
++              <h2 className="text-sm font-medium text-[var(--color-heading)]">
++                Try asking
++              </h2>
++              <p className="mt-3 text-sm leading-relaxed">
++                “Redesign this dashboard so I can find overdue tasks quickly.
++                Keep our existing components and check the mobile layout.”
++              </p>
++              <CopyButton
++                text="Redesign this dashboard so I can find overdue tasks quickly. Keep our existing components and check the mobile layout."
++                label="Copy starting prompt"
++                className="mt-4"
++              />
++            </section>
++          ) : null}
++      </div>
++      <details className="platform-disclosure mb-8 border-y border-[var(--color-border)]">
++        <summary className="cursor-pointer text-sm text-[var(--color-heading)]">
++          Other platforms and downloads
++        </summary>
+         <div className="pt-5">
+-      <section
+-        data-claude-app={claudeApp.state}
+-        className="mb-12 overflow-hidden terminal-panel"
+-        aria-labelledby="claude-app-surface-heading"
+-      >
+-        <div className="border-b border-[var(--color-border)] px-4 py-3">
+-          <h2 id="claude-app-surface-heading" className="flex items-center gap-2 text-sm font-medium text-[var(--color-heading)]">
+-            {claudeApp.available ? (
+-              <RuntimeLogo runtime="claude-app" decorative className="h-3.5 w-3.5" />
+-            ) : null}
+-            <span>{claudeApp.heading}</span>
+-          </h2>
+-        </div>
+-        <div className="p-4 sm:p-5">
+-          <p className="max-w-2xl text-sm leading-relaxed text-[var(--color-text)]">
+-            {claudeApp.description}
+-          </p>
+-          <div className="mt-4 flex flex-wrap items-center gap-4">
+-            <TrackedLink
+-              href={`/zips/${skill.slug}.zip`}
+-              download={`${skill.slug}.zip`}
+-              eventName="zip_download"
+-              agent={claudeApp.analyticsAgent}
+-              skill={skill.slug}
+-              className={`inline-flex items-center gap-2 rounded border border-[var(--color-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] ${
+-                claudeApp.available
+-                  ? "text-[var(--color-accent)] hover:border-[var(--color-accent)] hover:bg-[var(--color-surface-raised)]"
+-                  : "text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-heading)]"
+-              }`}
+-            >
+-              {claudeApp.downloadLabel}
+-            </TrackedLink>
+-            {claudeApp.showUploadInstructions ? (
++          <section
++            data-claude-app={claudeApp.state}
++            className="mb-12 overflow-hidden terminal-panel"
++            aria-labelledby="claude-app-surface-heading"
++          >
++            <div className="border-b border-[var(--color-border)] px-4 py-3">
++              <h2
++                id="claude-app-surface-heading"
++                className="flex items-center gap-2 text-sm font-medium text-[var(--color-heading)]"
++              >
++                {claudeApp.available ? (
++                  <RuntimeLogo
++                    runtime="claude-app"
++                    decorative
++                    className="h-3.5 w-3.5"
++                  />
++                ) : null}
++                <span>{claudeApp.heading}</span>
++              </h2>
++            </div>
++            <div className="p-4 sm:p-5">
++              <p className="max-w-2xl text-sm leading-relaxed text-[var(--color-text)]">
++                {claudeApp.description}
++              </p>
++              <div className="mt-4 flex flex-wrap items-center gap-4">
++                <TrackedLink
++                  href={`/zips/${skill.slug}.zip`}
++                  download={`${skill.slug}.zip`}
++                  eventName="zip_download"
++                  agent={claudeApp.analyticsAgent}
++                  skill={skill.slug}
++                  className={`inline-flex items-center gap-2 rounded border border-[var(--color-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] ${
++                    claudeApp.available
++                      ? "text-[var(--color-accent)] hover:border-[var(--color-accent)] hover:bg-[var(--color-surface-raised)]"
++                      : "text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-heading)]"
++                  }`}
++                >
++                  {claudeApp.downloadLabel}
++                </TrackedLink>
++                {claudeApp.showUploadInstructions ? (
++                  <TrackedLink
++                    href="/guides/claude-app"
++                    eventName="guide_open"
++                    agent="claude-app"
++                    skill={skill.slug}
++                    className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
++                  >
++                    Upload guide →
++                  </TrackedLink>
++                ) : null}
++              </div>
++            </div>
++          </section>
++
++          <section
++            className="mb-12 overflow-hidden terminal-panel"
++            aria-labelledby="chatgpt-surface-heading"
++          >
++            <div className="border-b border-[var(--color-border)] px-4 py-3">
++              <h2
++                id="chatgpt-surface-heading"
++                className="text-sm font-medium text-[var(--color-heading)]"
++              >
++                ChatGPT Skills
++              </h2>
++            </div>
++            <div className="p-4 sm:p-5">
++              <p className="max-w-2xl text-sm leading-relaxed text-[var(--color-text)]">
++                {chatgptAvailable
++                  ? "This workflow is suitable for ChatGPT Skills. ChatGPT does not document the same upload archive format as Claude, so follow its uploader instead of reusing the Claude ZIP."
++                  : "This workflow needs a local coding environment or capabilities that a chat-only Skills upload does not provide."}
++              </p>
+               <TrackedLink
+-                href="/guides/claude-app"
++                href="/guides/chatgpt"
+                 eventName="guide_open"
+-                agent="claude-app"
++                agent="chatgpt"
+                 skill={skill.slug}
+-                className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
++                className="mt-4 inline-flex min-h-11 items-center font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+               >
+-                Upload guide →
++                {chatgptAvailable
++                  ? "ChatGPT upload guide →"
++                  : "Why local agent required →"}
+               </TrackedLink>
+-            ) : null}
+-          </div>
+-        </div>
+-      </section>
+-
+-      <section className="mb-12 overflow-hidden terminal-panel" aria-labelledby="chatgpt-surface-heading">
+-        <div className="border-b border-[var(--color-border)] px-4 py-3">
+-          <h2 id="chatgpt-surface-heading" className="text-sm font-medium text-[var(--color-heading)]">ChatGPT Skills</h2>
+-        </div>
+-        <div className="p-4 sm:p-5">
+-          <p className="max-w-2xl text-sm leading-relaxed text-[var(--color-text)]">
+-            {chatgptAvailable
+-              ? "This workflow is suitable for ChatGPT Skills. ChatGPT does not document the same upload archive format as Claude, so follow its uploader instead of reusing the Claude ZIP."
+-              : "This workflow needs a local coding environment or capabilities that a chat-only Skills upload does not provide."}
+-          </p>
+-          <TrackedLink
+-            href="/guides/chatgpt"
+-            eventName="guide_open"
+-            agent="chatgpt"
+-            skill={skill.slug}
+-            className="mt-4 inline-flex min-h-11 items-center font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+-          >
+-            {chatgptAvailable ? "ChatGPT upload guide →" : "Why local agent required →"}
+-          </TrackedLink>
+-        </div>
+-      </section>
+-
++            </div>
++          </section>
+         </div>
+       </details>
+ 
+-      <div className="divider mb-10" />
+-
+-      <div id="package-skill-md">
+-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+-          <h2 className="text-sm font-medium text-[var(--color-heading)]">Instructions</h2>
+-          <span className="text-xs text-[var(--color-muted)]">Source: SKILL.md</span>
+-        </div>
+-        <div className="prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+-      </div>
+-
+-      {renderedFiles.length > 0 ? (
+-        <section className="mt-16" aria-labelledby="package-references-heading">
+-          <div className="mb-6 border-b border-[var(--color-border)] pb-4">
+-            <h2 id="package-references-heading" className="text-sm font-medium text-[var(--color-heading)]">
+-              Bundled references
+-            </h2>
+-            <p className="mt-2 text-xs text-[var(--color-muted)]">
+-              {renderedFiles.length} {renderedFiles.length === 1 ? "file" : "files"} · {renderedFiles.reduce((total, file) => total + file.lineCount, 0).toLocaleString()} lines
+-            </p>
+-          </div>
+-
+-          <nav aria-label="Bundled reference files" className="mb-10 flex flex-wrap gap-2">
+-            {renderedFiles.map((file) => (
+-              <a
+-                key={file.path}
+-                href={`#${file.anchor}`}
+-                className="border border-[var(--color-border)] px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-heading)]"
+-              >
+-                {file.path}
+-              </a>
+-            ))}
+-          </nav>
+-
+-          <div className="space-y-14">
+-            {renderedFiles.map((file) => (
+-              <section key={file.path} id={file.anchor} className="scroll-mt-6 border-t border-[var(--color-border)] pt-6">
+-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+-                  <h3 className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-heading)]">{file.path}</h3>
+-                  <a
+-                    href={githubFileUrl(skill.slug, file.path)}
+-                    target="_blank"
+-                    rel="noopener noreferrer"
+-                    className="text-xs text-[var(--color-muted)] hover:text-[var(--color-accent)]"
+-                  >
+-                    source ↗
+-                  </a>
+-                </div>
+-                <div className="prose" dangerouslySetInnerHTML={{ __html: file.contentHtml }} />
+-              </section>
+-            ))}
+-          </div>
+-        </section>
+-      ) : null}
+-
+-      <details className="mt-10 border-y border-[var(--color-border)] py-4">
+-        <summary className="cursor-pointer text-sm text-[var(--color-heading)]">Package details</summary>
++      <PackageDisclosure>
+         <dl className="mt-6 grid gap-x-5 gap-y-3 border-t border-[var(--color-border)] pt-5 text-xs sm:grid-cols-[8rem_1fr]">
+           <dt className="text-[var(--color-muted)]">Category</dt>
+           <dd className="text-[var(--color-text)]">{skill.category}</dd>
+           <dt className="text-[var(--color-muted)]">Package</dt>
+-          <dd className="break-all font-[family-name:var(--font-mono)] text-[var(--color-heading)]">{skill.slug}/SKILL.md</dd>
++          <dd className="break-all font-[family-name:var(--font-mono)] text-[var(--color-heading)]">
++            {skill.slug}/SKILL.md
++          </dd>
+           <dt className="text-[var(--color-muted)]">License</dt>
+           <dd className="text-[var(--color-text)]">{skill.license}</dd>
+           <dt className="text-[var(--color-muted)]">Author</dt>
+@@ -197,7 +239,9 @@ export function SkillDetail({
+           {skill.compatibility ? (
+             <>
+               <dt className="text-[var(--color-muted)]">Compatibility</dt>
+-              <dd className="text-[var(--color-text)]">{skill.compatibility}</dd>
++              <dd className="text-[var(--color-text)]">
++                {skill.compatibility}
++              </dd>
+             </>
+           ) : null}
+           <dt className="text-[var(--color-muted)]">Tags</dt>
+@@ -212,8 +256,24 @@ export function SkillDetail({
+             ))}
+           </dd>
+         </dl>
+-      </details>
++      </PackageDisclosure>
+       <LatestGuides skill={skill.slug} />
++      <SourceReader
++        license={skill.license}
++        files={[
++          {
++            path: "SKILL.md",
++            anchor: packageFileAnchor("SKILL.md"),
++            contentHtml,
++            rawContent: skill.rawContent,
++            sourceUrl: githubFileUrl(skill.slug, "SKILL.md"),
++          },
++          ...renderedFiles.map((file) => ({
++            ...file,
++            sourceUrl: githubFileUrl(skill.slug, file.path),
++          })),
++        ]}
++      />
+ 
+       <div className="mt-16 border-t border-[var(--color-border)] pt-8">
+         <a
+diff --git a/site/components/skill-directory.tsx b/site/components/skill-directory.tsx
+index 6bb00d5..5c2720d 100644
+--- a/site/components/skill-directory.tsx
++++ b/site/components/skill-directory.tsx
+@@ -1,9 +1,18 @@
+ "use client";
+-
++import { usePathname, useSearchParams } from "next/navigation";
++import { useEffect, useRef, useMemo, useState } from "react";
+ import { TrackedLink } from "./tracked-link";
+-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+-import { useEffect, useRef, useMemo } from "react";
+-import { SkillLogo } from "./skill-logo";
++import { SkillVisual } from "./skill-visual";
++import { CanvasIcon } from "./canvas-icon";
++import { AgentTabs } from "./agent-tabs";
++import { CATALOG, isSkillSlug } from "@/lib/catalog";
++import {
++  TASK_LABELS,
++  TASK_TITLES,
++  SKILL_DISPLAY,
++  matchesTask,
++  skillHref,
++} from "@/lib/canvas";
+ import {
+   filterDirectorySkills,
+   getDirectoryCategories,
+@@ -11,160 +20,354 @@ import {
+   type DirectorySkill,
+   type SurfaceFilter,
+ } from "@/lib/skill-directory";
+-
+-const SURFACE_FILTERS = new Set<SurfaceFilter>(["all", "local", "chat"]);
+-
+-export function SkillDirectory({ skills }: { skills: readonly DirectorySkill[] }) {
++const icons: Record<string, string> = {
++  design: "design",
++  ai: "ai",
++  auth: "auth",
++  planning: "idea",
++  marketing: "launch",
++  monetization: "growth",
++  payments: "growth",
++  analytics: "growth",
++  workflow: "route",
++  infrastructure: "database",
++  devops: "code",
++  seo: "search",
++  meta: "file",
++};
++export function SkillDirectory({
++  skills,
++}: {
++  skills: readonly DirectorySkill[];
++}) {
++  const topicRef = useRef<HTMLDetailsElement>(null);
+   const searchRef = useRef<HTMLInputElement>(null);
++  const pathname = usePathname();
++  const params = useSearchParams();
++  const [selected, setSelected] = useState<string | null>(null);
+   useEffect(() => {
+-    function focusSearch(event: KeyboardEvent) {
+-      const target = event.target as HTMLElement;
+-      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey || target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+-      event.preventDefault();
+-      searchRef.current?.focus();
+-    }
+-    window.addEventListener("keydown", focusSearch);
+-    return () => window.removeEventListener("keydown", focusSearch);
++    try {
++      setSelected(sessionStorage.getItem("skills-selected"));
++    } catch {}
+   }, []);
+-  const router = useRouter();
+-  const pathname = usePathname();
+-  const searchParams = useSearchParams();
+-  const categories = useMemo(() => getDirectoryCategories(skills), [skills]);
+-  const filters = useMemo<DirectoryFilters>(() => {
+-    const query = searchParams.get("q") ?? "";
+-    const requestedCategory = searchParams.get("category") ?? "all";
+-    const requestedSurface = searchParams.get("surface") ?? "all";
+-
+-    return {
+-      query,
+-      category: requestedCategory === "all" || categories.includes(requestedCategory)
+-        ? requestedCategory
+-        : "all",
+-      surface: SURFACE_FILTERS.has(requestedSurface as SurfaceFilter)
+-        ? requestedSurface as SurfaceFilter
+-        : "all",
++  useEffect(() => {
++    const dismiss = (e: KeyboardEvent) => {
++      if (e.key === "Escape" && topicRef.current?.open) {
++        topicRef.current.open = false;
++        topicRef.current.querySelector("summary")?.focus();
++      }
+     };
+-  }, [categories, searchParams]);
+-  const filteredSkills = filterDirectorySkills(skills, filters);
+-  const hasFilters = filters.query.trim().length > 0 || filters.category !== "all" || filters.surface !== "all";
+-
+-  function updateFilters(next: DirectoryFilters) {
+-    const params = new URLSearchParams(searchParams.toString());
+-    if (next.query.trim()) params.set("q", next.query); else params.delete("q");
+-    if (next.category !== "all") params.set("category", next.category); else params.delete("category");
+-    if (next.surface !== "all") params.set("surface", next.surface); else params.delete("surface");
+-    const queryString = params.toString();
+-    router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
++    const outside = (e: PointerEvent) => {
++      if (
++        topicRef.current?.open &&
++        !topicRef.current.contains(e.target as Node)
++      )
++        topicRef.current.open = false;
++    };
++    document.addEventListener("keydown", dismiss);
++    document.addEventListener("pointerdown", outside);
++    return () => {
++      document.removeEventListener("keydown", dismiss);
++      document.removeEventListener("pointerdown", outside);
++    };
++  }, []);
++  const categories = useMemo(() => getDirectoryCategories(skills), [skills]);
++  const task = params.get("task") ?? "all";
++  const filters: DirectoryFilters = {
++    query: params.get("q") ?? "",
++    category: categories.includes(params.get("category") ?? "")
++      ? params.get("category")!
++      : "all",
++    surface: ["local", "chat"].includes(params.get("surface") ?? "")
++      ? (params.get("surface") as SurfaceFilter)
++      : "all",
++  };
++  useEffect(() => {
++    document.documentElement.classList.toggle(
++      "is-searching",
++      Boolean(filters.query.trim()),
++    );
++    return () => document.documentElement.classList.remove("is-searching");
++  }, [filters.query]);
++  const found = filterDirectorySkills(skills, filters).filter((s) =>
++    matchesTask(s.slug, task),
++  );
++  const preview = found.find((s) => s.slug === selected) ?? found[0];
++  const constraints =
++    filters.category !== "all" || filters.surface !== "all" || task !== "all";
++  function update(values: Record<string, string>) {
++    const next = new URLSearchParams(window.location.search);
++    for (const [k, v] of Object.entries(values)) {
++      if (v && v !== "all") next.set(k, v);
++      else next.delete(k);
++    }
++    window.history.replaceState(
++      null,
++      "",
++      next.size ? `${pathname}?${next}` : pathname,
++    );
+   }
+-
+-  function clearFilters() {
+-    updateFilters({ query: "", category: "all", surface: "all" });
++  function remember(slug: string) {
++    try {
++      sessionStorage.setItem("skills-selected", slug);
++      sessionStorage.setItem(
++        "skills-return",
++        `${pathname}${params.size ? `?${params}` : ""}`,
++      );
++    } catch {}
+   }
+-
++  useEffect(() => {
++    const focus = (e: KeyboardEvent) => {
++      const t = e.target as HTMLElement;
++      if (
++        e.key === "/" &&
++        !e.metaKey &&
++        !e.ctrlKey &&
++        !e.altKey &&
++        !t.isContentEditable &&
++        !/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)
++      ) {
++        e.preventDefault();
++        searchRef.current?.focus();
++      }
++    };
++    window.addEventListener("keydown", focus);
++    return () => window.removeEventListener("keydown", focus);
++  }, []);
+   return (
+-    <section className="pb-20" aria-labelledby="skill-index-heading">
+-      <h2 id="skill-index-heading" className="mb-5 text-xl font-semibold text-[var(--color-heading)]">Skills</h2>
+-
+-      <div className="mb-3 border-y border-[var(--color-border)]">
+-        <label className="flex items-center gap-4 py-2">
+-          <span className="sr-only">Search skills</span>
+-          <input
+-            ref={searchRef}
+-            type="search"
+-            value={filters.query}
+-            onChange={(event) => updateFilters({ ...filters, query: event.target.value })}
+-            placeholder="Find a skill…"
+-            className="min-h-11 min-w-0 flex-1 bg-transparent py-2 text-base text-[var(--color-heading)] outline-none placeholder:text-[var(--color-muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--color-accent)]"
+-          />
+-          <kbd aria-hidden="true" className="hidden text-xs text-[var(--color-muted)] sm:block">/</kbd>
++    <section className="skill-directory discovery-directory" aria-labelledby="skill-index-heading">
++      <h2 id="skill-index-heading" className="sr-only">
++        Skills
++      </h2>
++      <div className="search-heading">
++        <label className="search-label" htmlFor="skill-search">
++          Search skills
+         </label>
+-        <div role="group" aria-label="Skill categories" className="flex gap-5 overflow-x-auto border-t border-[var(--color-border)]">
+-          {["all", ...categories].map((category) => (
+-            <button
+-              key={category}
+-              type="button"
+-              aria-pressed={filters.category === category}
+-              onClick={(event) => {
+-                updateFilters({ ...filters, category });
+-                event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
+-              }}
+-              className={`min-h-11 shrink-0 border-b-2 py-3 text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-accent)] ${filters.category === category ? "border-[var(--color-accent)] text-[var(--color-heading)]" : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-heading)]"}`}
+-            >
+-              {category === "all" ? "All skills" : category}
+-            </button>
+-          ))}
+-        </div>
++        <a href="#library-install" className="text-button">
++          Install collection <CanvasIcon name="download" />
++        </a>
+       </div>
+-
+-      <div className="mb-3 flex flex-wrap items-start justify-between gap-x-5 text-xs text-[var(--color-muted)]">
+-        <p aria-live="polite" aria-atomic="true" className="py-3">
+-          {filteredSkills.length} {filteredSkills.length === 1 ? "skill" : "skills"}
+-        </p>
+-        <div className="flex items-start gap-5">
+-          {hasFilters ? (
+-            <button type="button" onClick={clearFilters} className="min-h-11 hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-[var(--color-accent)]">Clear filters</button>
+-          ) : null}
+-          <details className="max-w-56">
+-            <summary className="min-h-11 cursor-pointer py-3 hover:text-[var(--color-heading)]">
+-              {filters.surface === "all" ? "Platform" : filters.surface === "local" ? "Local agents" : "Chat + local"}
+-            </summary>
+-            <fieldset className="flex flex-col gap-1 pb-3">
+-              <legend className="sr-only">Runs in</legend>
+-              {([ ["all", "All platforms"], ["local", "Local agents"], ["chat", "Chat + local"] ] as const).map(([value, label]) => (
+-                <label key={value} className="flex min-h-11 cursor-pointer items-center gap-3">
+-                  <input type="radio" name="platform" value={value} checked={filters.surface === value} onChange={() => updateFilters({ ...filters, surface: value })} className="accent-[var(--color-accent)]" />
+-                  {label}
+-                </label>
+-              ))}
+-            </fieldset>
+-          </details>
+-        </div>
++      <div className="search-control">
++        <CanvasIcon name="search" />
++        <input
++          ref={searchRef}
++          id="skill-search"
++          type="search"
++          name="q"
++          autoComplete="off"
++          spellCheck={false}
++          value={filters.query}
++          onChange={(e) => update({ q: e.target.value })}
++          placeholder='Try “interface” or “payments”'
++        />
++        <kbd aria-hidden="true">/</kbd>
+       </div>
+-
+-      <div className="terminal-rule mb-3 hidden grid-cols-[minmax(11rem,1fr)_8rem_minmax(15rem,1.5fr)_5rem] gap-4 px-3 pt-3 text-xs text-[var(--color-muted)] sm:grid">
+-        <span>Skill</span>
+-        <span>Category</span>
+-        <span>What it does</span>
+-        <span className="text-right">Runs in</span>
++      <div className="directory-filters">
++        <div
++          role="group"
++          aria-label="Skill categories"
++          className="task-buttons"
++        >
++          <span>What are you working on?</span>
++          {[["all", "All skills"], ...Object.entries(TASK_LABELS)].map(
++            ([key, label]) => (
++              <button
++                key={key}
++                aria-pressed={task === key}
++                onClick={() => update({ task: key, category: "all" })}
++              >
++                <span>{label}</span><span className="category-count">{skills.filter(s => matchesTask(s.slug, key)).length}</span>
++              </button>
++            ),
++          )}
++        </div>
++        <label className="mobile-category">
++          <span>Category</span>
++          <select
++            aria-label="Category"
++            value={task in TASK_LABELS ? task : "all"}
++            onChange={(e) => update({ task: e.target.value, category: "all" })}
++          >
++            <option value="all">All skills</option>
++            {Object.entries(TASK_LABELS).map(([v, l]) => (
++              <option value={v} key={v}>
++                {l}
++              </option>
++            ))}
++          </select>
++        </label>
++        <label className="platform-filter">
++          <CanvasIcon name="filter" />
++          <span className="sr-only">Platform</span>
++          <select
++            aria-label="Platform"
++            value={filters.surface}
++            onChange={(e) => update({ surface: e.target.value })}
++          >
++            <option value="all">All platforms</option>
++            <option value="local">Local agents</option>
++            <option value="chat">Chat apps</option>
++          </select>
++        </label>
+       </div>
+-
+-      {filteredSkills.length > 0 ? (
+-        <div className="terminal-panel p-1">
+-          {filteredSkills.map((skill) => (
+-            <TrackedLink
+-              key={skill.slug}
+-              href={`/${skill.slug}`}
+-              eventName="skill_open" skill={skill.slug} agent="all"
+-              className="skill-row group grid gap-2 border-b border-[var(--color-border)] px-3 py-4 last:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-accent)] sm:grid-cols-[minmax(11rem,1fr)_8rem_minmax(15rem,1.5fr)_5rem] sm:items-center sm:gap-4"
++      <div className="directory-meta">
++        <h2>{filters.query ? "Search results" : TASK_LABELS[task] ?? "Find your next move"}</h2>
++        <p aria-live="polite" aria-atomic="true">
++          {found.length} {found.length === 1 ? "skill" : "skills"}
++          {filters.query ? ` for “${filters.query}”` : ""}
++        </p>
++        <details ref={topicRef} className="topic-filter">
++          <summary>
++            Topics{filters.category !== "all" ? `: ${filters.category}` : ""}
++          </summary>
++          <label>
++            <span className="sr-only">Topic</span>
++            <select
++              aria-label="Topic"
++              value={filters.category}
++              onChange={(e) => update({ category: e.target.value })}
+             >
+-              <span className="skill-row-command relative z-10 flex min-w-0 items-center gap-2 font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-heading)] transition-colors sm:text-base">
+-                <SkillLogo slug={skill.slug} className="h-3.5 w-3.5 shrink-0 opacity-35 transition-opacity group-hover:opacity-70" />
+-                <span className="min-w-0 break-words">{skill.name}</span>
+-              </span>
+-              <span className="relative z-10 w-fit border border-[var(--color-border)] px-1.5 py-0.5 text-xs text-[var(--color-muted)] transition-colors group-hover:border-[var(--color-accent-dim)] group-hover:text-[var(--color-text)]">
+-                {skill.category}
+-              </span>
+-              <p className="relative z-10 font-[family-name:var(--font-sans)] text-sm leading-relaxed text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
+-                {skill.description.split(/\s+Use when\b/)[0]}
+-              </p>
+-              <span className="relative z-10 text-right text-xs text-[var(--color-muted)]">
+-                {skill.claudeAppReady ? "Chat + local" : "Local"}
+-              </span>
+-            </TrackedLink>
+-          ))}
+-        </div>
+-      ) : (
+-        <div className="terminal-panel px-5 py-10 text-center">
+-          <p className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-heading)]">No skills match these filters.</p>
++              <option value="all">All topics</option>
++              {categories.map((c) => (
++                <option key={c} value={c}>
++                  {c}
++                </option>
++              ))}
++            </select>
++          </label>
++        </details>
++        {constraints && (
+           <button
+-            type="button"
+-            onClick={clearFilters}
+-            className="mt-4 min-h-11 border border-[var(--color-border)] px-3 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)] transition-colors hover:border-[var(--color-border-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
++            onClick={() =>
++              update({ category: "all", surface: "all", task: "all" })
++            }
+           >
+             Clear filters
+           </button>
++        )}
++      </div>
++      <div
++        className={
++          filters.query && preview
++            ? "directory-workbench has-preview"
++            : "directory-workbench"
++        }
++      >
++        <div className={`skill-results ${!filters.query ? "visual-catalog" : ""}`}>
++          {found.map((skill) => (
++            <div
++              key={skill.slug}
++              className={`result-wrap ${filters.query && preview?.slug === skill.slug ? "is-selected" : ""}`}
++            >
++              <TrackedLink
++                href={skillHref(skill.slug)}
++                eventName="skill_open"
++                skill={skill.slug}
++                agent="all"
++                className="skill-row"
++                onClick={() => remember(skill.slug)}
++              >
++                <span className="workflow-mark"><CanvasIcon name={SKILL_DISPLAY[skill.slug]?.icon ?? icons[skill.category] ?? "file"} /></span>
++                <div className="result-copy">
++                  <h3>
++                    <CanvasIcon
++                      name={
++                        SKILL_DISPLAY[skill.slug]?.icon ??
++                        icons[skill.category] ??
++                        "file"
++                      }
++                    />
++                    {TASK_TITLES[skill.slug] ?? skill.name}
++                  </h3>
++                  <p>
++                    {SKILL_DISPLAY[skill.slug]?.summary ??
++                      skill.description.split(/\s+Use when\b/)[0]}
++                  </p>
++                  <span className="skill-pill">{skill.slug}</span>
++                </div>
++                <span className="result-platform">
++                  <span className="result-flow">
++                    {SKILL_DISPLAY[skill.slug]?.flow}
++                  </span>
++                  <span>
++                    {skill.claudeAppReady ? "Local + chat" : "Local agent"}
++                  </span>
++                </span>
++                <CanvasIcon name="arrow" className="result-arrow" />
++              </TrackedLink>
++              {filters.query && (
++                <button
++                  className="preview-trigger"
++                  title={`Preview ${skill.slug}`}
++                  aria-label={`Preview ${skill.slug}`}
++                  aria-pressed={preview?.slug === skill.slug}
++                  onClick={() => setSelected(skill.slug)}
++                >
++                  <CanvasIcon name="panel" />
++                  <span>Preview</span>
++                </button>
++              )}
++            </div>
++          ))}
++          {!found.length && (
++            <div className="empty-results">
++              <CanvasIcon name="search" width="32" height="32" />
++              <h3>
++                {constraints
++                  ? "No skills match these filters."
++                  : "No skills match your search."}
++              </h3>
++              <p>
++                {constraints
++                  ? "Keep your search and clear the filters, or try a different task."
++                  : "Try a skill name or a task, such as interface or payments."}
++              </p>
++              <div>
++                <button
++                  className="primary-button"
++                  onClick={() =>
++                    constraints
++                      ? update({ category: "all", surface: "all", task: "all" })
++                      : update({ q: "" })
++                  }
++                >
++                  {constraints ? "Clear filters" : "Clear search"}
++                </button>
++                <button
++                  className="text-button"
++                  onClick={() => searchRef.current?.focus()}
++                >
++                  Edit search
++                </button>
++              </div>
++            </div>
++          )}
+         </div>
+-      )}
++        {filters.query && preview && isSkillSlug(preview.slug) && (
++          <aside className="skill-inspector" aria-label="Skill preview">
++            <span className="skill-pill">{preview.slug}</span>
++            <h2>{TASK_TITLES[preview.slug] ?? preview.name}</h2>
++            <p>{preview.description.split(/\s+Use when\b/)[0]}</p>
++            <div className="inspector-visual"><SkillVisual slug={preview.slug} /><span>Illustrative workflow</span></div>
++            <AgentTabs
++              key={preview.slug}
++              slug={preview.slug}
++              support={CATALOG[preview.slug].support}
++              capabilities={CATALOG[preview.slug].capabilities}
++            />
++            <TrackedLink
++              href={skillHref(preview.slug)}
++              eventName="skill_open"
++              skill={preview.slug}
++              agent="all"
++              onClick={() => remember(preview.slug)}
++              className="text-button"
++            >
++              Read the skill & source <CanvasIcon name="arrow" />
++            </TrackedLink>
++          </aside>
++        )}
++      </div>
+     </section>
+   );
+ }
+diff --git a/site/e2e/discovery.spec.ts b/site/e2e/discovery.spec.ts
+index 6b88d47..5284cfc 100644
+--- a/site/e2e/discovery.spec.ts
++++ b/site/e2e/discovery.spec.ts
+@@ -9,21 +9,22 @@ for (const width of [390, 1440]) {
+     const search = page.getByRole("searchbox", { name: "Search skills" });
+     await expect(search).toBeInViewport();
+     await expect(page.locator(".skill-row").first()).toBeInViewport();
+-    const categories = page.getByRole("group", { name: "Skill categories" });
+-    await categories.getByRole("button", { name: "design", exact: true }).click();
++    await page.getByText("Topics", { exact: true }).click();
++    await page.getByRole("combobox", { name: "Topic", exact: true }).selectOption("design");
+     await expect(page).toHaveURL(/category=design/);
+-    await expect(categories.getByRole("button", { name: "design", exact: true })).toHaveAttribute("aria-pressed", "true");
+-    await expect(page.getByRole("heading", { name: "Skills", exact: true })).toBeInViewport();
+-    await categories.getByRole("button", { name: "All skills", exact: true }).click();
++    await expect(page.getByRole("combobox", { name: "Topic", exact: true })).toHaveValue("design");
++    await page.getByRole("combobox", { name: "Topic", exact: true }).selectOption("all");
++    await page.getByText("Topics", { exact: true }).click();
++    await page.getByRole("heading", { level: 1 }).click();
+     await page.keyboard.press("/");
+     await expect(search).toBeFocused();
+     await search.fill("interface-design");
+     await expect(page.locator(".skill-row").first()).toContainText("interface-design");
+     await page.locator(".skill-row").first().click();
+     const copy = page.getByRole("button", { name: "Copy command", exact: true });
++    if (width < 1024) await page.getByRole("button", { name: "Install skill", exact: true }).click();
+     await expect(copy).toBeInViewport();
+-    await expect(page.getByText("Package details", { exact: true })).toBeVisible();
+-    await expect(page.getByText("Other platforms and downloads", { exact: true })).toBeVisible();
++
+     await copy.click();
+     await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe("npx skills add tushaarmehtaa/tushar-skills --skill interface-design -g -a codex -y");
+     await page.getByRole("tab", { name: "Claude Code", exact: true }).click();
+diff --git a/site/e2e/guides.spec.ts b/site/e2e/guides.spec.ts
+index a484e01..3acf891 100644
+--- a/site/e2e/guides.spec.ts
++++ b/site/e2e/guides.spec.ts
+@@ -7,8 +7,9 @@ for (const width of [390, 1440]) {
+     await expect(page.getByRole("heading", { name: "Skills", exact: true })).toBeVisible();
+     await expect(page.getByRole("heading", { name: "Latest guides", exact: true })).toHaveCount(0);
+     await page.screenshot({ path: testInfo.outputPath("homepage-skills.png") });
+-    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "guides", exact: true }).click();
+-    await expect(page.getByRole("heading", { name: "Latest guides" })).toBeInViewport();
++    if (width < 640) await page.getByRole("button", { name: "Open menu" }).click();
++    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Guides", exact: true }).click();
++    await expect(page.getByRole("heading", { name: "Latest guides" })).toBeVisible();
+     await page.screenshot({ path: testInfo.outputPath("guides-index.png") });
+     await page.locator("#guides").getByRole("link").filter({ hasText: "Build an image-editing skill" }).click();
+     await expect(page).toHaveURL(/\/guides\/image-editing-skills$/);
+diff --git a/site/e2e/platform.spec.ts b/site/e2e/platform.spec.ts
+index f777dd1..e372073 100644
+--- a/site/e2e/platform.spec.ts
++++ b/site/e2e/platform.spec.ts
+@@ -10,12 +10,12 @@ test.describe("slashskills platform", () => {
+   test("keeps core pages within the mobile viewport", async ({ page }) => {
+     await page.goto("/");
+     await expectNoDocumentOverflow(page);
+-    await expect(page.getByRole("heading", { name: "workflows saved as Agent Skills." })).toBeVisible();
++    await expect(page.getByRole("heading", { name: "Good work starts with a useful skill." })).toBeVisible();
+ 
+     await page.goto("/cold-outreach");
+     await expectNoDocumentOverflow(page);
+-    await expect(page.getByRole("heading", { name: "cold-outreach" })).toBeVisible();
+-    await expect(page.locator("[data-status]")).toHaveCount(0);
++    await expect(page.getByRole("heading", { name: "Start a conversation" })).toBeVisible();
++    await expect(page.locator("main [data-status]")).toHaveCount(0);
+ 
+     await page.goto("/compatibility");
+     await expectNoDocumentOverflow(page);
+@@ -51,9 +51,8 @@ test.describe("slashskills platform", () => {
+ 
+   test("keeps chat-capable skills in the local-agent filter", async ({ page }) => {
+     await page.goto("/");
+-    await page.getByText("Platform", { exact: true }).click();
+-    await page.getByRole("radio", { name: "Local agents", exact: true }).click();
+-    await expect(page.getByRole("radio", { name: "Local agents", exact: true })).toBeChecked();
++    await page.getByRole("combobox", { name: "Platform", exact: true }).selectOption("local");
++    await expect(page.getByRole("combobox", { name: "Platform", exact: true })).toHaveValue("local");
+     await expect(page.getByRole("link", { name: /decision-doc/ })).toBeVisible();
+     await expect(page).toHaveURL(/surface=local/);
+   });
+@@ -62,7 +61,7 @@ test.describe("slashskills platform", () => {
+     for (const slug of ["humanize", "landing-page", "mobile-first"]) {
+       await page.goto(`/${slug}`);
+       await expectNoDocumentOverflow(page);
+-      await expect(page.getByRole("heading", { name: slug, exact: true })).toBeVisible();
++      await expect(page.locator(".skill-intro .skill-pill")).toBeVisible();
+     }
+   });
+ });
+diff --git a/site/lib/skill-directory.ts b/site/lib/skill-directory.ts
+index 263af12..136ad1d 100644
+--- a/site/lib/skill-directory.ts
++++ b/site/lib/skill-directory.ts
+@@ -1,6 +1,7 @@
+ export interface DirectorySkill {
+   slug: string;
+   name: string;
++  displayName?: string;
+   category: string;
+   description: string;
+   localAvailable: boolean;
+@@ -15,7 +16,9 @@ export interface DirectoryFilters {
+   surface: SurfaceFilter;
+ }
+ 
+-export function getDirectoryCategories(skills: readonly DirectorySkill[]): string[] {
++export function getDirectoryCategories(
++  skills: readonly DirectorySkill[],
++): string[] {
+   return [...new Set(skills.map((skill) => skill.category))].sort();
+ }
+ 
+@@ -28,11 +31,16 @@ export function filterDirectorySkills(
+   const matches = skills.filter((skill) => {
+     const matchesQuery =
+       normalizedQuery.length === 0 ||
+-      `${skill.name} ${skill.description} ${skill.category}`.toLowerCase().includes(normalizedQuery);
+-    const matchesCategory = filters.category === "all" || skill.category === filters.category;
++      `${skill.name} ${skill.slug} ${skill.displayName ?? ""} ${skill.description} ${skill.category}`
++        .toLowerCase()
++        .includes(normalizedQuery);
++    const matchesCategory =
++      filters.category === "all" || skill.category === filters.category;
+     const matchesSurface =
+       filters.surface === "all" ||
+-      (filters.surface === "chat" ? skill.claudeAppReady : skill.localAvailable);
++      (filters.surface === "chat"
++        ? skill.claudeAppReady
++        : skill.localAvailable);
+ 
+     return matchesQuery && matchesCategory && matchesSurface;
+   });
+@@ -41,7 +49,11 @@ export function filterDirectorySkills(
+     const name = skill.name.toLowerCase();
+     if (name === normalizedQuery || skill.slug === normalizedQuery) return 4;
+     if (name.startsWith(normalizedQuery)) return 3;
+-    if (name.includes(normalizedQuery)) return 2;
++    if (
++      name.includes(normalizedQuery) ||
++      skill.displayName?.toLowerCase().includes(normalizedQuery)
++    )
++      return 2;
+     return skill.category.toLowerCase().includes(normalizedQuery) ? 1 : 0;
+   }
+   return matches.sort((a, b) => relevance(b) - relevance(a));
+diff --git a/site/lib/skills.ts b/site/lib/skills.ts
+index 31cb738..cd65e25 100644
+--- a/site/lib/skills.ts
++++ b/site/lib/skills.ts
+@@ -16,12 +16,14 @@ export interface Skill extends CatalogEntry {
+   license: string;
+   compatibility?: string;
+   content: string;
++  rawContent: string;
+   files: SkillFile[];
+ }
+ 
+ export interface SkillFile {
+   path: string;
+   content: string;
++  rawContent: string;
+   lineCount: number;
+ }
+ 
+@@ -48,6 +50,7 @@ function getBundledMarkdownFiles(skillRoot: string): SkillFile[] {
+       files.push({
+         path: path.relative(skillRoot, absolutePath).split(path.sep).join("/"),
+         content,
++        rawContent: raw,
+         lineCount: content.split(/\r?\n/).length,
+       });
+     }
+@@ -78,6 +81,7 @@ export function getAllSkills(): Skill[] {
+         license: data.license || "MIT",
+         compatibility: data.compatibility,
+         content,
++        rawContent: raw,
+         files: getBundledMarkdownFiles(skillRoot),
+         ...catalog,
+       } satisfies Skill;
+diff --git a/site/tests/runtime.test.ts b/site/tests/runtime.test.ts
+index 569a2db..6cde508 100644
+--- a/site/tests/runtime.test.ts
++++ b/site/tests/runtime.test.ts
+@@ -204,8 +204,8 @@ test("every product surface has a local runtime brand mark", () => {
+   ]);
+ 
+   for (const brand of Object.values(RUNTIME_BRANDS)) {
+-    const hasSvgPath = "path" in brand.icon && brand.icon.path.length > 20;
+-    const hasLocalImage = "imageSrc" in brand.icon && brand.icon.imageSrc.startsWith("/");
++    const hasSvgPath = "path" in brand.icon && typeof brand.icon.path === "string" && brand.icon.path.length > 20;
++    const hasLocalImage = "imageSrc" in brand.icon && typeof brand.icon.imageSrc === "string" && brand.icon.imageSrc.startsWith("/");
+     assert.ok(hasSvgPath || hasLocalImage, `${brand.id} has a local runtime mark`);
+     assert.match(brand.icon.viewBox, /^[-.\d ]+$/);
+     assert.match(brand.colorOnDark, /^#[0-9A-F]{6}$/i);
+@@ -269,3 +269,8 @@ test("skill directory filters preserve repository order and combine criteria", (
+   assert.deepEqual(filterDirectorySkills(skills, { query: "interface-design", category: "all", surface: "all" }).map(skill => skill.slug), ["interface-design", "audit"]);
+   assert.deepEqual(filterDirectorySkills(skills, { query: "", category: "all", surface: "all" }).map(skill => skill.slug), ["audit", "interface-design"]);
+ });
++
++ test("discovery matches visible task titles while preserving package-name priority", () => {
++  const skills = [{slug:"cold-outreach",name:"cold-outreach",displayName:"Start a conversation",description:"Write an email",category:"marketing",localAvailable:true,claudeAppReady:false}];
++  assert.equal(filterDirectorySkills(skills,{query:"start a conversation",category:"all",surface:"all"})[0]?.slug,"cold-outreach");
++ });

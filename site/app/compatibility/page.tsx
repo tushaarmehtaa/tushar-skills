@@ -1,3 +1,5 @@
+import { WorkflowStrip } from "@/components/workflow-strip";
+import { skillHref } from "@/lib/canvas";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
@@ -24,16 +26,16 @@ export default function CompatibilityPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main id="main-content" className="flex-1 px-6 py-12 sm:py-16">
-        <div className="mx-auto w-full max-w-5xl">
+        <div className="mx-auto w-full max-w-[1344px]">
           <Link
             href="/"
             className="back-link mb-10 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
           >
-            ← home
+            ← All skills
           </Link>
 
           <header className="animate-fade-up mb-12 max-w-4xl">
-            <h1 className="text-4xl font-semibold leading-tight tracking-[-0.03em] text-[var(--color-heading)] sm:text-6xl">
+            <h1 className="text-[32px] font-medium leading-tight tracking-[-0.03em] text-[var(--color-heading)] sm:text-5xl">
               Requirements
             </h1>
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">
@@ -41,6 +43,7 @@ export default function CompatibilityPage() {
             </p>
           </header>
 
+          <WorkflowStrip steps={["Choose a runtime", "Check required tools", "Verify access"]} />
           <section className="mb-10 grid gap-3 md:grid-cols-3" aria-label="Coding agent guides">
             {AGENT_IDS.map((agentId) => (
               <Link
@@ -99,7 +102,7 @@ export default function CompatibilityPage() {
                   {skills.map((skill) => (
                     <tr key={skill.slug} className="group bg-[var(--color-bg)] transition-colors hover:bg-[var(--color-surface)]">
                       <th className="sticky left-0 z-10 border-r border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-3 font-[family-name:var(--font-mono)] text-xs font-semibold text-[var(--color-heading)] transition-colors group-hover:bg-[var(--color-surface)]">
-                        <Link href={`/${skill.slug}`} className="hover:text-[var(--color-accent)]">{skill.name}</Link>
+                        <Link href={skillHref(skill.slug)} className="hover:text-[var(--color-accent)]">{skill.name}</Link>
                       </th>
                       <td className="px-3 py-3 font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text)]">
                         {skill.surfaces.includes("claude-app") ? "local + chat" : "local"}

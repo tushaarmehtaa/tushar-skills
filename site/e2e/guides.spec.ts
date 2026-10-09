@@ -7,9 +7,9 @@ for (const width of [390, 1440]) {
     await expect(page.getByRole("heading", { name: "Skills", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Latest guides", exact: true })).toHaveCount(0);
     await page.screenshot({ path: testInfo.outputPath("homepage-skills.png") });
-    const guidesLink = width < 640 ? page.getByRole("contentinfo") : page.getByRole("navigation", { name: "Primary" });
-    await guidesLink.getByRole("link", { name: /^guides$/i }).click();
-    await expect(page.getByRole("heading", { name: "Latest guides" })).toBeInViewport();
+    if (width < 640) await page.getByRole("button", { name: "Open menu" }).click();
+    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Guides", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Latest guides" })).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath("guides-index.png") });
     await page.locator("#guides").getByRole("link").filter({ hasText: "Build an image-editing skill" }).click();
     await expect(page).toHaveURL(/\/guides\/image-editing-skills$/);

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { CanvasIcon } from "./canvas-icon";
+import { useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 
 interface AnalyticsEvent {
@@ -19,21 +20,31 @@ export function CopyButton({
   className,
   wrapperClassName,
   analytics,
+  successMessage = "Copied to clipboard.",
 }: {
   text: string;
   label?: string;
   className?: string;
   wrapperClassName?: string;
   analytics?: AnalyticsEvent;
+  successMessage?: string;
 }) {
   const [status, setStatus] = useState<CopyStatus>("idle");
   const buttonRef = useRef<HTMLButtonElement>(null);
   const resetTimer = useRef<number | null>(null);
 
+  useEffect(
+    () => () => {
+      if (resetTimer.current) window.clearTimeout(resetTimer.current);
+    },
+    [],
+  );
+
   function showStatus(nextStatus: Exclude<CopyStatus, "idle">) {
     if (resetTimer.current) window.clearTimeout(resetTimer.current);
     setStatus(nextStatus);
-    if (nextStatus === "copied") buttonRef.current?.classList.add("copy-success");
+    if (nextStatus === "copied")
+      buttonRef.current?.classList.add("copy-success");
     resetTimer.current = window.setTimeout(() => {
       setStatus("idle");
       buttonRef.current?.classList.remove("copy-success");
@@ -50,12 +61,18 @@ export function CopyButton({
     }
   }
 
-  const buttonLabel = status === "copied" ? "Copied" : status === "failed" ? "Copy failed. Try again" : label;
-  const statusMessage = status === "copied"
-    ? "Command copied."
-    : status === "failed"
-      ? "Copy failed. Select the command and copy it manually."
-      : "";
+  const buttonLabel =
+    status === "copied"
+      ? "Copied"
+      : status === "failed"
+        ? "Copy failed. Try again"
+        : label;
+  const statusMessage =
+    status === "copied"
+      ? successMessage
+      : status === "failed"
+        ? "Copy failed. Select the text and copy it manually."
+        : "";
 
   return (
     <span className={`inline-flex items-center ${wrapperClassName || ""}`}>
@@ -68,13 +85,30 @@ export function CopyButton({
           status === "copied"
             ? "border-[var(--color-accent)] bg-[var(--color-accent-dim)] text-[var(--color-accent)]"
             : status === "failed"
-              ? "border-rose-400/60 text-rose-300 hover:border-rose-300"
+              ? "border-red-700 text-red-800 hover:border-red-800"
               : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-heading)]"
         } ${className || ""}`}
       >
-        {status === "copied" ? "copied" : status === "failed" ? "retry" : label}
+        <CanvasIcon
+          name={status === "copied" ? "check" : "copy"}
+          width="16"
+          height="16"
+        />
+        {status === "copied"
+          ? "Copied"
+          : status === "failed"
+            ? "Retry copy"
+            : label}
       </button>
-      <span aria-live="polite" className="sr-only">{statusMessage}</span>
+      <span
+        role="status"
+        aria-live="polite"
+        className={
+          status === "failed" ? "ml-3 text-xs text-red-800" : "sr-only"
+        }
+      >
+        {statusMessage}
+      </span>
     </span>
   );
 }

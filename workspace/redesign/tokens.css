@@ -1,0 +1,20 @@
+/* Design handoff tokens. Not imported by the production site. */
+:root {
+  --color-canvas: #ffffff;
+  --color-ink: #17191c;
+  --color-secondary: #60646c;
+  --color-accent: #345847;
+  --color-surface: #f5f7f5;
+  --color-selected: #eef3ef;
+  --color-divider: #dcdde1;
+  --color-control-outline: #858b89;
+  --font-ui: 'Geist', sans-serif;
+  --font-code: 'Geist Mono', monospace;
+  --radius-control: 6px;
+  --radius-panel: 8px;
+  --spacing-touch-target: 44px;
+  --duration-press: 160ms;
+  --duration-popover: 180ms;
+  --duration-sheet: 220ms;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}

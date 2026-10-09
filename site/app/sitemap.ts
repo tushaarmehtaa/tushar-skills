@@ -1,3 +1,4 @@
+import { skillHref } from "@/lib/canvas";
 import { EDITORIAL_GUIDES } from "@/lib/guides";
 import type { MetadataRoute } from "next";
 import { getAllSkills } from "@/lib/skills";
@@ -21,8 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const staticPaths = new Set(staticPages.map((page) => new URL(page.url).pathname));
-  const skillPages = getAllSkills().filter((skill) => !staticPaths.has(`/${skill.slug}`)).map((skill) => ({
-    url: `${siteUrl}/${skill.slug}`,
+  const skillPages = getAllSkills().filter((skill) => !staticPaths.has(skillHref(skill.slug))).map((skill) => ({
+    url: `${siteUrl}${skillHref(skill.slug)}`,
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));

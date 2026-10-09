@@ -192,8 +192,8 @@ const RELEASES: Release[] = [
 
 const TYPE_STYLES: Record<EntryType, { label: string; color: string }> = {
   skill:  { label: "new",    color: "text-[var(--color-accent)]" },
-  update: { label: "update", color: "text-[#60a5fa]" },
-  fix:    { label: "fix",    color: "text-[#a78bfa]" },
+  update: { label: "update", color: "text-[var(--color-accent)]" },
+  fix:    { label: "fix",    color: "text-[var(--color-heading)]" },
   site:   { label: "site",   color: "text-[var(--color-muted)]" },
 };
 
@@ -221,11 +221,11 @@ export default function ChangelogPage() {
           </Link>
 
           <div className="animate-fade-up mb-12">
-            <h1 className="terminal-heading text-4xl font-semibold text-[var(--color-heading)] sm:text-5xl">
-              changelog
+            <h1 className="terminal-heading text-[32px] font-medium text-[var(--color-heading)] sm:text-5xl">
+              Changelog
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-[var(--color-text)]">
-              every skill added, updated, or fixed.
+              Every skill added, updated, or fixed.
             </p>
           </div>
 

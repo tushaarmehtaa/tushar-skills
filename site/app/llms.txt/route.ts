@@ -1,3 +1,4 @@
+import { skillHref } from "@/lib/canvas";
 import { getAllSkills } from '@/lib/skills';
 export const dynamic = 'force-static';
 export function GET() {
@@ -17,7 +18,7 @@ export function GET() {
     '',
     '## Skills',
     '',
-    ...getAllSkills().map(skill => `- [${skill.name}](https://www.slashskills.xyz/${skill.slug}): ${skill.description}`),
+    ...getAllSkills().map(skill => `- [${skill.name}](https://www.slashskills.xyz${skillHref(skill.slug)}): ${skill.description}`),
   ];
   return new Response(lines.join('\n') + '\n', { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

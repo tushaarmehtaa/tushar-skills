@@ -1,0 +1,646 @@
+{
+  "captured": "2026-10-05",
+  "purpose": "Content preservation baseline before implementation",
+  "files": [
+    {
+      "path": "agent-instructions/SKILL.md",
+      "sha256": "d4ef3f9909846ea6ebf2482a7f275ddbda91238ee8312cb466e727850537e618",
+      "bytes": 6424
+    },
+    {
+      "path": "ai-cost-audit/SKILL.md",
+      "sha256": "da762a1b7e28ea46289b3a4bd0b5ec4823ced2279b488a7c72c2b133f1b9fd6a",
+      "bytes": 4759
+    },
+    {
+      "path": "ai-cost-audit/references/model-inventory.md",
+      "sha256": "15ed45224589e02d564c4e9081ca22ac7c13b4b533fb01ec97e56ee4e128275e",
+      "bytes": 3905
+    },
+    {
+      "path": "ai-cost-audit/references/unit-economics.md",
+      "sha256": "bf2265ae74980f8a890d973f11b628dc55c8e4514b7663a5c885d44f048397f5",
+      "bytes": 4755
+    },
+    {
+      "path": "ai-product-development/SKILL.md",
+      "sha256": "133bc825e10f169e902de7c8f769629781483b3a7359b80155490124babf209d",
+      "bytes": 3951
+    },
+    {
+      "path": "ai-product-development/references/streaming.md",
+      "sha256": "8a0d2b83ae819791f5b542690885e22386d3f65c6e97c2f87a0b9d9e664f7814",
+      "bytes": 4538
+    },
+    {
+      "path": "analytics/SKILL.md",
+      "sha256": "a2c28053fe16c3d203dd791d0b30fde785db653900e3fdf82bb9c4a2311df092",
+      "bytes": 4935
+    },
+    {
+      "path": "analytics/references/health-endpoint.md",
+      "sha256": "116f6aa8610ad06205e440f05bc45daf58993956cbae75e8c87960d44bdcf60b",
+      "bytes": 2777
+    },
+    {
+      "path": "analytics/references/posthog.md",
+      "sha256": "dfe12e70a0df0018b227953f808d4eb1f5df4042436906326bf2e9bbca8a20dd",
+      "bytes": 3667
+    },
+    {
+      "path": "analytics/references/sentry.md",
+      "sha256": "2ad29baf48bf359e974e198198b843e05ac4dee13276a3969a77b7ae58cdcbb1",
+      "bytes": 3127
+    },
+    {
+      "path": "auth-implementation/SKILL.md",
+      "sha256": "2d37fb8bc56bad266fd73fbb1838f7473ffa40c0b6a239c2193b3114d3b4322f",
+      "bytes": 3246
+    },
+    {
+      "path": "auth-implementation/references/clerk.md",
+      "sha256": "a9a0105ac8aedb1b8c3f3afc556d216cabbde6050e4c4b7671e96297ed41a896",
+      "bytes": 3871
+    },
+    {
+      "path": "auth-implementation/references/nextauth.md",
+      "sha256": "3f03e83539a8a8951ae25075a0336e33f9a71236b426e85f8d4a713b7fff6a46",
+      "bytes": 3228
+    },
+    {
+      "path": "auth-implementation/references/supabase-auth.md",
+      "sha256": "8492333a565b3fa3d51330813405fceb5b9150f6a1cb465139aad08f6f244731",
+      "bytes": 2384
+    },
+    {
+      "path": "changelog/SKILL.md",
+      "sha256": "cb4227d7cdbd86f160b106e9f0d8e0499a27d0e927b00660d285f9b48baadde0",
+      "bytes": 5075
+    },
+    {
+      "path": "cold-outreach/SKILL.md",
+      "sha256": "fabc60de94f9013499378924fd56395c4b7c2268f27f5dfad0b19273f30330c2",
+      "bytes": 3811
+    },
+    {
+      "path": "cold-outreach/references/sequence-reference.md",
+      "sha256": "78fac67b21c643aabc1d42db612d0988dab2265e9720363715af79ee7d96b051",
+      "bytes": 2014
+    },
+    {
+      "path": "cold-outreach/references/sequence-workflow.md",
+      "sha256": "1014592bfc8abd58fedfa44d97f01519dc4292013857630b9abfebf4fbe42f77",
+      "bytes": 2637
+    },
+    {
+      "path": "cold-outreach/references/single-email-reference.md",
+      "sha256": "c263744a8d3ca4d46189d2f95846bdbe9f127ce496c5427f793f1ff885086a74",
+      "bytes": 2005
+    },
+    {
+      "path": "cold-outreach/references/single-email-workflow.md",
+      "sha256": "e574612317cfe211f352973399ad8cae8c15c395276c2aeffa2b84317d08668c",
+      "bytes": 2604
+    },
+    {
+      "path": "credit-metering/SKILL.md",
+      "sha256": "26295bcbc73aaa02d3cbb4a000ca7f5328844dfe7d40066f264dc961f9dc3ebb",
+      "bytes": 3151
+    },
+    {
+      "path": "credit-metering/references/database-schemas.md",
+      "sha256": "40aa80c6af4aeaf94a393fef4ab759fe46cf4c9974ba5158c0c48381a5423110",
+      "bytes": 3983
+    },
+    {
+      "path": "credit-metering/references/payment-providers.md",
+      "sha256": "392928086cb450361c2e650fbdbec00521500ef7dc13fea87bf7ba8dba8b7d07",
+      "bytes": 3461
+    },
+    {
+      "path": "decision-doc/SKILL.md",
+      "sha256": "e0959fece3006069a72b66e44550c42bc9299ae559cf58640084a3b844c14241",
+      "bytes": 3264
+    },
+    {
+      "path": "demo-video/SKILL.md",
+      "sha256": "260d52b6da4f65e89d497fea0f1e142dd13f2511dcaa07b99844c5b60b68ae36",
+      "bytes": 7861
+    },
+    {
+      "path": "demo-video/references/audio.md",
+      "sha256": "df6d81e5a6243ab9e7ec7d30e9635d365f42afdb5cadbe2c7f08c4c54fa76d6a",
+      "bytes": 3440
+    },
+    {
+      "path": "demo-video/references/cheatsheet.md",
+      "sha256": "95fda3edfabdfd8cd27029c55d11defce29cb2d7b954aff103d04fba58198d37",
+      "bytes": 2767
+    },
+    {
+      "path": "demo-video/references/explainer-writing.md",
+      "sha256": "9d6372321f66bae9d33890cbcd66289478fa72e60af36b7a68262e46fe9ca964",
+      "bytes": 1474
+    },
+    {
+      "path": "demo-video/references/primitives.md",
+      "sha256": "7dde015840be26dc2616614832013042840cb45d437f885c37c50b425aa9e9b3",
+      "bytes": 3451
+    },
+    {
+      "path": "deploy-check/SKILL.md",
+      "sha256": "4f900af16960d5ddf6fed92f53376d6ffc2492d48c355bbede33c5a39441964c",
+      "bytes": 2799
+    },
+    {
+      "path": "email-with-resend/SKILL.md",
+      "sha256": "fe4f163c5c453ed41ebc7d27f0986f93d21d2282eb82bb0bd09c1a6c91cdbf1e",
+      "bytes": 3195
+    },
+    {
+      "path": "email-with-resend/references/guide.md",
+      "sha256": "980fe9ecbae65400b34da0b9fa0792f59f38903abf40feea72c0d5f754b1029a",
+      "bytes": 6244
+    },
+    {
+      "path": "fundraising/SKILL.md",
+      "sha256": "430fe5c9786e2bdc9aef264974b935b6bb9ea7db3fb242dc83710e390d0ed048",
+      "bytes": 4128
+    },
+    {
+      "path": "fundraising/references/founder-frameworks.md",
+      "sha256": "a8b84358f60053d25824a5a2bb18be37bd53a04fb4bc876c2b7506cdaa40e89d",
+      "bytes": 2495
+    },
+    {
+      "path": "fundraising/references/pitch-workshop.md",
+      "sha256": "be252dee1a98b0e1b9988c6fe3bd7ad1d90b21098cdde929250856ff377ed3db",
+      "bytes": 2719
+    },
+    {
+      "path": "humanize/SKILL.md",
+      "sha256": "4c31cf3518a8e66c0fe07401cca022925553e017b0b5d1d183e33381416af23d",
+      "bytes": 5456
+    },
+    {
+      "path": "humanize/references/evaluation.md",
+      "sha256": "8d896c34c250d39bca34a31ffbf8a41755356e31ec533dd425e26d4bb70ee739",
+      "bytes": 2932
+    },
+    {
+      "path": "humanize/references/formats.md",
+      "sha256": "aa492683008ab587f3694ba71a6a3fe75b5d81e9a5d2371669f17d8d84476d20",
+      "bytes": 2630
+    },
+    {
+      "path": "humanize/references/patterns.md",
+      "sha256": "17cf9935bab4354a02fea53e8b9447ce16e8729a0fc84f411c052d87d7b93898",
+      "bytes": 2821
+    },
+    {
+      "path": "image-editing/SKILL.md",
+      "sha256": "152560032fb47dec7a9f50f93983cae2d4bf7fa61fbf316681b040c025561324",
+      "bytes": 3496
+    },
+    {
+      "path": "image-editing/references/edit-record.md",
+      "sha256": "7a5d57b4a14609aae8f84feda653ab2a565dedd67b024827b07b8db4cf186f2b",
+      "bytes": 1151
+    },
+    {
+      "path": "interface-design/SKILL.md",
+      "sha256": "dd3e685f128840fe593cf6618dedcb4957e09b5d5eb8bdd43f49006f2945a886",
+      "bytes": 7691
+    },
+    {
+      "path": "landing-copy/SKILL.md",
+      "sha256": "23d171d39c855c28cd341c55c8dd0c1024f716a79cd588c7f44340126f1bc269",
+      "bytes": 7043
+    },
+    {
+      "path": "landing-copy/references/claim-first.md",
+      "sha256": "8b2b8aff25cf526fc332849c08e35c252dc8be661d09fac77e3685ff413c586d",
+      "bytes": 2021
+    },
+    {
+      "path": "landing-copy/references/guide.md",
+      "sha256": "8ae747e73a5da38c369861887f114ee83e06fa811648b90b6ed11255cede5dc5",
+      "bytes": 3363
+    },
+    {
+      "path": "landing-page/SKILL.md",
+      "sha256": "8ed6f8a9345b715ad461b6be1e348db080160f9f7a63228d3a9e012d62d438c5",
+      "bytes": 6351
+    },
+    {
+      "path": "landing-page/references/architecture.md",
+      "sha256": "8ac58df302ce5079485242fc9b30849b97f4b14c389945f21a5ef1a61a5899ed",
+      "bytes": 3510
+    },
+    {
+      "path": "landing-page/references/evidence.md",
+      "sha256": "beeb92d3b77d4906954325a98082a83d8e1b8a87c930f6680596bb289bf66a93",
+      "bytes": 2583
+    },
+    {
+      "path": "landing-page/references/review.md",
+      "sha256": "a1162b6b718da68c8d9790df96bc249ed6a96516a9bd69eb2c671d5a68caf78c",
+      "bytes": 2540
+    },
+    {
+      "path": "mobile-first/SKILL.md",
+      "sha256": "b7bce4a31d3414c2f45ecec8863d0fa44e0d341f545eb0f876a0fb009216d9b6",
+      "bytes": 5868
+    },
+    {
+      "path": "mobile-first/references/audit.md",
+      "sha256": "1246cc6ce12d8123428d4a65c9d67827d4b1fd74e84f20781dd91bca14ded1e3",
+      "bytes": 2797
+    },
+    {
+      "path": "mobile-first/references/patterns.md",
+      "sha256": "4f1a17b0f865b81c47bb50b0dd6e13efb72dc8cb36d38a41a14d73c36581e9ce",
+      "bytes": 3201
+    },
+    {
+      "path": "mobile-first/references/standards.md",
+      "sha256": "9f30aecd73542096c4890bccc21eb54e0d27f2ef3d6dcdfe13bf1a668dd09d26",
+      "bytes": 2700
+    },
+    {
+      "path": "payments-with-dodo/SKILL.md",
+      "sha256": "c5f6ce6afca1ac77cbbca31c2fa2fe7e984358fd7d69b00a41185eda5e8c0961",
+      "bytes": 3091
+    },
+    {
+      "path": "payments-with-dodo/references/implementation-guide.md",
+      "sha256": "60a79e8899870e9400212c16223b1acf942ac67ec9366942fb44e8bb51a109bc",
+      "bytes": 3306
+    },
+    {
+      "path": "payments-with-dodo/references/pricing-and-checkout.md",
+      "sha256": "6d06285781f9a4151e5f76f93bc317dfe2c43db7239187b76a84d120860fa2fb",
+      "bytes": 4054
+    },
+    {
+      "path": "payments-with-dodo/references/webhooks.md",
+      "sha256": "c9cb0c79d283e8c3302d09044ca09470c01156c349ca105f745c25b25db1ac0a",
+      "bytes": 6277
+    },
+    {
+      "path": "performance-diagnosis/SKILL.md",
+      "sha256": "aa59875f97c63327e90019c62c7bbbb1cdee5e99f3f55a62354612a870b66be6",
+      "bytes": 3240
+    },
+    {
+      "path": "product-experiments/SKILL.md",
+      "sha256": "4c2101cd66d6ca0faa1526154669c2b6798e3be8ac589d138d04a6f1a0ffb1f2",
+      "bytes": 4961
+    },
+    {
+      "path": "product-experiments/references/posthog.md",
+      "sha256": "1deb20b4b030a4d240fe5d793a183aa04c28995dfb4f5828489433f417810af6",
+      "bytes": 3049
+    },
+    {
+      "path": "product-launch/SKILL.md",
+      "sha256": "78da9f6222bf3ee00f3121a64979af1b322e54e0e743f22ea4ae4ef1acdb4ac2",
+      "bytes": 3821
+    },
+    {
+      "path": "product-launch/references/launch-strategy.md",
+      "sha256": "c81c1dcce5529f03d86613441d8f66d72de5474149129f33fdde3a5a6b182e82",
+      "bytes": 4108
+    },
+    {
+      "path": "product-launch/references/waitlist-implementation.md",
+      "sha256": "fb396f1ec183a37b06ebcdb8513e7b615e8f263f57e0b80abbb7bba10b2dcd96",
+      "bytes": 5166
+    },
+    {
+      "path": "product-spec/SKILL.md",
+      "sha256": "89fde52b03b436f4ee04030c8f378b78077c8d98c7ff2b2d52549559fe5c687f",
+      "bytes": 3890
+    },
+    {
+      "path": "product-spec/references/product-brief.md",
+      "sha256": "a9a6b71c3768437f29bb292362101be770240693e73e158e4ac4f44534cd55fc",
+      "bytes": 2367
+    },
+    {
+      "path": "product-spec/references/technical-spec.md",
+      "sha256": "8b226f7498de001fa34884bda9caa716423f6703155bf092437a0beb8320e04f",
+      "bytes": 4091
+    },
+    {
+      "path": "product-teardown/SKILL.md",
+      "sha256": "7699e845066e904dc7284fccc7e6b3604eb4af7d01e2039b1c95a56ca893d553",
+      "bytes": 3603
+    },
+    {
+      "path": "rate-limit/SKILL.md",
+      "sha256": "0eae47072c9eb99a964bafbc77571e9cc1b4cd9df67cfc8c9bd4352d32f42f36",
+      "bytes": 2836
+    },
+    {
+      "path": "readme/SKILL.md",
+      "sha256": "f7cce89704151abf550b9be5594bef886575e88634020e8d4e5a0677125ae336",
+      "bytes": 6159
+    },
+    {
+      "path": "remove-ai-slop/SKILL.md",
+      "sha256": "1cb2c72dc17167fad9face8b9ec4d7d74e7a4ce90f508697115344db9e6c701e",
+      "bytes": 29639
+    },
+    {
+      "path": "search-ready/SKILL.md",
+      "sha256": "54ccac1c1d14117601d61d39144aa2d298fd538aea525248b212c93b4d718dd5",
+      "bytes": 4585
+    },
+    {
+      "path": "search-ready/references/ai-search-reference.md",
+      "sha256": "dafddee87d7fe5dbf2f559079996d5d98e0265b3c5ed6d87552b9eedecbf6a6f",
+      "bytes": 2698
+    },
+    {
+      "path": "search-ready/references/ai-search-workflow.md",
+      "sha256": "9cf0be50ffaf5358aebb6ca2a7d73440e44e96849ad51d09397cf558f10b72fb",
+      "bytes": 4351
+    },
+    {
+      "path": "search-ready/references/technical-seo.md",
+      "sha256": "609441325a296192d3652ca436a3e908d321496de2b350ba4fb00739bea02903",
+      "bytes": 5596
+    },
+    {
+      "path": "site/app/[skill]/page.tsx",
+      "sha256": "6f34aa2b26ed17311173602664d3bb82a0621f71edb4796bf530d12ce658019d",
+      "bytes": 3819
+    },
+    {
+      "path": "site/app/api/og/route.tsx",
+      "sha256": "defa6e76ad06df9d01097a69ba38650e40e0bb51eb5b882ccbaf19b49e091a79",
+      "bytes": 5464
+    },
+    {
+      "path": "site/app/changelog/page.tsx",
+      "sha256": "6dba86f4c3b7c94b933589cf7fb0fed9d2bd459eeaac27ca779d6f4cf37e26ec",
+      "bytes": 12082
+    },
+    {
+      "path": "site/app/compatibility/page.tsx",
+      "sha256": "bba60712a631affe114146877fce44c48dc80f4ac486adf8969aafd4439ddf80",
+      "bytes": 7280
+    },
+    {
+      "path": "site/app/globals.css",
+      "sha256": "49ec66158de6458358693d1fd18979cabd981cd705b112bcd675426ac265c7f2",
+      "bytes": 9318
+    },
+    {
+      "path": "site/app/guides/[agent]/page.tsx",
+      "sha256": "c4a9b311b2d91fbe4f439114334a4dd81400ff20a9649e7f8b3481a25f41141d",
+      "bytes": 19795
+    },
+    {
+      "path": "site/app/guides/astra-skill-instructions/page.tsx",
+      "sha256": "9cb29a6d80fc1b1d8d39dd940e2606fa7f8c2b8b8b17a7f0683e170086472662",
+      "bytes": 8370
+    },
+    {
+      "path": "site/app/guides/chatgpt/page.tsx",
+      "sha256": "ccccbb74b14c8f786f78e4c5e68c3451eee6446f28dea9f6cea20c9820e1ab71",
+      "bytes": 7258
+    },
+    {
+      "path": "site/app/guides/claude-app/page.tsx",
+      "sha256": "417d8ba066b837bb9cead7bda0b214cfe9101c08c9671b950286e37373aeffa3",
+      "bytes": 4378
+    },
+    {
+      "path": "site/app/guides/image-editing-skills/page.tsx",
+      "sha256": "572f93173076d35d9ba3aa1516eb350f9f249656344e1f3ded41691177fba6be",
+      "bytes": 5576
+    },
+    {
+      "path": "site/app/guides/mcp-event-automation/page.tsx",
+      "sha256": "7c3abb56ba822af83293458cf18ecae873d59f2d6356f9797db8dba90d7b85ad",
+      "bytes": 6984
+    },
+    {
+      "path": "site/app/guides/page.tsx",
+      "sha256": "efe9992e4e89e7042ac379681454411fb02eddd52e607c83f44348f521937fd7",
+      "bytes": 2641
+    },
+    {
+      "path": "site/app/icon.svg",
+      "sha256": "7e964aadaa325a975b7fdeb8a4d0c845acb2da01a5aa662c38a672c5df7d02b6",
+      "bytes": 217
+    },
+    {
+      "path": "site/app/layout.tsx",
+      "sha256": "30abb4cbb9d023577650ce3394fa72e9fd1e0a5b0d72c332a16dccbb467cf008",
+      "bytes": 2543
+    },
+    {
+      "path": "site/app/llms.txt/route.ts",
+      "sha256": "e38039142167f9573153983f3ef64afc70d3672d174f8000f075d825cfe320a0",
+      "bytes": 1246
+    },
+    {
+      "path": "site/app/page.tsx",
+      "sha256": "c821f44dcc3da2d0d57c37b928ecbe9cece72bdba726516518f08ae9365c8bf3",
+      "bytes": 3025
+    },
+    {
+      "path": "site/app/robots.ts",
+      "sha256": "37a52ef8ba001dda4cec3428f2dea97ff6485fcc603c77414ae017eafec23768",
+      "bytes": 538
+    },
+    {
+      "path": "site/app/sitemap.ts",
+      "sha256": "7005137d1f47c50c0212de98d811936ef43bda8736fe17e57c95f2a6d11efcf0",
+      "bytes": 1434
+    },
+    {
+      "path": "site/app/skills.json/route.ts",
+      "sha256": "a20206dfa37daf1b49927720e924420e02c5f57e76bcb34637a0366f304d4838",
+      "bytes": 898
+    },
+    {
+      "path": "site/components/agent-tabs.tsx",
+      "sha256": "12bc7bd6813746d78286f09b190a0c8283a34d19a35c35836b930b7d8277b82e",
+      "bytes": 7750
+    },
+    {
+      "path": "site/components/back-button.tsx",
+      "sha256": "eb7529f07132e38e01648b23819a097a37c9c9b52fdd97e7af997f3169ade0f2",
+      "bytes": 933
+    },
+    {
+      "path": "site/components/command-line.tsx",
+      "sha256": "752751bca7bba5c981d45fa77edf9c6a167a4fe47e81ef16986f46c98171fa1a",
+      "bytes": 870
+    },
+    {
+      "path": "site/components/copy-button.tsx",
+      "sha256": "fcbbae8165d20197445446007ea4a5516147c07ce9be9d8797c51e68f9d3ddb0",
+      "bytes": 2764
+    },
+    {
+      "path": "site/components/editorial-guide.tsx",
+      "sha256": "bc0246ab45efe16cbd875bf3f25a374f9904d0e12b20884e2a25a84ea9696d59",
+      "bytes": 6622
+    },
+    {
+      "path": "site/components/footer.tsx",
+      "sha256": "c4529fe4a86da2a2e6ae73ec53a89037d13d3eedb42ebb52a342e9c2816b67cb",
+      "bytes": 2400
+    },
+    {
+      "path": "site/components/github-stars.tsx",
+      "sha256": "18edb8184637fb1df3ed648699d402a1f049f9d59668996592ee35527a3ae133",
+      "bytes": 609
+    },
+    {
+      "path": "site/components/guide-code.tsx",
+      "sha256": "118d84a5fe55f26cac98d5a6df627299dec0e1c3e406c60bcd38f90ce5ac5835",
+      "bytes": 1198
+    },
+    {
+      "path": "site/components/guide-layout.tsx",
+      "sha256": "e99a68ca4ceeaefd42b07cc0257abf68cb98e9420559e624c76c0202d38fea89",
+      "bytes": 1982
+    },
+    {
+      "path": "site/components/header.tsx",
+      "sha256": "9054a58a1a993d4d3cffe682713870ab0dc65411b38191ee723f7a67d89085ee",
+      "bytes": 3159
+    },
+    {
+      "path": "site/components/interactive-installer.tsx",
+      "sha256": "987c1d374230ecddbce3a0af31276b08c369116097f5e2a7ba08e6b3b0841edd",
+      "bytes": 5073
+    },
+    {
+      "path": "site/components/latest-guides.tsx",
+      "sha256": "7b4570d1f81b60609b88c212d0c6e66cb970ffe51150d9dbe9c474699051cff6",
+      "bytes": 2214
+    },
+    {
+      "path": "site/components/page-frame.tsx",
+      "sha256": "43fffb9a4d1caeb1db4ab22b8daf1f5f14d3963b7e2d207c3ded3d8927b27f46",
+      "bytes": 219
+    },
+    {
+      "path": "site/components/runtime-logo.tsx",
+      "sha256": "f3d027f0e52347a1c85f8fc8da17783f99c68337b5256b2434c4c65568c31974",
+      "bytes": 4003
+    },
+    {
+      "path": "site/components/skill-detail.tsx",
+      "sha256": "61412721eb384c829df19f566c1c96e09c537bdaca03b3fb0c43095a7f91e379",
+      "bytes": 11282
+    },
+    {
+      "path": "site/components/skill-directory.tsx",
+      "sha256": "59454d3f39591db20550e390c66a18c684c9f7ccc056ad1e874a4021b2bbee7a",
+      "bytes": 9191
+    },
+    {
+      "path": "site/components/skill-logo.tsx",
+      "sha256": "1ad5f3e1050ee8e50a4406af35ae73f64853ed16a152f5fa17844791ceb77990",
+      "bytes": 1215
+    },
+    {
+      "path": "site/components/tracked-link.tsx",
+      "sha256": "a6e9cd7a4b91a5d0306a46831f7dc3d5c44b305f88ef259c761138fd27f72134",
+      "bytes": 596
+    },
+    {
+      "path": "site/lib/agents.ts",
+      "sha256": "486a0d863bc238eaeb09de2fc8279d57ad4cf2e1f8150e67d071a0aa8894ca7e",
+      "bytes": 3487
+    },
+    {
+      "path": "site/lib/catalog.ts",
+      "sha256": "bea7aef9679346cc80de27ff9808fc39309b3feb9a260f9029ba115ed11ade0d",
+      "bytes": 12533
+    },
+    {
+      "path": "site/lib/guides.ts",
+      "sha256": "badae3eab87201ca674c4c25818c5889a14469c6fef0b61f9fd83e0254cb23e1",
+      "bytes": 1578
+    },
+    {
+      "path": "site/lib/json-ld.ts",
+      "sha256": "ee73ecb18f5561cdfae7e636a5d3907f35afc31c435709566ca7a4086d18c91f",
+      "bytes": 192
+    },
+    {
+      "path": "site/lib/markdown.ts",
+      "sha256": "81c2db5768c222ee71d7b3d0eb4c2c0ca01b8d1057c99f7da2107dec7d90b0d6",
+      "bytes": 7029
+    },
+    {
+      "path": "site/lib/runtime-brands.ts",
+      "sha256": "58512f0f46d4c30a8f1bead2014a3506cdfaa609963198fa9ebc10a4ce48cd46",
+      "bytes": 4981
+    },
+    {
+      "path": "site/lib/skill-directory.ts",
+      "sha256": "80d031ee2fd6072b051f95ac97d06324280cff2158ab506c8f7ba47ce11c9369",
+      "bytes": 1641
+    },
+    {
+      "path": "site/lib/skill-presentation.ts",
+      "sha256": "7f3e49424e575dd2f4a8d947cb01afffe680a800ed9afcf00f3c8e6f4439b9a3",
+      "bytes": 4302
+    },
+    {
+      "path": "site/lib/skills.ts",
+      "sha256": "1cf813c9a5062def265b670a3d5228730b73c30eb1c6a39000c12a5c0ec7af95",
+      "bytes": 2496
+    },
+    {
+      "path": "skill-creator/SKILL.md",
+      "sha256": "6b2008471cc01116fea77ab8a418b5ef4a5f0835aa09e9f6c040839832553884",
+      "bytes": 7574
+    },
+    {
+      "path": "skill-creator/references/guide.md",
+      "sha256": "a98d19e0e4c2a0213eb90184ab7f396d8942956b5f6d180b7451ed78b0e7f443",
+      "bytes": 6760
+    },
+    {
+      "path": "social-sharing/SKILL.md",
+      "sha256": "67d17908f2dc08a3f826d6aaf4a173d9c0db6a0eacbf9dafe95f64b0495aa5ae",
+      "bytes": 7990
+    },
+    {
+      "path": "supabase/SKILL.md",
+      "sha256": "1814d92358afb666f9d98c2c2390933af3cb182fdee12872672c7dfe03e2775b",
+      "bytes": 3186
+    },
+    {
+      "path": "ui-copy/SKILL.md",
+      "sha256": "792fb37bb2497c584d85c08f095b48dd33e516cd4afd74e27b4841f75891da21",
+      "bytes": 6580
+    },
+    {
+      "path": "ui-copy/references/copy-quality.md",
+      "sha256": "22d9c36ea9ef9343fd30521921c357a00fdc2636278aec2d50777dd95979006a",
+      "bytes": 3179
+    },
+    {
+      "path": "user-insights/SKILL.md",
+      "sha256": "4b9092daf9c602b9a00078559c822789bcaede0a3ada7ea30cf2b43ed232ba66",
+      "bytes": 4352
+    },
+    {
+      "path": "user-insights/references/guide.md",
+      "sha256": "fbe82d274e7ea0e24f4a5f2b32c61e10b2afff0a816c98f1156bd8b3d258a1e9",
+      "bytes": 6876
+    }
+  ]
+}

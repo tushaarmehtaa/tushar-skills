@@ -16,12 +16,14 @@ export interface Skill extends CatalogEntry {
   license: string;
   compatibility?: string;
   content: string;
+  rawContent: string;
   files: SkillFile[];
 }
 
 export interface SkillFile {
   path: string;
   content: string;
+  rawContent: string;
   lineCount: number;
 }
 
@@ -48,6 +50,7 @@ function getBundledMarkdownFiles(skillRoot: string): SkillFile[] {
       files.push({
         path: path.relative(skillRoot, absolutePath).split(path.sep).join("/"),
         content,
+        rawContent: raw,
         lineCount: content.split(/\r?\n/).length,
       });
     }
@@ -78,6 +81,7 @@ export function getAllSkills(): Skill[] {
         license: data.license || "MIT",
         compatibility: data.compatibility,
         content,
+        rawContent: raw,
         files: getBundledMarkdownFiles(skillRoot),
         ...catalog,
       } satisfies Skill;

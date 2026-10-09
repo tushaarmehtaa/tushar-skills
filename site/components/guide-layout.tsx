@@ -1,3 +1,4 @@
+import { WorkflowStrip } from "./workflow-strip";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { BackButton } from "./back-button";
@@ -17,8 +18,8 @@ export function GuideLayout({
     <div className="flex min-h-screen flex-col">
       <Header />
       <main id="main-content" className="flex-1 px-6 py-12 sm:py-16">
-        <div className="mx-auto w-full max-w-5xl">
-          <BackButton />
+        <div className="guide-layout">
+          <BackButton fallback="/guides" />
           <header className="animate-fade-up mb-12 max-w-3xl">
             <div className="flex items-center gap-4 sm:gap-5">
               {mark ? (
@@ -35,6 +36,7 @@ export function GuideLayout({
             </div>
             <p className="mt-5 text-base leading-relaxed text-[var(--color-text)] sm:text-lg">{intro}</p>
           </header>
+          <WorkflowStrip steps={title.includes("ChatGPT") ? ["Choose a workflow", "Create or upload", "Check access"] : title === "Claude app" ? ["Choose a workflow", "Upload archive", "Enable and try"] : ["Install a skill", "Choose a scope", "Invoke and check"]} />
           {children}
         </div>
       </main>
@@ -53,7 +55,7 @@ export function GuideSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="grid min-w-0 gap-4 border-t border-[var(--color-border)] py-8 sm:grid-cols-[7rem_minmax(0,1fr)]">
+    <section className="guide-step grid min-w-0 gap-4 border-t border-[var(--color-border)] py-8 sm:grid-cols-[7rem_minmax(0,1fr)]">
       <p className="text-sm text-[var(--color-muted)]">{number}</p>
       <div className="min-w-0">
         <h2 className="mb-4 text-xl font-medium text-[var(--color-heading)]">{title}</h2>

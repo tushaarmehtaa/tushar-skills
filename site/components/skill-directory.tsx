@@ -1,9 +1,18 @@
 "use client";
-
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { TrackedLink } from "./tracked-link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useMemo } from "react";
-import { SkillLogo } from "./skill-logo";
+import { SkillVisual } from "./skill-visual";
+import { CanvasIcon } from "./canvas-icon";
+import { AgentTabs } from "./agent-tabs";
+import { CATALOG, isSkillSlug } from "@/lib/catalog";
+import {
+  TASK_LABELS,
+  TASK_TITLES,
+  SKILL_DISPLAY,
+  matchesTask,
+  skillHref,
+} from "@/lib/canvas";
 import {
   filterDirectorySkills,
   getDirectoryCategories,
@@ -11,160 +20,354 @@ import {
   type DirectorySkill,
   type SurfaceFilter,
 } from "@/lib/skill-directory";
-
-const SURFACE_FILTERS = new Set<SurfaceFilter>(["all", "local", "chat"]);
-
-export function SkillDirectory({ skills }: { skills: readonly DirectorySkill[] }) {
+const icons: Record<string, string> = {
+  design: "design",
+  ai: "ai",
+  auth: "auth",
+  planning: "idea",
+  marketing: "launch",
+  monetization: "growth",
+  payments: "growth",
+  analytics: "growth",
+  workflow: "route",
+  infrastructure: "database",
+  devops: "code",
+  seo: "search",
+  meta: "file",
+};
+export function SkillDirectory({
+  skills,
+}: {
+  skills: readonly DirectorySkill[];
+}) {
+  const topicRef = useRef<HTMLDetailsElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    function focusSearch(event: KeyboardEvent) {
-      const target = event.target as HTMLElement;
-      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey || target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
-      event.preventDefault();
-      searchRef.current?.focus();
-    }
-    window.addEventListener("keydown", focusSearch);
-    return () => window.removeEventListener("keydown", focusSearch);
-  }, []);
-  const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const categories = useMemo(() => getDirectoryCategories(skills), [skills]);
-  const filters = useMemo<DirectoryFilters>(() => {
-    const query = searchParams.get("q") ?? "";
-    const requestedCategory = searchParams.get("category") ?? "all";
-    const requestedSurface = searchParams.get("surface") ?? "all";
-
-    return {
-      query,
-      category: requestedCategory === "all" || categories.includes(requestedCategory)
-        ? requestedCategory
-        : "all",
-      surface: SURFACE_FILTERS.has(requestedSurface as SurfaceFilter)
-        ? requestedSurface as SurfaceFilter
-        : "all",
+  const params = useSearchParams();
+  const [selected, setSelected] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      setSelected(sessionStorage.getItem("skills-selected"));
+    } catch {}
+  }, []);
+  useEffect(() => {
+    const dismiss = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && topicRef.current?.open) {
+        topicRef.current.open = false;
+        topicRef.current.querySelector("summary")?.focus();
+      }
     };
-  }, [categories, searchParams]);
-  const filteredSkills = filterDirectorySkills(skills, filters);
-  const hasFilters = filters.query.trim().length > 0 || filters.category !== "all" || filters.surface !== "all";
-
-  function updateFilters(next: DirectoryFilters) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (next.query.trim()) params.set("q", next.query); else params.delete("q");
-    if (next.category !== "all") params.set("category", next.category); else params.delete("category");
-    if (next.surface !== "all") params.set("surface", next.surface); else params.delete("surface");
-    const queryString = params.toString();
-    router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    const outside = (e: PointerEvent) => {
+      if (
+        topicRef.current?.open &&
+        !topicRef.current.contains(e.target as Node)
+      )
+        topicRef.current.open = false;
+    };
+    document.addEventListener("keydown", dismiss);
+    document.addEventListener("pointerdown", outside);
+    return () => {
+      document.removeEventListener("keydown", dismiss);
+      document.removeEventListener("pointerdown", outside);
+    };
+  }, []);
+  const categories = useMemo(() => getDirectoryCategories(skills), [skills]);
+  const task = params.get("task") ?? "all";
+  const filters: DirectoryFilters = {
+    query: params.get("q") ?? "",
+    category: categories.includes(params.get("category") ?? "")
+      ? params.get("category")!
+      : "all",
+    surface: ["local", "chat"].includes(params.get("surface") ?? "")
+      ? (params.get("surface") as SurfaceFilter)
+      : "all",
+  };
+  useEffect(() => {
+    document.documentElement.classList.toggle(
+      "is-searching",
+      Boolean(filters.query.trim()),
+    );
+    return () => document.documentElement.classList.remove("is-searching");
+  }, [filters.query]);
+  const found = filterDirectorySkills(skills, filters).filter((s) =>
+    matchesTask(s.slug, task),
+  );
+  const preview = found.find((s) => s.slug === selected) ?? found[0];
+  const constraints =
+    filters.category !== "all" || filters.surface !== "all" || task !== "all";
+  function update(values: Record<string, string>) {
+    const next = new URLSearchParams(window.location.search);
+    for (const [k, v] of Object.entries(values)) {
+      if (v && v !== "all") next.set(k, v);
+      else next.delete(k);
+    }
+    window.history.replaceState(
+      null,
+      "",
+      next.size ? `${pathname}?${next}` : pathname,
+    );
   }
-
-  function clearFilters() {
-    updateFilters({ query: "", category: "all", surface: "all" });
+  function remember(slug: string) {
+    try {
+      sessionStorage.setItem("skills-selected", slug);
+      sessionStorage.setItem(
+        "skills-return",
+        `${pathname}${params.size ? `?${params}` : ""}`,
+      );
+    } catch {}
   }
-
+  useEffect(() => {
+    const focus = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (
+        e.key === "/" &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey &&
+        !t.isContentEditable &&
+        !/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)
+      ) {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", focus);
+    return () => window.removeEventListener("keydown", focus);
+  }, []);
   return (
-    <section className="pb-20" aria-labelledby="skill-index-heading">
-      <h2 id="skill-index-heading" className="mb-5 text-xl font-semibold text-[var(--color-heading)]">Skills</h2>
-
-      <div className="mb-3 border-y border-[var(--color-border)]">
-        <label className="flex items-center gap-4 py-2">
-          <span className="sr-only">Search skills</span>
-          <input
-            ref={searchRef}
-            type="search"
-            value={filters.query}
-            onChange={(event) => updateFilters({ ...filters, query: event.target.value })}
-            placeholder="Find a skill…"
-            className="min-h-11 min-w-0 flex-1 bg-transparent py-2 text-base text-[var(--color-heading)] outline-none placeholder:text-[var(--color-muted)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--color-accent)]"
-          />
-          <kbd aria-hidden="true" className="hidden text-xs text-[var(--color-muted)] sm:block">/</kbd>
+    <section className="skill-directory discovery-directory" aria-labelledby="skill-index-heading">
+      <h2 id="skill-index-heading" className="sr-only">
+        Skills
+      </h2>
+      <div className="search-heading">
+        <label className="search-label" htmlFor="skill-search">
+          Search skills
         </label>
-        <div role="group" aria-label="Skill categories" className="flex gap-5 overflow-x-auto border-t border-[var(--color-border)]">
-          {["all", ...categories].map((category) => (
-            <button
-              key={category}
-              type="button"
-              aria-pressed={filters.category === category}
-              onClick={(event) => {
-                updateFilters({ ...filters, category });
-                event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
-              }}
-              className={`min-h-11 shrink-0 border-b-2 py-3 text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-accent)] ${filters.category === category ? "border-[var(--color-accent)] text-[var(--color-heading)]" : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-heading)]"}`}
-            >
-              {category === "all" ? "All skills" : category}
-            </button>
-          ))}
-        </div>
+        <a href="#library-install" className="text-button">
+          Install collection <CanvasIcon name="download" />
+        </a>
       </div>
-
-      <div className="mb-3 flex flex-wrap items-start justify-between gap-x-5 text-xs text-[var(--color-muted)]">
-        <p aria-live="polite" aria-atomic="true" className="py-3">
-          {filteredSkills.length} {filteredSkills.length === 1 ? "skill" : "skills"}
+      <div className="search-control">
+        <CanvasIcon name="search" />
+        <input
+          ref={searchRef}
+          id="skill-search"
+          type="search"
+          name="q"
+          autoComplete="off"
+          spellCheck={false}
+          value={filters.query}
+          onChange={(e) => update({ q: e.target.value })}
+          placeholder='Try “interface” or “payments”'
+        />
+        <kbd aria-hidden="true">/</kbd>
+      </div>
+      <div className="directory-filters">
+        <div
+          role="group"
+          aria-label="Skill categories"
+          className="task-buttons"
+        >
+          <span>What are you working on?</span>
+          {[["all", "All skills"], ...Object.entries(TASK_LABELS)].map(
+            ([key, label]) => (
+              <button
+                key={key}
+                aria-pressed={task === key}
+                onClick={() => update({ task: key, category: "all" })}
+              >
+                <span>{label}</span><span className="category-count">{skills.filter(s => matchesTask(s.slug, key)).length}</span>
+              </button>
+            ),
+          )}
+        </div>
+        <label className="mobile-category">
+          <span>Category</span>
+          <select
+            aria-label="Category"
+            value={task in TASK_LABELS ? task : "all"}
+            onChange={(e) => update({ task: e.target.value, category: "all" })}
+          >
+            <option value="all">All skills</option>
+            {Object.entries(TASK_LABELS).map(([v, l]) => (
+              <option value={v} key={v}>
+                {l}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="platform-filter">
+          <CanvasIcon name="filter" />
+          <span className="sr-only">Platform</span>
+          <select
+            aria-label="Platform"
+            value={filters.surface}
+            onChange={(e) => update({ surface: e.target.value })}
+          >
+            <option value="all">All platforms</option>
+            <option value="local">Local agents</option>
+            <option value="chat">Chat apps</option>
+          </select>
+        </label>
+      </div>
+      <div className="directory-meta">
+        <h2>{filters.query ? "Search results" : TASK_LABELS[task] ?? "Find your next move"}</h2>
+        <p aria-live="polite" aria-atomic="true">
+          {found.length} {found.length === 1 ? "skill" : "skills"}
+          {filters.query ? ` for “${filters.query}”` : ""}
         </p>
-        <div className="flex items-start gap-5">
-          {hasFilters ? (
-            <button type="button" onClick={clearFilters} className="min-h-11 hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-[var(--color-accent)]">Clear filters</button>
-          ) : null}
-          <details className="max-w-56">
-            <summary className="min-h-11 cursor-pointer py-3 hover:text-[var(--color-heading)]">
-              {filters.surface === "all" ? "Platform" : filters.surface === "local" ? "Local agents" : "Chat + local"}
-            </summary>
-            <fieldset className="flex flex-col gap-1 pb-3">
-              <legend className="sr-only">Runs in</legend>
-              {([ ["all", "All platforms"], ["local", "Local agents"], ["chat", "Chat + local"] ] as const).map(([value, label]) => (
-                <label key={value} className="flex min-h-11 cursor-pointer items-center gap-3">
-                  <input type="radio" name="platform" value={value} checked={filters.surface === value} onChange={() => updateFilters({ ...filters, surface: value })} className="accent-[var(--color-accent)]" />
-                  {label}
-                </label>
-              ))}
-            </fieldset>
-          </details>
-        </div>
-      </div>
-
-      <div className="terminal-rule mb-3 hidden grid-cols-[minmax(11rem,1fr)_8rem_minmax(15rem,1.5fr)_5rem] gap-4 px-3 pt-3 text-xs text-[var(--color-muted)] sm:grid">
-        <span>Skill</span>
-        <span>Category</span>
-        <span>What it does</span>
-        <span className="text-right">Runs in</span>
-      </div>
-
-      {filteredSkills.length > 0 ? (
-        <div className="terminal-panel p-1">
-          {filteredSkills.map((skill) => (
-            <TrackedLink
-              key={skill.slug}
-              href={`/${skill.slug}`}
-              eventName="skill_open" skill={skill.slug} agent="all"
-              className="skill-row group grid gap-2 border-b border-[var(--color-border)] px-3 py-4 last:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-accent)] sm:grid-cols-[minmax(11rem,1fr)_8rem_minmax(15rem,1.5fr)_5rem] sm:items-center sm:gap-4"
+        <details ref={topicRef} className="topic-filter">
+          <summary>
+            Topics{filters.category !== "all" ? `: ${filters.category}` : ""}
+          </summary>
+          <label>
+            <span className="sr-only">Topic</span>
+            <select
+              aria-label="Topic"
+              value={filters.category}
+              onChange={(e) => update({ category: e.target.value })}
             >
-              <span className="skill-row-command relative z-10 flex min-w-0 items-center gap-2 font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-heading)] transition-colors sm:text-base">
-                <SkillLogo slug={skill.slug} className="h-3.5 w-3.5 shrink-0 opacity-35 transition-opacity group-hover:opacity-70" />
-                <span className="min-w-0 break-words">{skill.name}</span>
-              </span>
-              <span className="relative z-10 w-fit border border-[var(--color-border)] px-1.5 py-0.5 text-xs text-[var(--color-muted)] transition-colors group-hover:border-[var(--color-accent-dim)] group-hover:text-[var(--color-text)]">
-                {skill.category}
-              </span>
-              <p className="relative z-10 font-[family-name:var(--font-sans)] text-sm leading-relaxed text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-text)]">
-                {skill.description.split(/\s+Use when\b/)[0]}
-              </p>
-              <span className="relative z-10 text-right text-xs text-[var(--color-muted)]">
-                {skill.claudeAppReady ? "Chat + local" : "Local"}
-              </span>
-            </TrackedLink>
-          ))}
-        </div>
-      ) : (
-        <div className="terminal-panel px-5 py-10 text-center">
-          <p className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-heading)]">No skills match these filters.</p>
+              <option value="all">All topics</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </label>
+        </details>
+        {constraints && (
           <button
-            type="button"
-            onClick={clearFilters}
-            className="mt-4 min-h-11 border border-[var(--color-border)] px-3 font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)] transition-colors hover:border-[var(--color-border-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+            onClick={() =>
+              update({ category: "all", surface: "all", task: "all" })
+            }
           >
             Clear filters
           </button>
+        )}
+      </div>
+      <div
+        className={
+          filters.query && preview
+            ? "directory-workbench has-preview"
+            : "directory-workbench"
+        }
+      >
+        <div className={`skill-results ${!filters.query ? "visual-catalog" : ""}`}>
+          {found.map((skill) => (
+            <div
+              key={skill.slug}
+              className={`result-wrap ${filters.query && preview?.slug === skill.slug ? "is-selected" : ""}`}
+            >
+              <TrackedLink
+                href={skillHref(skill.slug)}
+                eventName="skill_open"
+                skill={skill.slug}
+                agent="all"
+                className="skill-row"
+                onClick={() => remember(skill.slug)}
+              >
+                <span className="workflow-mark"><CanvasIcon name={SKILL_DISPLAY[skill.slug]?.icon ?? icons[skill.category] ?? "file"} /></span>
+                <div className="result-copy">
+                  <h3>
+                    <CanvasIcon
+                      name={
+                        SKILL_DISPLAY[skill.slug]?.icon ??
+                        icons[skill.category] ??
+                        "file"
+                      }
+                    />
+                    {TASK_TITLES[skill.slug] ?? skill.name}
+                  </h3>
+                  <p>
+                    {SKILL_DISPLAY[skill.slug]?.summary ??
+                      skill.description.split(/\s+Use when\b/)[0]}
+                  </p>
+                  <span className="skill-pill">{skill.slug}</span>
+                </div>
+                <span className="result-platform">
+                  <span className="result-flow">
+                    {SKILL_DISPLAY[skill.slug]?.flow}
+                  </span>
+                  <span>
+                    {skill.claudeAppReady ? "Local + chat" : "Local agent"}
+                  </span>
+                </span>
+                <CanvasIcon name="arrow" className="result-arrow" />
+              </TrackedLink>
+              {filters.query && (
+                <button
+                  className="preview-trigger"
+                  title={`Preview ${skill.slug}`}
+                  aria-label={`Preview ${skill.slug}`}
+                  aria-pressed={preview?.slug === skill.slug}
+                  onClick={() => setSelected(skill.slug)}
+                >
+                  <CanvasIcon name="panel" />
+                  <span>Preview</span>
+                </button>
+              )}
+            </div>
+          ))}
+          {!found.length && (
+            <div className="empty-results">
+              <CanvasIcon name="search" width="32" height="32" />
+              <h3>
+                {constraints
+                  ? "No skills match these filters."
+                  : "No skills match your search."}
+              </h3>
+              <p>
+                {constraints
+                  ? "Keep your search and clear the filters, or try a different task."
+                  : "Try a skill name or a task, such as interface or payments."}
+              </p>
+              <div>
+                <button
+                  className="primary-button"
+                  onClick={() =>
+                    constraints
+                      ? update({ category: "all", surface: "all", task: "all" })
+                      : update({ q: "" })
+                  }
+                >
+                  {constraints ? "Clear filters" : "Clear search"}
+                </button>
+                <button
+                  className="text-button"
+                  onClick={() => searchRef.current?.focus()}
+                >
+                  Edit search
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+        {filters.query && preview && isSkillSlug(preview.slug) && (
+          <aside className="skill-inspector" aria-label="Skill preview">
+            <span className="skill-pill">{preview.slug}</span>
+            <h2>{TASK_TITLES[preview.slug] ?? preview.name}</h2>
+            <p>{preview.description.split(/\s+Use when\b/)[0]}</p>
+            <div className="inspector-visual"><SkillVisual slug={preview.slug} /><span>Illustrative workflow</span></div>
+            <AgentTabs
+              key={preview.slug}
+              slug={preview.slug}
+              support={CATALOG[preview.slug].support}
+              capabilities={CATALOG[preview.slug].capabilities}
+            />
+            <TrackedLink
+              href={skillHref(preview.slug)}
+              eventName="skill_open"
+              skill={preview.slug}
+              agent="all"
+              onClick={() => remember(preview.slug)}
+              className="text-button"
+            >
+              Read the skill & source <CanvasIcon name="arrow" />
+            </TrackedLink>
+          </aside>
+        )}
+      </div>
     </section>
   );
 }

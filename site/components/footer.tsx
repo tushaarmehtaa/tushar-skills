@@ -1,14 +1,15 @@
+import { GithubStars } from "./github-stars";
 import { RuntimeLogo } from "./runtime-logo";
 import { PageFrame } from "./page-frame";
 
 export function Footer() {
   return (
-    <footer className="px-6 py-10">
+    <footer className="site-footer px-6 py-10">
       <PageFrame className="border-t border-[var(--color-border)] pt-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]">
+          <div className="space-y-2 text-sm text-[var(--color-muted)]">
             <p>
-              built by{" "}
+              Built by{" "}
               <a
                 href="https://tushaarmehtaa.xyz"
                 target="_blank"
@@ -32,16 +33,21 @@ export function Footer() {
               rel="noopener noreferrer"
               className="-my-2 flex min-h-8 items-center gap-2 py-2 transition-colors hover:text-[var(--color-heading)]"
             >
-              <RuntimeLogo runtime="agent-skills" tone="current" decorative className="h-3.5 w-3.5" />
+              <RuntimeLogo
+                runtime="agent-skills"
+                tone="current"
+                decorative
+                className="h-3.5 w-3.5"
+              />
               <span>Agent Skills specification ↗</span>
             </a>
           </div>
-          <div className="flex items-center gap-4 font-[family-name:var(--font-mono)] text-xs">
-            <a href="/guides" className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]">
-              Guides
-            </a>
-            <a href="/compatibility" className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]">
-              Compatibility
+          <div className="flex items-center gap-4 text-sm">
+            <a
+              href="/compatibility"
+              className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
+            >
+              Requirements
             </a>
             <a
               href="https://github.com/tushaarmehtaa/tushar-skills"
@@ -49,7 +55,10 @@ export function Footer() {
               rel="noopener noreferrer"
               className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
             >
-              MIT license · GitHub
+              MIT license · GitHub{" "}
+              <span className="ml-2" title="GitHub stars">
+                ☆ <GithubStars />
+              </span>
             </a>
           </div>
         </div>

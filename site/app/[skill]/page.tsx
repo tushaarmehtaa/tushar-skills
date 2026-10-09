@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { ResultsBack } from "@/components/results-back";
+import { skillHref } from "@/lib/canvas";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { SkillDetail } from "@/components/skill-detail";
@@ -15,7 +16,7 @@ const siteUrl = "https://www.slashskills.xyz";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getAllSkills().map((skill) => ({ skill: skill.slug }));
+  return getAllSkills().filter(skill => skill.slug !== "changelog").map((skill) => ({ skill: skill.slug }));
 }
 
 export async function generateMetadata({
@@ -51,7 +52,7 @@ export async function generateMetadata({
       images: [ogImageUrl],
     },
     alternates: {
-      canonical: `/${slug}`,
+      canonical: skillHref(slug),
     },
   };
 }
@@ -67,13 +68,13 @@ export default async function SkillPage({
 
   const availableFiles = new Set(["SKILL.md", ...skill.files.map((file) => file.path)]);
   const renderOptions = { availableFiles, skillSlug: skill.slug };
-  const contentHtml = renderMarkdown(skill.content, { ...renderOptions, sourcePath: "SKILL.md" });
+  const contentHtml = renderMarkdown(skill.content, { ...renderOptions, sourcePath: "SKILL.md" }).replace(/<(\/?)h1(?=[ >])/g, "<$1h2");
   const renderedFiles = skill.files.map((file) => ({
     ...file,
     anchor: packageFileAnchor(file.path),
-    contentHtml: renderMarkdown(file.content, { ...renderOptions, sourcePath: file.path }),
+    contentHtml: renderMarkdown(file.content, { ...renderOptions, sourcePath: file.path }).replace(/<(\/?)h1(?=[ >])/g, "<$1h2"),
   }));
-  const skillUrl = `${siteUrl}/${skill.slug}`;
+  const skillUrl = `${siteUrl}${skillHref(skill.slug)}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
@@ -90,24 +91,15 @@ export default async function SkillPage({
 
   const installs = (await getInstallStats())?.bySlug[skill.slug] ?? null;
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="has-skill-installer flex min-h-screen flex-col">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <Header />
       <main id="main-content" className="flex-1 px-6 py-6 sm:py-10">
-        <div className="mx-auto w-full max-w-5xl min-w-0">
-          <Link
-            href="/"
-            className="back-link mb-6 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            All skills
-          </Link>
+        <div className="mx-auto w-full max-w-[1344px] min-w-0">
+          <ResultsBack />
           <SkillDetail skill={skill} contentHtml={contentHtml} renderedFiles={renderedFiles} installs={installs} />
         </div>
       </main>
