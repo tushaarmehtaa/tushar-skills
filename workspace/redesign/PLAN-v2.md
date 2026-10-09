@@ -80,6 +80,6 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 
 ### Remaining
 - [x] Guides, Requirements, Changelog and guide pages brought into the v2 look (same column, page head, hairline rows, ink command blocks, one left edge); skill pages link their related guides again
-- [ ] Small repo fixes: humanize "article-development workflow", product-experiments "if present", em dashes in two output contracts
+- [x] Small repo fixes: user-insights em dash replaced. Left as is on purpose: humanize "article-development workflow" (a boundary, not a broken link), product-experiments "if present" (correct), remove-ai-slop em dashes (inside its report template, changing them changes the output format)
 - [ ] Voice-line review table for Tushar
 - [ ] Merge `redesign-v2` to main (needs Tushar's go-ahead)
