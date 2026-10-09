@@ -252,10 +252,12 @@ function ProofRun({ proof, slug }: { proof: SkillProof; slug: string }) {
   return (
     <div className="proof">
       <p className="proof-summary">{proof.summary}</p>
-      <div className="proof-request">
-        <span>The request</span>
-        <p>{proof.request}</p>
-      </div>
+      {proof.pair?.before.text?.trim() !== proof.request.trim() && (
+        <div className="proof-request">
+          <span>The request</span>
+          <p>{proof.request}</p>
+        </div>
+      )}
       {proof.pair ? (
         <ProofPair pair={proof.pair} slug={slug} />
       ) : (
@@ -269,6 +271,13 @@ function ProofRun({ proof, slug }: { proof: SkillProof; slug: string }) {
             }}
           />
         )
+      )}
+      {proof.still && (
+        <figure className="proof-still">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={proof.still} alt={`A frame from the video the /${slug} run rendered`} width={1200} height={676} loading="lazy" />
+          <figcaption>A frame from the rendered video</figcaption>
+        </figure>
       )}
       {proof.table && (
         <div className="proof-table">

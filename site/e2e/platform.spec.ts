@@ -72,10 +72,10 @@ test.describe("slashskills platform", () => {
   });
 
   test("falls back to the output contract when there is no sample run", async ({ page }) => {
-    await page.goto("/rate-limit");
+    await page.goto("/image-editing");
     await expectNoDocumentOverflow(page);
     const output = page.getByRole("region", { name: "What you get back" });
-    await expect(output.getByText("From the skill's Output section", { exact: true })).toBeVisible();
+    await expect(output.getByText(/^From the skill's .+ section$/)).toBeVisible();
     await expect(output.locator(".contract")).not.toBeEmpty();
     await expect(
       output.getByText("No sample run here. This skill works against your own accounts or keys, so it runs on your project, not ours."),

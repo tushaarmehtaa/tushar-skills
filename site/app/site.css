@@ -1193,3 +1193,6 @@ main#main-content {
   .pair.phone { grid-template-columns: 1fr 1fr; }
   .pair-text { max-height: 280px; font-size: 13.5px; line-height: 21px; }
 }
+.proof-still { margin: 0; }
+.proof-still img { display: block; width: 100%; height: auto; border: 1px solid var(--color-border); border-radius: 8px; }
+.proof-still figcaption { margin-top: 8px; font-size: 13px; }

@@ -52,6 +52,7 @@ export interface SkillProof {
     filesChanged: number | null;
   };
   caveat?: string;
+  still?: string;
 }
 
 export interface SkillHistory {
