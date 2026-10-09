@@ -256,19 +256,19 @@ function ProofRun({ proof, slug }: { proof: SkillProof; slug: string }) {
         <span>The request</span>
         <p>{proof.request}</p>
       </div>
-      {proof.images && (
-        <figure className={proof.images.before.includes("-mobile") ? "proof-shots phone" : "proof-shots"}>
-          <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={proof.images.before} alt={`Sample project before /${slug}`} width={1200} height={833} loading="lazy" />
-            <figcaption>Before</figcaption>
-          </div>
-          <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={proof.images.after} alt={`Sample project after one /${slug} run`} width={1200} height={833} loading="lazy" />
-            <figcaption className="strong">After one run</figcaption>
-          </div>
-        </figure>
+      {proof.pair ? (
+        <ProofPair pair={proof.pair} slug={slug} />
+      ) : (
+        proof.images && (
+          <ProofPair
+            slug={slug}
+            pair={{
+              kind: "screenshots",
+              before: { label: "Before", image: proof.images.before },
+              after: { label: "After one run", image: proof.images.after },
+            }}
+          />
+        )
       )}
       {proof.table && (
         <div className="proof-table">
@@ -298,6 +298,39 @@ function ProofRun({ proof, slug }: { proof: SkillProof; slug: string }) {
         {proof.caveat && <span>{proof.caveat}</span>}
       </p>
     </div>
+  );
+}
+
+/** Strip the indentation every line shares, so quoted code starts at the left edge. */
+function dedent(text: string) {
+  const lines = text.split("\n");
+  const indents = lines.filter((l) => l.trim()).map((l) => l.match(/^[ \t]*/)![0].length);
+  const cut = indents.length ? Math.min(...indents) : 0;
+  return lines.map((l) => l.slice(cut)).join("\n");
+}
+
+function ProofPair({ pair, slug }: { pair: NonNullable<SkillProof["pair"]>; slug: string }) {
+  const phone = pair.kind === "screenshots" && (pair.before.image ?? "").includes("-mobile");
+  return (
+    <figure className={`pair pair-kind-${pair.kind}${phone ? " phone" : ""}`}>
+      {[pair.before, pair.after].map((side, i) => (
+        <div key={i} className={i === 0 ? "pair-side pair-before" : "pair-side pair-after"}>
+          <span className="pair-label">{side.label}</span>
+          {side.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={side.image}
+              alt={i === 0 ? `Sample project before /${slug}` : `Sample project after one /${slug} run`}
+              width={phone ? 600 : 1200}
+              height={phone ? 1298 : 833}
+              loading="lazy"
+            />
+          ) : (
+            <pre className="pair-text">{pair.kind === "text" ? side.text : dedent(side.text ?? "")}</pre>
+          )}
+        </div>
+      ))}
+    </figure>
   );
 }
 

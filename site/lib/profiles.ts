@@ -26,12 +26,23 @@ export interface SkillProfile {
   checks: string[];
 }
 
+export interface ProofSide {
+  label: string;
+  text?: string;
+  image?: string;
+}
+
 export interface SkillProof {
   request: string;
   summary: string;
   excerpt: string[];
   table?: { head: string[]; rows: string[][] };
   images?: { before: string; after: string; caption: string };
+  pair?: {
+    kind: "screenshots" | "text" | "code" | "data";
+    before: ProofSide;
+    after: ProofSide;
+  };
   run: {
     agent: string;
     version: string;

@@ -1161,3 +1161,35 @@ main#main-content {
 @media (max-width: 639px) {
   .checks li { font-size: 14px; line-height: 21px; }
 }
+
+/* What went in -> what came out */
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin: 0; }
+.pair-side { display: grid; grid-template-rows: auto 1fr; gap: 8px; min-width: 0; }
+.pair-label { font-size: 13px; color: var(--color-text); }
+.pair-after .pair-label { color: var(--color-heading); font-weight: 500; }
+.pair img { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 833; object-fit: cover; object-position: top; border: 1px solid var(--color-border); border-radius: 8px; }
+.pair.phone { grid-template-columns: repeat(2, minmax(0, 260px)); }
+.pair.phone img { aspect-ratio: 390 / 844; }
+.pair-text {
+  margin: 0;
+  min-height: 100%;
+  max-height: 340px;
+  overflow: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-heading);
+  font: 14px/22px var(--font-sans);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.pair-after .pair-text { background: #fff; border-color: var(--color-accent); }
+.pair-kind-code .pair-text, .pair-kind-data .pair-text { font: 12.5px/20px var(--font-mono); }
+.pair-kind-code .pair-text { background: var(--color-heading); color: #e9ece8; border-color: var(--color-heading); white-space: pre; overflow-wrap: normal; }
+.pair-kind-code .pair-after .pair-text { background: var(--color-heading); border-color: #8fb79f; }
+@media (max-width: 639px) {
+  .pair { grid-template-columns: minmax(0, 1fr); }
+  .pair.phone { grid-template-columns: 1fr 1fr; }
+  .pair-text { max-height: 280px; font-size: 13.5px; line-height: 21px; }
+}
