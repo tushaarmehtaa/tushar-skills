@@ -1,7 +1,7 @@
 import { WorkflowStrip } from "./workflow-strip";
+import { Crumb } from "./crumb";
 import { skillHref } from "@/lib/canvas";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { PageFrame } from "./page-frame";
@@ -48,10 +48,7 @@ export function EditorialGuide({ guide, content }: { guide: Guide; content: stri
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }} />
       <main id="main-content" className="flex-1 px-6 pb-16 pt-8 sm:pt-12">
         <PageFrame>
-          <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-3 text-sm text-[var(--color-muted)]">
-            <Link href="/guides" className="inline-flex min-h-11 items-center hover:text-[var(--color-accent)]">← Guides</Link>
-            <span aria-hidden="true">/</span><span>{guide.category}</span>
-          </nav>
+          <Crumb className="mb-8" items={[{ label: "Skills", href: "/" }, { label: "Guides", href: "/guides" }, { label: guide.category }]} />
           <header className="max-w-3xl">
             <p className="mb-4 text-xs text-[var(--color-muted)]">Tushar Mehta <span aria-hidden="true"> · </span>{guide.updatedDate ? "Updated " : ""}<time dateTime={guide.updatedDate ?? guide.date}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${guide.updatedDate ?? guide.date}T00:00:00Z`))}</time><span aria-hidden="true"> · </span>{minutes} min read</p>
             <h1 className="text-[2rem] font-medium leading-[1.13] tracking-[-0.04em] text-[var(--color-heading)] sm:text-[3rem]">{guide.title}</h1>

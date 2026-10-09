@@ -1,4 +1,5 @@
 import { WorkflowStrip } from "@/components/workflow-strip";
+import { Crumb } from "@/components/crumb";
 import { skillHref } from "@/lib/canvas";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -27,12 +28,7 @@ export default function CompatibilityPage() {
       <Header />
       <main id="main-content" className="flex-1 px-6 py-12 sm:py-16">
         <div className="mx-auto w-full max-w-[1344px]">
-          <Link
-            href="/"
-            className="back-link mb-10 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
-          >
-            ← All skills
-          </Link>
+          <Crumb className="mb-8" items={[{ label: "Skills", href: "/" }, { label: "Requirements" }]} />
 
           <header className="animate-fade-up mb-12 max-w-4xl">
             <h1 className="text-[32px] font-medium leading-tight tracking-[-0.03em] text-[var(--color-heading)] sm:text-5xl">

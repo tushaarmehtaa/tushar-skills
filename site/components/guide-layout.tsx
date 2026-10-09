@@ -1,7 +1,7 @@
 import { WorkflowStrip } from "./workflow-strip";
+import { Crumb } from "./crumb";
 import { Header } from "./header";
 import { Footer } from "./footer";
-import { BackButton } from "./back-button";
 
 export function GuideLayout({
   title,
@@ -19,7 +19,7 @@ export function GuideLayout({
       <Header />
       <main id="main-content" className="flex-1 px-6 py-12 sm:py-16">
         <div className="guide-layout">
-          <BackButton fallback="/guides" />
+          <Crumb className="mb-8" items={[{ label: "Skills", href: "/" }, { label: "Guides", href: "/guides" }, { label: title }]} />
           <header className="animate-fade-up mb-12 max-w-3xl">
             <div className="flex items-center gap-4 sm:gap-5">
               {mark ? (

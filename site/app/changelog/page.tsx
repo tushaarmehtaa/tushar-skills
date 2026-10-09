@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Crumb } from "@/components/crumb";
 import { Header } from "@/components/header";
 import { PageFrame } from "@/components/page-frame";
 import { Footer } from "@/components/footer";
@@ -209,16 +209,7 @@ export default function ChangelogPage() {
       <main id="main-content" className="flex-1 px-6 py-12">
         <PageFrame>
           <div className="max-w-3xl">
-          <Link
-            href="/"
-            className="back-link mb-10 -ml-3 inline-flex items-center gap-2 rounded px-3 py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-heading)]"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            back
-          </Link>
+          <Crumb className="mb-8" items={[{ label: "Skills", href: "/" }, { label: "Changelog" }]} />
 
           <div className="animate-fade-up mb-12">
             <h1 className="terminal-heading text-[32px] font-medium text-[var(--color-heading)] sm:text-5xl">

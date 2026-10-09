@@ -1,4 +1,5 @@
 import { CanvasIcon } from "@/components/canvas-icon";
+import { Crumb } from "@/components/crumb";
 import { RuntimeLogo } from "@/components/runtime-logo";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -31,12 +32,7 @@ export default function GuidesPage() {
       <Header />
       <main id="main-content" className="flex-1 px-6 py-8 sm:py-12">
         <PageFrame>
-          <Link
-            href="/"
-            className="mb-7 inline-flex min-h-11 items-center text-sm text-[var(--color-muted)] hover:text-[var(--color-accent)]"
-          >
-            ← All skills
-          </Link>
+          <Crumb className="mb-7" items={[{ label: "Skills", href: "/" }, { label: "Guides" }]} />
           <header className="guide-index-hero">
             <div>
               <h1>Make yourself at home.</h1>
