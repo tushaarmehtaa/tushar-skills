@@ -26,15 +26,13 @@ export default function CompatibilityPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main id="main-content" className="flex-1 px-6 py-12 sm:py-16">
-        <div className="mx-auto w-full max-w-[1344px]">
-          <Crumb className="mb-8" items={[{ label: "Skills", href: "/" }, { label: "Requirements" }]} />
+      <main id="main-content" className="page">
+        <div>
+          <Crumb className="crumb-page" items={[{ label: "Skills", href: "/" }, { label: "Requirements" }]} />
 
-          <header className="animate-fade-up mb-12 max-w-4xl">
-            <h1 className="text-[32px] font-medium leading-tight tracking-[-0.03em] text-[var(--color-heading)] sm:text-5xl">
-              Requirements
-            </h1>
-            <p className="mt-5 max-w-3xl text-base leading-relaxed text-[var(--color-text)] sm:text-lg">
+          <header className="page-head">
+            <h1>Requirements</h1>
+            <p>
               Compare the access and execution surfaces each workflow needs. Local packages install in Codex, Claude Code, or Cursor; installation does not grant tools or permissions.
             </p>
           </header>
@@ -45,7 +43,7 @@ export default function CompatibilityPage() {
               <Link
                 key={agentId}
                 href={AGENTS[agentId].guideRoute}
-                className="group terminal-panel install-box flex items-start gap-3 p-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+                className="agent-card group"
               >
                 <RuntimeLogoTile runtime={agentId} size="md" decorative />
                 <div className="min-w-0 pt-0.5">
@@ -113,7 +111,7 @@ export default function CompatibilityPage() {
             </div>
           </section>
 
-          <section className="mt-12 border-l-2 border-[var(--color-accent)] bg-[var(--color-surface)] px-5 py-4">
+          <section className="scope-note">
             <h2 className="mb-2 text-base font-medium text-[var(--color-heading)]">Not included in v1</h2>
             <p className="text-sm leading-relaxed text-[var(--color-text)]">
               Copilot, Gemini, and OpenAI plugin packaging are outside v1. OpenAI support is local Codex Agent Skills only. Raw ZIP downloads remain available for inspection and complete multi-file transfer.

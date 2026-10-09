@@ -462,3 +462,37 @@
   .release li[data-type] { grid-template-columns: 52px minmax(0, 1fr); font-size: 14px; line-height: 22px; }
   .release-type { line-height: 22px; }
 }
+
+/* Guide lists: hairline rows like the skill list */
+.guide-rows { border-top: 1px solid var(--color-heading); }
+.guide-row {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr) 2rem;
+  gap: 8px 28px;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.guide-row h3 { transition: color 150ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .guide-row:hover h3 { color: var(--color-accent); }
+}
+.guide-row:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 4px; }
+.skill section[aria-labelledby="related-guides-heading"] { max-width: 840px; margin-top: 48px; padding-bottom: 0; }
+.runtime-guide-row p code { font: 12.5px var(--font-mono); color: var(--color-heading); }
+@media (max-width: 639px) {
+  .guide-row { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 16px 0; }
+}
+
+/* Requirements and guide pages: hairlines instead of filled boxes */
+.guide-flow { background: transparent; border: 0; border-block: 1px solid var(--color-border); border-radius: 0; padding: 14px 0; }
+.agent-card { display: flex; align-items: flex-start; gap: 12px; padding: 16px 0; border-top: 1px solid var(--color-border); }
+.agent-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .agent-card:hover p:first-child { color: var(--color-accent); }
+}
+.scope-note { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--color-border); max-width: 72ch; }
+.command-inline { margin-block: 8px 12px; }
+/* Guide pages start on the same left edge as the header and every other page. */
+.guide-layout { max-width: 1344px; margin-inline: auto; }
+.guide-layout > * { max-width: 1152px; }

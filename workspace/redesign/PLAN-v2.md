@@ -59,7 +59,7 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
   - [x] "1 installs" bug gone (installs now a facts row)
   - [x] one list for browse and search (inspector removed)
   - [x] tablet duplicate category controls gone
-  - [ ] CHANGELOG entry for guides leaving the homepage; CHANGELOG still says "30 skills"
+  - [x] CHANGELOG and /changelog brought up to date (five missing releases, 10 Sep to 9 Oct, including guides leaving the homepage). The "30 skills" lines are historical and correct for their dates
   - [ ] skills.sh still lists 64 skills including retired names
   - [ ] CSS still in three layers (globals, canvas, visual-direction) plus library.css
 
@@ -79,7 +79,7 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 - [x] Mobile alignment pass (Tushar's feedback 9 Oct): headline is two lines sized to fill the width (320–430px); one full-width copy bar on every command; installer sits on the page edge instead of nested cards; facts collapse to 3 rows + "All facts" on phones; "Then type" shows one command. Checked at 390 and 320, 31/31 browser tests pass
 
 ### Remaining
-- [ ] Guides, Requirements, Changelog pages brought into the v2 look
+- [x] Guides, Requirements, Changelog and guide pages brought into the v2 look (same column, page head, hairline rows, ink command blocks, one left edge); skill pages link their related guides again
 - [ ] Small repo fixes: humanize "article-development workflow", product-experiments "if present", em dashes in two output contracts
 - [ ] Voice-line review table for Tushar
 - [ ] Merge `redesign-v2` to main (needs Tushar's go-ahead)

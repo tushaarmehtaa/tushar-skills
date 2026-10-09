@@ -6,6 +6,7 @@ import { RuntimeLogo } from "./runtime-logo";
 import { TrackedLink } from "./tracked-link";
 import { Clamp } from "./clamp";
 import { Crumb } from "./crumb";
+import { LatestGuides } from "./latest-guides";
 import { AGENTS, AGENT_IDS, CAPABILITY_LABELS } from "@/lib/agents";
 import { supportsChatGPT } from "@/lib/catalog";
 import { createClaudeAppViewModel } from "@/lib/skill-presentation";
@@ -187,6 +188,8 @@ export function SkillDetail({
           />
         </Clamp>
       </section>
+
+      <LatestGuides skill={skill.slug} />
 
       <OtherPlatforms skill={skill} />
 

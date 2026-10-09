@@ -30,14 +30,12 @@ export default function GuidesPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main id="main-content" className="flex-1 px-6 py-8 sm:py-12">
+      <main id="main-content" className="page">
         <PageFrame>
-          <Crumb className="mb-7" items={[{ label: "Skills", href: "/" }, { label: "Guides" }]} />
-          <header className="guide-index-hero">
-            <div>
-              <h1>Make yourself at home.</h1>
-              <p>Set up your agent, add a skill, and put it to work.</p>
-            </div>
+          <Crumb className="crumb-page" items={[{ label: "Skills", href: "/" }, { label: "Guides" }]} />
+          <header className="page-head">
+            <h1>Make yourself at home.</h1>
+            <p>Set up your agent, add a skill, and put it to work.</p>
           </header>
           <section aria-labelledby="installation-guides">
             <h2
@@ -54,7 +52,10 @@ export default function GuidesPage() {
               >
                 <RuntimeLogo runtime={id} decorative className="h-7 w-7" />
                 <h3>{AGENTS[id].label}</h3>
-                <p>Install a skill, check the setup and start using it.</p>
+                <p>
+                  Installs to <code>{AGENTS[id].globalDirectory}</code>. Run a skill with{" "}
+                  <code>{AGENTS[id].invocation.split(" or ")[0].replace("<skill>", "name")}</code>.
+                </p>
                 <CanvasIcon name="arrow" />
               </Link>
             ))}
