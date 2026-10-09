@@ -14,8 +14,9 @@ test.describe("slashskills platform", () => {
 
     await page.goto("/cold-outreach");
     await expectNoDocumentOverflow(page);
-    await expect(page.getByRole("heading", { name: "Start a conversation" })).toBeVisible();
-    await expect(page.locator("main [data-status]")).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("/cold-outreach");
+    await expect(page.getByRole("heading", { name: "What you get back" })).toBeVisible();
+    await expect(page.locator("main [data-status]:not(.command-copy)")).toHaveCount(0);
 
     await page.goto("/compatibility");
     await expectNoDocumentOverflow(page);
@@ -37,31 +38,59 @@ test.describe("slashskills platform", () => {
     );
   });
 
-  test("requires an explicit runtime and scope before generating an install command", async ({ page }) => {
+  test("marks every chat-capable skill in the library", async ({ page, request }) => {
+    const catalog = await (await request.get("/skills.json")).json();
+    const chat = new Set(
+      catalog.skills
+        .filter((skill: { surfaces: string[] }) => skill.surfaces.includes("claude-app"))
+        .map((skill: { slug: string }) => skill.slug),
+    );
+    expect(chat.has("decision-doc")).toBe(true);
     await page.goto("/");
-    await page.getByText("Installation options", { exact: true }).click();
-    await expect(page.getByText("Choose a runtime and scope to generate an install command.")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Copy install command" })).toHaveCount(0);
-
-    await page.getByLabel("Runtime").selectOption("codex");
-    await page.getByLabel("Scope").selectOption("global");
-    await expect(page.locator("code").filter({ hasText: "npx skills add" }).last()).toContainText("-g -a codex -y");
-    await expect(page.getByRole("button", { name: "Copy install command" })).toBeVisible();
+    const rows = page.locator(".row");
+    await expect(rows).toHaveCount(34);
+    for (let i = 0; i < 34; i++) {
+      const row = rows.nth(i);
+      const slug = (await row.locator(".row-name").textContent())!.slice(1);
+      await expect(row.getByText("Chat too", { exact: true }), slug).toHaveCount(chat.has(slug) ? 1 : 0);
+    }
+    await page.getByRole("searchbox", { name: "Search skills" }).fill("decision-doc");
+    await expect(page.getByRole("link", { name: /^\/decision-doc/ })).toContainText("Chat too");
   });
 
-  test("keeps chat-capable skills in the local-agent filter", async ({ page }) => {
-    await page.goto("/");
-    await page.getByRole("combobox", { name: "Platform", exact: true }).selectOption("local");
-    await expect(page.getByRole("combobox", { name: "Platform", exact: true })).toHaveValue("local");
-    await expect(page.getByRole("link", { name: /decision-doc/ })).toBeVisible();
-    await expect(page).toHaveURL(/surface=local/);
+  test("shows a real run with loaded before and after shots", async ({ page }) => {
+    await page.goto("/remove-ai-slop");
+    await expectNoDocumentOverflow(page);
+    const output = page.getByRole("region", { name: "What you get back" });
+    await expect(output.getByRole("heading", { name: "What you get back" })).toBeVisible();
+    await expect(output.getByText("Real run on a sample project", { exact: true })).toBeVisible();
+    for (const name of ["Sample project before /remove-ai-slop", "Sample project after one /remove-ai-slop run"]) {
+      const image = output.getByRole("img", { name });
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth)).toBeGreaterThan(0);
+    }
+  });
+
+  test("falls back to the output contract when there is no sample run", async ({ page }) => {
+    await page.goto("/rate-limit");
+    await expectNoDocumentOverflow(page);
+    const output = page.getByRole("region", { name: "What you get back" });
+    await expect(output.getByText("From the skill's Output section", { exact: true })).toBeVisible();
+    await expect(output.locator(".contract")).not.toBeEmpty();
+    await expect(
+      output.getByText("No sample run here. This skill works against your own accounts or keys, so it runs on your project, not ours."),
+    ).toBeVisible();
+    await expect(output.getByText("Real run on a sample project")).toHaveCount(0);
+    await expect(output.getByRole("img")).toHaveCount(0);
   });
 
   test("renders the new skill packages without mobile overflow", async ({ page }) => {
     for (const slug of ["humanize", "landing-page", "mobile-first"]) {
       await page.goto(`/${slug}`);
       await expectNoDocumentOverflow(page);
-      await expect(page.locator(".skill-intro .skill-pill").first()).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(`/${slug}`);
+      await expect(page.getByRole("region", { name: `Install /${slug}` })).toBeVisible();
+      await expect(page.locator(".skill-lead")).not.toBeEmpty();
     }
   });
 });
