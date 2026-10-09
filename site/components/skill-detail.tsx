@@ -1,306 +1,322 @@
-import { SkillVisual } from "./skill-visual";
-import { formatInstalls } from "@/lib/installs";
+import Link from "next/link";
+import { InstallBox } from "./install-box";
 import { SourceReader } from "./source-reader";
 import { PackageDisclosure } from "./package-disclosure";
-import { LatestGuides } from "./latest-guides";
-import { InstallPanel } from "./install-panel";
-import { CopyButton } from "./copy-button";
-import { SKILL_DISPLAY, TASK_TITLES } from "@/lib/canvas";
 import { RuntimeLogo } from "./runtime-logo";
 import { TrackedLink } from "./tracked-link";
-import { createClaudeAppViewModel } from "@/lib/skill-presentation";
-import { CAPABILITY_LABELS } from "@/lib/agents";
+import { Clamp } from "./clamp";
+import { Crumb } from "./crumb";
+import { AGENTS, AGENT_IDS, CAPABILITY_LABELS } from "@/lib/agents";
 import { supportsChatGPT } from "@/lib/catalog";
-import type { Skill } from "@/lib/skills";
+import { createClaudeAppViewModel } from "@/lib/skill-presentation";
+import { formatInstalls } from "@/lib/installs";
 import { githubFileUrl, packageFileAnchor } from "@/lib/markdown";
+import { skillHref } from "@/lib/canvas";
+import {
+  GROUPS,
+  formatDate,
+  getHistory,
+  getProfile,
+  getProof,
+  speak,
+  type SkillProof,
+} from "@/lib/profiles";
+import type { Skill } from "@/lib/skills";
+
+interface RenderedFile {
+  path: string;
+  lineCount: number;
+  anchor: string;
+  contentHtml: string;
+  rawContent: string;
+}
 
 export function SkillDetail({
   skill,
   contentHtml,
+  outputHtml,
   renderedFiles,
   installs = null,
+  next,
 }: {
   skill: Skill;
   contentHtml: string;
+  outputHtml: string;
+  renderedFiles: RenderedFile[];
   installs?: number | null;
-  renderedFiles: Array<{
-    path: string;
-    lineCount: number;
-    anchor: string;
-    contentHtml: string;
-    rawContent: string;
-  }>;
+  next: { slug: string; outcome: string } | null;
 }) {
-  const claudeApp = createClaudeAppViewModel({
-    surfaces: skill.surfaces,
-    capabilities: skill.capabilities,
-    support: skill.support,
-  });
-  const chatgptAvailable = supportsChatGPT(skill.surfaces);
+  const profile = getProfile(skill.slug);
+  const proof = getProof(skill.slug);
+  const history = getHistory(skill.slug);
+  const group = GROUPS[profile.group];
+  const verified = AGENT_IDS.filter((agent) => skill.support[agent] === "tested");
+  const skillLines = skill.rawContent.split(/\r?\n/).length;
 
   return (
-    <article className="min-w-0 skill-page">
-      <div className="skill-overview" id="overview">
-        <div className="skill-intro">
-          <div className="skill-title-block">
-            <div className="skill-pill-row">
-              <span className="skill-pill">{skill.slug}</span>
-              {installs !== null && installs > 0 && (
-                <a
-                  className="skill-pill skill-pill-installs"
-                  href={`https://www.skills.sh/tushaarmehtaa/tushar-skills/${skill.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Installs tracked by skills.sh"
-                >
-                  <span className="tabular-nums">{formatInstalls(installs)}</span> installs
-                </a>
-              )}
-            </div>
-            <h1 className="terminal-heading mb-4 break-words text-3xl font-semibold leading-tight text-[var(--color-heading)] sm:text-5xl">
-              {TASK_TITLES[skill.slug] ?? skill.name}
-            </h1>
-            <p className="intro-description">
-              {SKILL_DISPLAY[skill.slug]?.summary ?? skill.description.split(/\s+Use when\b/)[0]}
-            </p>
-
+    <article className="skill">
+      <div className="skill-layout">
+        <div className="skill-main">
+          <Crumb items={[{ label: "Skills", href: "/" }, { label: group.label, href: `/?group=${profile.group}` }, { label: skill.slug }]} />
+          <h1 className="skill-name">/{skill.slug}</h1>
+          <p className="skill-lead">{profile.outcome}</p>
+          <div className="skill-when">
+            <p>{speak(profile.useWhen)}</p>
+            <p>{profile.skipWhen}</p>
           </div>
-
+          <blockquote className="skill-why">
+            <p>{profile.why}</p>
+            <footer>Tushar, on why this skill exists</footer>
+          </blockquote>
+          <InstallBox slug={skill.slug} support={skill.support} />
         </div>
-        <InstallPanel
-          slug={skill.slug}
-          support={skill.support}
-          capabilities={skill.capabilities}
-        />
-        <figure className="skill-outcome">
-          <SkillVisual slug={skill.slug} detail />
-          <figcaption>Illustrative concept · Your brief sets the direction.</figcaption>
-          <div className="outcome-requirements">            <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
-              {skill.slug === "image-editing"
-                ? "Requires an image-editing tool or configured API and your reference images. Model access is separate."
-                : skill.surfaces.includes("coding-agent")
-                  ? `Needs a coding agent. Required tools: ${skill.capabilities.map((capability) => CAPABILITY_LABELS[capability]).join(", ") || "none beyond the agent"}.`
-                  : null}
-            </p>
 
-          <p className="skill-provenance">
-            By {skill.author} · {skill.license} license ·{" "}
-            {skill.surfaces.includes("claude-app")
-              ? "Local + chat"
-              : "Local agent"}
-          </p>
-          <nav className="skill-section-links" aria-label="Skill sections">
-            <a href="#overview">Overview</a>
-            <a href="#package-skill-md">Instructions</a>
-            <a href="#package-details">Package details</a>
-          </nav></div>
-        </figure>
-      </div>
-      <div className="skill-explanation">
-          <section>
-            <h2>When it’s useful</h2>
-            <p>
-              {skill.description.includes("Use when")
-                ? "Use this when " +
-                  skill.description.split("Use when")[1].trim()
-                : skill.description}
-            </p>
-          </section>
-          {skill.slug === "interface-design" && (
-            <div className="skill-steps">
-              {[
-                [
-                  "01 · Understand",
-                  "Clarify the task, audience and constraints.",
-                ],
-                [
-                  "02 · Structure",
-                  "Shape the layout, visual system and interaction states.",
-                ],
-                [
-                  "03 · Check",
-                  "Build and check the result across screen sizes.",
-                ],
-              ].map(([title, body]) => (
-                <div key={title} className="skill-step">
-                  <strong>{title}</strong>
-                  {body}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {skill.slug === "interface-design" ? (
-            <section className="starter-prompt">
-              <h2 className="text-sm font-medium text-[var(--color-heading)]">
-                Try asking
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed">
-                “Redesign this dashboard so I can find overdue tasks quickly.
-                Keep our existing components and check the mobile layout.”
-              </p>
-              <CopyButton
-                text="Redesign this dashboard so I can find overdue tasks quickly. Keep our existing components and check the mobile layout."
-                label="Copy starting prompt"
-                className="mt-4"
-              />
-            </section>
-          ) : null}
-      </div>
-      <details className="platform-disclosure mb-8 border-y border-[var(--color-border)]">
-        <summary className="cursor-pointer text-sm text-[var(--color-heading)]">
-          Other platforms and downloads
-        </summary>
-        <div className="pt-5">
-          <section
-            data-claude-app={claudeApp.state}
-            className="mb-12 overflow-hidden terminal-panel"
-            aria-labelledby="claude-app-surface-heading"
-          >
-            <div className="border-b border-[var(--color-border)] px-4 py-3">
-              <h2
-                id="claude-app-surface-heading"
-                className="flex items-center gap-2 text-sm font-medium text-[var(--color-heading)]"
-              >
-                {claudeApp.available ? (
-                  <RuntimeLogo
-                    runtime="claude-app"
-                    decorative
-                    className="h-3.5 w-3.5"
-                  />
-                ) : null}
-                <span>{claudeApp.heading}</span>
-              </h2>
-            </div>
-            <div className="p-4 sm:p-5">
-              <p className="max-w-2xl text-sm leading-relaxed text-[var(--color-text)]">
-                {claudeApp.description}
-              </p>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <TrackedLink
-                  href={`/zips/${skill.slug}.zip`}
-                  download={`${skill.slug}.zip`}
-                  eventName="zip_download"
-                  agent={claudeApp.analyticsAgent}
-                  skill={skill.slug}
-                  className={`inline-flex items-center gap-2 rounded border border-[var(--color-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] ${
-                    claudeApp.available
-                      ? "text-[var(--color-accent)] hover:border-[var(--color-accent)] hover:bg-[var(--color-surface-raised)]"
-                      : "text-[var(--color-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-heading)]"
-                  }`}
-                >
-                  {claudeApp.downloadLabel}
-                </TrackedLink>
-                {claudeApp.showUploadInstructions ? (
-                  <TrackedLink
-                    href="/guides/claude-app"
-                    eventName="guide_open"
-                    agent="claude-app"
-                    skill={skill.slug}
-                    className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
-                  >
-                    Upload guide →
-                  </TrackedLink>
-                ) : null}
+        <aside className="facts" aria-label="Facts">
+          <h2>Facts</h2>
+          <dl>
+            {installs !== null && installs > 0 && (
+              <div>
+                <dt>Installs</dt>
+                <dd>
+                  <a href={`https://www.skills.sh/tushaarmehtaa/tushar-skills/${skill.slug}`} target="_blank" rel="noopener noreferrer">
+                    {formatInstalls(installs)} via skills.sh
+                  </a>
+                </dd>
               </div>
+            )}
+            <div>
+              <dt>Tested in</dt>
+              <dd className={verified.length || proof ? "fact-good" : undefined}>
+                {verified.length
+                  ? `Verified in ${verified.map((a) => AGENTS[a].label).join(", ")}`
+                  : proof
+                    ? `Ran in ${proof.run.agent}, ${formatDate(proof.run.date).replace(/ \d{4}$/, "")}`
+                    : "Not run yet"}
+              </dd>
             </div>
-          </section>
+            {!verified.length && proof && (
+              <div>
+                <dt>Full verification</dt>
+                <dd>Not yet</dd>
+              </div>
+            )}
+            <div>
+              <dt>Works in</dt>
+              <dd>
+                {[
+                  ...AGENT_IDS.filter((a) => skill.support[a] !== "unsupported").map((a) => AGENTS[a].label),
+                  ...(skill.surfaces.includes("claude-app") ? ["Claude app"] : []),
+                ].join(", ")}
+              </dd>
+            </div>
+            <div>
+              <dt>Needs</dt>
+              <dd>{skill.capabilities.map((c) => CAPABILITY_LABELS[c]).join(", ") || "Nothing beyond the agent"}</dd>
+            </div>
+            {history && (
+              <div>
+                <dt>Updated</dt>
+                <dd>{formatDate(history.updated)}</dd>
+              </div>
+            )}
+            <div>
+              <dt>Package</dt>
+              <dd>
+                SKILL.md · {skillLines} lines
+                {renderedFiles.length > 0 && ` + ${renderedFiles.length} reference${renderedFiles.length === 1 ? "" : "s"}`} · {skill.license}
+              </dd>
+            </div>
+            <div>
+              <dt>Source</dt>
+              <dd>
+                <a href={githubFileUrl(skill.slug, "SKILL.md")} target="_blank" rel="noopener noreferrer">
+                  GitHub ↗
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
 
-          <section
-            className="mb-12 overflow-hidden terminal-panel"
-            aria-labelledby="chatgpt-surface-heading"
-          >
-            <div className="border-b border-[var(--color-border)] px-4 py-3">
-              <h2
-                id="chatgpt-surface-heading"
-                className="text-sm font-medium text-[var(--color-heading)]"
-              >
-                ChatGPT Skills
-              </h2>
-            </div>
-            <div className="p-4 sm:p-5">
-              <p className="max-w-2xl text-sm leading-relaxed text-[var(--color-text)]">
-                {chatgptAvailable
-                  ? "This workflow is suitable for ChatGPT Skills. ChatGPT does not document the same upload archive format as Claude, so follow its uploader instead of reusing the Claude ZIP."
-                  : "This workflow needs a local coding environment or capabilities that a chat-only Skills upload does not provide."}
-              </p>
-              <TrackedLink
-                href="/guides/chatgpt"
-                eventName="guide_open"
-                agent="chatgpt"
-                skill={skill.slug}
-                className="mt-4 inline-flex min-h-11 items-center font-[family-name:var(--font-mono)] text-xs text-[var(--color-accent)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
-              >
-                {chatgptAvailable
-                  ? "ChatGPT upload guide →"
-                  : "Why local agent required →"}
-              </TrackedLink>
-            </div>
-          </section>
+      <section className="skill-section" aria-labelledby="get-back">
+        <div className="section-head">
+          <h2 id="get-back">What you get back</h2>
+          <span className={proof ? "section-note fact-good" : "section-note"}>
+            {proof ? "Real run on a sample project" : `From the skill's ${profile.outputSource} section`}
+          </span>
         </div>
-      </details>
+        {proof ? (
+          <ProofRun proof={proof} slug={skill.slug} />
+        ) : (
+          <>
+            <div className="contract prose" dangerouslySetInnerHTML={{ __html: outputHtml }} />
+            <p className="section-foot">
+              {profile.proofTier === "contract"
+                ? "No sample run here. This skill works against your own accounts or keys, so it runs on your project, not ours."
+                : "No sample run on this page yet."}
+            </p>
+          </>
+        )}
+      </section>
+
+      <section className="skill-section" aria-labelledby="instructions">
+        <div className="section-head">
+          <h2 id="instructions">The instructions</h2>
+          <span className="section-note mono">SKILL.md · {skillLines} lines</span>
+        </div>
+        <Clamp label="Read the full skill">
+          <SourceReader
+            license={skill.license}
+            files={[
+              {
+                path: "SKILL.md",
+                anchor: packageFileAnchor("SKILL.md"),
+                contentHtml,
+                rawContent: skill.rawContent,
+                sourceUrl: githubFileUrl(skill.slug, "SKILL.md"),
+              },
+              ...renderedFiles.map((file) => ({ ...file, sourceUrl: githubFileUrl(skill.slug, file.path) })),
+            ]}
+          />
+        </Clamp>
+      </section>
+
+      <OtherPlatforms skill={skill} />
 
       <PackageDisclosure>
-        <dl className="mt-6 grid gap-x-5 gap-y-3 border-t border-[var(--color-border)] pt-5 text-xs sm:grid-cols-[8rem_1fr]">
-          <dt className="text-[var(--color-muted)]">Category</dt>
-          <dd className="text-[var(--color-text)]">{skill.category}</dd>
-          <dt className="text-[var(--color-muted)]">Package</dt>
-          <dd className="break-all font-[family-name:var(--font-mono)] text-[var(--color-heading)]">
-            {skill.slug}/SKILL.md
-          </dd>
-          <dt className="text-[var(--color-muted)]">License</dt>
-          <dd className="text-[var(--color-text)]">{skill.license}</dd>
-          <dt className="text-[var(--color-muted)]">Author</dt>
-          <dd className="text-[var(--color-text)]">@{skill.author}</dd>
-          {skill.compatibility ? (
+        <dl className="package-facts">
+          <dt>Package</dt>
+          <dd className="mono">{skill.slug}/SKILL.md</dd>
+          <dt>Author</dt>
+          <dd>@{skill.author}</dd>
+          {history && (
             <>
-              <dt className="text-[var(--color-muted)]">Compatibility</dt>
-              <dd className="text-[var(--color-text)]">
-                {skill.compatibility}
-              </dd>
+              <dt>Added</dt>
+              <dd>{formatDate(history.added)}</dd>
             </>
-          ) : null}
-          <dt className="text-[var(--color-muted)]">Tags</dt>
-          <dd className="flex flex-wrap gap-2">
+          )}
+          {skill.compatibility && (
+            <>
+              <dt>Compatibility</dt>
+              <dd>{skill.compatibility}</dd>
+            </>
+          )}
+          <dt>Tags</dt>
+          <dd className="tags">
             {skill.tags.map((tag) => (
-              <span
-                key={tag}
-                className="tag border border-[var(--color-border)] px-2 py-0.5 text-[11px] text-[var(--color-muted)]"
-              >
-                {tag}
-              </span>
+              <span key={tag}>{tag}</span>
             ))}
           </dd>
         </dl>
       </PackageDisclosure>
-      <LatestGuides skill={skill.slug} />
-      <SourceReader
-        license={skill.license}
-        files={[
-          {
-            path: "SKILL.md",
-            anchor: packageFileAnchor("SKILL.md"),
-            contentHtml,
-            rawContent: skill.rawContent,
-            sourceUrl: githubFileUrl(skill.slug, "SKILL.md"),
-          },
-          ...renderedFiles.map((file) => ({
-            ...file,
-            sourceUrl: githubFileUrl(skill.slug, file.path),
-          })),
-        ]}
-      />
 
-      <div className="mt-16 border-t border-[var(--color-border)] pt-8">
-        <a
-          href={`https://github.com/tushaarmehtaa/tushar-skills/blob/main/${skill.slug}/SKILL.md`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-accent)]"
-        >
-          edit source on GitHub ↗
-        </a>
-      </div>
+      {next && (
+        <Link href={skillHref(next.slug)} className="next-skill">
+          <span className="next-label">Next in {group.label}</span>
+          <span className="next-name">/{next.slug}</span>
+          <span className="next-outcome">{next.outcome}</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </Link>
+      )}
     </article>
+  );
+}
+
+function ProofRun({ proof, slug }: { proof: SkillProof; slug: string }) {
+  const minutes = Math.floor(proof.run.durationSec / 60);
+  const seconds = proof.run.durationSec % 60;
+  return (
+    <div className="proof">
+      <p className="proof-summary">{proof.summary}</p>
+      <div className="proof-request">
+        <span>The request</span>
+        <p>{proof.request}</p>
+      </div>
+      {proof.images && (
+        <figure className={proof.images.before.includes("-mobile") ? "proof-shots phone" : "proof-shots"}>
+          <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={proof.images.before} alt={`Sample project before /${slug}`} width={1200} height={833} loading="lazy" />
+            <figcaption>Before</figcaption>
+          </div>
+          <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={proof.images.after} alt={`Sample project after one /${slug} run`} width={1200} height={833} loading="lazy" />
+            <figcaption className="strong">After one run</figcaption>
+          </div>
+        </figure>
+      )}
+      {proof.table && (
+        <div className="proof-table">
+          <table>
+            <thead>
+              <tr>{proof.table.head.map((cell) => <th key={cell} scope="col">{cell}</th>)}</tr>
+            </thead>
+            <tbody>
+              {proof.table.rows.map((row, i) => (
+                <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <div className="proof-excerpt">
+        <span>From the reply, word for word</span>
+        {proof.excerpt.map((paragraph, i) => (
+          <p key={i}>{paragraph}</p>
+        ))}
+      </div>
+      <p className="proof-record">
+        <span>{proof.run.agent} {proof.run.version}</span>
+        <span>{proof.run.triggered === "auto" ? "Picked the skill on its own" : "Invoked by name"}</span>
+        <span>{minutes ? `${minutes} min ${seconds} s` : `${seconds} s`}</span>
+        {proof.run.filesChanged !== null && <span>{proof.run.filesChanged} file{proof.run.filesChanged === 1 ? "" : "s"} changed</span>}
+        {proof.caveat && <span>{proof.caveat}</span>}
+      </p>
+    </div>
+  );
+}
+
+function OtherPlatforms({ skill }: { skill: Skill }) {
+  const claudeApp = createClaudeAppViewModel({ surfaces: skill.surfaces, capabilities: skill.capabilities, support: skill.support });
+  const chatgpt = supportsChatGPT(skill.surfaces);
+  return (
+    <details className="platforms">
+      <summary>Claude app, ChatGPT and ZIP download</summary>
+      <div className="platforms-body">
+        <section data-claude-app={claudeApp.state} aria-labelledby="claude-app-surface-heading">
+          <h3 id="claude-app-surface-heading">
+            {claudeApp.available && <RuntimeLogo runtime="claude-app" decorative className="h-3.5 w-3.5" />}
+            {claudeApp.heading}
+          </h3>
+          <p>{claudeApp.description}</p>
+          <div className="platform-links">
+            <TrackedLink href={`/zips/${skill.slug}.zip`} download={`${skill.slug}.zip`} eventName="zip_download" agent={claudeApp.analyticsAgent} skill={skill.slug}>
+              {claudeApp.downloadLabel}
+            </TrackedLink>
+            {claudeApp.showUploadInstructions && (
+              <TrackedLink href="/guides/claude-app" eventName="guide_open" agent="claude-app" skill={skill.slug}>
+                Upload guide →
+              </TrackedLink>
+            )}
+          </div>
+        </section>
+        <section aria-labelledby="chatgpt-surface-heading">
+          <h3 id="chatgpt-surface-heading">ChatGPT Skills</h3>
+          <p>
+            {chatgpt
+              ? "This workflow is suitable for ChatGPT Skills. ChatGPT does not document the same upload archive format as Claude, so follow its uploader instead of reusing the Claude ZIP."
+              : "This workflow needs a local coding environment or capabilities that a chat-only Skills upload does not provide."}
+          </p>
+          <div className="platform-links">
+            <TrackedLink href="/guides/chatgpt" eventName="guide_open" agent="chatgpt" skill={skill.slug}>
+              {chatgpt ? "ChatGPT upload guide →" : "Why local agent required →"}
+            </TrackedLink>
+          </div>
+        </section>
+      </div>
+    </details>
   );
 }

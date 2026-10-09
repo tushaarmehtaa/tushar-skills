@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { ResultsBack } from "@/components/results-back";
 import { skillHref } from "@/lib/canvas";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -8,6 +7,7 @@ import { getInstallStats } from "@/lib/installs";
 import { getAllSkills, getSkill } from "@/lib/skills";
 import { packageFileAnchor, renderMarkdown } from "@/lib/markdown";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { getProfile } from "@/lib/profiles";
 
 const siteUrl = "https://www.slashskills.xyz";
 
@@ -69,6 +69,9 @@ export default async function SkillPage({
   const availableFiles = new Set(["SKILL.md", ...skill.files.map((file) => file.path)]);
   const renderOptions = { availableFiles, skillSlug: skill.slug };
   const contentHtml = renderMarkdown(skill.content, { ...renderOptions, sourcePath: "SKILL.md" }).replace(/<(\/?)h1(?=[ >])/g, "<$1h2");
+  const profile = getProfile(skill.slug);
+  const outputHtml = renderMarkdown(profile.outputContract, { ...renderOptions, sourcePath: "SKILL.md" });
+  const next = profile.next ? { slug: profile.next, outcome: getProfile(profile.next).outcome } : null;
   const renderedFiles = skill.files.map((file) => ({
     ...file,
     anchor: packageFileAnchor(file.path),
@@ -91,17 +94,21 @@ export default async function SkillPage({
 
   const installs = (await getInstallStats())?.bySlug[skill.slug] ?? null;
   return (
-    <div className="has-skill-installer flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <Header />
-      <main id="main-content" className="flex-1 px-6 py-6 sm:py-10">
-        <div className="mx-auto w-full max-w-[1344px] min-w-0">
-          <ResultsBack />
-          <SkillDetail skill={skill} contentHtml={contentHtml} renderedFiles={renderedFiles} installs={installs} />
-        </div>
+      <main id="main-content" className="page">
+        <SkillDetail
+          skill={skill}
+          contentHtml={contentHtml}
+          outputHtml={outputHtml}
+          renderedFiles={renderedFiles}
+          installs={installs}
+          next={next}
+        />
       </main>
       <Footer />
     </div>

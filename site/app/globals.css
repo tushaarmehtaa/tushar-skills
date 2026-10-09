@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./canvas.css";
 @import "./visual-direction.css";
+@import "./library.css";
 
 @theme {
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;

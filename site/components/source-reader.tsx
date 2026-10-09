@@ -97,7 +97,7 @@ export function SourceReader({
         <h2 id="reader-heading" className="reader-heading">
           Instructions & references
         </h2>
-        <a href="#overview" className="text-button">
+        <a href="#main-content" className="text-button">
           Back to overview ↑
         </a>
       </div>

@@ -1,112 +1,52 @@
-import { TASK_TITLES } from "@/lib/canvas";
-import { Suspense } from "react";
 import { Header } from "@/components/header";
-import { PageFrame } from "@/components/page-frame";
 import { Footer } from "@/components/footer";
-import { InteractiveInstaller } from "@/components/interactive-installer";
-import { SkillDirectory } from "@/components/skill-directory";
-import { getAllSkills, type Skill } from "@/lib/skills";
-
-const SKILL_ORDER = [
-  "interface-design",
-  "ai-product-development",
-  "user-insights",
-  "auth-implementation",
-  "remove-ai-slop",
-  "deploy-check",
-  "demo-video",
-  "search-ready",
-  "analytics",
-  "payments-with-dodo",
-  "credit-metering",
-  "email-with-resend",
-  "product-experiments",
-  "performance-diagnosis",
-  "decision-doc",
-  "product-spec",
-  "product-launch",
-  "skill-creator",
-  "landing-copy",
-  "ui-copy",
-  "fundraising",
-  "product-teardown",
-  "ai-cost-audit",
-  "changelog",
-  "cold-outreach",
-  "rate-limit",
-  "social-sharing",
-  "supabase",
-  "readme",
-  "agent-instructions",
-];
-
-function orderSkills(allSkills: Skill[]) {
-  const priority = new Map(SKILL_ORDER.map((slug, index) => [slug, index]));
-  return [...allSkills].sort((a, b) => {
-    const aIndex = priority.get(a.slug) ?? Number.POSITIVE_INFINITY;
-    const bIndex = priority.get(b.slug) ?? Number.POSITIVE_INFINITY;
-    return aIndex - bIndex || a.name.localeCompare(b.name);
-  });
-}
+import { CommandBlock } from "@/components/command-block";
+import { Library, type LibrarySkill } from "@/components/library";
+import { skillHref } from "@/lib/canvas";
+import { generateInstallCommand } from "@/lib/agents";
+import { GROUPS, GROUP_IDS, GROUP_ORDER, getProfile, getProof } from "@/lib/profiles";
+import { getAllSkills } from "@/lib/skills";
 
 export default function Home() {
-  const skills = orderSkills(getAllSkills());
+  const bySlug = new Map(getAllSkills().map((skill) => [skill.slug, skill]));
+  const skills: LibrarySkill[] = GROUP_IDS.flatMap((group) =>
+    GROUP_ORDER[group].map((slug) => {
+      const skill = bySlug.get(slug as never);
+      if (!skill) throw new Error(`Profile without a package: ${slug}`);
+      const profile = getProfile(slug);
+      return {
+        slug,
+        href: skillHref(slug),
+        outcome: profile.outcome,
+        group,
+        chat: skill.surfaces.includes("claude-app"),
+        verified: Object.values(skill.support).includes("tested"),
+        sampleRun: getProof(slug) !== null,
+        keywords: [skill.description, ...skill.tags, skill.category].join(" ").toLowerCase(),
+      };
+    }),
+  );
+  const groups = GROUP_IDS.map((id) => ({ id, ...GROUPS[id] }));
 
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-
-      <main id="main-content" className="flex-1 px-6">
-        <PageFrame>
-          <section className="canvas-hero">
-            <div className="hero-copy">
-              <h1>Good work starts<br />with a <span>useful skill.</span></h1>
-              <p>Give your agent a better way to work. Pick a workflow, install it, and make it yours.</p>
-            </div>
-          </section>
-          <Suspense
-            fallback={
-              <section className="pb-20" aria-labelledby="skill-index-heading">
-                <h2
-                  id="skill-index-heading"
-                  className="mb-5 text-xl font-semibold text-[var(--color-heading)]"
-                >
-                  Skills
-                </h2>
-              </section>
-            }
-          >
-            <SkillDirectory
-              skills={skills.map(
-                ({ slug, name, category, description, surfaces }) => ({
-                  slug,
-                  name,
-                  displayName: TASK_TITLES[slug],
-                  category,
-                  description,
-                  localAvailable: surfaces.includes("coding-agent"),
-                  claudeAppReady: surfaces.includes("claude-app"),
-                }),
-              )}
-            />
-          </Suspense>
-          <section
-            id="library-install"
-            tabIndex={-1}
-            className="library-install"
-            aria-labelledby="library-heading"
-          >
-            <div>
-              <h2 id="library-heading">Want the whole collection?</h2>
-              <p>Install the library, or choose a single skill and scope.</p>
-            </div>
-            <InteractiveInstaller
-              skills={skills.map(({ slug, name }) => ({ slug, name }))}
-            />
-          </section>
-        </PageFrame>
+      <main id="main-content" className="page">
+        <section className="hero">
+          <h1>
+            Good work starts with a <span>useful skill.</span>
+          </h1>
+          <div className="hero-side">
+            <p>
+              {skills.length} skills I use to ship products, from the first idea to the first payment. Each one is open
+              source, versioned and written down.
+            </p>
+            <CommandBlock command={generateInstallCommand()} copyLabel="Copy all" analytics={{ agent: "all", skill: "all" }} />
+            <p className="hero-hint">Installs all {skills.length} into Claude Code, Codex or Cursor. Or pick one below.</p>
+          </div>
+        </section>
+        <Library skills={skills} groups={groups} />
       </main>
-
       <Footer />
     </div>
   );

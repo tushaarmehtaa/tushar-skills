@@ -9,7 +9,7 @@ export function Footer() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-2 text-sm text-[var(--color-muted)]">
             <p>
-              Built by{" "}
+              Made by{" "}
               <a
                 href="https://tushaarmehtaa.xyz"
                 target="_blank"
@@ -25,7 +25,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="-my-2 flex min-h-8 items-center py-2 text-[var(--color-text)] transition-colors hover:text-[var(--color-heading)]"
             >
-              I build things on the internet →
+              I build things on the internet. These are the workflows I kept. →
             </a>
             <a
               href="https://agentskills.io"
@@ -42,7 +42,13 @@ export function Footer() {
               <span>Agent Skills specification ↗</span>
             </a>
           </div>
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+            <a href="/guides" className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]">
+              Guides
+            </a>
+            <a href="/changelog" className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]">
+              Changelog
+            </a>
             <a
               href="/compatibility"
               className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
