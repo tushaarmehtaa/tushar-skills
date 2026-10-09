@@ -32,7 +32,7 @@ export function InteractiveInstaller({
     <section className="terminal-panel install-box overflow-hidden" aria-label="Install skills">
       <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 font-[family-name:var(--font-mono)] text-xs sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:text-sm">
         <span className="select-none text-[var(--color-accent)]">$</span>
-        <code className="min-w-0 break-all leading-relaxed text-[var(--color-heading)]">{allSkillsCommand}</code>
+        <code className="min-w-0 break-words leading-relaxed text-[var(--color-heading)]">{allSkillsCommand}</code>
         <CopyButton
           text={allSkillsCommand}
           label="Copy all skills"
@@ -89,7 +89,7 @@ export function InteractiveInstaller({
         {command ? (
           <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center gap-3 font-[family-name:var(--font-mono)] text-xs sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:text-sm">
             <span className="select-none text-[var(--color-accent)]">$</span>
-            <code className="min-w-0 break-all leading-relaxed text-[var(--color-heading)]">{command}</code>
+            <code className="min-w-0 break-words leading-relaxed text-[var(--color-heading)]">{command}</code>
             <CopyButton
               text={command}
               label="Copy install command"
