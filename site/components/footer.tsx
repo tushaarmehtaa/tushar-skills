@@ -37,6 +37,9 @@ export function Footer() {
             </a>
           </div>
           <div className="flex items-center gap-4 font-[family-name:var(--font-mono)] text-xs">
+            <a href="/guides" className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]">
+              Guides
+            </a>
             <a href="/compatibility" className="-my-2 inline-flex min-h-8 items-center py-2 text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]">
               Compatibility
             </a>

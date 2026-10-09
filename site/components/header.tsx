@@ -19,10 +19,10 @@ export async function Header() {
           </span>
         </Link>
         <nav aria-label="Primary" className="flex items-center gap-3 sm:gap-5">
-          <Link href="/guides" className="-my-2 inline-flex min-h-11 items-center py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] hover:text-[var(--color-heading)]">guides</Link>
+          <Link href="/guides" className="-my-2 hidden min-h-11 items-center py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] hover:text-[var(--color-heading)] sm:inline-flex">guides</Link>
           <Link
             href="/compatibility"
-            className="-my-2 inline-flex min-h-11 items-center py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)]"
+            className="-my-2 hidden min-h-11 items-center py-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-heading)] sm:inline-flex"
           >
             compatibility
           </Link>
