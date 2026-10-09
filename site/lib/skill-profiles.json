@@ -53,7 +53,13 @@
       "next": "product-teardown",
       "outputContract": "Distinguish two states:\n\n- **Executed analysis:** evidence ledger, metric definitions, data-quality findings, results with denominators/uncertainty, limitations, and decisions.\n- **Query plan:** schema mapping, executable queries, expected columns, validation queries, and interpretation rules, with no invented results.\n\nFor either state, include justified segments/cohorts only, privacy notes, alternative explanations, recommended action, and how to test it.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Queries use real schema fields and correct grain",
+        "Cohort denominators and maturity are correct",
+        "PII is minimized and access assumptions are explicit",
+        "Observational results are never presented as causal"
+      ]
     },
     "product-teardown": {
       "group": "shape",
@@ -64,7 +70,13 @@
       "next": "decision-doc",
       "outputContract": "Return:\n\n- scope and evidence ledger;\n- concise journey or page narrative;\n- findings table with evidence, lens, impact, confidence, and recommendation;\n- strengths worth preserving;\n- weaknesses or unanswered objections;\n- transferable principles mapped to the user's product, including when not to apply them;\n- access gaps and next evidence to collect.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Capture date, viewport, and access boundary are stated",
+        "Every important claim ties to visible or sourced evidence",
+        "Unseen pricing and onboarding are marked unknown, not inferred",
+        "Findings state impact, confidence, and limitations"
+      ]
     },
     "decision-doc": {
       "group": "shape",
@@ -75,7 +87,13 @@
       "next": "product-spec",
       "outputContract": "Return a concise decision record with:\n\n- title, date, status, owner, participants;\n- decision statement and deadline;\n- context, constraints, and decision drivers;\n- evidence and assumptions;\n- options, including status quo where relevant;\n- comparison and strongest argument for/against each;\n- decision, confidence, and rationale;\n- consequences and what is being given up;\n- first action, owner, due date;\n- review/expiry trigger and supersession links;\n- unresolved risks or dissent.\n\nOffer to save it only when the user requested a file or the workspace convention clearly supports one.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "States one executable decision or explicit sequence",
+        "Claims are sourced, measured, or labeled as assumptions",
+        "Reversibility, cost, and downside are explicit",
+        "Dissent and the strongest counterargument are represented fairly"
+      ]
     },
     "product-spec": {
       "group": "shape",
@@ -86,7 +104,13 @@
       "next": "agent-instructions",
       "outputContract": "For a brief, return audience/trigger, problem/evidence, promise/mechanism, smallest value path, scope, exclusions, success signals, assumptions, and open questions.\n\nFor a buildable or change spec, add flows/states, architecture fit, data and authorization, interfaces, non-functional requirements, rollout/migration, vertical slices, acceptance criteria, verification, risks, and decisions. For an audit, return findings with evidence, impact, and required correction rather than silently rewriting product intent.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Scope traces to a stated user outcome",
+        "Facts, assumptions, and open questions are kept distinct",
+        "Failure states, data ownership, and authorization are covered",
+        "Acceptance criteria are testable"
+      ]
     },
     "agent-instructions": {
       "group": "build",
@@ -97,7 +121,13 @@
       "next": "supabase",
       "outputContract": "When editing, deliver:\n\n1. the requested instruction file or files;\n2. a short scope summary naming which directories and runtimes they govern;\n3. a command table with verification labels;\n4. conflicts resolved, preserved, or still requiring a decision;\n5. any facts deliberately omitted because they were unverified or too volatile.\n\nKeep files concise enough to scan, but let repository complexity determine length. Prefer concrete imperatives and paths over explanatory essays.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Every path, script, port, and env variable exists in the repo",
+        "Nested files never contradict inherited rules",
+        "Unverified syntax is labeled unverified, not presented as established",
+        "Documented-only commands are never described as tested"
+      ]
     },
     "supabase": {
       "group": "build",
@@ -108,7 +138,13 @@
       "next": "auth-implementation",
       "outputContract": "Report tables/functions/storage changed, migration files, grants and RLS policies with auth strategy, client/session changes, type-generation command/result, negative authorization tests, and remaining linked-project/dashboard/production steps.",
       "outputSource": "Output",
-      "proofTier": "contract"
+      "proofTier": "contract",
+      "checks": [
+        "Local migrations reset and apply cleanly",
+        "Schema and generated types show no drift",
+        "Anonymous, other-user, and other-tenant access is denied",
+        "Attempts to change row ownership are tested"
+      ]
     },
     "auth-implementation": {
       "group": "build",
@@ -119,7 +155,13 @@
       "next": "interface-design",
       "outputContract": "Report provider/version and identity model, files/migrations changed, access matrix and enforcement points, sync strategy, RLS/grants, environment-variable names, automated verification evidence, and manual dashboard/backfill/production checks.",
       "outputSource": "Output",
-      "proofTier": "contract"
+      "proofTier": "contract",
+      "checks": [
+        "New sign-up, returning login, logout, and expiry are tested",
+        "Every protected resource rejects unauthenticated and other-user requests",
+        "Cross-tenant and non-admin access is tested and denied",
+        "Replayed sync and account linking are tested"
+      ]
     },
     "interface-design": {
       "group": "build",
@@ -130,7 +172,13 @@
       "next": "ui-copy",
       "outputContract": "Deliver:\n\n1. implemented code or the explicitly requested design artifact;\n2. a short rationale connecting major decisions to product, content, and interaction evidence;\n3. the component/state coverage completed;\n4. assets, dependencies, or content requirements introduced;\n5. verification results at representative viewports and states;\n6. known gaps that still affect usability or fidelity.\n\nIf exploration was requested, provide genuinely distinct directions with tradeoffs and a recommended choice. Do not vary only palette and font.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Renders checked at desktop and narrow mobile widths",
+        "Keyboard navigation, visible focus, and touch targets work",
+        "Contrast, reduced motion, and zoom behavior are checked",
+        "Placeholders and invented claims are removed"
+      ]
     },
     "ui-copy": {
       "group": "build",
@@ -141,7 +189,13 @@
       "next": "ai-product-development",
       "outputContract": "### Audit\n\nDeliver manifest coverage, prioritized findings, exact source locations, before/after repairs grounded in behavior, decisions to preserve, and states or channels that could not be inspected.\n\n### Generate or flow rewrite\n\nOrganize copy by flow and state rather than a fixed list of fields:\n\n```text\n[Flow / screen / state]\nPurpose and system behavior:\nVisible copy:\nActions and destinations:\nAccessible names or announcements:\nVariables and localization notes:\nSource/content owner:\n```\n\n### Implement\n\nUpdate the correct source of truth, preserve unrelated strings, and report files changed, migrations or message-ID changes, rendered states checked, and unverified channels.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Every consequential line matches the actual action and state",
+        "Failure and destructive flows exercised in the running product",
+        "Plurals, interpolation, and long translations are tested",
+        "No placeholder copy or fictional proof reaches production"
+      ]
     },
     "ai-product-development": {
       "group": "build",
@@ -152,7 +206,13 @@
       "next": "payments-with-dodo",
       "outputContract": "Report the chosen interaction and why, server/UI paths changed, state coverage, safety and permission boundaries, evaluation results, latency/cost observations, usage-settlement behavior, verification evidence, and remaining provider or production setup.",
       "outputSource": "Output",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Mid-stream failure, cancellation, and timeout paths are tested",
+        "Tool actions tested against prompt injection and cross-tenant IDs",
+        "Execution-time authorization and usage settlement hold under concurrency",
+        "Evaluation set runs alongside lint, type, test, and build"
+      ]
     },
     "payments-with-dodo": {
       "group": "build",
@@ -163,7 +223,13 @@
       "next": "credit-metering",
       "outputContract": "Report product/entitlement mapping, SDK and environment detected, files/migrations changed, checkout/portal paths, webhook inbox and state transitions, payload minimization/access/retention decisions, server enforcement points, test evidence/event IDs, and exact dashboard/production steps still required.",
       "outputSource": "Output",
-      "proofTier": "contract"
+      "proofTier": "contract",
+      "checks": [
+        "Duplicate and concurrent webhooks are tested in test mode",
+        "Invalid webhook signatures are tested",
+        "Renewal, cancellation, failed payment, and refund flows are tested",
+        "Stored subscriptions reconcile against the Dodo API"
+      ]
     },
     "credit-metering": {
       "group": "build",
@@ -174,7 +240,13 @@
       "next": "rate-limit",
       "outputContract": "Report the denomination and policies, schema/migrations, ledger operations and invariants, protected usage paths, provider/product mapping, UI reconciliation, verification evidence, and remaining dashboard or production setup.",
       "outputSource": "Output",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Reserve, capture, and release flows are tested",
+        "Ledger and balance invariants hold under concurrent spend",
+        "Payment replay and out-of-order events are tested",
+        "Refunds, clawbacks, and promo races are tested"
+      ]
     },
     "rate-limit": {
       "group": "build",
@@ -185,7 +257,13 @@
       "next": "email-with-resend",
       "outputContract": "Report the policy table, identifier trust model, files/env names changed, outage behavior, response headers, layered controls, automated test evidence, and remaining Upstash/deployment configuration.",
       "outputSource": "Output",
-      "proofTier": "contract"
+      "proofTier": "contract",
+      "checks": [
+        "Allowed, blocked, and reset behavior tested with a controllable clock",
+        "Spoofed forwarding headers are tested",
+        "Route isolation and anonymous versus authenticated keys are tested",
+        "Store timeout and outage behavior is tested"
+      ]
     },
     "email-with-resend": {
       "group": "build",
@@ -196,7 +274,13 @@
       "next": "remove-ai-slop",
       "outputContract": "Report message classes and triggers, files/templates/jobs changed, sender and environment-variable names, consent/preferences/suppression behavior, webhook and idempotency design, verification evidence/message IDs, and remaining DNS/dashboard/production checks.",
       "outputSource": "Output",
-      "proofTier": "contract"
+      "proofTier": "contract",
+      "checks": [
+        "Returned API errors and thrown network errors are both tested",
+        "Webhooks tested with signed, invalid, and replayed payloads",
+        "Bounce and complaint suppression is tested",
+        "Sends go only to test recipients until production confirmed"
+      ]
     },
     "remove-ai-slop": {
       "group": "ship",
@@ -207,7 +291,13 @@
       "next": "mobile-first",
       "outputContract": "Stop before editing. Lead with a prioritized summary ranked by user impact, frequency, confidence, and repair cost. In focused work, report all in-scope findings. In representative or exhaustive work, group repeated source decisions so the report does not duplicate the same repair for every rendered instance. Use these sections when applicable:\n\n```text\nCOPY MANIFEST COVERAGE\nScope: [surfaces, routes, channels, locales, states]\nUnavailable: [anything not inspected]\nUnique source decisions: [count]  Rendered instances: [count]\nBaseline: [hard bans, unverified claims, convergence clusters]\n\nHARD SLOP — REMOVE\nH1. [route, file:line] — [pattern]\n    Before: [exact original]\n    After: [verified replacement, deletion, or BLOCKED — CONTENT REQUIRED]\n    Evidence: [exact code plus rendered evidence]\n    Why it fails: [specific diagnosis]\n    Verdict: Remove it.\n\nCONTEXTUAL SLOP\nC1. [route, file:line] — [pattern, score, HIGH or MEDIUM confidence]\n    Verdict: [STRONG PRESUMPTION, CONTEXTUAL SIGNAL, or CANDIDATE]\n    Before: [exact original]\n    After: [product-specific repair or BLOCKED — CONTENT REQUIRED]\n    Evidence: [repetition, mismatch, co-occurrence, render or copy manifest]\n\nCOPY CONVERGENCE\nCC1. [convergence type and normalized pattern or term, score, confidence]\n     Instances: [routes, states, files, and exact excerpts]\n     Impact: [how unrelated jobs were flattened or terminology drifted]\n     Repair: [which source decisions change and which terminology stays]\n     Why it fails: [unrelated jobs forced through one voice or template]\n\nQUALITY DEFECTS\nQ1. [route, file:line] — [accessibility, semantics, performance, claim, or state-integrity issue]\n    Evidence: [code, behavior, source, or contradiction]\n    Impact: [user, trust, task, or compliance consequence]\n    Provenance: [verified, unverified, contradicted, or not applicable]\n    Recommendation: [repair, provenance request, or blocked status]\n\nDECISIONS TO PRESERVE\nP1. [element] — [why it is intentional, specific, and effective]\n```\n\nCritique the artifact, not its author. Be direct about objective hard slop: write “This placeholder is exposed as finished copy. Remove it,” not “You may want to consider refining it.” For visual defaults, state the rendered evidence and confidence rather than presenting taste as fact.\n\nFor every actionable source decision, show the exact before and after when the replacement can be grounded in repository evidence. When content or product intent is missing, state the required decision instead of generating speculative alternatives. Use real product copy and existing tokens rather than placeholders. Ground rewritten claims in cited repository evidence. Treat `UNVERIFIED` and `BLOCKED — CONTENT REQUIRED` as report-only statuses; never write them into user-facing copy. When rendering is available, compare the same route, viewport, state, data, and animation setting.\n\nDo not use canonical replacements such as flat black, one accent, 8px radii, a two-column list, uniformly terse prose, or default casual voice unless the product evidence supports them. State the intended design or copy job first, then propose the smallest repair that performs it.",
       "outputSource": "Phase 7: Report findings and fixes",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Hard-ban pattern counts reach zero, not just renamed",
+        "Same routes, viewports, and states re-rendered after edits",
+        "No cliché replaced with another cliché",
+        "Material claims are sourced, narrowed, marked UNVERIFIED, or removed"
+      ]
     },
     "mobile-first": {
       "group": "ship",
@@ -218,7 +308,13 @@
       "next": "performance-diagnosis",
       "outputContract": "For an audit, provide the measurement table, ranked findings, preserved strengths, and sequenced repairs without editing files.\n\nFor a repair or build, report:\n\n- the observed failures and chosen responsive transformations;\n- files changed and meaningful product tradeoffs;\n- before/after measurements where a baseline existed;\n- widths, zoom levels, states, inputs, and motion preferences tested;\n- real-device or production checks that remain.\n\nDo not claim “mobile complete” from a single screenshot or the absence of document overflow.",
       "outputSource": "Deliver",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Layouts re-measured at 320, 375, 768, and 1440px",
+        "200% zoom and 320px reflow are tested",
+        "Touch controls, orientation changes, and text enlargement are exercised",
+        "Software keyboard and long localized labels are tested"
+      ]
     },
     "performance-diagnosis": {
       "group": "ship",
@@ -229,7 +325,13 @@
       "next": "search-ready",
       "outputContract": "Report symptom and reproduction, baseline, evidence, root cause or ranked remaining hypotheses, files changed only if authorized, before/after metrics, correctness checks, confidence level, and next measurement. Do not claim a cause or improvement without observed evidence.",
       "outputSource": "Output",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Same reproduction rerun under the same conditions",
+        "Median and tail values compared, cold and warm separately",
+        "Caching and concurrency changes pass correctness tests",
+        "Lab results paired with field data when available"
+      ]
     },
     "search-ready": {
       "group": "ship",
@@ -240,7 +342,13 @@
       "next": "social-sharing",
       "outputContract": "Return mode-relevant sections:\n\n- scope and evidence sources;\n- prioritized findings with affected URLs/templates, severity, confidence, and fix;\n- live-vs-repository discrepancies;\n- route-level metadata/schema/indexation matrix;\n- implemented changes with file paths;\n- content opportunities grounded in current evidence;\n- validator and deployed verification results;\n- unresolved blockers and maintenance cadence.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Templates and edge states sampled beyond the homepage",
+        "Schema matches visible content and passes validation",
+        "Redirects, canonicals, robots, and sitemap agree",
+        "AI-search recommendations state confidence and avoid guarantees"
+      ]
     },
     "social-sharing": {
       "group": "ship",
@@ -251,7 +359,13 @@
       "next": "readme",
       "outputContract": "For each defect, report:\n\n```text\n[route family and representative URL]\nSource: [file:line or generator]\nResolved value: [observed tag, URL, or image response]\nExpected behavior: [route contract]\nImpact: [wrong identity, missing preview, stale image, privacy risk, or broken action]\nRepair: [specific source change]\nVerification: [automated and deployed check]\n```\n\nSeparate source-code candidates from defects confirmed in rendered HTML or image responses.\n\nFor repair or implementation work, also return:\n\n- files and route families changed;\n- metadata sources, canonical policy, and image fallback implemented;\n- representative or exhaustive coverage manifest, including every enumerated image response in exhaustive mode;\n- local and deployed checks with observed status, content type, dimensions, and resolved values;\n- cache/debugger state and any refresh still pending;\n- routes, dynamic sets, credentials, or production checks that remain unverified.",
       "outputSource": "Audit findings",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Resolved HTML has one canonical URL and OG tags",
+        "Every preview image returns correct status and dimensions",
+        "Dynamic routes never borrow another record's title or image",
+        "Public URLs fetched after deploy, not just localhost"
+      ]
     },
     "readme": {
       "group": "ship",
@@ -262,7 +376,13 @@
       "next": "deploy-check",
       "outputContract": "In generate or repair mode, deliver the updated `README.md` and a short report containing:\n\n- primary audience and reader job;\n- authoritative sources used;\n- commands and examples actually executed;\n- sections added, removed, or intentionally omitted;\n- links, assets, badges, and license status checked;\n- limitations or setup paths that remain unverified.\n\nIn audit mode, deliver prioritized findings and proposed replacements for the most consequential defects. Do not rewrite only the lowest-scoring cosmetic sections.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Every path, port, and env variable matches the repo",
+        "Install and minimal usage run in a clean environment",
+        "Code blocks and links validated with available tooling",
+        "Anything not executed is labeled as such"
+      ]
     },
     "deploy-check": {
       "group": "ship",
@@ -273,7 +393,13 @@
       "next": "changelog",
       "outputContract": "Report release base/head and scope, commands with exit status, blockers, warnings, migrations and rollout order, config/secrets findings without values, external confirmations, rollback/roll-forward notes, and the evidence behind the verdict. Never say “safe to push” solely because type checking passed.",
       "outputSource": "Output",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Verdict is READY, BLOCKED, or NEEDS CONFIRMATION with evidence",
+        "Every command reported with its exit status",
+        "Secrets findings reported without printing values",
+        "Never calls a release safe from type checks alone"
+      ]
     },
     "changelog": {
       "group": "ship",
@@ -284,7 +410,13 @@
       "next": "skill-creator",
       "outputContract": "Deliver the requested artifact plus:\n\n```text\nRange: [commits/tags/dates and branch]\nAudience and channel: [who/where]\nRelease status: [verified live, released, unreleased, or mixed]\nItems: [final count]\nProvenance: [item -> commits or paths]\nStatistics: [definitions and values, if used]\nArtifacts: [paths and dimensions]\nLimitations: [deployment or content facts not verified]\n```\n\nFor a prose-only request, do not create HTML. For an audit request, stop at findings and proposed copy unless the user also asked for edits.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Every claim re-checked against the selected release range",
+        "No breaking, security, or migration change is hidden",
+        "Statistics recomputed with commands that match their labels",
+        "Visual cards rendered at target size for clipping and overflow"
+      ]
     },
     "skill-creator": {
       "group": "ship",
@@ -295,7 +427,13 @@
       "next": "landing-copy",
       "outputContract": "Deliver:\n\n- the complete package, including changed resources;\n- a concise behavior summary and trigger boundary;\n- validation and eval results;\n- resources added, removed, or rerouted;\n- preserved behavior and intentional breaking changes;\n- remaining limitations or untested environments.\n\nRead [the authoring guide](references/guide.md) when selecting a multi-file resource structure, designing eval cases, merging packages, or diagnosing portability and routing failures.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Directory name and frontmatter name agree",
+        "Every relative Markdown link resolves",
+        "Repository skill validator passes on every touched package",
+        "Behavioral evals rerun after structural changes"
+      ]
     },
     "landing-copy": {
       "group": "grow",
@@ -306,7 +444,13 @@
       "next": "landing-page",
       "outputContract": "### Audit or targeted rewrite\n\n```text\nPage job and intended buyer:\nCore claim and proof status:\nPriority findings: [impact, evidence, and source location]\nBefore -> after: [for grounded repairs]\nContent required: [missing facts, proof, or product decisions]\nPreserve: [effective language or structure]\nVerification and experiment recommendations:\n```\n\n### Generate or positioning\n\nDeliver:\n\n1. claim/evidence ledger;\n2. message architecture with the question each section answers;\n3. complete copy deck labelled by section and component;\n4. CTA destinations and commitment level;\n5. proof, asset, and content requirements;\n6. assumptions, excluded claims, and implementation notes;\n7. optional variants only when they test a stated hypothesis.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Every material claim maps to product behavior or a source",
+        "Major propositions pass a competitor swap test",
+        "CTA text, destination, and actual commitment agree",
+        "No proof, statistic, urgency, or guarantee is invented"
+      ]
     },
     "landing-page": {
       "group": "grow",
@@ -317,7 +461,13 @@
       "next": "image-editing",
       "outputContract": "Return the implemented page or requested artifact, then summarize:\n\n- the visitor, decision, claim, and proof used;\n- material structure and design decisions;\n- what was changed and directly verified;\n- assumptions, missing evidence, and production work still requiring authorization;\n- the post-release measurement plan.\n\nIn audit mode, change nothing. Rank findings by their effect on comprehension, trust, action, accessibility, and performance, then recommend the smallest coherent repair.",
       "outputSource": "Deliver",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Renders checked at narrow, tablet, desktop, and 200% zoom",
+        "Primary action, forms, errors, and keyboard path are exercised",
+        "Claims, links, analytics events, and share previews are verified",
+        "Reports gaps against the brief instead of declaring success"
+      ]
     },
     "image-editing": {
       "group": "grow",
@@ -328,7 +478,13 @@
       "next": "demo-video",
       "outputContract": "Return the image files, the model identity if exposed, which changes passed inspection, and specific unresolved defects. For a revision chain, identify the chosen base and final output. Do not claim measured fidelity, superiority, or cross-runtime compatibility without an actual recorded test.",
       "outputSource": "Deliver",
-      "proofTier": "contract"
+      "proofTier": "contract",
+      "checks": [
+        "Each requested change and preserved detail checked separately",
+        "Exact copy checked with OCR and visual inspection",
+        "Retries start from the last approved base",
+        "Unchecked images are never labeled approved"
+      ]
     },
     "demo-video": {
       "group": "grow",
@@ -339,7 +495,13 @@
       "next": "analytics",
       "outputContract": "Deliver the requested combination of:\n\n- treatment and timed beat sheet;\n- narration and on-screen script;\n- asset/capture manifest with provenance;\n- Remotion source and composition IDs;\n- caption file or embedded captions;\n- rendered files named by format;\n- representative stills or review frames;\n- verification report including technical and editorial checks.\n\nState which formats share a timeline and which were independently composed.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Every requested deliverable renders with matching resolution and duration",
+        "Frames around scene boundaries are deterministic",
+        "Narration never claims unavailable product behavior",
+        "Captions verified against the final audio"
+      ]
     },
     "analytics": {
       "group": "grow",
@@ -350,7 +512,13 @@
       "next": "product-launch",
       "outputContract": "Report:\n\n- questions the system now answers and the event/monitoring plan;\n- metric contracts for activation, retention, or other implemented measures;\n- providers reused, added, or deliberately omitted;\n- files and environment-variable names changed;\n- dashboard routes/components, aggregate queries, access policy, freshness, and rendered states when applicable;\n- privacy, consent, identity, sampling, and retention decisions;\n- verification performed with event IDs or observed responses;\n- dashboard, DNS, token, alerting, and production checks still required.",
       "outputSource": "Output",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Event names and properties confirmed in the provider",
+        "Logout reset never merges the wrong people",
+        "Test errors are redacted, tagged, and source-mapped",
+        "Anything needing production credentials is reported as manual setup"
+      ]
     },
     "product-launch": {
       "group": "grow",
@@ -361,7 +529,13 @@
       "next": "cold-outreach",
       "outputContract": "Return only mode-relevant sections:\n\n- launch context and evidence/assumption ledger;\n- positioning and target action;\n- channel plan and asset dependencies;\n- implementation changes and conversion-path notes;\n- measurement and attribution plan;\n- dry-run findings, operations, rollback, and owners;\n- follow-up schedule or postmortem with decisions.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Every public link and conversion path works when deployed",
+        "Signup, attribution, and activation events are observed",
+        "Platform rules are sourced and date-stamped",
+        "Owners, incident path, and rollback are explicit"
+      ]
     },
     "cold-outreach": {
       "group": "grow",
@@ -372,7 +546,13 @@
       "next": "humanize",
       "outputContract": "For a single message, return:\n\n- subject or channel opener;\n- send-ready body;\n- one meaningfully different opening when useful;\n- facts requiring confirmation and source notes, separate from copy.\n\nFor a sequence, return a table with touch, timing rationale, channel, purpose, copy, stop condition, and measurement. For an audit, identify the issue, evidence, impact, and rewrite. For reply handling, return send-ready copy plus the intended next state.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "The opener depends on this specific recipient",
+        "Every material claim is verified or marked for confirmation",
+        "One clear ask or next step per message",
+        "Opt-outs, bounces, and replies have stop or routing rules"
+      ]
     },
     "humanize": {
       "group": "grow",
@@ -383,7 +563,13 @@
       "next": "product-experiments",
       "outputContract": "Adapt the output to the size and mode.\n\nFor edit mode:\n\n1. Return the complete edited draft without inline commentary.\n2. Add a short `What changed` section grouped by material pattern or structural decision.\n3. Add `Preserved` when naming deliberate voice choices helps the user trust the edit.\n4. Add `Needs you` only for unresolved facts, claims, or voice decisions.\n\nFor a one-line or very short edit, return the edit and one sentence of rationale; do not force four empty sections.\n\nFor detect mode, list the pattern, exact excerpt, evidence tier, consequence, and repair direction. Also identify specific passages that already work. Do not rewrite unless requested.",
       "outputSource": "Output",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "The author would recognize the position and voice",
+        "Factual meaning and calibrated uncertainty survive the edit",
+        "Amount changed matches the evidence",
+        "No uniform staccato or corporate polish is introduced"
+      ]
     },
     "product-experiments": {
       "group": "grow",
@@ -394,7 +580,13 @@
       "next": "ai-cost-audit",
       "outputContract": "Return the applicable artifact:\n\n- experiment brief and analysis plan;\n- implementation changes and event schemas;\n- pre-launch validation report;\n- staged rollout/rollback plan;\n- analysis with data-quality checks, effect sizes, uncertainty, and limitations;\n- decision record with follow-up and flag cleanup.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Assignment is stable and matches the intended unit",
+        "Exposure is deduplicated and joins to outcome events",
+        "Kill switch and rollback are tested",
+        "Sample-ratio mismatch and event completeness are checked"
+      ]
     },
     "ai-cost-audit": {
       "group": "grow",
@@ -405,7 +597,13 @@
       "next": "fundraising",
       "outputContract": "Return only sections supported by the selected mode:\n\n- scope and evidence ledger;\n- model/media call inventory with file paths and ownership;\n- assumptions and data gaps;\n- formulas with units and a scenario table;\n- highest-cost paths and invoice reconciliation;\n- prioritized changes with savings ranges and quality gates;\n- verification results or an explicit measurement plan.\n\nCite every time-sensitive price with an official source and retrieval date.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Inventory covers retries, fallbacks, background jobs, and non-text operations",
+        "Measured and estimated inputs stay distinguishable",
+        "Bottom-up totals reconcile to billed totals when billing exists",
+        "Every recommendation has a quality gate and rollback path"
+      ]
     },
     "fundraising": {
       "group": "grow",
@@ -416,7 +614,13 @@
       "next": null,
       "outputContract": "Return the sections required by the selected mode, such as:\n\n- candid fit/fundability assessment and financing alternatives;\n- strongest defensible narrative and claim-to-evidence map;\n- metric, market, and operating evidence gaps;\n- round amount/use/milestone/runway logic;\n- investor-fit shortlist with sources and conflict notes;\n- slide headlines or memo outline;\n- objection handling, diligence requests, and next actions.",
       "outputSource": "Output contract",
-      "proofTier": "run"
+      "proofTier": "run",
+      "checks": [
+        "Metric definitions, periods, and denominators stay consistent",
+        "Round amount, use of funds, runway, and milestones agree",
+        "Investor-fit claims never imply investor interest",
+        "Unsupported pitch claims are labeled as hypotheses"
+      ]
     }
   }
 }

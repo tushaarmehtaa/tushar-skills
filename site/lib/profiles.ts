@@ -23,6 +23,7 @@ export interface SkillProfile {
   outputContract: string;
   outputSource: string;
   proofTier: "run" | "contract";
+  checks: string[];
 }
 
 export interface SkillProof {

@@ -1,0 +1,206 @@
+{
+  "agent-instructions": { "source": "Verify", "checks": [
+    "Every path, script, port, and env variable exists in the repo",
+    "Nested files never contradict inherited rules",
+    "Unverified syntax is labeled unverified, not presented as established",
+    "Documented-only commands are never described as tested"
+  ]},
+  "ai-cost-audit": { "source": "Verify", "checks": [
+    "Inventory covers retries, fallbacks, background jobs, and non-text operations",
+    "Measured and estimated inputs stay distinguishable",
+    "Bottom-up totals reconcile to billed totals when billing exists",
+    "Every recommendation has a quality gate and rollback path"
+  ]},
+  "ai-product-development": { "source": "Verification", "checks": [
+    "Mid-stream failure, cancellation, and timeout paths are tested",
+    "Tool actions tested against prompt injection and cross-tenant IDs",
+    "Execution-time authorization and usage settlement hold under concurrency",
+    "Evaluation set runs alongside lint, type, test, and build"
+  ]},
+  "analytics": { "source": "Verification", "checks": [
+    "Event names and properties confirmed in the provider",
+    "Logout reset never merges the wrong people",
+    "Test errors are redacted, tagged, and source-mapped",
+    "Anything needing production credentials is reported as manual setup"
+  ]},
+  "auth-implementation": { "source": "Verification", "checks": [
+    "New sign-up, returning login, logout, and expiry are tested",
+    "Every protected resource rejects unauthenticated and other-user requests",
+    "Cross-tenant and non-admin access is tested and denied",
+    "Replayed sync and account linking are tested"
+  ]},
+  "changelog": { "source": "Verify", "checks": [
+    "Every claim re-checked against the selected release range",
+    "No breaking, security, or migration change is hidden",
+    "Statistics recomputed with commands that match their labels",
+    "Visual cards rendered at target size for clipping and overflow"
+  ]},
+  "cold-outreach": { "source": "Verify", "checks": [
+    "The opener depends on this specific recipient",
+    "Every material claim is verified or marked for confirmation",
+    "One clear ask or next step per message",
+    "Opt-outs, bounces, and replies have stop or routing rules"
+  ]},
+  "credit-metering": { "source": "Verification", "checks": [
+    "Reserve, capture, and release flows are tested",
+    "Ledger and balance invariants hold under concurrent spend",
+    "Payment replay and out-of-order events are tested",
+    "Refunds, clawbacks, and promo races are tested"
+  ]},
+  "decision-doc": { "source": "Verify", "checks": [
+    "States one executable decision or explicit sequence",
+    "Claims are sourced, measured, or labeled as assumptions",
+    "Reversibility, cost, and downside are explicit",
+    "Dissent and the strongest counterargument are represented fairly"
+  ]},
+  "demo-video": { "source": "Verify", "checks": [
+    "Every requested deliverable renders with matching resolution and duration",
+    "Frames around scene boundaries are deterministic",
+    "Narration never claims unavailable product behavior",
+    "Captions verified against the final audio"
+  ]},
+  "deploy-check": { "source": "Output (no verification section)", "checks": [
+    "Verdict is READY, BLOCKED, or NEEDS CONFIRMATION with evidence",
+    "Every command reported with its exit status",
+    "Secrets findings reported without printing values",
+    "Never calls a release safe from type checks alone"
+  ]},
+  "email-with-resend": { "source": "Verification", "checks": [
+    "Returned API errors and thrown network errors are both tested",
+    "Webhooks tested with signed, invalid, and replayed payloads",
+    "Bounce and complaint suppression is tested",
+    "Sends go only to test recipients until production confirmed"
+  ]},
+  "fundraising": { "source": "Verify", "checks": [
+    "Metric definitions, periods, and denominators stay consistent",
+    "Round amount, use of funds, runway, and milestones agree",
+    "Investor-fit claims never imply investor interest",
+    "Unsupported pitch claims are labeled as hypotheses"
+  ]},
+  "humanize": { "source": "Verify", "checks": [
+    "The author would recognize the position and voice",
+    "Factual meaning and calibrated uncertainty survive the edit",
+    "Amount changed matches the evidence",
+    "No uniform staccato or corporate polish is introduced"
+  ]},
+  "image-editing": { "source": "Inspect and revise (no verification section)", "checks": [
+    "Each requested change and preserved detail checked separately",
+    "Exact copy checked with OCR and visual inspection",
+    "Retries start from the last approved base",
+    "Unchecked images are never labeled approved"
+  ]},
+  "interface-design": { "source": "Verify", "checks": [
+    "Renders checked at desktop and narrow mobile widths",
+    "Keyboard navigation, visible focus, and touch targets work",
+    "Contrast, reduced motion, and zoom behavior are checked",
+    "Placeholders and invented claims are removed"
+  ]},
+  "landing-copy": { "source": "Verify", "checks": [
+    "Every material claim maps to product behavior or a source",
+    "Major propositions pass a competitor swap test",
+    "CTA text, destination, and actual commitment agree",
+    "No proof, statistic, urgency, or guarantee is invented"
+  ]},
+  "landing-page": { "source": "Audit and verify", "checks": [
+    "Renders checked at narrow, tablet, desktop, and 200% zoom",
+    "Primary action, forms, errors, and keyboard path are exercised",
+    "Claims, links, analytics events, and share previews are verified",
+    "Reports gaps against the brief instead of declaring success"
+  ]},
+  "mobile-first": { "source": "Verify the outcome", "checks": [
+    "Layouts re-measured at 320, 375, 768, and 1440px",
+    "200% zoom and 320px reflow are tested",
+    "Touch controls, orientation changes, and text enlargement are exercised",
+    "Software keyboard and long localized labels are tested"
+  ]},
+  "payments-with-dodo": { "source": "Verification", "checks": [
+    "Duplicate and concurrent webhooks are tested in test mode",
+    "Invalid webhook signatures are tested",
+    "Renewal, cancellation, failed payment, and refund flows are tested",
+    "Stored subscriptions reconcile against the Dodo API"
+  ]},
+  "performance-diagnosis": { "source": "Verification", "checks": [
+    "Same reproduction rerun under the same conditions",
+    "Median and tail values compared, cold and warm separately",
+    "Caching and concurrency changes pass correctness tests",
+    "Lab results paired with field data when available"
+  ]},
+  "product-experiments": { "source": "Verify", "checks": [
+    "Assignment is stable and matches the intended unit",
+    "Exposure is deduplicated and joins to outcome events",
+    "Kill switch and rollback are tested",
+    "Sample-ratio mismatch and event completeness are checked"
+  ]},
+  "product-launch": { "source": "Verify", "checks": [
+    "Every public link and conversion path works when deployed",
+    "Signup, attribution, and activation events are observed",
+    "Platform rules are sourced and date-stamped",
+    "Owners, incident path, and rollback are explicit"
+  ]},
+  "product-spec": { "source": "Verify", "checks": [
+    "Scope traces to a stated user outcome",
+    "Facts, assumptions, and open questions are kept distinct",
+    "Failure states, data ownership, and authorization are covered",
+    "Acceptance criteria are testable"
+  ]},
+  "product-teardown": { "source": "Verify", "checks": [
+    "Capture date, viewport, and access boundary are stated",
+    "Every important claim ties to visible or sourced evidence",
+    "Unseen pricing and onboarding are marked unknown, not inferred",
+    "Findings state impact, confidence, and limitations"
+  ]},
+  "rate-limit": { "source": "Verification", "checks": [
+    "Allowed, blocked, and reset behavior tested with a controllable clock",
+    "Spoofed forwarding headers are tested",
+    "Route isolation and anonymous versus authenticated keys are tested",
+    "Store timeout and outage behavior is tested"
+  ]},
+  "readme": { "source": "Verify", "checks": [
+    "Every path, port, and env variable matches the repo",
+    "Install and minimal usage run in a clean environment",
+    "Code blocks and links validated with available tooling",
+    "Anything not executed is labeled as such"
+  ]},
+  "remove-ai-slop": { "source": "Phase 9: Verify", "checks": [
+    "Hard-ban pattern counts reach zero, not just renamed",
+    "Same routes, viewports, and states re-rendered after edits",
+    "No cliché replaced with another cliché",
+    "Material claims are sourced, narrowed, marked UNVERIFIED, or removed"
+  ]},
+  "search-ready": { "source": "Verify", "checks": [
+    "Templates and edge states sampled beyond the homepage",
+    "Schema matches visible content and passes validation",
+    "Redirects, canonicals, robots, and sitemap agree",
+    "AI-search recommendations state confidence and avoid guarantees"
+  ]},
+  "skill-creator": { "source": "Package and validate", "checks": [
+    "Directory name and frontmatter name agree",
+    "Every relative Markdown link resolves",
+    "Repository skill validator passes on every touched package",
+    "Behavioral evals rerun after structural changes"
+  ]},
+  "social-sharing": { "source": "Verify locally + Verify after deployment", "checks": [
+    "Resolved HTML has one canonical URL and OG tags",
+    "Every preview image returns correct status and dimensions",
+    "Dynamic routes never borrow another record's title or image",
+    "Public URLs fetched after deploy, not just localhost"
+  ]},
+  "supabase": { "source": "Verification", "checks": [
+    "Local migrations reset and apply cleanly",
+    "Schema and generated types show no drift",
+    "Anonymous, other-user, and other-tenant access is denied",
+    "Attempts to change row ownership are tested"
+  ]},
+  "ui-copy": { "source": "Verify", "checks": [
+    "Every consequential line matches the actual action and state",
+    "Failure and destructive flows exercised in the running product",
+    "Plurals, interpolation, and long translations are tested",
+    "No placeholder copy or fictional proof reaches production"
+  ]},
+  "user-insights": { "source": "Verify", "checks": [
+    "Queries use real schema fields and correct grain",
+    "Cohort denominators and maturity are correct",
+    "PII is minimized and access assumptions are explicit",
+    "Observational results are never presented as causal"
+  ]}
+}

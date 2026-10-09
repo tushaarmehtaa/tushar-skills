@@ -740,6 +740,9 @@ function validateSkillProfiles(skillDirectories) {
     if (!groupIds.includes(profile.group)) addError(`skill-profiles: ${slug}.group is not one of ${groupIds.join(", ")}`);
     if (!profiles.groupOrder?.[profile.group]?.includes(slug)) addError(`skill-profiles: ${slug} is not listed under its group`);
     if (profile.next !== null && !skillDirectories.includes(profile.next)) addError(`skill-profiles: ${slug}.next points at unknown skill ${profile.next}`);
+    if (!Array.isArray(profile.checks) || profile.checks.length < 3 || profile.checks.length > 4) {
+      addError(`skill-profiles: ${slug}.checks must list 3 or 4 checks`);
+    }
     for (const field of ["outcome", "useWhen", "skipWhen", "why", "outputContract"]) {
       if (typeof profile[field] !== "string" || !profile[field].trim()) addError(`skill-profiles: ${slug}.${field} is empty`);
     }

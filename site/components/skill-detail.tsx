@@ -167,6 +167,18 @@ export function SkillDetail({
         )}
       </section>
 
+      <section className="skill-section" aria-labelledby="checks">
+        <div className="section-head">
+          <h2 id="checks">How it checks its own work</h2>
+          <span className="section-note">From the skill's instructions</span>
+        </div>
+        <ul className="checks">
+          {profile.checks.map((check) => (
+            <li key={check}>{check}</li>
+          ))}
+        </ul>
+      </section>
+
       <section className="skill-section" aria-labelledby="instructions">
         <div className="section-head">
           <h2 id="instructions">The instructions</h2>
