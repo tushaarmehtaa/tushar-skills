@@ -70,7 +70,7 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 - [x] One-tap mobile install, command fully visible at 320px (tested)
 - [x] No horizontal overflow 320–1440 on core pages (tested)
 - [ ] ≥15 skills fully verified in Claude Code (21 single real runs done; full verification method not yet run)
-- [ ] Lighthouse mobile ≥95 performance and accessibility
+- [x] Lighthouse mobile (production build): performance 96 on / and /remove-ai-slop, 97–98 elsewhere; accessibility 100 on every page tested. Fonts use display: optional. /guides SEO 66 is its deliberate noindex (navigation hub); best practices 96 is a local-only analytics 404
 - [x] One site stylesheet (site.css) plus globals.css for tokens and base
 - [x] Tests green (31 browser, 21 unit), validation and production build pass
 - [ ] skills.sh retired names cleared

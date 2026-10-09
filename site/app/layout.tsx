@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const GeistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
-const GeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
+const GeistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "optional" });
+const GeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "optional" });
 
 // Keep a single public identity. Preview deployments must never become canonical.
 const siteUrl = "https://www.slashskills.xyz";
