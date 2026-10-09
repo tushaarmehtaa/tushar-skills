@@ -1,0 +1,7 @@
+{
+  "skill": "deploy-check",
+  "kind": "report",
+  "title": "Preflight verdict: blocked",
+  "after": "**Verdict: BLOCKED. Don't ship this tonight.** The build passes, but the pricing page's checkout buttons don't take payment, and the code handles the Stripe secret key in a way that will leak it to the browser. I didn't deploy or push anything. …\n2. **The Stripe secret key is handled unsafely.**\n   - `lib/checkout.js:2` reads `STRIPE_SECRET_KEY` and has a hardcoded fallback value, with a `// TODO: move to env before launch` comment.\n   - The file is imported by a client component (`app/pricing/CheckoutButton.jsx`), so the fallback string ends up in the JavaScript sent to browsers. I confirmed it's in `.next/static/chunks/2d53bce1f47f897f.js`.",
+  "caption": "It built the app and grepped the client bundle to prove the hard-coded key ships to browsers. Nothing was pushed."
+}

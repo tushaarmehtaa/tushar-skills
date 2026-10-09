@@ -1,0 +1,28 @@
+{
+  "skill": "changelog",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill changelog -a claude-code -y (project scope, .claude/skills/changelog; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "changelog",
+      "args": "Weekly update for users (past week), as an X post"
+    }
+  ],
+  "skillFileReads": [],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 3
+  },
+  "durationSec": 27,
+  "costUsd": 0.2133792,
+  "numTurns": 6,
+  "isError": false,
+  "diffStat": "no file changes",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "Shortest run (27s). Produced an X post draft of 3 items and deliberately excluded checkout, billing FAQ, dashboard mock and widget with reasons. Did not produce a visual card (skill treats visuals as optional). Picked 8 commits 14d98fd..b674c00 (Oct 3-8) as 'this week'. gitlog-input.txt is the fixture's git log for reference. All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

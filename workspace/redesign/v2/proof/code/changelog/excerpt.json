@@ -1,0 +1,8 @@
+{
+  "skill": "changelog",
+  "kind": "before-after",
+  "title": "A week of commits into a post you can actually publish",
+  "before": "b674c00 2026-10-08 Mention cancel-anytime on pricing\nc29bfe0 2026-10-07 Format rupee amounts with Indian digit grouping\n13bb2ae 2026-10-07 Add pricing FAQ\n2949f54 2026-10-06 Wire plan checkout buttons on pricing\nc47d313 2026-10-05 Add SupportDesk chat widget\na0ab97a 2026-10-04 Show product screenshot under the hero\n334b5e0 2026-10-03 Add top navigation to all pages\n14d98fd 2026-10-03 Add dashboard mock with expense ledger",
+  "after": "> This week on Tallyroom 🧾\n>\n> • A new top nav across the site, so you can get to Pricing and the FAQ from any page\n> • A first look at the product on the homepage\n> • A pricing FAQ that covers switching plans and who pays in a shared group\n>\n> More soon, with real billing next.\n…\n- **Checkout buttons (2949f54).** \"Choose Plus\" and \"Choose Household\" don't start a checkout. They link to `/dashboard?plan=…&k=sk_test` (or `sk_live` once you set a real key), which puts the first 7 characters of your Stripe secret key in a public URL (`lib/checkout.js:12`). That's only the key's prefix, but a secret key shouldn't feed into a client-visible URL at all. Fix this before launch, and don't say people can subscribe yet.",
+  "caption": "Three user-facing items, and an explicit list of what was held back because announcing it would be untrue."
+}

@@ -1,0 +1,1 @@
+The Tallyroom homepage feels slow to load, especially on mobile. There's a noticeable blank pause before anything shows up. Figure out why.

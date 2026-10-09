@@ -1,0 +1,11 @@
+b674c00 2026-10-08 Mention cancel-anytime on pricing
+c29bfe0 2026-10-07 Format rupee amounts with Indian digit grouping
+13bb2ae 2026-10-07 Add pricing FAQ
+2949f54 2026-10-06 Wire plan checkout buttons on pricing
+c47d313 2026-10-05 Add SupportDesk chat widget
+a0ab97a 2026-10-04 Show product screenshot under the hero
+334b5e0 2026-10-03 Add top navigation to all pages
+14d98fd 2026-10-03 Add dashboard mock with expense ledger
+ea9d4d9 2026-10-02 Add pricing page with plan comparison table
+b78774c 2026-10-01 Add landing hero and feature cards
+1a8cda0 2026-10-01 Scaffold Next.js app

@@ -1,0 +1,7 @@
+{
+  "skill": "search-ready",
+  "kind": "report",
+  "title": "Launch-ready SEO for a site that isn't live yet",
+  "after": "2. **No `robots.txt` or sitemap.** I added both (`app/robots.js`, `app/sitemap.js`). The sitemap lists only `/` and `/pricing`.\n3. **`/dashboard` could have been indexed.** It's linked from the menu and the homepage, but it's an app screen showing made-up demo data. It's now marked \"don't index\" in `app/dashboard/page.jsx`. I deliberately didn't block it in `robots.txt`, because that would stop Google from seeing the \"don't index\" tag. …\n6. **Security: part of your Stripe secret key was in the public pricing page.** `lib/checkout.js` added the first 7 characters of the key (`sk_test` or `sk_live`) to the plan button links, so they'd appear in the page and in Google's copy of it. I removed that. Only the start of the key was exposed, not the whole key.",
+  "caption": "robots, sitemap, canonicals and noindex added, with the reasoning for noindex over Disallow. It also caught a key prefix rendered into public HTML."
+}

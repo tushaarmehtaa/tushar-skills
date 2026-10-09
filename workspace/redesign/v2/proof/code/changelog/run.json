@@ -1,0 +1,99 @@
+{
+  "duration_api_ms": 24947,
+  "stop_reason": "end_turn",
+  "session_id": "9a0bcfc0-2b9f-42c4-88b0-12b9da254330",
+  "total_cost_usd": 0.2133792,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 18646,
+    "cache_read_input_tokens": 107556,
+    "output_tokens": 2133,
+    "output_tokens_details": {
+      "thinking_tokens": 759
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18646,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1044,
+        "cache_read_input_tokens": 29595,
+        "cache_creation_input_tokens": 1563,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1563
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 10,
+      "outputTokens": 2133,
+      "cacheReadInputTokens": 107556,
+      "cacheCreationInputTokens": 18646,
+      "webSearchRequests": 0,
+      "costUSD": 0.2133792,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 759,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 6,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "I've written a post, but most of this week's commits shouldn't be announced yet. Several of them would make the post untrue.\n\n**Draft for X (271 characters):**\n\n> This week on Tallyroom \ud83e\uddfe\n>\n> \u2022 A new top nav across the site, so you can get to Pricing and the FAQ from any page\n> \u2022 A first look at the product on the homepage\n> \u2022 A pricing FAQ that covers switching plans and who pays in a shared group\n>\n> More soon, with real billing next.\n\nThis is about all I can honestly claim. It covers the week's 8 commits (14d98fd..b674c00, Oct 3\u20138, `main`), and there's no git remote or deploy config, so I couldn't confirm any of it is live. Only post it once it's actually deployed.\n\n**What I left out and why:**\n\n- **Checkout buttons (2949f54).** \"Choose Plus\" and \"Choose Household\" don't start a checkout. They link to `/dashboard?plan=\u2026&k=sk_test` (or `sk_live` once you set a real key), which puts the first 7 characters of your Stripe secret key in a public URL (`lib/checkout.js:12`). That's only the key's prefix, but a secret key shouldn't feed into a client-visible URL at all. Fix this before launch, and don't say people can subscribe yet.\n- **\"Cancel anytime\" and the billing answers in the FAQ (13bb2ae, b674c00).** These describe how billing works, but billing doesn't exist yet.\n- **\"INR, USD, EUR, GBP, SGD and AED, with daily exchange rates\" in the FAQ.** Nothing in `app/` or `lib/` handles currencies or exchange rates. I'd remove or soften that answer before people see it.\n- **Dashboard and rupee formatting (14d98fd, c29bfe0).** This is a mock with hardcoded sample data, not a feature people can use.\n- **SupportDesk chat widget (c47d313).** `public/vendor/support-widget.js` is loaded in `<head>`, where it blocks the page, and it busy-loops for 350ms before anything renders. That makes every page load slower. Look into it before promoting the widget.\n\n**Smaller issues I noticed:**\n\n- `hero-dashboard.png` is 3.1 MB. Compressing it or converting it to WebP would help page load.\n- The nav links \"Groups\", \"Activity\" and \"For Teams\" just point to `/dashboard` and `/pricing`.\n\nIf you fix the checkout key and the currency FAQ answer and deploy, I can rewrite the post to include more.",
+  "ttft_ms": 1533,
+  "type": "result",
+  "duration_ms": 25589,
+  "uuid": "c111e2cb-ffd9-4373-b163-2241e515aed2",
+  "ttft_stream_ms": 1023,
+  "time_to_request_ms": 289,
+  "first_content_frame_ms": 1024,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

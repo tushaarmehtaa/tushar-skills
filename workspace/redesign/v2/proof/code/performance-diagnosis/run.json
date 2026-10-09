@@ -1,0 +1,99 @@
+{
+  "duration_api_ms": 53757,
+  "stop_reason": "end_turn",
+  "session_id": "ae778e85-0bab-4b00-8f5e-959c2fe0dffd",
+  "total_cost_usd": 0.3251362,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 20209,
+    "cache_read_input_tokens": 283781,
+    "output_tokens": 5331,
+    "output_tokens_details": {
+      "thinking_tokens": 787
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20209,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1266,
+        "cache_read_input_tokens": 32261,
+        "cache_creation_input_tokens": 460,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 460
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 22,
+      "outputTokens": 5331,
+      "cacheReadInputTokens": 283781,
+      "cacheCreationInputTokens": 20209,
+      "webSearchRequests": 0,
+      "costUSD": 0.3251362,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 787,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 12,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The blank pause comes from the SupportDesk chat widget script. It's loaded in the page `<head>` and freezes the browser for about 350ms before anything can be drawn. Removing it in a test cut the time to first content roughly in half.\n\n**The cause.** Commit `c47d313` (\"Add SupportDesk chat widget\", Oct 5) added `<script src=\"/vendor/support-widget.js\">` to `app/layout.jsx:7`. It's a plain script tag with no `async` or `defer`, so the browser stops building the page until the script finishes. The script itself (`public/vendor/support-widget.js:6-9`) then deliberately loops for 350ms before it does anything:\n\n```js\nwhile (Date.now() - start < 350) { ... }\n```\n\nAll it does after that is add a chat button once the page has loaded. Because it's in the root layout, every page pays this cost, not just the homepage.\n\n**How I measured it.** I ran a production build and loaded the homepage in headless Chrome set up like a phone: 390px wide screen, CPU slowed 4\u00d7, network limited to about 1.6 Mbps. I loaded it 5 times per setup and took the middle result (times in ms):\n\n| Setup | First content on screen | Main content on screen | HTML parsed | Fully loaded |\n|---|---|---|---|---|\n| Current site | **788** | 780 | 755 | 16,758 |\n| Widget script blocked | **404** | 404 | 394 | 16,747 |\n| Hero image blocked | 768 | 768 | 756 | 1,218 |\n\n- Blocking the widget cut first paint by about 385ms. The browser's slow-task log showed a single 350ms task that goes away when the widget is blocked.\n- The server isn't the problem. The homepage is pre-built as a static page and the server responded in about 13ms.\n\n**A second, smaller problem: the hero screenshot.** `public/hero-dashboard.png` is a 3.1 MB PNG (2000\u00d71250), added in `a0ab97a` and used as a plain `<img>` in `app/page.jsx:20`. On a phone it sits below the first screen, so it doesn't cause the blank pause. But it takes most of the 16.7s full load and uses up the bandwidth on a slow connection. Blocking it brought full load down from 16.7s to 1.2s.\n\n**Fixes, in priority order (I haven't changed anything):**\n1. In `app/layout.jsx`, load the widget with `next/script` and `strategy=\"lazyOnload\"` (or at least `afterInteractive`) instead of a plain tag in `<head>`. Separately, ask SupportDesk about the 350ms wait in their loader, which still costs time after the page appears.\n2. Serve the screenshot through `next/image` with a `sizes` setting so phones get a small WebP/AVIF version, or at least re-export it as a compressed WebP at a sensible width.\n\n**How confident I am.** I'm confident the widget is the main cause: it's the only thing in the 350ms slow task, and blocking it alone halved first paint. These numbers come from a simulated phone, not real users. Field data from real phones would confirm the effect, and I'd re-run the same measurement after fix #1.\n\nThe working tree is unchanged. The measurement script is in `/tmp/tr-perf/measure.js`, and the build output is in the ignored `.next/` folder.",
+  "ttft_ms": 1720,
+  "type": "result",
+  "duration_ms": 251037,
+  "uuid": "aee28303-6e71-4652-99bc-a08967200674",
+  "ttft_stream_ms": 1193,
+  "time_to_request_ms": 458,
+  "first_content_frame_ms": 1194,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

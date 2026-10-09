@@ -1,0 +1,27 @@
+{
+  "skill": "deploy-check",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill deploy-check -a claude-code -y (project scope, .claude/skills/deploy-check; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "deploy-check"
+    }
+  ],
+  "skillFileReads": [],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 5
+  },
+  "durationSec": 39,
+  "costUsd": 0.24118479999999998,
+  "numTurns": 8,
+  "isError": false,
+  "diffStat": "no file changes",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "Read-only. Ran npm run build and grepped .next output to confirm the sk_test_FAKE_FOR_FIXTURE fallback ships in a client chunk. Verdict BLOCKED. Noted the 350ms busy-loop is 'an odd thing for a vendor loader to do' (it is a fixture artifact). No push/deploy attempted; no git remote exists. All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

@@ -10,3 +10,7 @@ site/test-results/
 # plugin eval run output
 evals/results/
 .vercel/
+
+# Raw v2 run transcripts and full-size screenshots stay local
+workspace/redesign/v2/proof/**/*.jsonl
+workspace/redesign/v2/proof/**/*.png

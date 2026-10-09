@@ -1,0 +1,179 @@
+diff --git a/app/dashboard/page.jsx b/app/dashboard/page.jsx
+index 6df0053..1c75402 100644
+--- a/app/dashboard/page.jsx
++++ b/app/dashboard/page.jsx
+@@ -6,6 +6,12 @@ const expenses = [
+   { date: "Sep 25", what: "Cooking gas refill", paidBy: "Neha", amount: 903, split: "4 ways", status: "Settled" },
+ ];
+ 
++// Signed-in app view, not a landing page; also reached with checkout query params.
++export const metadata = {
++  title: "Dashboard",
++  robots: { index: false, follow: true },
++};
++
+ export default function Dashboard() {
+   const total = expenses.reduce((s, e) => s + e.amount, 0);
+   return (
+diff --git a/app/globals.css b/app/globals.css
+index fb6ad9e..22db549 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -43,7 +43,7 @@ a { color: inherit; }
+ .nav-cta { margin-left: auto; font-size: 13px; padding: 6px 12px; border-radius: 8px; background: #764ba2; color: #fff; text-decoration: none; }
+ 
+ .shot { max-width: 1100px; margin: -48px auto 0; padding: 0 24px; }
+-.shot img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
++.shot img { width: 100%; height: auto; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+ 
+ .plan-actions { display: flex; gap: 8px; margin-top: 24px; }
+ .mini-btn { font-size: 12px; padding: 3px 8px; border-radius: 6px; background: #764ba2; color: #fff; text-decoration: none; }
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 77da3b5..785d8dc 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,5 +1,22 @@
+ import "./globals.css";
+ import Nav from "./Nav";
++import { SITE_URL, SITE_NAME } from "../lib/site";
++
++const description =
++  "Tallyroom splits shared expenses for housemates and friends: track who paid, scan receipts, handle recurring bills and multiple currencies, and settle up.";
++
++export const metadata = {
++  metadataBase: new URL(SITE_URL),
++  title: { default: `${SITE_NAME} — Split shared expenses with housemates`, template: `%s — ${SITE_NAME}` },
++  description,
++  applicationName: SITE_NAME,
++  openGraph: {
++    type: "website",
++    siteName: SITE_NAME,
++    images: [{ url: "/hero-dashboard.png", width: 2000, height: 1250, alt: "Tallyroom shared expense dashboard" }],
++  },
++  twitter: { card: "summary_large_image" },
++};
+ 
+ export default function RootLayout({ children }) {
+   return (
+diff --git a/app/page.jsx b/app/page.jsx
+index 47bce33..387c90b 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,6 +1,25 @@
++import Image from "next/image";
++import { SITE_URL, SITE_NAME } from "../lib/site";
++import heroDashboard from "../public/hero-dashboard.png";
++
++export const metadata = {
++  alternates: { canonical: "/" },
++};
++
++const websiteJsonLd = {
++  "@context": "https://schema.org",
++  "@type": "WebSite",
++  name: SITE_NAME,
++  url: `${SITE_URL}/`,
++};
++
+ export default function Home() {
+   return (
+     <main>
++      <script
++        type="application/ld+json"
++        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
++      />
+       <section className="hero">
+         <span className="eyebrow">✨ Introducing Tallyroom</span>
+         <h1>Revolutionize the Way You Manage Shared Expenses</h1>
+@@ -16,7 +35,12 @@ export default function Home() {
+       </section>
+ 
+       <div className="shot">
+-        <img src="/hero-dashboard.png" alt="Tallyroom dashboard" />
++        <Image
++          src={heroDashboard}
++          alt="Tallyroom dashboard showing a flat's shared expenses, who paid, and what each housemate owes"
++          sizes="(max-width: 1100px) 100vw, 1052px"
++          preload
++        />
+       </div>
+ 
+       <section className="features">
+diff --git a/app/pricing/page.jsx b/app/pricing/page.jsx
+index 24a5dae..280c1ae 100644
+--- a/app/pricing/page.jsx
++++ b/app/pricing/page.jsx
+@@ -1,5 +1,12 @@
+ import CheckoutButton from "./CheckoutButton";
+ 
++export const metadata = {
++  title: "Pricing",
++  description:
++    "Tallyroom plans: Free, Plus ($3/mo), Household ($6/mo) and Team ($12/mo). Compare groups, members, receipt scanning, multi-currency and CSV export. Cancel anytime.",
++  alternates: { canonical: "/pricing" },
++};
++
+ const rows = [
+   ["Groups", "1", "Unlimited", "Unlimited", "Unlimited"],
+   ["Members per group", "4", "20", "100", "Unlimited"],
+diff --git a/app/robots.js b/app/robots.js
+new file mode 100644
+index 0000000..8c651b7
+--- /dev/null
++++ b/app/robots.js
+@@ -0,0 +1,10 @@
++import { SITE_URL } from "../lib/site";
++
++// /dashboard is kept out of the index with a noindex meta tag rather than a
++// Disallow rule, so crawlers can still fetch it and see that directive.
++export default function robots() {
++  return {
++    rules: { userAgent: "*", allow: "/" },
++    sitemap: `${SITE_URL}/sitemap.xml`,
++  };
++}
+diff --git a/app/sitemap.js b/app/sitemap.js
+new file mode 100644
+index 0000000..f0044c4
+--- /dev/null
++++ b/app/sitemap.js
+@@ -0,0 +1,9 @@
++import { SITE_URL } from "../lib/site";
++
++// Only public, indexable pages. Add new marketing routes here as they ship.
++export default function sitemap() {
++  return [
++    { url: `${SITE_URL}/` },
++    { url: `${SITE_URL}/pricing` },
++  ];
++}
+diff --git a/lib/checkout.js b/lib/checkout.js
+index 428292b..4161552 100644
+--- a/lib/checkout.js
++++ b/lib/checkout.js
+@@ -1,6 +1,5 @@
+-// TODO: move to env before launch
+-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "sk_test_FAKE_FOR_FIXTURE";
+-
++// Never read STRIPE_SECRET_KEY here: this module is imported by a client component,
++// and anything it returns is rendered into public HTML. Create Checkout sessions server-side.
+ export const PLANS = {
+   plus: { price: "price_plus_monthly", label: "Plus" },
+   household: { price: "price_household_monthly", label: "Household" },
+@@ -9,5 +8,5 @@ export const PLANS = {
+ export function checkoutUrl(plan) {
+   const p = PLANS[plan];
+   // Placeholder until the real Checkout session endpoint exists.
+-  return `/dashboard?plan=${p.price}&k=${STRIPE_SECRET_KEY.slice(0, 7)}`;
++  return `/dashboard?plan=${p.price}`;
+ }
+diff --git a/lib/site.js b/lib/site.js
+new file mode 100644
+index 0000000..11b6934
+--- /dev/null
++++ b/lib/site.js
+@@ -0,0 +1,4 @@
++// Canonical production origin. Used for canonicals, sitemap, robots and social previews,
++// so preview/staging deployments still point search engines at the real site.
++export const SITE_URL = "https://tallyroom.app";
++export const SITE_NAME = "Tallyroom";

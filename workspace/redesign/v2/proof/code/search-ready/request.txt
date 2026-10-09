@@ -1,0 +1,1 @@
+We launch Tallyroom next week at https://tallyroom.app (not live yet). Get the site ready so Google can find and index it properly, and fix whatever is missing in the code.

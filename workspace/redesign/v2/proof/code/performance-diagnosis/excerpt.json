@@ -1,0 +1,7 @@
+{
+  "skill": "performance-diagnosis",
+  "kind": "table",
+  "title": "The blank pause, measured",
+  "after": "The blank pause comes from the SupportDesk chat widget script. It's loaded in the page `<head>` and freezes the browser for about 350ms before anything can be drawn. Removing it in a test cut the time to first content roughly in half.\n…\n| Setup | First content on screen | Main content on screen | HTML parsed | Fully loaded |\n|---|---|---|---|---|\n| Current site | **788** | 780 | 755 | 16,758 |\n| Widget script blocked | **404** | 404 | 394 | 16,747 |\n| Hero image blocked | 768 | 768 | 756 | 1,218 |",
+  "caption": "Throttled-phone runs isolate a blocking widget script (≈385ms of first paint) and a 3.1MB image (16.7s→1.2s full load). Diagnosis only; no files changed."
+}

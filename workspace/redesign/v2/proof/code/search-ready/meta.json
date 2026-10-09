@@ -1,0 +1,33 @@
+{
+  "skill": "search-ready",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill search-ready -a claude-code -y (project scope, .claude/skills/search-ready; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "search-ready",
+      "args": "Prepare Tallyroom (launching next week at https://tallyroom.app, not live yet) for Google discovery and indexing; implement missing technical SEO in the code."
+    }
+  ],
+  "skillFileReads": [
+    "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/proof/code/search-ready/app/.claude/skills/search-ready/references/technical-seo.md"
+  ],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 10,
+    "Read": 1,
+    "Write": 3,
+    "Edit": 11
+  },
+  "durationSec": 128,
+  "costUsd": 0.7146424,
+  "numTurns": 28,
+  "isError": false,
+  "diffStat": " 9 files changed, 82 insertions(+), 6 deletions(-)",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "Added metadata, robots.js, sitemap.js, noindex on /dashboard, WebSite JSON-LD, hero image sizing. Also edited lib/checkout.js to drop the secret-key prefix from URLs (security fix outside SEO scope, disclosed in output). Reported hero image 'about 8 KB at 1080px' via next/image. All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

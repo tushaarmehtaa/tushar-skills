@@ -1,0 +1,99 @@
+{
+  "duration_api_ms": 116221,
+  "stop_reason": "end_turn",
+  "session_id": "5e78b621-a95d-47cd-a4da-4c5dca4de2cb",
+  "total_cost_usd": 0.7146424,
+  "usage": {
+    "input_tokens": 34,
+    "cache_creation_input_tokens": 43861,
+    "cache_read_input_tokens": 630192,
+    "output_tokens": 11879,
+    "output_tokens_details": {
+      "thinking_tokens": 2860
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 43861,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1591,
+        "cache_read_input_tokens": 55895,
+        "cache_creation_input_tokens": 478,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 478
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 34,
+      "outputTokens": 11879,
+      "cacheReadInputTokens": 630192,
+      "cacheCreationInputTokens": 43861,
+      "webSearchRequests": 0,
+      "costUSD": 0.7146424,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 2860,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 28,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The site is now set up so Google can find and index it. I built it and checked the pages on a local server; it still needs re-checking on https://tallyroom.app once that's live. I haven't committed anything.\n\nNothing about the live site was checked, since it isn't up yet. There's also no Search Console data until after launch.\n\n## What was missing, and what I fixed\n\n1. **No titles, descriptions or link previews on any page.** Every page now has its own title, a description, and a canonical address pointing at https://tallyroom.app (the \"this is the real version of the page\" tag). Link previews for social sites use the dashboard screenshot. The address is set once in `lib/site.js`, so test or preview copies of the site still point Google at the real one.\n2. **No `robots.txt` or sitemap.** I added both (`app/robots.js`, `app/sitemap.js`). The sitemap lists only `/` and `/pricing`.\n3. **`/dashboard` could have been indexed.** It's linked from the menu and the homepage, but it's an app screen showing made-up demo data. It's now marked \"don't index\" in `app/dashboard/page.jsx`. I deliberately didn't block it in `robots.txt`, because that would stop Google from seeing the \"don't index\" tag.\n4. **The homepage screenshot was a 3.1 MB image with no size set.** It was the biggest thing at the top of the page and made the layout jump while loading. It now loads early and at a size that fits the screen: about 8 KB at 1080px wide, down from 3.1 MB.\n5. **The site name for Google.** I added a small block of structured data on the homepage that tells Google the site is called \"Tallyroom\". I didn't add FAQ markup for the pricing questions, because Google no longer shows those for sites like this.\n6. **Security: part of your Stripe secret key was in the public pricing page.** `lib/checkout.js` added the first 7 characters of the key (`sk_test` or `sk_live`) to the plan button links, so they'd appear in the page and in Google's copy of it. I removed that. Only the start of the key was exposed, not the whole key. The checkout buttons are still placeholders that go to `/dashboard`.\n\nChecked on the local server:\n- `/` and `/pricing` load normally and have the right titles, descriptions, canonical addresses and previews.\n- `/dashboard` has \"don't index\" on it, including when the checkout links add the plan to its address.\n- `robots.txt` and the sitemap are correct, and a page that doesn't exist correctly returns \"not found\".\n\n## Still to fix (I didn't change these)\n\n- **The chat widget slows every page.** `public/vendor/support-widget.js` makes the browser wait about 0.35 seconds on every page before anything appears. It only adds its chat button when the page first finishes loading. If I simply made it load later, the button would never appear, and that means editing the supplier's code. It's worth asking SupportDesk for a version that doesn't hold up the page.\n- **The homepage doesn't say what Tallyroom does.** Lines like \"Revolutionize the Way You Manage Shared Expenses\" and \"Lightning Fast\" give Google little to work with. Your pricing table and FAQ are more concrete: receipt scanning, recurring bills, six currencies, one paid account covering the whole group. That's what people will search for, so the homepage should say it.\n- **Prices are in dollars, but everything else points to India.** The demo is in rupees and set in Indiranagar. If India is the main market, decide which currency to show.\n- **Smaller issues:**\n  - The menu has \"Groups\" and \"Activity\" both going to `/dashboard`, and \"For Teams\" going to `/pricing`.\n  - The Team plan has no checkout button.\n  - The link-preview image is the full 3.1 MB file. A 1200\u00d7630 image made for previews would be better.\n\n## Launch-day steps (outside the code)\n\n- Make one address the main one (for example, send `www` and `http` visitors to `https://tallyroom.app`) in your hosting settings.\n- Check that preview deployments aren't indexed. Vercel handles this automatically.\n- Add the site to Google Search Console and Bing Webmaster Tools.\n- Submit `https://tallyroom.app/sitemap.xml`, then use URL Inspection on `/` and `/pricing`.\n- Re-check the live pages against what I checked locally.\n- Test the link previews with each social site's preview tool.\n- Run PageSpeed Insights once real visitor data starts coming in.\n\nGoogle decides when it indexes and ranks the site. These changes remove the blockers on your side; they can't guarantee timing or position.\n\nAfter launch, check Search Console's indexing report every week for the first month, then monthly. Add new public pages to `app/sitemap.js` when you ship them.",
+  "ttft_ms": 1696,
+  "type": "result",
+  "duration_ms": 126136,
+  "uuid": "eb603b06-3bc8-44ed-9fec-c32fa7aaeec4",
+  "ttft_stream_ms": 1182,
+  "time_to_request_ms": 460,
+  "first_content_frame_ms": 1182,
+  "queued_turn_count": 0,
+  "result_index": 0
+}
