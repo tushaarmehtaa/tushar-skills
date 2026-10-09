@@ -1,5 +1,7 @@
 # Resume here — 6 October 2026
 
+> **Shipped, 10 October 2026:** v2 is merged to main and live. Status checklist and open follow-ups: [PLAN-v2.md](PLAN-v2.md). Verification report: [v2/verification-2026-10-10.md](v2/verification-2026-10-10.md).
+>
 > **Superseded direction, 9 October 2026:** read [PLAN-v2.md](PLAN-v2.md) first. The audit and Tushar's four decisions there (Shape/Build/Ship/Grow, drafted voice lines, real runs, keep the look) now set the direction. Work continues on the `redesign-v2` branch. The notes below remain useful history and constraints.
 
 ## Current status: paused for continuity, design NOT approved

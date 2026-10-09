@@ -69,7 +69,7 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 - [x] Install-all and first skill row in the first screen at 390×844 and 1440×900 (tested)
 - [x] One-tap mobile install, command fully visible at 320px (tested)
 - [x] No horizontal overflow 320–1440 on core pages (tested)
-- [ ] ≥15 skills fully verified in Claude Code (21 single real runs done; full verification method not yet run)
+- [~] 3 skills fully verified in Claude Code (changelog, remove-ai-slop, rate-limit); 33 skills have a single real run. Target of 15 not met; follow-ups listed in the verification report
 - [x] Lighthouse mobile (production build): performance 96 on / and /remove-ai-slop, 97–98 elsewhere; accessibility 100 on every page tested. Fonts use display: optional. /guides SEO 66 is its deliberate noindex (navigation hub); best practices 96 is a local-only analytics 404
 - [x] One site stylesheet (site.css) plus globals.css for tokens and base
 - [x] Tests green (31 browser, 21 unit), validation and production build pass
@@ -87,6 +87,6 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 ### Update, 9 Oct night
 - [x] Why lines rewritten per Tushar: the thinking behind each skill, then the outcome for the user (workspace/redesign/v2/why-v2.json); quote label "The thinking behind it"
 - [x] Before/after pairs ("what went in, what came out") for all 21 runs: screenshots, text, code or data
-- [~] Real runs for the remaining 12 skills (code skills on the Tallyroom fixture with fake keys, labelled "not contacted"); image-editing stays contract-only (needs an image-model key)
-- [~] Full verification (changelog method) running for remove-ai-slop, deploy-check, landing-copy, readme, rate-limit; results go to runtime-verification.json and catalog support only if they pass
-- [ ] Merge redesign-v2 into main (fast-forward; approved by Tushar once the above lands)
+- [x] Real runs for the remaining 12 skills (code skills on the Tallyroom fixture with test keys, caveats say what was not exercised); 33 of 34 skills now show a real run with a before/after. image-editing stays contract-only (needs an image-model key)
+- [x] Full verification (changelog method): remove-ai-slop and rate-limit verified and recorded; deploy-check (printed a fake secret 2/3), landing-copy (skipped its evidence table), readme (fixture showed no lift) stay unverified. Report: workspace/redesign/v2/verification-2026-10-10.md
+- [x] Merge redesign-v2 into main (fast-forward, approved by Tushar)
