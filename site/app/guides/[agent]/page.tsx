@@ -308,6 +308,9 @@ export default async function CodingAgentGuide({
       <GuideSection number={agentId === "cursor" ? "07" : agentId === "codex" ? "05" : "04"} title="Update and remove">
         <p>Update the global copy:</p>
         <CommandLine command={generateUpdateCommand(EXAMPLE_SKILL)} agent={agentId} skill={EXAMPLE_SKILL} />
+        <p>
+          Update only pulls a newer published version. If you edited the installed SKILL.md yourself, it reports the skill as up to date and keeps your edits. To get the published version back, run the install command again.
+        </p>
         <p>Remove it only from {agent.label}:</p>
         <CommandLine command={generateRemoveCommand(EXAMPLE_SKILL, agentId)} agent={agentId} skill={EXAMPLE_SKILL} />
       </GuideSection>
