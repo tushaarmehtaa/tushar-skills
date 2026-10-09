@@ -83,3 +83,10 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 - [x] Small repo fixes: user-insights em dash replaced. Left as is on purpose: humanize "article-development workflow" (a boundary, not a broken link), product-experiments "if present" (correct), remove-ai-slop em dashes (inside its report template, changing them changes the output format)
 - [~] Voice-line review page live (https://claude.ai/artifact/MyBLXNK18aCBpfnJ6N2dAj): 34 lines seeded, waiting for Tushar
 - [ ] Merge `redesign-v2` to main (needs Tushar's go-ahead)
+
+### Update, 9 Oct night
+- [x] Why lines rewritten per Tushar: the thinking behind each skill, then the outcome for the user (workspace/redesign/v2/why-v2.json); quote label "The thinking behind it"
+- [x] Before/after pairs ("what went in, what came out") for all 21 runs: screenshots, text, code or data
+- [~] Real runs for the remaining 12 skills (code skills on the Tallyroom fixture with fake keys, labelled "not contacted"); image-editing stays contract-only (needs an image-model key)
+- [~] Full verification (changelog method) running for remove-ai-slop, deploy-check, landing-copy, readme, rate-limit; results go to runtime-verification.json and catalog support only if they pass
+- [ ] Merge redesign-v2 into main (fast-forward; approved by Tushar once the above lands)
