@@ -48,7 +48,7 @@ Read [analysis patterns](references/guide.md) for calibrated segmentation, event
 Distinguish two states:
 
 - **Executed analysis:** evidence ledger, metric definitions, data-quality findings, results with denominators/uncertainty, limitations, and decisions.
-- **Query plan:** schema mapping, executable queries, expected columns, validation queries, and interpretation rules—no invented results.
+- **Query plan:** schema mapping, executable queries, expected columns, validation queries, and interpretation rules, with no invented results.
 
 For either state, include justified segments/cohorts only, privacy notes, alternative explanations, recommended action, and how to test it.
 

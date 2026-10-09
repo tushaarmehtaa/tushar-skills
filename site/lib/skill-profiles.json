@@ -51,7 +51,7 @@
       "skipWhen": "Skip it if you want personas from snapshot columns or proof of cause; observational results stay non-causal.",
       "why": "i wanted product calls backed by event history, not guesses from a last_active_at column or a convenient threshold.",
       "next": "product-teardown",
-      "outputContract": "Distinguish two states:\n\n- **Executed analysis:** evidence ledger, metric definitions, data-quality findings, results with denominators/uncertainty, limitations, and decisions.\n- **Query plan:** schema mapping, executable queries, expected columns, validation queries, and interpretation rules—no invented results.\n\nFor either state, include justified segments/cohorts only, privacy notes, alternative explanations, recommended action, and how to test it.",
+      "outputContract": "Distinguish two states:\n\n- **Executed analysis:** evidence ledger, metric definitions, data-quality findings, results with denominators/uncertainty, limitations, and decisions.\n- **Query plan:** schema mapping, executable queries, expected columns, validation queries, and interpretation rules, with no invented results.\n\nFor either state, include justified segments/cohorts only, privacy notes, alternative explanations, recommended action, and how to test it.",
       "outputSource": "Output contract",
       "proofTier": "run"
     },
