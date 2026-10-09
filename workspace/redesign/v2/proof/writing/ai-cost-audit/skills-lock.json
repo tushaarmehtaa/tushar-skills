@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "ai-cost-audit": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "ai-cost-audit/SKILL.md",
+      "computedHash": "fa87b243f6fcd0ee49e6fac9158bdf9a2b0f2ea03bbb8b37f416eac1d71a5dcb"
+    }
+  }
+}

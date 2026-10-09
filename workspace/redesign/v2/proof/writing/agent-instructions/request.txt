@@ -1,0 +1,1 @@
+Set up instructions for the coding agents that work in this repo. We use both Claude Code and Codex.

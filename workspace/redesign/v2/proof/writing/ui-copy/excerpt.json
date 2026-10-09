@@ -1,0 +1,7 @@
+{
+  "skill": "ui-copy",
+  "kind": "table",
+  "title": "Invite screen copy rewritten from what the code does",
+  "after": "| Where | Before | After |\n|---|---|---|\n| Heading | Team Management | Invite your team |\n| Intro | Please enter the emails of users\u2026 | We'll email each person an invite. Invites expire after 7 days, and you're only billed for a seat when someone accepts. |\n\u2026\n| Button | Submit / Loading... | Send invites / Send 3 invites (counts as you type) / Sending invites\u2026 |\n| Success | Success! | Sent 3 invites. They expire in 7 days. (`sentCount` was stored before but never shown) |\n\u2026\n| Not enough seats | Oops! Something went wrong. | Not enough seats. You're inviting 5 people, but your plan has 3 seats left. No invites were sent. Remove some addresses or add seats to your plan. |",
+  "caption": "Every string now matches api.ts: the 20-address limit, the 7-day expiry, billing on acceptance, and what happens to the batch on failure. The run also caught that sentCount was never shown."
+}

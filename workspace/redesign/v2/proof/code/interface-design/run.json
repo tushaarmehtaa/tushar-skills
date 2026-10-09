@@ -1,0 +1,99 @@
+{
+  "duration_api_ms": 269743,
+  "stop_reason": "end_turn",
+  "session_id": "ebb5c11d-df85-4a67-b454-31aefd83bb2f",
+  "total_cost_usd": 1.2475223999999998,
+  "usage": {
+    "input_tokens": 46,
+    "cache_creation_input_tokens": 57819,
+    "cache_read_input_tokens": 1090332,
+    "output_tokens": 28336,
+    "output_tokens_details": {
+      "thinking_tokens": 8318
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 57819,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1421,
+        "cache_read_input_tokens": 70109,
+        "cache_creation_input_tokens": 222,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 222
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 46,
+      "outputTokens": 28336,
+      "cacheReadInputTokens": 1090332,
+      "cacheCreationInputTokens": 57819,
+      "webSearchRequests": 0,
+      "costUSD": 1.2475223999999998,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 8318,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 31,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "The dashboard now works as the flat's home screen. It shows what you owe or are owed, the payments that would clear all balances, each member's balance, and recent activity grouped by date. The build passes and every flow worked in Chrome at 1280, 820 and 375 px wide. Nothing is committed.\n\n**Sample data, not real.** The old page showed \"You owe \u20b91,842 / You are owed \u20b9710\", which didn't follow from its own expense list, and \"3 ways\" didn't say who split the bill. I moved the expenses into `lib/flat-fixture.js` and gave each one an explicit list of who shares it. Past payments are stored as separate records instead of a \"Settled\" flag. All figures are now calculated from that data. The page is labelled \"Sample data \u2014 viewing as Kabir\", and changes are lost when you reload.\n\n**What's on the page**\n- **Your position:** \"You owe \u20b91,365.87\", followed by the action that clears it (\"Pay Arjun \u20b91,365.87\"). Owing is shown in amber and being owed in green, and the words say which it is, so the colour isn't the only signal.\n- **To settle:** the fewest payments needed to clear everyone's balances, each with a **Record payment** button. A one-line note explains that balances are combined, which is why you might pay someone you never directly owed.\n- **Balances:** one line per member, such as \"gets back \u20b94,915.62\" or \"owes \u20b92,544.88\".\n- **Recent activity:** expenses and payments together, newest first, grouped by day. Each expense shows what it means for you (\"your share \u20b9710.12\", \"you lent \u20b9884.25\"). The first 8 entries show, with a \"Show all\" button for the rest.\n- **Add expense:** a pop-up form with description, amount, date, who paid, and checkboxes for who splits it. It blocks submission if nobody is ticked to share the expense.\n- **Undo:** recording a payment, deleting an expense and adding one all show a message with Undo, so nothing needs a confirmation step.\n- **Empty states:** \"You're settled up\", \"Everyone's square. Nothing to settle.\" and a first-expense prompt.\n\nThe existing purple stays as the colour for buttons and actions. The rest is plain and neutral so the amounts stand out, and numbers line up in columns.\n\n**What I tested**\n- The numbers are correct. The four balances sum to zero. Adding \u20b94,000 paid by Kabir correctly moves him from \u2212\u20b91,365.87 to +\u20b91,634.13.\n- **Keyboard:**\n  - After recording a payment, focus moves to Undo; after undoing, it moves to the message.\n  - The form opens with focus on the first field, Esc closes it, and focus returns to the Add expense button.\n  - Screen-reader labels are specific, e.g. \"Record \u20b91,365.87 paid by you to Arjun\".\n- **Layout:** no sideways scrolling at any of the three widths.\n- **No browser errors** except one 404, which is probably the missing favicon.\n\n**Changes outside the dashboard**\n- I removed the old `.stats`, `.ledger` and `.icon-btn` styles, which only the old dashboard used.\n- I let the top nav scroll sideways on narrow screens; before, it pushed the whole page 500 px wider on phones.\n- The money logic is in `lib/ledger.js` and works in paise, so shares always add up exactly.\n\n**Still missing**\n- Nothing is saved, and there's no login. \"You\" is a fixture setting until real accounts exist.\n- Expenses can be deleted but not edited, and only equal splits are supported.\n- On phones, Delete takes its own line under each expense, which uses a lot of space.\n- I didn't do a screen-reader pass or test 200% zoom.\n\n**Problems I found elsewhere (not changed)**\n- `public/vendor/support-widget.js` loads in the page head and blocks the browser for 350 ms before every page appears. Its fixed chat button also covers content on smaller screens; on tablet it covered an expense's Delete button.\n- `lib/checkout.js` puts the first seven characters of `STRIPE_SECRET_KEY` into a link, and that file is loaded by a component that runs in the browser. It's a placeholder for now, but it should be fixed before the real key is set.",
+  "ttft_ms": 1865,
+  "type": "result",
+  "duration_ms": 324912,
+  "uuid": "911e1760-b8ea-4edd-a948-cae0c3a7385c",
+  "ttft_stream_ms": 1257,
+  "time_to_request_ms": 472,
+  "first_content_frame_ms": 1257,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

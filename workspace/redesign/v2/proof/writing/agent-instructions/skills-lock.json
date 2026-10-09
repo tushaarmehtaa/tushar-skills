@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-instructions": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "agent-instructions/SKILL.md",
+      "computedHash": "b761b68ce593591b5540765dc7e47d7d2eef41bdfb9663d324525e09eb51720f"
+    }
+  }
+}

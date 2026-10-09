@@ -1,0 +1,7 @@
+{
+  "skill": "fundraising",
+  "kind": "report",
+  "title": "Should a $166k-ARR vertical SaaS raise a $2.5M seed in January?",
+  "after": "**Don't start a $2.5M institutional seed in January with the current story. Fix the runway now, and spend Q4\u2013Q1 finding out whether Harborline can be a venture-scale company. Raise a seed only if that work turns up real evidence.**\n\u2026\n| Scenario | Shops | Price/mo | ARR at 100% share |\n|---|---|---|---|\n| US bike only, today's price | 4,000 | $99 | $4.75M |\n| US + CA + UK bike | 6,500 | $99 | $7.7M |\n| US + CA + UK bike, 3\u00d7 price | 6,500 | $300 | $23.4M |\n| Series A bar (rough heuristic: ~$1M ARR) at $99 | **~840 shops** | $99 | $1M = **21% of all US bike shops** |\n\u2026\n1. Is the $28k/month burn **net** (after revenue) or **gross**? If gross, net burn is ~$14k and runway is ~15 months, which lowers the urgency a lot.",
+  "caption": "From raise-plan.md. It sizes the market at today's price, flags that a January start means raising with about 4.5 months of cash, sets pass/fail tests for a March decision, and surfaces the net-vs-gross burn question that changes the urgency."
+}

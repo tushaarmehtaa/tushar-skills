@@ -1,0 +1,19 @@
+{
+  "skill": "ai-cost-audit",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill ai-cost-audit -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 114.2,
+  "costUsd": 0.4559938,
+  "numTurns": 16,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "ai-cost-audit"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill,Bash(python3:*)",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote cost-review.md. Per-feature costs reconcile with CSV x stated rates ($13,819 total). Caught a contradiction between a CSV note (2,400-token prompt) and logged averages (1,600 tokens). Tried WebFetch for official pricing; it was denied, and the report says prices are unverified. Wrote a helper script OUTSIDE the fixture (/private/tmp/claude-501/costcalc/calc.py), moved to _written-outside-fixture/."
+}

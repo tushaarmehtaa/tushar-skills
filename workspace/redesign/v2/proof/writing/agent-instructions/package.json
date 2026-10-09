@@ -1,0 +1,13 @@
+{
+  "name": "mdtally",
+  "version": "0.3.1",
+  "description": "Count words and estimate reading time for Markdown files",
+  "type": "module",
+  "bin": { "mdtally": "bin/mdtally.js" },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test",
+    "lint": "node --check bin/mdtally.js && node --check src/count.js"
+  },
+  "license": "MIT"
+}

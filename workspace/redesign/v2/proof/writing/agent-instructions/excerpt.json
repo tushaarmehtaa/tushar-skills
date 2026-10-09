@@ -1,0 +1,7 @@
+{
+  "skill": "agent-instructions",
+  "kind": "diff",
+  "title": "One AGENTS.md for Codex, imported by CLAUDE.md",
+  "after": "+Before finishing a change, run `npm test` and `npm run lint`; both must pass.\n+\n+## Conventions\n+\n+- Keep zero dependencies. Use Node built-ins (`node:fs`, `node:test`, `node:assert/strict`) rather than adding packages.\n+- Use double quotes, semicolons, and named exports, matching existing files.\n+- Add a test in `test/count.test.js` for any change to counting or reading-time behavior.\n+- The default reading speed is 230 wpm, and it is set in two places: `readingMinutes` in `src/count.js` and the CLI fallback in `bin/mdtally.js`. Change both together.\n+- Reading time rounds up to whole minutes, with a minimum of 1. Tests assert this.\n+- `npm run lint` lists files explicitly. If you add a source file, add it to the `lint` script in `package.json`.\n+\n\u2026\n+++ b/CLAUDE.md\n@@ -0,0 +1,3 @@\n+@AGENTS.md\n+\n+<!-- Shared instructions live in AGENTS.md so Codex and Claude Code read the same facts. Add Claude-only notes below. -->",
+  "caption": "Commands were run before being written down. The rules come from the code: the 230 wpm default lives in two files, and the lint script lists files by hand."
+}

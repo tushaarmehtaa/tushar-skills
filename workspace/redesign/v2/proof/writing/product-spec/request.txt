@@ -1,0 +1,1 @@
+Turn idea.md into something engineering can actually build from in the next 6 weeks. Make the calls you can, flag the ones you can't. Save it under docs/.

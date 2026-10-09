@@ -1,0 +1,79 @@
+diff --git a/src/InviteTeam.tsx b/src/InviteTeam.tsx
+index 7dfc822..4ecb24b 100644
+--- a/src/InviteTeam.tsx
++++ b/src/InviteTeam.tsx
+@@ -29,32 +29,62 @@ export function InviteTeam({ seatsLeft }: { seatsLeft: number }) {
+ 
+   return (
+     <div>
+-      <h2>Team Management</h2>
+-      <p>Please enter the emails of users you wish to add to your workspace below.</p>
++      <h2>Invite your team</h2>
++      <p>
++        We'll email each person an invite. Invites expire after 7 days, and you're only
++        billed for a seat when someone accepts.
++      </p>
++      <label htmlFor="invite-emails">Email addresses</label>
+       <textarea
+-        placeholder="Enter emails"
++        id="invite-emails"
++        aria-describedby="invite-emails-hint"
++        placeholder="alex@company.com, sam@company.com"
+         value={emails}
+         onChange={(e) => setEmails(e.target.value)}
+       />
+-      <p>{seatsLeft} seats remaining</p>
++      <p id="invite-emails-hint">
++        Separate addresses with commas or spaces. You can invite up to {MAX_INVITES_PER_BATCH}{" "}
++        people at a time.
++      </p>
++      <p>{seatsLeft === 1 ? "1 seat left on your plan" : `${seatsLeft} seats left on your plan`}</p>
+ 
+       <button onClick={onSubmit} disabled={status === "sending"}>
+-        {status === "sending" ? "Loading..." : "Submit"}
++        {status === "sending"
++          ? "Sending invites…"
++          : list.length === 1
++            ? "Send 1 invite"
++            : list.length > 1
++              ? `Send ${list.length} invites`
++              : "Send invites"}
+       </button>
+ 
+-      {status === "done" && <p>Success!</p>}
++      {status === "done" && (
++        <p role="status">
++          {sentCount === 1 ? "Sent 1 invite." : `Sent ${sentCount} invites.`} They expire in 7
++          days.
++        </p>
++      )}
+ 
+       {status === "error" && errorCode === "TOO_MANY" && (
+-        <p>Error: Invalid input.</p>
++        <p role="alert">
++          You've entered {list.length} addresses. You can send up to {MAX_INVITES_PER_BATCH} at a
++          time, so remove some and send the rest afterward.
++        </p>
+       )}
+       {status === "error" && errorCode === "SEATS_EXCEEDED" && (
+-        <p>Oops! Something went wrong.</p>
++        <p role="alert">
++          Not enough seats. You're inviting {list.length}{" "}
++          {list.length === 1 ? "person" : "people"}, but your plan has{" "}
++          {seatsLeft === 1 ? "1 seat" : `${seatsLeft} seats`} left. No invites were sent. Remove
++          some addresses or add seats to your plan.
++        </p>
+       )}
+-      {status === "error" && errorCode === "UNKNOWN" && (
+-        <p>An error has occurred. Please try again later.</p>
++      {status === "error" && errorCode !== "TOO_MANY" && errorCode !== "SEATS_EXCEEDED" && (
++        <p role="alert">
++          Couldn't send invites. If any address isn't valid, none are sent, so check the list
++          and try again. Your addresses are still here.
++        </p>
+       )}
+-
+-      {list.length === 0 && status === "idle" && <p>No data.</p>}
+     </div>
+   );
+ }

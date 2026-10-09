@@ -1,0 +1,1 @@
+We ran the onboarding checklist test for two weeks. Results and notes are in results/. The PM wants to ship Monday because the numbers look up. Can we? Put your answer in results/readout.md.

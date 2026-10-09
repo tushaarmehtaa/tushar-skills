@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "decision-doc": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "decision-doc/SKILL.md",
+      "computedHash": "993c5222e885223704713de5ffbdc1469fc0e35166037c0566788667aef61cd4"
+    }
+  }
+}

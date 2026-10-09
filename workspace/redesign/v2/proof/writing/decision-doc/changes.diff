@@ -1,0 +1,140 @@
+diff --git a/docs/search-decision.md b/docs/search-decision.md
+new file mode 100644
+index 0000000..eeb4227
+--- /dev/null
++++ b/docs/search-decision.md
+@@ -0,0 +1,134 @@
++# Decision: How Driftwood search should work
++
++| | |
++|---|---|
++| **Date** | 2026-10-09 |
++| **Status** | Proposed, waiting on Priya's decision |
++| **Decision owner** | Priya (PM) |
++| **Participants** | Maya (prototyped Postgres), Sam (scoped Meilisearch), engineering team, Finance (only if Algolia is chosen) |
++| **Decide by** | 2026-10-20 |
++| **Ship by** | 2027-01-06 (January "healthy eating" campaign) |
++
++## Decision to make
++
++Which search approach should we build and ship before the January 6 campaign: Postgres full-text search, self-hosted Meilisearch, or hosted Algolia?
++
++## Recommendation
++
++**Build on Postgres full-text search (tsvector + GIN, with pg_trgm for typos), and start logging zero-result queries now.** Look at it again in February with real query data. If typo misses or facet work turn out to be the bottleneck, move to Meilisearch or Algolia then.
++
++**Confidence: medium.** It covers the must-haves (ingredient search, filters, the deadline, no new on-call) with the least risk. It is weakest on typo tolerance, and we don't yet know how much typo tolerance matters to users.
++
++## Context
++
++- Driftwood has about 180k recipes and adds about 6k a month. It runs on Postgres 16, on a managed host.
++- Today's search is `ILIKE '%term%'` on recipe titles only.
++- Support tickets tagged "search" rose from 14 in May to 41 in August.
++- Users are asking for three things: **ingredient search** ("chickpea"), **typo tolerance** ("chikpea"), and **filters** (diet, cook time).
++- Four engineers, none of them working on search full time.
++
++## Constraints and decision drivers
++
++In priority order:
++
++1. **Live by Jan 6.** That leaves about 11 weeks after the decision date, including the December holidays. This is a hard constraint.
++2. **Filters work well.** This is Priya's top priority.
++3. **Ingredient search.** It is the most specific thing users are asking for.
++4. **No new on-call rotation.** The team has said this clearly.
++5. **Cost.** Any recurring cost over $500/month needs CFO sign-off.
++6. **Typo tolerance.** Users want it, but we don't know how much it matters (see Unknowns).
++
++## Evidence and assumptions
++
++| Claim | Type | Source |
++|---|---|---|
++| Postgres FTS p95 is 38ms on a prod snapshot | Measured | Maya's 2-day prototype |
++| pg_trgm typo tolerance is "okay, not great" | Judgment | Maya, from the prototype |
++| Postgres facet *counts* need hand-written queries | Fact | Prototype notes |
++| Meilisearch takes ~2 weeks to be production-ready | Estimate | Sam |
++| Algolia costs ~$1,100/month at projected volume | Quote | Vendor quote |
++| Over $500/month needs CFO sign-off | Policy | Finance |
++| How many tickets are about typos, ingredients, or filters | **Unknown** | Nobody has broken down the 41 August tickets |
++| How often searches return zero results | **Unknown** | We don't log it |
++| Time to take Postgres to production, including filters and facet counts | **Unknown** | We have a prototype but no estimate |
++
++**Note on filters vs. facets:** Filtering by diet or cook time is a plain `WHERE` clause in Postgres and easy to build. The extra work is the **counts** shown next to each filter ("Vegan (312)"). If Priya's "filters" means filtering without counts, Postgres covers it fully.
++
++## Options
++
++### 0. Status quo (ILIKE on titles)
++- **For:** No work needed.
++- **Against:** No ingredient search, no typo handling, no filters, and tickets are tripling. Not viable for the campaign. Included only as a baseline.
++
++### 1. Postgres full-text search + pg_trgm (recommended)
++- **For:** No new infrastructure and no new on-call. A working prototype already exists with good latency. Search data stays in sync with the database automatically, so no sync pipeline is needed. Ingredient search and filters are straightforward. Costs nothing extra.
++- **Against:** Typo tolerance is weaker. Facet counts are custom code we'd have to maintain. Relevance tuning is more manual.
++- **Strongest argument against:** If the hand-written facet counts and relevance tuning take longer than expected, we could end up spending more engineering time than Meilisearch's 2 weeks and still have worse typo handling.
++
++### 2. Meilisearch, self-hosted
++- **For:** Strong typo tolerance and facets out of the box. Free to license. Sam has a 2-week estimate to production.
++- **Against:** It's a new service to run and monitor, which breaks the "no new on-call" constraint. It needs a Postgres → Meilisearch sync pipeline, and sync bugs mean stale or missing recipes. Nobody owns search, so nobody clearly owns this service either.
++- **Strongest argument for (Sam's view):** It's the best user experience for the least build effort, and it fits the deadline easily. The ops burden of one small service may be smaller than the team fears.
++
++### 3. Algolia, hosted
++- **For:** Best relevance tooling, zero ops, and the strongest typo handling and facets.
++- **Against:** About $13.2k/year, which needs CFO sign-off. It still needs a sync pipeline from Postgres (our assumption; the notes don't say). It creates vendor lock-in for a core feature.
++- **Strongest argument for:** It's the only option that fully covers typos and facets without adding on-call. If the CFO approves quickly, it's a real alternative to Meilisearch.
++
++## Comparison
++
++| Driver | Status quo | Postgres FTS | Meilisearch | Algolia |
++|---|---|---|---|---|
++| Live by Jan 6 | n/a | Likely (prototype exists; full estimate needed) | Likely (2-wk estimate) | Likely, *if* the CFO approves in time |
++| Filters | No | Yes; counts are custom work | Yes | Yes |
++| Ingredient search | No | Yes | Yes | Yes |
++| No new on-call | Yes | **Yes** | **No** | Yes |
++| Cost | $0 | $0 | Hosting only | ~$1,100/mo, CFO sign-off |
++| Typo tolerance | No | Okay | Strong | Strong |
++| Cost to reverse later | n/a | Low | Medium (service + pipeline to remove) | Medium (contract + pipeline) |
++
++Postgres is the only option with no hard "no" on the top five drivers. Meilisearch fails the on-call constraint, and Algolia hits the cost approval gate. **The answer flips** if typo tolerance turns out to be the main complaint, or if the Postgres production estimate comes in well over Sam's 2 weeks.
++
++## Before Oct 20: two cheap checks
++
++These can be done before the deadline and could change the decision:
++
++1. **Sort the 41 August search tickets** into typo, ingredient, filter, and other. Owner: Priya. About half a day.
++   - *If typo complaints are the largest group,* Meilisearch (or Algolia) becomes the stronger choice.
++2. **Estimate Postgres to production, including filters and facet counts.** Owner: Maya. Due Oct 16.
++   - *If it comes in at more than ~3 weeks,* Postgres loses its effort advantage over Meilisearch.
++
++If neither check changes the picture, go with Postgres.
++
++## Consequences
++
++- **What we give up:** Best-in-class typo tolerance and ready-made facets at launch.
++- **What we get:** A ship date we can trust, no new service to run, no new spend, and real query data for a better decision later.
++- **Reversibility:** Low cost to reverse. If search sits behind one internal API, swapping the backend later doesn't change the app. The Postgres work isn't wasted either: tsvector columns and filter logic carry over to any later sync pipeline.
++
++## Next steps (proposed owners)
++
++| Action | Owner | Due |
++|---|---|---|
++| Sort August search tickets by type | Priya | 2026-10-16 |
++| Estimate Postgres to production, incl. facet counts | Maya | 2026-10-16 |
++| Final decision | Priya | 2026-10-20 |
++| Add zero-result query logging (do this whichever option wins) | Maya | 2026-10-31 |
++| Put search behind a single internal API so the backend can be swapped | Build owner | With the build |
++
++## Review triggers
++
++Revisit this decision if any of these happen:
++
++- **Scheduled review in February 2027**, after the campaign, using zero-result logs and ticket trends.
++- Zero-result queries or search tickets are mostly typo-driven after launch.
++- The Postgres build slips past mid-December.
++- Recipe volume or query load pushes Postgres p95 well above the prototype's 38ms.
++
++If we later move to Meilisearch or Algolia, write a new decision record that supersedes this one and link it here.
++
++## Open risks and dissent
++
++- **Sam prefers Meilisearch.** The argument is that it's a better product for comparable effort and that the on-call fear is overstated. That is a fair position. The ticket breakdown and Maya's estimate are the evidence that would settle it.
++- **Maya prefers Postgres.** Her prototype is the strongest hard evidence we have, but the 38ms number covers only basic queries, not facet counts.
++- **Unknown user priority.** Without zero-result logs, we are guessing how much typo tolerance matters. The February review is designed to fix that.

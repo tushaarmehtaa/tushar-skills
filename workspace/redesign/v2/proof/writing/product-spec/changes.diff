@@ -1,0 +1,341 @@
+diff --git a/docs/shared-folders-spec.md b/docs/shared-folders-spec.md
+new file mode 100644
+index 0000000..aeae457
+--- /dev/null
++++ b/docs/shared-folders-spec.md
+@@ -0,0 +1,335 @@
++# Spec: Shared folders in Quillnote (v1)
++
++**Status:** Draft for eng kickoff · **Date:** 2026-10-09 · **Source:** `idea.md`
++**Build window:** 6 weeks, Mon 2026-10-12 → Fri 2026-11-20
++**Mode:** Greenfield feature in an existing product. No Quillnote code is in this repo, so every architecture statement below is an **assumption** for the eng lead to confirm in week 1 (see §11).
++
++---
++
++## 0. TL;DR of the calls made here
++
++| # | Call | Why |
++|---|---|---|
++| D1 | One canonical folder, **no per-member copies**. Members access the owner's folder; nothing gets duplicated. | The "what happens to other people's copies" question goes away because there are no copies. |
++| D2 | **Last-write-wins is not allowed on shared notes.** Saves carry a `base_version`. A stale save becomes a **conflicted copy** next to the original, and the server does it atomically. | With several editors on blur-save, LWW silently loses meeting notes. That's the worst failure this feature can have. Real-time co-editing doesn't fit in 6 weeks. |
++| D3 | "Edits show up for everyone" means **within about 30 seconds**, via refresh-on-focus plus polling. It does not mean real-time. | Meets the ask ("we all see the same notes") without a sync engine. |
++| D4 | Roles: **owner / editor / viewer**. One owner per folder. Only the owner manages members and deletes the folder. | This is the smallest model that covers the request. |
++| D5 | **Web is the launch surface.** iOS support is a parallel track that the launch doesn't wait on. Older iOS clients don't see shared folders at all. | iOS is 2 releases behind, and App Store review adds about 3 days. An old iOS client writing LWW into a shared note would break D2. |
++| D6 | Paywall rules are **server-side config**, not code. The default build is *owner must be Pro, invitees free*. | Pricing isn't decided (Q1). This keeps it from blocking engineering. |
++| D7 | Deleting a shared folder **soft-deletes it for everyone**. Members are emailed. Support can restore it for 30 days. | Follows from D1. Confirmation still needed (Q2). |
++
++---
++
++## 1. Problem and evidence
++
++**Who:** Teams at existing Quillnote accounts who take meeting notes together (sales-led accounts first).
++**Trigger:** A recurring meeting where several people need to read or add to the same notes.
++**Today's workaround (assumed, not verified):** One person takes notes and pastes them into email or Slack, or each person keeps their own divergent notes. Every note is private to one account.
++**Evidence:** A direct request from sales, plus 3 of the top 20 accounts asking: *"let me share a folder with my team so we all see the same meeting notes."*
++**Evidence gaps:** We don't know team sizes, whether people co-edit at the *same time* (which drives conflict rate), or whether these accounts actually want an org/workspace with admin billing. A shared folder may only be a step toward that (Risk R4).
++
++**Product promise:** Put notes in a shared folder and everyone you invite sees the same, current notes without anyone's edits getting lost.
++
++## 2. Success signals (measured from beta start, 2026-11-13)
++
++- **Leading:** At least 2 of the 3 requesting accounts create a shared folder with 3 or more accepted members within 7 days of access.
++- **Outcome:** At 30 days, 40% or more of shared folders are "active": opened by 2 or more distinct members in a week. *(The 40% target is a guess. Revisit after beta.)*
++- **Funnel:** Invite → accept rate, plus the share of invitees who are new signups (this is the number that answers the pricing question).
++- **Guardrails:**
++  - Zero support tickets for lost edits on shared notes.
++  - Conflicted copies under 2% of saves on shared notes. Above 5%, D3 isn't enough and real-time moves up.
++  - No cross-account data exposure incidents.
++
++## 3. Scope
++
++### In v1
++1. The owner shares an existing folder by inviting email addresses, each as an editor or viewer.
++2. Invite email, then accept. This works for existing users and for new signups.
++3. Members see the shared folder in their sidebar under "Shared with me", and its notes appear in their search.
++4. Editors can create and edit notes in the folder. Viewers can only read.
++5. Versioned saves with conflicted copies (D2).
++6. Freshness: refresh on focus, plus polling while a shared folder or note is open (D3).
++7. Attribution: "Edited by {name} · {relative time}" on each shared note.
++8. The owner can list members and pending invites, change roles, remove members, revoke invites, and delete the folder. Members can leave.
++9. Members can **copy a note into their own private notes**. This is the member's escape hatch for D7.
++10. Moving notes into and out of a shared folder, with the rules in §5.4.
++11. Entitlement gate (D6), audit log, and a support restore tool.
++12. Web app. iOS on the parallel track (§9).
++
++### Explicitly out of v1
++| Excluded | Why / when |
++|---|---|
++| Real-time co-editing, cursors, presence | Needs a sync engine and can't fit in 6 weeks. Gated on the conflict-rate guardrail. |
++| Sharing single notes | The ask is folders. Adds a second permission path. |
++| Public or link-only sharing | Risk of access by link forwarding. Not requested. |
++| Org/workspace entity, admin console, team billing | Bigger strategic call (R4). |
++| Comments, mentions, activity feed, notifications other than invite/removal/delete emails | Not on the value path. |
++| Sharing subfolders separately, or nested shared folders | Depends on Q6. If subfolders exist, sharing a folder shares its whole subtree and nothing more granular. |
++| Transferring folder ownership | Support can do it manually if needed. Add in v2 if asked. |
++| In-app trash/restore UI for shared content | Support restore only in v1 (§5.5). |
++| Android | Not mentioned in `idea.md`. |
++
++## 4. Flows and states
++
++### 4.1 Share a folder (owner)
++| Step | Actor | Behavior | Failure / recovery |
++|---|---|---|---|
++| 1 | Owner | Folder menu, then **Share**. The dialog shows current members and pending invites. | Owner not entitled → upgrade prompt (copy depends on Q1). |
++| 2 | Owner | Enters one or more emails, picks Editor (default) or Viewer, and clicks Invite. | Invalid email → inline error. Already a member → inline "already has access". Over the member cap → blocked with the cap shown. Rate limit → "try again later". |
++| 3 | System | Creates the invites, sends emails, and marks the folder as shared (the sidebar icon changes). | Email send fails → the invite still exists, shows "Not delivered, resend", and the job retries 3× with backoff. |
++| 4 | Owner | Sees pending invites, with Resend and Revoke on each. | Resend on a pending invite reuses the invite and makes a new token (idempotent). |
++
++The first time someone shares a folder, the dialog must say: *"Everyone you invite will see all notes in this folder, including ones added later."* It must also say *"Shared folders aren't on iOS yet"* until iOS ships.
++
++### 4.2 Accept an invite (invitee)
++| Case | Behavior |
++|---|---|
++| Logged in, verified email matches the invite | Preview page ("{Owner} invited you to {Folder} as {role}") → Accept → lands in the folder. |
++| Not logged in, has an account | Log in → back to the preview. |
++| No account | Sign up with the **invited email** prefilled → verify email → preview. |
++| Logged in as a **different** email | Block: "This invite was sent to a••@b.com. Switch accounts to accept." No cross-email accept in v1 (security, §7). |
++| Token expired (14 days), revoked, or already used | Message plus "Ask {Owner} to re-invite you". No folder details are shown. |
++| Invitee is already a member | Go straight to the folder. |
++| Folder deleted since the invite | "This folder is no longer available." |
++
++### 4.3 Read and edit a shared note
++- **Open:** fetch the note with its `version`. Header shows the role badge and "Edited by X · time".
++- **Viewer:** the editor is read-only and editing controls are hidden. Any write attempt gets a 403 → toast "You have view-only access".
++- **Editor saves (on blur, unchanged trigger):** `PUT` with `base_version`.
++  - `base_version == current` → saved, `version + 1`.
++  - Stale → the server keeps the current note untouched and saves the editor's content as a **new note** titled `"{title} (conflicted copy – {name}, {date})"` in the same folder, in the same transaction. The client shows a non-blocking banner: "Someone else edited this note. Your changes were saved as a copy." with a link. **No edits are ever discarded.**
++- **Freshness:** while a shared note is open and the user has no unsaved changes, poll its version every 15 seconds. If it's newer, reload silently and show "Updated by X". If the user does have unsaved changes, don't reload. The conflict rule handles it at save. The folder list polls the change feed every 30 seconds while visible, and refreshes on window focus.
++- **Offline / timeout on save:** keep today's retry behavior. The retry sends the same `base_version` and an `Idempotency-Key`, so retrying never creates duplicate conflicted copies.
++- **Access revoked mid-session:** the next request returns 403 → the folder disappears from the sidebar with the toast "You no longer have access to {Folder}." Unsaved text stays in the editor with a **Copy to my notes** action, so it isn't lost.
++
++### 4.4 Manage members
++- The owner changes a role → takes effect on the member's next request. No real-time push.
++- The owner removes a member → access ends immediately and the member gets an email. Notes they wrote stay in the folder (owned by the folder owner), attributed to them.
++- A member leaves → confirm dialog → membership is removed. The owner can't leave; they can only delete.
++
++### 4.5 Delete a shared folder (owner)
++1. Confirm dialog, listing the member count: "{N} people will lose access. Members can copy notes to their own account before you delete." Requires typing the folder name if N ≥ 1.
++2. Soft delete: the folder and its notes get `deleted_at`, all memberships and pending invites are revoked, and members are emailed "{Owner} deleted {Folder}".
++3. Support can restore within 30 days (§5.5). After that a purge job hard-deletes.
++4. **No grace period for members** in v1. This is the main thing Q2 needs to confirm.
++
++### 4.6 Account lifecycle edge cases
++- **Owner deletes their account** → same as deleting each of their shared folders (§4.5).
++- **Member deletes their account** → membership removed. Their past edits show as "Deleted user".
++- **Owner downgrades from Pro** → existing shares keep working, but no new invites are allowed. *(Default. Needs confirmation, Q3.)*
++
++## 5. Data and authorization
++
++### 5.1 Entities (changes to assumed existing `users`, `folders`, `notes`)
++
++**`folders`** (existing). Add: `deleted_at`, `deleted_by`. A folder is shared iff it has more than one `folder_members` row (derived, not stored).
++
++**`folder_members`** (new)
++| Field | Notes |
++|---|---|
++| `folder_id`, `user_id` | PK `(folder_id, user_id)` |
++| `role` | `owner` \| `editor` \| `viewer` |
++| `added_by`, `created_at`, `updated_at` | |
++
++Invariant: exactly one `owner` row per shared folder, and it matches `folders.owner_id`. The owner row is created on the first invite.
++
++**`folder_invites`** (new)
++| Field | Notes |
++|---|---|
++| `id` | |
++| `folder_id`, `invited_by` | |
++| `email` | lowercased and trimmed |
++| `role` | `editor` \| `viewer` |
++| `token_hash` | Only the hash is stored. The raw token appears only in the email. 32+ bytes of randomness. |
++| `status` | `pending → accepted \| revoked \| expired`. These are terminal states. |
++| `expires_at` | created + 14 days |
++| `accepted_by`, `accepted_at` | |
++
++Unique partial index on `(folder_id, email) WHERE status = 'pending'`.
++
++**`notes`** (existing). Add:
++- `version int NOT NULL DEFAULT 1`
++- `created_by`
++- `updated_by`
++- `deleted_at`
++- `deleted_by`
++- `conflict_of_note_id` (nullable)
++
++`owner_id` for notes in a shared folder is the folder owner, so storage and quota count against the owner. *Confirm there's no per-user quota that this breaks (Q6).*
++
++**`share_events`** (new, audit, append-only): `folder_id`, `actor_id`, `type` (invite_sent, invite_accepted, invite_revoked, role_changed, member_removed, member_left, folder_deleted, folder_restored), `target_user_id` / `target_email`, `created_at`. Kept for 1 year.
++
++### 5.2 Migration
++- Additive only. Backfill `notes.version = 1` and `created_by = updated_by = owner_id`.
++- No existing behavior changes for private notes. A missing `base_version` on a private note means LWW, exactly as today.
++
++### 5.3 Authorization matrix
++| Operation | Owner | Editor | Viewer | Non-member |
++|---|---|---|---|---|
++| Read folder / notes / search hits | ✅ | ✅ | ✅ | ❌ 404 |
++| Create / edit notes | ✅ | ✅ | ❌ 403 | ❌ 404 |
++| Delete a note (soft) | ✅ | ✅ | ❌ | ❌ |
++| Move note **into** folder | ✅ | ✅ (own private notes only) | ❌ | ❌ |
++| Move note **out** of folder | ✅ | ❌ (use Copy) | ❌ | ❌ |
++| Copy note to my notes | ✅ | ✅ | ✅ | ❌ |
++| Rename folder | ✅ | ❌ | ❌ | ❌ |
++| Invite / revoke / change role / remove | ✅ | ❌ | ❌ | ❌ |
++| Leave | ❌ | ✅ | ✅ | — |
++| Delete folder | ✅ | ❌ | ❌ | ❌ |
++
++Non-members get 404, not 403, so the existence of a folder or note isn't revealed.
++
++**Hard requirement:** a single `canAccess(user, note|folder, op)` function is the only path to this decision. It must be used by every route that touches notes. That includes **search, export, attachments, and the change feed**, and any of those missed is a data leak. The week 1 task is to list every such route (Q6).
++
++### 5.4 Moving notes
++- **Into a shared folder:** a confirm dialog says "Everyone in {Folder} will be able to see this note". `owner_id` is transferred to the folder owner.
++- **Out:** owner only. The note becomes the owner's private note.
++
++### 5.5 Deletion and retention
++- Soft-deleted notes and folders are restorable by support for 30 days via an internal admin action that writes `folder_restored`. Restoring re-creates memberships from `share_events`.
++- A nightly purge job hard-deletes rows older than 30 days. It must be idempotent.
++
++## 6. Interfaces
++
++Assumes a JSON HTTP API. Adapt naming to existing conventions. All errors use the shape `{ "error": { "code": "...", "message": "..." } }`.
++
++| Endpoint | Who | Success | Errors |
++|---|---|---|---|
++| `POST /folders/:id/invites` `{emails[], role}` | owner | `201 {invites[]}`. A pending invite to the same email gets a new token and a resent email (`200`). | `403 not_owner`, `402 entitlement_required`, `409 already_member`, `422 invalid_email`, `422 member_cap_reached`, `429 rate_limited` |
++| `DELETE /folders/:id/invites/:inviteId` | owner | `204` | `404` |
++| `GET /invites/:token` | anyone | `200 {folder_name, inviter_name, role, invited_email_masked}` | `410 invite_unavailable` (expired, revoked, used, or folder deleted, deliberately not distinguished) |
++| `POST /invites/:token/accept` | logged-in user with matching verified email | `200 {folder_id}`. Idempotent if already a member. | `403 email_mismatch`, `410 invite_unavailable` |
++| `GET /folders/:id/members` | members | `200 {members[], pending_invites[]}` (pending invites shown to owner only) | `404` |
++| `PATCH /folders/:id/members/:userId` `{role}` | owner | `200` | `403`, `422 cannot_change_owner` |
++| `DELETE /folders/:id/members/:userId` | owner (remove) or self (leave) | `204` | `403`, `422 owner_cannot_leave` |
++| `PUT /notes/:id` `{title, body, base_version}` + `Idempotency-Key` | owner/editor | `200 {version}` or `200 {version, conflict: {copy_note_id}}` | `403 read_only`, `404`, `428 base_version_required` (shared notes only) |
++| `GET /folders/:id/changes?cursor=` | members | `200 {changes:[{note_id, version, updated_by, deleted}], cursor}` | `404` |
++| `POST /notes/:id/copy` | members | `201 {note_id}` (into caller's private notes) | `404` |
++| `DELETE /folders/:id` | owner | `204` (soft) | `403` |
++
++**Limits (defaults, confirm with sales, Q7):**
++- 50 members plus pending invites per folder.
++- 100 invites per user per day.
++- 20 shared folders owned per user.
++
++**Client gating:** every client sends `X-Client-Platform` and `X-Client-Version`. If that header doesn't exist today, add it in week 1. For iOS versions older than the sharing release, the server **omits shared folders and their notes** from list, sync, and search responses, and rejects writes to shared notes with `426 upgrade_required`. This applies to the owner too: their shared folder won't appear on old iOS builds. That's an accepted risk, disclosed in the share dialog.
++
++**Background jobs:**
++- Invite email send (retry 3×, then mark undelivered).
++- Removal and deletion emails.
++- Invite expiry sweep (hourly).
++- 30-day purge (nightly).
++
++## 7. Non-functional requirements
++
++**Required for launch:**
++- **Security:**
++  - Invite tokens are single-use, hashed at rest, and expire in 14 days.
++  - Accepting requires a verified email that matches the invite.
++  - Non-members get 404s.
++  - Invite rate limits are in place.
++  - Authz tests cover every row of §5.3 on every note-touching route, including search, export, and attachments.
++- **Data integrity:**
++  - No code path on a shared note can overwrite a newer version (D2). Property test: N concurrent saves with the same `base_version` → exactly 1 succeeds and N−1 produce conflicted copies, and no content is lost.
++  - Idempotency keys are honored for 24 hours.
++- **Privacy:**
++  - Invite emails show only the inviter's name, the folder name, and the role.
++  - The invite preview masks the email address.
++  - Removed members lose access on their next request. Cached data on the iOS client is cleared on next sync.
++- **Accessibility:**
++  - The share dialog, role selector, banners, and toasts are keyboard-operable and screen-reader-announced (`aria-live` for the conflict and revoked banners).
++  - Role is conveyed by text, not just icon or color.
++- **Observability:**
++  - Metrics for invites sent/accepted/failed, saves on shared notes, conflicts created, 403/404 on shared resources, and 426s by client version.
++  - Alerts if the conflict rate goes over 5% in a day, or the email failure rate goes over 5%.
++- **Performance:**
++  - The authz check adds at most 20 ms p95 to note reads.
++  - The change-feed endpoint is at most 100 ms p95.
++  - Polling load estimate: 1 request per 15 s per open shared note, plus 1 per 30 s per visible shared folder. Check against current API capacity in week 1.
++
++**Deferred, risk accepted:**
++- Real-time updates.
++- In-app restore.
++- Ownership transfer.
++- A per-folder activity log visible to users (the audit log exists, but only internally).
++
++## 8. Delivery plan: vertical slices
++
++Each slice ships behind the flag `shared_folders` (per account) and is demoable end to end on web.
++
++| Week | Slice | User-visible outcome | Key work | Acceptance (summary) |
++|---|---|---|---|---|
++| 1 (10/12) | **S0 Foundations** | None (invisible) | Answer Q4–Q6. Migrations (§5.2). `canAccess` plus a route inventory. Client version header. `version` on notes. Feature flag. | Migrations rehearsed on a prod snapshot. The route inventory is reviewed and every note-touching route calls `canAccess`. |
++| 2 (10/19) | **S1 Share read-only** | The owner invites by email. The invitee accepts and **reads** the folder on web. | Invites API, email, accept flow (all cases in §4.2), "Shared with me" sidebar, search inclusion. All members are viewers in this slice. | AC1–AC4 |
++| 3 (10/26) | **S2 Co-edit safely** | Editors edit. Nobody loses an edit. Changes show up within 30 s. | Editor role, `base_version` saves, atomic conflicted copy, idempotency, change feed, polling, attribution. | AC5–AC8 |
++| 4 (11/02) | **S3 Manage and exit** | The owner manages members and deletes. Members leave or copy notes. | Role change, remove, leave, revoke, delete folder plus emails, copy-to-my-notes, move in/out, entitlement gate (D6), audit log, support restore. | AC9–AC13 |
++| 5 (11/09) | **Harden + beta** | The 3 requesting accounts get access **Fri 11/13** (in customers' hands by end of week 5). | Authz test sweep, accessibility pass, dashboards and alerts, load check, onboarding copy. | AC14–AC15. Beta checklist signed off. |
++| 6 (11/16) | **Expand** | Rollout to the top 20 accounts, then GA if the guardrails hold. | Fix beta issues. Pricing config set from the Q1 decision. | Guardrails green for 5 days before GA. |
++
++**iOS parallel track (D5):** view and edit for shared folders, `base_version` saves, conflict banner, and handling 426/403. **Submit to the App Store by Wed 11/11** so it can land in week 6 with buffer for one rejection. If it slips, launch on web anyway. That depends on Q4.
++
++## 9. Acceptance criteria
++
++1. **AC1** Given a Pro owner (under default config), when they invite `a@x.com` as viewer, then a pending invite exists, an email is sent within 1 minute, and re-inviting the same email doesn't create a second pending invite.
++2. **AC2** Given a valid invite, when a new user signs up with the invited email and verifies it, then they land in the folder and see all its notes.
++3. **AC3** Given an invite to `a@x.com`, when a user logged in as `b@x.com` opens it, then accept is blocked with `email_mismatch` and no folder content is returned.
++4. **AC4** Given an expired, revoked, or used token, `GET /invites/:token` returns 410 without the folder name.
++5. **AC5** Given two editors who opened the same note at version 3, when both save, then one is saved as version 4 and the other appears as a conflicted copy in the same folder. Both texts are retrievable and the second editor sees the banner.
++6. **AC6** Given a save retried with the same `Idempotency-Key`, then exactly one version or one conflicted copy results.
++7. **AC7** Given editor A saves a note while viewer B has it open with no local changes, then B sees A's change within 20 s without reloading.
++8. **AC8** Given a viewer, any write to a note in the folder returns 403 and the UI shows no edit affordance.
++9. **AC9** Given the owner removes member M, then M's next request for any of the folder's notes, search results, or change feed returns 404, and M gets an email.
++10. **AC10** Given the owner deletes a shared folder with 3 members, then all members lose access, all receive an email, and support can restore the folder **with memberships** within 30 days.
++11. **AC11** Given a member with unsaved text whose access is revoked, then the text stays in the editor and **Copy to my notes** saves it privately.
++12. **AC12** Given an editor, moving a note *out* of the shared folder isn't offered and the API returns 403.
++13. **AC13** Given the entitlement config is set to `owner_requires_pro=true`, a Free user who tries to share gets `402` and the upgrade prompt. Flipping the config changes this without a deploy.
++14. **AC14** Given an iOS client below the sharing version, shared folders don't appear in any response and writes to shared notes return 426. Private notes behave exactly as before.
++15. **AC15** All §5.3 cells are covered by automated authz tests across read, list, search, export, attachment, and change-feed routes.
++
++**Verification:**
++- Unit/property tests for versioning and conflicts (AC5, AC6).
++- Integration tests for the authz matrix (AC15).
++- E2E tests (web) for invite → accept → edit → conflict → remove.
++- Migration rehearsal on a prod snapshot.
++- Accessibility check (axe + manual VoiceOver/NVDA pass on the share dialog).
++- Staging load check for polling.
++- Post-deploy smoke test per slice, and metrics confirmed on the dashboard.
++
++## 10. Rollout and rollback
++
++- **Flag:** `shared_folders`, per account. Internal team in week 4, the 3 requesting accounts on 11/13, top 20 midweek in week 6, GA after the guardrails hold.
++- **Kill switch:** turning the flag off hides the sharing UI and makes the server treat shared folders as **owner-only**. Members lose access, and no data is deleted or moved. Owners keep all notes, including the ones members wrote. Turning it back on restores memberships unchanged.
++- **Rollback triggers:**
++  - Any confirmed cross-account exposure → kill immediately.
++  - Any confirmed lost edit → pause expansion.
++  - Conflict rate above 5% sustained over 2 days → pause and reconsider D3.
++- **Migrations** are additive and stay in place on rollback.
++
++## 11. Open questions (cannot be decided here)
++
++| # | Question | Owner | Needed by | Default being built until answered |
++|---|---|---|---|---|
++| Q1 | **Pricing:** must invitees be Pro? Must owners? | Founder + Sales | End of week 2 (10/23) | Owner Pro, invitees free (config, D6). Sales' growth argument is plausible but unproven. The invitee-signup metric in §2 will provide evidence. |
++| Q2 | **Delete semantics:** is "gone for everyone, support restore for 30 days" acceptable, or do members get copies or a grace period? | Founder | Week 3 (10/30) | D7, plus Copy-to-my-notes as the member escape hatch. |
++| Q3 | **Owner downgrades from Pro:** do shares keep working, become read-only, or end? | Founder | Week 4 (11/06) | Keep working, no new invites. |
++| Q4 | **iOS staffing:** who builds iOS, and does iOS block launch? The 2-release lag also has to ship first or be bundled. | Eng lead | Week 1 (10/14) | Web launches alone. iOS submits 11/11. |
++| Q5 | **Team size** for the 6 weeks. This plan assumes 2 web/backend engineers, 1 iOS engineer, and part-time design/QA. | Eng lead | Week 1 | If it's 1 backend engineer, cut S3's move-in/out and copy-to-my-notes before cutting anything in S2. |
++| Q6 | **Architecture facts:** stack, whether subfolders/attachments/export/search index exist, per-user quotas, whether a client version header exists, and how note IDs are cached on iOS. | Eng lead | Week 1 | Assumptions as written. Any "yes" on subfolders or attachments adds authz scope in S0. |
++| Q7 | **Member and folder caps:** do the top accounts need more than 50 members per folder? | Sales | Week 2 | 50 / 20 / 100 per day. |
++| Q8 | **Strategic:** do these accounts really want a team workspace with admin and billing? | Founder + Sales | Before GA | Folder-level sharing only. Don't build an org entity yet. |
++
++## 12. Risks
++
++| # | Risk | Likelihood | Mitigation |
++|---|---|---|---|
++| R1 | Simultaneous note-taking during meetings produces lots of conflicted copies and feels broken | Medium-High | Conflict-rate metric and alert. Copy and banner make the cause clear. This is the trigger for a real-time v2. Ask beta accounts how they take notes. |
++| R2 | A note-touching route that bypasses `canAccess` leaks data | Medium | Single authz function, route inventory, AC15 test sweep, and 404-for-non-members. |
++| R3 | iOS misses the window, so owners lose iOS visibility of folders they share | High | Disclosed in the share dialog. Web launch doesn't depend on iOS. Submit by 11/11. |
++| R4 | The customers' real need is a team workspace, and folder sharing gets reworked later | Medium | Keep `folder_members` generic so a future workspace can grant membership. Validate in beta interviews. |
++| R5 | Polling load at scale | Low (beta) | Load check in week 5. Back off polling when the tab is hidden. |
++| R6 | Pricing decision lands late | Medium | Config-driven gate (D6). Only the copy changes. |
++
++**Confidence:**
++- High on scope and the safety model (D1, D2, D4).
++- Medium on the timeline, which depends on Q4–Q6.
++- Low on the success targets, which are first guesses to recalibrate after beta.

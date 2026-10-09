@@ -1,0 +1,31 @@
+{
+  "skill": "social-sharing",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill social-sharing -a claude-code -y (project scope, .claude/skills/social-sharing; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "social-sharing",
+      "args": "Fix share previews (OG/Twitter cards) for the home and pricing pages. Production origin: https://tallyroom.app (not launched yet)."
+    }
+  ],
+  "skillFileReads": [],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 9,
+    "Read": 3,
+    "Write": 3,
+    "Edit": 4
+  },
+  "durationSec": 95,
+  "costUsd": 0.525027,
+  "numTurns": 22,
+  "isError": false,
+  "diffStat": " 6 files changed, 96 insertions(+)",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "Added metadataBase, per-page canonical/OG/Twitter metadata and generated 1200x630 opengraph-image routes. I independently built the fixture and fetched both OG images (og-home.png, og-pricing.png) and the served meta tags. The cards are plain text on the old purple gradient. Noticed a foreign process on port 3123 (user's own next-server) and left it alone. All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

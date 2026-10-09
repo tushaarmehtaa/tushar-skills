@@ -1,0 +1,143 @@
+diff --git a/app/layout.jsx b/app/layout.jsx
+index 77da3b5..2d5e0cb 100644
+--- a/app/layout.jsx
++++ b/app/layout.jsx
+@@ -1,5 +1,14 @@
+ import "./globals.css";
+ import Nav from "./Nav";
++import { SITE_URL } from "../lib/og-card";
++
++export const metadata = {
++  metadataBase: new URL(SITE_URL),
++  title: { default: "Tallyroom — Split shared expenses", template: "%s · Tallyroom" },
++  description: "Split shared expenses with roommates and friends. Track who paid, who owes, and settle up.",
++  openGraph: { siteName: "Tallyroom", type: "website" },
++  twitter: { card: "summary_large_image" },
++};
+ 
+ export default function RootLayout({ children }) {
+   return (
+diff --git a/app/opengraph-image.jsx b/app/opengraph-image.jsx
+new file mode 100644
+index 0000000..58874a0
+--- /dev/null
++++ b/app/opengraph-image.jsx
+@@ -0,0 +1,12 @@
++import { ogCard, ogSize } from "../lib/og-card";
++
++export const alt = "Tallyroom — split shared expenses with roommates and friends";
++export const size = ogSize;
++export const contentType = "image/png";
++
++export default function Image() {
++  return ogCard({
++    title: "Split shared expenses without the awkward maths",
++    subtitle: "Track who paid, who owes, and settle up with roommates and friends.",
++  });
++}
+diff --git a/app/page.jsx b/app/page.jsx
+index 47bce33..32b7a75 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,3 +1,17 @@
++const description = "Split shared expenses with roommates and friends. Track who paid, who owes, and settle up.";
++
++export const metadata = {
++  alternates: { canonical: "/" },
++  openGraph: {
++    siteName: "Tallyroom",
++    type: "website",
++    url: "/",
++    title: "Tallyroom — Split shared expenses",
++    description,
++  },
++  twitter: { card: "summary_large_image", title: "Tallyroom — Split shared expenses", description },
++};
++
+ export default function Home() {
+   return (
+     <main>
+diff --git a/app/pricing/opengraph-image.jsx b/app/pricing/opengraph-image.jsx
+new file mode 100644
+index 0000000..e8504d5
+--- /dev/null
++++ b/app/pricing/opengraph-image.jsx
+@@ -0,0 +1,12 @@
++import { ogCard, ogSize } from "../../lib/og-card";
++
++export const alt = "Tallyroom pricing — Free, Plus, Household and Team plans";
++export const size = ogSize;
++export const contentType = "image/png";
++
++export default function Image() {
++  return ogCard({
++    title: "Pricing",
++    subtitle: "Free to start. Plus $3/mo, Household $6/mo, Team $12/mo. Cancel anytime.",
++  });
++}
+diff --git a/app/pricing/page.jsx b/app/pricing/page.jsx
+index 24a5dae..d170c3f 100644
+--- a/app/pricing/page.jsx
++++ b/app/pricing/page.jsx
+@@ -10,6 +10,22 @@ const rows = [
+   ["Priority support", "—", "—", "—", "✓"],
+ ];
+ 
++const description = "Free to start. Plus $3/mo, Household $6/mo, Team $12/mo — one paid account covers the whole group. Cancel anytime.";
++
++export const metadata = {
++  title: "Pricing",
++  description,
++  alternates: { canonical: "/pricing" },
++  openGraph: {
++    siteName: "Tallyroom",
++    type: "website",
++    url: "/pricing",
++    title: "Pricing · Tallyroom",
++    description,
++  },
++  twitter: { card: "summary_large_image", title: "Pricing · Tallyroom", description },
++};
++
+ export default function Pricing() {
+   return (
+     <main className="page">
+diff --git a/lib/og-card.jsx b/lib/og-card.jsx
+new file mode 100644
+index 0000000..9d35276
+--- /dev/null
++++ b/lib/og-card.jsx
+@@ -0,0 +1,33 @@
++import { ImageResponse } from "next/og";
++
++export const SITE_URL = "https://tallyroom.app";
++
++export const ogSize = { width: 1200, height: 630 };
++
++// Shared 1200x630 preview card, styled after the homepage hero.
++export function ogCard({ title, subtitle }) {
++  return new ImageResponse(
++    (
++      <div
++        style={{
++          width: "100%",
++          height: "100%",
++          display: "flex",
++          flexDirection: "column",
++          justifyContent: "space-between",
++          padding: 80,
++          background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a855f7 100%)",
++          color: "#fff",
++        }}
++      >
++        <div style={{ fontSize: 40, fontWeight: 800 }}>Tallyroom</div>
++        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
++          <div style={{ fontSize: 76, fontWeight: 800, lineHeight: 1.05, maxWidth: 1000 }}>{title}</div>
++          <div style={{ fontSize: 34, opacity: 0.9, maxWidth: 1000 }}>{subtitle}</div>
++        </div>
++        <div style={{ fontSize: 28, opacity: 0.8 }}>tallyroom.app</div>
++      </div>
++    ),
++    ogSize,
++  );
++}

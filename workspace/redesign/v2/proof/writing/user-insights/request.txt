@@ -1,0 +1,1 @@
+I talked to three Quillnote users (interviews/) and exported our activation numbers (activation.csv, see README-data.md). What should we fix first and how sure can we be? Write it up in insights.md.

@@ -1,0 +1,737 @@
+diff --git a/app/dashboard/FlatHome.jsx b/app/dashboard/FlatHome.jsx
+new file mode 100644
+index 0000000..17fabb6
+--- /dev/null
++++ b/app/dashboard/FlatHome.jsx
+@@ -0,0 +1,407 @@
++"use client";
++import { useEffect, useMemo, useRef, useState } from "react";
++import { balances, simplify, shareOf, formatINR, formatDay, todayISO, toPaise } from "../../lib/ledger";
++
++const ACTIVITY_PREVIEW = 8;
++
++export default function FlatHome({ name, members, you, initialExpenses, initialSettlements }) {
++  const [expenses, setExpenses] = useState(initialExpenses);
++  const [settlements, setSettlements] = useState(initialSettlements);
++  const [notice, setNotice] = useState(null);
++  const [showAllActivity, setShowAllActivity] = useState(false);
++  const dialogRef = useRef(null);
++  const undoRef = useRef(null);
++  const noticeRef = useRef(null);
++
++  const net = useMemo(() => balances(members, expenses, settlements), [members, expenses, settlements]);
++  const transfers = useMemo(() => simplify(net), [net]);
++  const outstanding = transfers.reduce((sum, t) => sum + t.amount, 0);
++  const yours = transfers.filter((t) => t.from === you || t.to === you);
++  const others = transfers.filter((t) => t.from !== you && t.to !== you);
++
++  const activity = useMemo(() => {
++    const items = [
++      ...expenses.map((e) => ({ ...e, kind: "expense" })),
++      ...settlements.map((s) => ({ ...s, kind: "payment" })),
++    ];
++    return items.sort((a, b) => b.date.localeCompare(a.date) || (b.seq ?? 0) - (a.seq ?? 0));
++  }, [expenses, settlements]);
++  const visibleActivity = showAllActivity ? activity : activity.slice(0, ACTIVITY_PREVIEW);
++
++  useEffect(() => {
++    if (notice?.undo) undoRef.current?.focus();
++    else if (notice) noticeRef.current?.focus();
++  }, [notice]);
++
++  const label = (m) => (m === you ? "You" : m);
++  const who = (m) => (m === you ? "you" : m);
++
++  function recordPayment(t) {
++    const payment = { ...t, id: `s${Date.now()}`, date: todayISO(), seq: Date.now() };
++    setSettlements((prev) => [...prev, payment]);
++    setNotice({
++      message: `Recorded ${formatINR(t.amount)} from ${who(t.from)} to ${who(t.to)}.`,
++      undo: () => setSettlements((prev) => prev.filter((s) => s.id !== payment.id)),
++      undone: "Payment removed.",
++    });
++  }
++
++  function deleteExpense(expense) {
++    setExpenses((prev) => prev.filter((e) => e.id !== expense.id));
++    setNotice({
++      message: `Deleted “${expense.what}”.`,
++      undo: () => setExpenses((prev) => [...prev, expense]),
++      undone: `Restored “${expense.what}”.`,
++    });
++  }
++
++  function addExpense(expense) {
++    setExpenses((prev) => [...prev, expense]);
++    setNotice({
++      message: `Added “${expense.what}”, ${formatINR(expense.amount)} split ${expense.splitBetween.length} ways.`,
++      undo: () => setExpenses((prev) => prev.filter((e) => e.id !== expense.id)),
++      undone: `Removed “${expense.what}”.`,
++    });
++  }
++
++  return (
++    <main className="dash">
++      <header className="dash-head">
++        <div>
++          <h1>{name}</h1>
++          <p className="dash-meta">
++            {members.length} members · {members.join(", ")}
++          </p>
++        </div>
++        <button type="button" className="dash-btn dash-btn-primary" onClick={() => dialogRef.current?.open()}>
++          Add expense
++        </button>
++      </header>
++      <p className="dash-fixture">Sample data — viewing as {you}. Changes last until you reload.</p>
++
++      <div ref={noticeRef} className="dash-notice" role="status" aria-live="polite" tabIndex={-1}>
++        {notice && (
++          <>
++            <span>{notice.message}</span>
++            {notice.undo && (
++              <button
++                ref={undoRef}
++                type="button"
++                className="dash-link"
++                onClick={() => {
++                  notice.undo();
++                  setNotice({ message: notice.undone });
++                }}
++              >
++                Undo
++              </button>
++            )}
++          </>
++        )}
++      </div>
++
++      <div className="dash-grid">
++        <section className="dash-you" aria-labelledby="you-heading">
++          <h2 id="you-heading" className="dash-eyebrow">Your position</h2>
++          <YourPosition net={net[you]} transfers={yours} you={you} />
++        </section>
++
++        <section className="dash-panel dash-settle" aria-labelledby="settle-heading">
++          <div className="dash-panel-head">
++            <h2 id="settle-heading">To settle</h2>
++            {transfers.length > 0 && (
++              <p className="dash-meta">
++                {formatINR(outstanding)} in {transfers.length} {transfers.length === 1 ? "payment" : "payments"}
++              </p>
++            )}
++          </div>
++          {transfers.length === 0 ? (
++            <p className="dash-empty">Everyone’s square. Nothing to settle.</p>
++          ) : (
++            <>
++              <ul className="dash-list">
++                {[...yours, ...others].map((t) => (
++                  <li key={`${t.from}-${t.to}`} className="dash-transfer">
++                    <span className="dash-transfer-who">
++                      <strong>{label(t.from)}</strong>
++                      <span className="dash-arrow" aria-hidden="true">→</span>
++                      <span className="sr-only">{t.from === you ? "pay" : "pays"}</span>
++                      <strong>{who(t.to)}</strong>
++                    </span>
++                    <span className="dash-amount">{formatINR(t.amount)}</span>
++                    <button
++                      type="button"
++                      className="dash-btn"
++                      onClick={() => recordPayment(t)}
++                      aria-label={`Record ${formatINR(t.amount)} paid by ${who(t.from)} to ${who(t.to)}`}
++                    >
++                      Record payment
++                    </button>
++                  </li>
++                ))}
++              </ul>
++              <p className="dash-hint">
++                Balances are combined so the flat makes the fewest payments. Record a payment once the money has moved.
++              </p>
++            </>
++          )}
++        </section>
++
++        <section className="dash-panel dash-balances" aria-labelledby="balances-heading">
++          <div className="dash-panel-head">
++            <h2 id="balances-heading">Balances</h2>
++          </div>
++          <ul className="dash-list">
++            {members.map((m) => (
++              <li key={m} className="dash-balance">
++                <span>
++                  {m}
++                  {m === you && <span className="dash-you-tag"> (you)</span>}
++                </span>
++                <BalanceText value={net[m]} />
++              </li>
++            ))}
++          </ul>
++        </section>
++
++        <section className="dash-panel dash-activity" aria-labelledby="activity-heading">
++          <div className="dash-panel-head">
++            <h2 id="activity-heading">Recent activity</h2>
++          </div>
++          {activity.length === 0 ? (
++            <p className="dash-empty">
++              No expenses yet. Add the first one and Tallyroom will work out who owes what.
++            </p>
++          ) : (
++            <>
++              <ActivityList items={visibleActivity} you={you} label={label} onDelete={deleteExpense} />
++              {activity.length > ACTIVITY_PREVIEW && (
++                <button type="button" className="dash-link dash-more" onClick={() => setShowAllActivity((v) => !v)}>
++                  {showAllActivity ? "Show recent only" : `Show all ${activity.length} entries`}
++                </button>
++              )}
++            </>
++          )}
++        </section>
++      </div>
++
++      <AddExpenseDialog ref={dialogRef} members={members} you={you} onAdd={addExpense} />
++    </main>
++  );
++}
++
++function YourPosition({ net, transfers, you }) {
++  if (net === 0) {
++    return (
++      <>
++        <p className="dash-you-figure">You’re settled up</p>
++        <p className="dash-meta">Nobody owes you and you don’t owe anyone.</p>
++      </>
++    );
++  }
++  const owing = net < 0;
++  return (
++    <>
++      <p className={`dash-you-figure ${owing ? "is-owe" : "is-owed"}`}>
++        {owing ? "You owe " : "You’re owed "}
++        <span className="dash-num">{formatINR(net)}</span>
++      </p>
++      <ul className="dash-you-steps">
++        {transfers.map((t) => (
++          <li key={`${t.from}-${t.to}`}>
++            {t.from === you ? `Pay ${t.to}` : `${t.from} pays you`}{" "}
++            <span className="dash-num">{formatINR(t.amount)}</span>
++          </li>
++        ))}
++      </ul>
++    </>
++  );
++}
++
++function BalanceText({ value }) {
++  if (value === 0) return <span className="dash-muted">settled up</span>;
++  return value > 0 ? (
++    <span className="is-owed">
++      gets back <span className="dash-num">{formatINR(value)}</span>
++    </span>
++  ) : (
++    <span className="is-owe">
++      owes <span className="dash-num">{formatINR(value)}</span>
++    </span>
++  );
++}
++
++function ActivityList({ items, you, label, onDelete }) {
++  const groups = [];
++  for (const item of items) {
++    const last = groups[groups.length - 1];
++    if (last && last.date === item.date) last.items.push(item);
++    else groups.push({ date: item.date, items: [item] });
++  }
++  return (
++    <div className="dash-days">
++      {groups.map((g) => (
++        <div key={g.date} className="dash-day">
++          <h3 className="dash-day-label">{formatDay(g.date)}</h3>
++          <ul className="dash-list">
++            {g.items.map((item) =>
++              item.kind === "expense" ? (
++                <ExpenseRow key={item.id} expense={item} you={you} label={label} onDelete={onDelete} />
++              ) : (
++                <li key={item.id} className="dash-entry">
++                  <div className="dash-entry-main">
++                    <span className="dash-entry-title">
++                      {label(item.from)} paid {item.to === you ? "you" : item.to}
++                    </span>
++                    <span className="dash-meta">Payment</span>
++                  </div>
++                  <span className="dash-amount">{formatINR(item.amount)}</span>
++                </li>
++              )
++            )}
++          </ul>
++        </div>
++      ))}
++    </div>
++  );
++}
++
++function ExpenseRow({ expense, you, label, onDelete }) {
++  const share = shareOf(expense, you);
++  let effect;
++  if (expense.paidBy === you) {
++    const lent = expense.amount - share;
++    effect = lent > 0 ? <span className="is-owed">you lent {formatINR(lent)}</span> : <span className="dash-muted">just you</span>;
++  } else if (share > 0) {
++    effect = <span className="is-owe">your share {formatINR(share)}</span>;
++  } else {
++    effect = <span className="dash-muted">not involved</span>;
++  }
++  const n = expense.splitBetween.length;
++  const everyone = n > 1 ? `split ${n} ways` : `for ${label(expense.splitBetween[0])}`;
++
++  return (
++    <li className="dash-entry">
++      <div className="dash-entry-main">
++        <span className="dash-entry-title">{expense.what}</span>
++        <span className="dash-meta">
++          {label(expense.paidBy)} paid · {everyone}
++        </span>
++      </div>
++      <div className="dash-entry-side">
++        <span className="dash-amount">{formatINR(expense.amount)}</span>
++        <span className="dash-effect">{effect}</span>
++      </div>
++      <button
++        type="button"
++        className="dash-link dash-delete"
++        onClick={() => onDelete(expense)}
++        aria-label={`Delete ${expense.what}`}
++      >
++        Delete
++      </button>
++    </li>
++  );
++}
++
++function AddExpenseDialog({ ref, members, you, onAdd }) {
++  const dialog = useRef(null);
++  const form = useRef(null);
++  const [splitError, setSplitError] = useState(false);
++
++  // Expose open() to the parent; the native dialog handles focus trapping, Esc, and focus return.
++  useEffect(() => {
++    ref.current = {
++      open() {
++        form.current.reset();
++        const date = form.current.elements.date;
++        date.value = date.max = todayISO();
++        setSplitError(false);
++        dialog.current.showModal();
++      },
++    };
++  }, [ref]);
++
++  function submit(event) {
++    event.preventDefault();
++    const data = new FormData(event.currentTarget);
++    const splitBetween = members.filter((m) => data.getAll("split").includes(m));
++    if (splitBetween.length === 0) {
++      setSplitError(true);
++      form.current.querySelector('input[name="split"]').focus();
++      return;
++    }
++    const amount = toPaise(data.get("amount"));
++    onAdd({
++      id: `e${Date.now()}`,
++      seq: Date.now(),
++      date: data.get("date"),
++      what: data.get("what").trim(),
++      paidBy: data.get("paidBy"),
++      amount,
++      splitBetween,
++    });
++    dialog.current.close();
++  }
++
++  return (
++    <dialog ref={dialog} className="dash-dialog" aria-labelledby="add-heading">
++      <form ref={form} onSubmit={submit} className="dash-form">
++        <h2 id="add-heading">Add expense</h2>
++
++        <label className="dash-field">
++          <span>What was it for?</span>
++          <input name="what" required maxLength={80} autoComplete="off" placeholder="e.g. Groceries — BigBasket" />
++        </label>
++
++        <div className="dash-field-row">
++          <label className="dash-field">
++            <span>Amount (₹)</span>
++            <input name="amount" type="number" inputMode="decimal" min="0.01" step="0.01" required />
++          </label>
++          <label className="dash-field">
++            <span>Date</span>
++            <input name="date" type="date" required />
++          </label>
++        </div>
++
++        <label className="dash-field">
++          <span>Paid by</span>
++          <select name="paidBy" defaultValue={you}>
++            {members.map((m) => (
++              <option key={m} value={m}>
++                {m === you ? `${m} (you)` : m}
++              </option>
++            ))}
++          </select>
++        </label>
++
++        <fieldset className="dash-field" aria-describedby={splitError ? "split-error" : "split-hint"}>
++          <legend>Split equally between</legend>
++          <div className="dash-checks">
++            {members.map((m) => (
++              <label key={m} className="dash-check">
++                <input type="checkbox" name="split" value={m} defaultChecked onChange={() => setSplitError(false)} />
++                {m === you ? `${m} (you)` : m}
++              </label>
++            ))}
++          </div>
++          {splitError ? (
++            <p id="split-error" className="dash-error">Choose at least one person to split with.</p>
++          ) : (
++            <p id="split-hint" className="dash-hint">Untick anyone who wasn’t part of it.</p>
++          )}
++        </fieldset>
++
++        <div className="dash-form-actions">
++          <button type="button" className="dash-btn" onClick={() => dialog.current.close()}>
++            Cancel
++          </button>
++          <button type="submit" className="dash-btn dash-btn-primary">
++            Add expense
++          </button>
++        </div>
++      </form>
++    </dialog>
++  );
++}
+diff --git a/app/dashboard/page.jsx b/app/dashboard/page.jsx
+index 6df0053..0bf33f5 100644
+--- a/app/dashboard/page.jsx
++++ b/app/dashboard/page.jsx
+@@ -1,34 +1,16 @@
+-const expenses = [
+-  { date: "Oct 1", what: "Groceries — Nature's Basket", paidBy: "Arjun", amount: 2840.5, split: "4 ways", status: "Unsettled" },
+-  { date: "Sep 30", what: "Electricity bill (Sept)", paidBy: "Maya", amount: 3125, split: "4 ways", status: "Settled" },
+-  { date: "Sep 28", what: "Wi-Fi — ACT Fibernet", paidBy: "Kabir", amount: 1179, split: "4 ways", status: "Unsettled" },
+-  { date: "Sep 27", what: "Dinner at Toit", paidBy: "Arjun", amount: 4620, split: "3 ways", status: "Unsettled" },
+-  { date: "Sep 25", what: "Cooking gas refill", paidBy: "Neha", amount: 903, split: "4 ways", status: "Settled" },
+-];
++import FlatHome from "./FlatHome";
++import { flat } from "../../lib/flat-fixture";
++
++export const metadata = { title: `${flat.name} — Tallyroom` };
+ 
+ export default function Dashboard() {
+-  const total = expenses.reduce((s, e) => s + e.amount, 0);
+   return (
+-    <main className="page">
+-      <h1>Flat 4B — Indiranagar</h1>
+-      <div className="stats">
+-        <div className="stat"><span>Total this month</span><strong>₹{total.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</strong></div>
+-        <div className="stat"><span>You owe</span><strong>₹1,842</strong></div>
+-        <div className="stat"><span>You are owed</span><strong>₹710</strong></div>
+-      </div>
+-      <table className="ledger">
+-        <thead>
+-          <tr><th>Date</th><th>Expense</th><th>Paid by</th><th>Amount</th><th>Split</th><th>Status</th><th></th></tr>
+-        </thead>
+-        <tbody>
+-          {expenses.map((e) => (
+-            <tr key={e.what}>
+-              <td>{e.date}</td><td>{e.what}</td><td>{e.paidBy}</td><td>₹{e.amount.toLocaleString("en-IN")}</td><td>{e.split}</td><td>{e.status}</td>
+-              <td><button className="icon-btn" aria-label="Edit">✎</button><button className="icon-btn" aria-label="Delete">✕</button></td>
+-            </tr>
+-          ))}
+-        </tbody>
+-      </table>
+-    </main>
++    <FlatHome
++      name={flat.name}
++      members={flat.members}
++      you={flat.you}
++      initialExpenses={flat.expenses}
++      initialSettlements={flat.settlements}
++    />
+   );
+ }
+diff --git a/app/globals.css b/app/globals.css
+index fb6ad9e..3d43d91 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -28,15 +28,148 @@ a { color: inherit; }
+ .compare th, .compare td { padding: 14px 18px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: nowrap; }
+ .compare thead th { background: #f5f3ff; }
+ 
+-.stats { display: flex; gap: 16px; margin: 24px 0; }
+-.stat { flex: 0 0 240px; padding: 20px; border-radius: 16px; background: #f5f3ff; display: flex; flex-direction: column; gap: 6px; }
+-.stat span { color: #6b7280; font-size: 14px; }
+-.stat strong { font-size: 28px; }
+-.ledger { width: 100%; min-width: 880px; border-collapse: collapse; }
+-.ledger th, .ledger td { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: nowrap; }
+-.icon-btn { width: 20px; height: 20px; padding: 0; font-size: 11px; border: 0; background: none; cursor: pointer; }
+-
+-.topnav { display: flex; align-items: center; gap: 32px; padding: 16px 32px; border-bottom: 1px solid #ede9fe; white-space: nowrap; }
++/* Flat home (dashboard) */
++.dash {
++  --ink: #1a1a2e;
++  --ink-2: #4b5563;
++  --ink-3: #6b7280;
++  --line: #e5e7eb;
++  --surface: #fff;
++  --surface-2: #f8f7fb;
++  --accent: #764ba2;
++  --accent-hover: #643e8b;
++  --accent-soft: #f5f3ff;
++  --owe: #b45309;
++  --owed: #047857;
++  --danger: #b91c1c;
++  --radius: 12px;
++  --radius-sm: 8px;
++  --ease: 160ms ease-out;
++
++  max-width: 1100px;
++  margin: 0 auto;
++  padding: 32px 24px 96px; /* bottom room for the support chat button */
++  color: var(--ink);
++}
++.dash h1 { margin: 0; font-size: 28px; line-height: 1.2; }
++.dash h2 { margin: 0; font-size: 17px; }
++.dash-num, .dash-amount { font-variant-numeric: tabular-nums; }
++.dash-meta { margin: 2px 0 0; color: var(--ink-3); font-size: 14px; }
++.dash-muted { color: var(--ink-3); }
++.dash-hint { margin: 12px 0 0; color: var(--ink-3); font-size: 13px; }
++.is-owe { color: var(--owe); }
++.is-owed { color: var(--owed); }
++.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
++
++.dash-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
++.dash-fixture { margin: 12px 0 0; font-size: 13px; color: var(--ink-2); }
++
++.dash-btn {
++  min-height: 40px; padding: 8px 14px; border-radius: var(--radius-sm);
++  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
++  font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap;
++  transition: background-color var(--ease), border-color var(--ease);
++}
++.dash-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
++.dash-btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
++.dash-btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
++.dash-link {
++  min-height: 32px; padding: 4px 6px; border: 0; background: none;
++  font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); cursor: pointer;
++  text-decoration: underline; text-underline-offset: 3px;
++}
++.dash :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
++
++.dash-notice { display: flex; align-items: center; gap: 12px; margin-top: 24px; font-size: 14px; }
++.dash-notice:not(:empty) { min-height: 44px; margin-bottom: 20px; padding: 6px 8px 6px 14px; border-radius: var(--radius-sm); background: var(--accent-soft); }
++
++.dash-grid {
++  display: grid; gap: 20px;
++  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
++  grid-template-areas: "you balances" "settle balances" "activity activity";
++}
++.dash-you { grid-area: you; }
++.dash-settle { grid-area: settle; }
++.dash-balances { grid-area: balances; align-self: start; }
++.dash-activity { grid-area: activity; }
++
++.dash-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 20px; }
++.dash-panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
++.dash-panel-head .dash-meta { margin: 0; }
++.dash-empty { margin: 8px 0 0; color: var(--ink-2); }
++.dash-list { list-style: none; margin: 0; padding: 0; }
++.dash-list > li + li { border-top: 1px solid var(--line); }
++
++.dash-you { padding: 20px; border-radius: var(--radius); background: var(--surface-2); }
++.dash .dash-eyebrow { color: var(--ink-3); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
++.dash-you-figure { margin: 6px 0 0; font-size: 32px; font-weight: 700; line-height: 1.2; }
++.dash-you-steps { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--ink-2); }
++
++.dash-transfer { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 16px; padding: 12px 0; }
++.dash-transfer-who { display: flex; align-items: center; gap: 8px; min-width: 0; }
++.dash-arrow { color: var(--ink-3); }
++.dash-transfer .dash-amount { font-weight: 600; }
++
++.dash-balance { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; }
++.dash-you-tag { color: var(--ink-3); }
++
++.dash-day + .dash-day { margin-top: 16px; }
++.dash-day-label { margin: 0 0 2px; padding: 6px 0; font-size: 13px; font-weight: 600; color: var(--ink-3); border-bottom: 1px solid var(--line); }
++.dash-entry { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 16px; padding: 10px 0; }
++.dash-day .dash-list > li:first-child { border-top: 0; }
++.dash-entry-main { display: flex; flex-direction: column; min-width: 0; }
++.dash-entry-title { overflow-wrap: anywhere; }
++.dash-entry-main .dash-meta { margin: 0; font-size: 13px; }
++.dash-entry-side { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
++.dash-entry-side .dash-amount { font-weight: 600; }
++.dash-effect { font-size: 13px; }
++.dash-entry:not(:has(.dash-delete)) { grid-template-columns: 1fr auto; }
++.dash-delete { color: var(--ink-3); font-weight: 500; }
++.dash-delete:hover { color: var(--danger); }
++.dash-more { margin-top: 12px; }
++
++.dash-dialog {
++  width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px);
++  padding: 0; border: 0; border-radius: var(--radius); color: var(--ink);
++  box-shadow: 0 20px 50px rgba(26, 26, 46, 0.25);
++}
++.dash-dialog::backdrop { background: rgba(26, 26, 46, 0.4); }
++.dash-dialog[open] { animation: dash-in 160ms ease-out; }
++@keyframes dash-in { from { opacity: 0; transform: translateY(8px); } }
++.dash-form { display: flex; flex-direction: column; gap: 16px; padding: 24px; }
++.dash-form h2 { font-size: 20px; }
++.dash-field { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; border: 0; min-width: 0; font-size: 14px; font-weight: 600; }
++.dash-field legend { padding: 0; margin-bottom: 6px; }
++.dash-field input, .dash-field select {
++  min-height: 42px; padding: 8px 10px; border: 1px solid #c9ccd3; border-radius: var(--radius-sm);
++  font: inherit; font-weight: 400; color: var(--ink); background: var(--surface); width: 100%;
++}
++.dash-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
++.dash-checks { display: flex; flex-wrap: wrap; gap: 4px 16px; }
++.dash-check { display: flex; align-items: center; gap: 8px; min-height: 36px; font-weight: 400; }
++.dash-check input { width: 18px; height: 18px; accent-color: var(--accent); }
++.dash-field .dash-hint, .dash-error { margin: 2px 0 0; font-weight: 400; }
++.dash-error { color: var(--danger); font-size: 13px; }
++.dash-form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
++
++@media (max-width: 760px) {
++  .dash { padding-top: 24px; }
++  .dash h1 { font-size: 24px; }
++  .dash-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "you" "settle" "balances" "activity"; gap: 16px; }
++  .dash-panel { padding: 16px; }
++  .dash-you-figure { font-size: 28px; }
++  .dash-transfer { grid-template-columns: 1fr auto; }
++  .dash-transfer .dash-btn { grid-column: 1 / -1; width: 100%; }
++  .dash-entry { grid-template-columns: 1fr auto; gap: 4px 12px; }
++  .dash-delete { grid-column: 2; justify-self: end; }
++  .dash-field-row { grid-template-columns: 1fr; }
++}
++@media (prefers-reduced-motion: reduce) {
++  .dash-dialog[open] { animation: none; }
++  .dash-btn { transition: none; }
++}
++
++.topnav { display: flex; align-items: center; gap: 32px; padding: 16px 32px; border-bottom: 1px solid #ede9fe; white-space: nowrap; overflow-x: auto; }
+ .logo { font-weight: 800; font-size: 20px; text-decoration: none; }
+ .links { display: flex; gap: 28px; }
+ .links a { font-size: 13px; text-decoration: none; padding: 2px 0; color: #4b5563; }
+diff --git a/lib/flat-fixture.js b/lib/flat-fixture.js
+new file mode 100644
+index 0000000..83a1280
+--- /dev/null
++++ b/lib/flat-fixture.js
+@@ -0,0 +1,23 @@
++// Sample data for development until the dashboard reads a real group.
++// Amounts are in paise. "you" stands in for the signed-in member.
++
++export const flat = {
++  name: "Flat 4B — Indiranagar",
++  members: ["Arjun", "Maya", "Kabir", "Neha"],
++  you: "Kabir",
++  expenses: [
++    { id: "e1", date: "2026-10-01", what: "Groceries — Nature's Basket", paidBy: "Arjun", amount: 284050, splitBetween: ["Arjun", "Maya", "Kabir", "Neha"] },
++    { id: "e2", date: "2026-09-30", what: "Electricity bill (Sept)", paidBy: "Maya", amount: 312500, splitBetween: ["Arjun", "Maya", "Kabir", "Neha"] },
++    { id: "e3", date: "2026-09-28", what: "Wi-Fi — ACT Fibernet", paidBy: "Kabir", amount: 117900, splitBetween: ["Arjun", "Maya", "Kabir", "Neha"] },
++    { id: "e4", date: "2026-09-27", what: "Dinner at Toit", paidBy: "Arjun", amount: 462000, splitBetween: ["Arjun", "Maya", "Kabir"] },
++    { id: "e5", date: "2026-09-25", what: "Cooking gas refill", paidBy: "Neha", amount: 90300, splitBetween: ["Arjun", "Maya", "Kabir", "Neha"] },
++  ],
++  settlements: [
++    { id: "s1", date: "2026-10-02", from: "Arjun", to: "Maya", amount: 78125 },
++    { id: "s2", date: "2026-10-02", from: "Kabir", to: "Maya", amount: 78125 },
++    { id: "s3", date: "2026-10-03", from: "Neha", to: "Maya", amount: 78125 },
++    { id: "s4", date: "2026-09-26", from: "Arjun", to: "Neha", amount: 22575 },
++    { id: "s5", date: "2026-09-26", from: "Kabir", to: "Neha", amount: 22575 },
++    { id: "s6", date: "2026-09-26", from: "Maya", to: "Neha", amount: 22575 },
++  ],
++};
+diff --git a/lib/ledger.js b/lib/ledger.js
+new file mode 100644
+index 0000000..e6411c9
+--- /dev/null
++++ b/lib/ledger.js
+@@ -0,0 +1,77 @@
++// Money is held in paise (integers) so splits and balances never drift.
++
++const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
++const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
++
++export function toPaise(rupees) {
++  return Math.round(Number(rupees) * 100);
++}
++
++export function formatINR(paise) {
++  const abs = Math.abs(paise);
++  const digits = abs % 100 === 0 ? 0 : 2;
++  return "₹" + (abs / 100).toLocaleString("en-IN", { minimumFractionDigits: digits, maximumFractionDigits: 2 });
++}
++
++// "2026-10-01" -> "Thu 1 Oct". Parsed as UTC so server and browser agree.
++export function formatDay(iso) {
++  const [y, m, d] = iso.split("-").map(Number);
++  const weekday = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
++  return `${WEEKDAYS[weekday]} ${d} ${MONTHS[m - 1]}`;
++}
++
++export function todayISO() {
++  const d = new Date();
++  const pad = (n) => String(n).padStart(2, "0");
++  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
++}
++
++// Equal split; leftover paise go to the first people listed so shares sum exactly.
++export function shares(expense) {
++  const n = expense.splitBetween.length;
++  const base = Math.floor(expense.amount / n);
++  const extra = expense.amount - base * n;
++  return Object.fromEntries(expense.splitBetween.map((m, i) => [m, base + (i < extra ? 1 : 0)]));
++}
++
++export function shareOf(expense, member) {
++  return shares(expense)[member] ?? 0;
++}
++
++// Positive: the flat owes this person. Negative: this person owes the flat.
++export function balances(members, expenses, settlements) {
++  const net = Object.fromEntries(members.map((m) => [m, 0]));
++  for (const e of expenses) {
++    net[e.paidBy] += e.amount;
++    for (const [m, share] of Object.entries(shares(e))) net[m] -= share;
++  }
++  for (const s of settlements) {
++    net[s.from] += s.amount;
++    net[s.to] -= s.amount;
++  }
++  return net;
++}
++
++// Fewest payments that clear every balance: repeatedly match the largest debtor with the largest creditor.
++export function simplify(net) {
++  const debtors = [];
++  const creditors = [];
++  for (const [m, v] of Object.entries(net)) {
++    if (v < 0) debtors.push({ m, v: -v });
++    else if (v > 0) creditors.push({ m, v });
++  }
++  const transfers = [];
++  while (debtors.length && creditors.length) {
++    debtors.sort((a, b) => b.v - a.v);
++    creditors.sort((a, b) => b.v - a.v);
++    const d = debtors[0];
++    const c = creditors[0];
++    const amount = Math.min(d.v, c.v);
++    transfers.push({ from: d.m, to: c.m, amount });
++    d.v -= amount;
++    c.v -= amount;
++    if (d.v === 0) debtors.shift();
++    if (c.v === 0) creditors.shift();
++  }
++  return transfers;
++}

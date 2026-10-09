@@ -1,0 +1,46 @@
+--- auto (no remote, expect gh fallback)
+{
+  "since": "2026-10-02",
+  "since_reason": "latest note release-notes/2026-10-02.md",
+  "source": "git",
+  "warning": "gh unavailable (no git remotes found); labels not available, used git merge commits",
+  "count": 2,
+  "prs": [
+    {
+      "number": 12,
+      "title": "feat: dark mode on iOS",
+      "labels": null,
+      "merged_at": "2026-10-05T10:00:00+05:30",
+      "files": [
+        "ios/a.swift"
+      ],
+      "body": "feat: dark mode on iOS"
+    },
+    {
+      "number": 13,
+      "title": "fix: null check in importer",
+      "labels": null,
+      "merged_at": "2026-10-06T10:00:00+05:30",
+      "files": [
+        "web.ts"
+      ],
+      "body": ""
+    }
+  ]
+}
+--- since after range
+  "since": "2026-10-08",
+  "count": 0,
+--- bad since
+error: --since must be YYYY-MM-DD, got 'friday'
+exit=1
+--- not a repo
+error: / is not a git repository
+exit=1
+--- gh forced
+error: gh failed: no git remotes found
+--- re-run with today's note present
+  "since": "2026-10-02",
+  "since_reason": "latest note release-notes/2026-10-02.md",
+  "count": 2,
+exit=0

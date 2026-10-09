@@ -1,0 +1,8 @@
+{
+  "skill": "landing-copy",
+  "kind": "before-after",
+  "title": "A generic SaaS hero rebuilt from the product notes",
+  "before": "<h1>Unlock the Power of Next-Generation Scheduling</h1>\n    <p>Tidepool is an all-in-one AI-powered platform that streamlines your workflow and empowers your team to achieve more.</p>\n    <a href=\"/signup\">Get Started</a>\n\u2026\n<h2>Trusted by teams everywhere</h2>\n    <p>Join thousands of happy customers.</p>",
+  "after": "<h1>Stop spending Monday morning texting people to cover sick calls.</h1>\n    <p>Tidepool is shift scheduling for independent veterinary clinics. It drafts your weekly rota from staff availability and your coverage rules, and when someone calls in sick, it texts eligible staff and fills the shift for you.</p>\n    <a href=\"/signup\">Start your 30-day free trial</a>\n    <p>No card required. Built for clinics with 2-12 vets and 5-40 staff.</p>\n\u2026\n<h3>\"My staff won't install another app.\"</h3>\n    <p>They don't need to. Shift offers arrive as plain SMS, and staff reply YES to take one.</p>\n\u2026\n<h3>Is it AI?</h3>\n    <p>No. The rota builder is a constraint solver: it builds the rota from the availability and coverage rules you give it.</p>",
+  "caption": "Every claim traces to product-notes.md. \"AI-powered\", \"enterprise-grade\" and \"thousands of customers\" are gone. The run also refused to subtract two survey numbers from different samples."
+}

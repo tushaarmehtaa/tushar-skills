@@ -1,0 +1,11 @@
+{
+  "skill": "social-sharing",
+  "kind": "diff",
+  "title": "Share cards for home and pricing",
+  "after": "+export const metadata = {\n+  metadataBase: new URL(SITE_URL),\n+  title: { default: \"Tallyroom — Split shared expenses\", template: \"%s · Tallyroom\" },\n+  description: \"Split shared expenses with roommates and friends. Track who paid, who owes, and settle up.\",\n+  openGraph: { siteName: \"Tallyroom\", type: \"website\" },\n+  twitter: { card: \"summary_large_image\" },\n+};\n…\n+export default function Image() {\n+  return ogCard({\n+    title: \"Pricing\",\n+    subtitle: \"Free to start. Plus $3/mo, Household $6/mo, Team $12/mo. Cancel anytime.\",\n+  });",
+  "caption": "Metadata, canonicals and generated 1200×630 preview images. Both images below were fetched from a production build of the run's output.",
+  "images": [
+    "social-sharing/og-home.png",
+    "social-sharing/og-pricing.png"
+  ]
+}

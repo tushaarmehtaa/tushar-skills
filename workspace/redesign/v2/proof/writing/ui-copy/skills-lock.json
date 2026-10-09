@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "ui-copy": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "ui-copy/SKILL.md",
+      "computedHash": "1a05e7601450fe4f87ab306d30f24a29865c71103192061b4368d7c5f02be7a7"
+    }
+  }
+}

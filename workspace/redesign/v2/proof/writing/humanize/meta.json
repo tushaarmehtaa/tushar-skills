@@ -1,0 +1,20 @@
+{
+  "skill": "humanize",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill humanize -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 34.5,
+  "costUsd": 0.227182,
+  "numTurns": 10,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "humanize",
+      "args": "announcement.md"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Edited announcement.md in place. Kept every fact (212 businesses, 94%, Canada CSV caveat, $29 Growth, 30-day Starter trial). Dropped one unsupported claim ('countless hours') and said so."
+}

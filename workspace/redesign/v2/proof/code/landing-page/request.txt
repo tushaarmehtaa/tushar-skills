@@ -1,0 +1,1 @@
+Rework the Tallyroom homepage so it actually convinces housemates to sign up. Right now it says nothing specific about the product. Build the improved page in the codebase.

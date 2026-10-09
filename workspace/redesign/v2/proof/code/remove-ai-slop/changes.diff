@@ -1,0 +1,185 @@
+diff --git a/app/dashboard/page.jsx b/app/dashboard/page.jsx
+index 6df0053..44c5d74 100644
+--- a/app/dashboard/page.jsx
++++ b/app/dashboard/page.jsx
+@@ -1,10 +1,4 @@
+-const expenses = [
+-  { date: "Oct 1", what: "Groceries — Nature's Basket", paidBy: "Arjun", amount: 2840.5, split: "4 ways", status: "Unsettled" },
+-  { date: "Sep 30", what: "Electricity bill (Sept)", paidBy: "Maya", amount: 3125, split: "4 ways", status: "Settled" },
+-  { date: "Sep 28", what: "Wi-Fi — ACT Fibernet", paidBy: "Kabir", amount: 1179, split: "4 ways", status: "Unsettled" },
+-  { date: "Sep 27", what: "Dinner at Toit", paidBy: "Arjun", amount: 4620, split: "3 ways", status: "Unsettled" },
+-  { date: "Sep 25", what: "Cooking gas refill", paidBy: "Neha", amount: 903, split: "4 ways", status: "Settled" },
+-];
++import { expenses } from "../../lib/sampleGroup";
+ 
+ export default function Dashboard() {
+   const total = expenses.reduce((s, e) => s + e.amount, 0);
+diff --git a/app/globals.css b/app/globals.css
+index fb6ad9e..76ebae8 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -2,25 +2,33 @@
+ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1a1a2e; background: #fff; }
+ a { color: inherit; }
+ 
+-.hero {
+-  text-align: center;
+-  padding: 120px 24px 96px;
+-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a855f7 100%);
+-  color: #fff;
++.hero { max-width: 1100px; margin: 0 auto; padding: 72px 24px 40px; }
++.hero h1 { font-size: clamp(34px, 5vw, 52px); line-height: 1.1; max-width: 760px; margin: 0 0 20px; }
++.lede { font-size: 19px; line-height: 1.5; max-width: 620px; margin: 0 0 32px; color: #374151; }
++.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
++.btn { padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid #764ba2; }
++.btn:focus-visible { outline: 2px solid #764ba2; outline-offset: 2px; }
++.btn-primary { background: #764ba2; color: #fff; }
++.btn-primary:hover { background: #643d8c; }
++.btn-secondary { color: #764ba2; }
++.btn-secondary:hover { background: #f5f3ff; }
++
++.preview { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
++.preview-scroll { overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
++.preview .ledger { min-width: 640px; }
++.preview .ledger tr:last-child td { border-bottom: 0; }
++.preview figcaption { margin-top: 10px; font-size: 14px; color: #6b7280; }
++
++.capabilities { max-width: 1100px; margin: 72px auto; padding: 0 24px; }
++.capabilities h2 { margin: 0 0 24px; }
++.capabilities dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 48px; margin: 0; }
++.capabilities dt { font-weight: 600; margin-bottom: 6px; }
++.capabilities dd { margin: 0; color: #4b5563; line-height: 1.5; }
++.plan-note { font-size: 13px; color: #764ba2; white-space: nowrap; }
++@media (max-width: 720px) {
++  .hero { padding-top: 48px; }
++  .capabilities dl { grid-template-columns: 1fr; }
+ }
+-.eyebrow { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.18); font-size: 14px; margin-bottom: 24px; }
+-.hero h1 { font-size: 64px; line-height: 1.05; max-width: 900px; margin: 0 auto 24px; background: linear-gradient(90deg, #fff, #e9d5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+-.lede { font-size: 20px; max-width: 680px; margin: 0 auto 40px; opacity: 0.9; }
+-.cta-row { display: flex; gap: 16px; justify-content: center; }
+-.btn { padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: 600; }
+-.btn-primary { background: #fff; color: #764ba2; box-shadow: 0 10px 30px rgba(118,75,162,0.4); }
+-.btn-ghost { border: 1px solid rgba(255,255,255,0.5); color: #fff; }
+-
+-.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 80px auto; padding: 0 24px; }
+-.card { padding: 32px; border-radius: 20px; background: #fff; box-shadow: 0 20px 40px rgba(102,126,234,0.15); border: 1px solid #ede9fe; text-align: center; }
+-.card-icon { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; background: linear-gradient(135deg, #667eea, #a855f7); display: grid; place-items: center; font-size: 26px; }
+-.card h3 { margin: 0 0 8px; }
+-.card p { color: #6b7280; margin: 0; }
+ 
+ .page { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+ .sub { color: #6b7280; }
+@@ -42,9 +50,6 @@ a { color: inherit; }
+ .links a { font-size: 13px; text-decoration: none; padding: 2px 0; color: #4b5563; }
+ .nav-cta { margin-left: auto; font-size: 13px; padding: 6px 12px; border-radius: 8px; background: #764ba2; color: #fff; text-decoration: none; }
+ 
+-.shot { max-width: 1100px; margin: -48px auto 0; padding: 0 24px; }
+-.shot img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+-
+ .plan-actions { display: flex; gap: 8px; margin-top: 24px; }
+ .mini-btn { font-size: 12px; padding: 3px 8px; border-radius: 6px; background: #764ba2; color: #fff; text-decoration: none; }
+ 
+diff --git a/app/page.jsx b/app/page.jsx
+index 47bce33..644dbfa 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,40 +1,59 @@
++import { expenses } from "../lib/sampleGroup";
++
+ export default function Home() {
+   return (
+     <main>
+       <section className="hero">
+-        <span className="eyebrow">✨ Introducing Tallyroom</span>
+-        <h1>Revolutionize the Way You Manage Shared Expenses</h1>
++        <h1>Track shared bills and see who owes whom.</h1>
+         <p className="lede">
+-          Unlock the power of seamless, AI-driven expense splitting. Tallyroom is the
+-          all-in-one platform that empowers you to effortlessly elevate your financial
+-          harmony with friends, roommates, and beyond.
++          Log what each person paid, split it between the people it was for, and
++          Tallyroom keeps a running balance for the whole group. Free for one group
++          of up to four people.
+         </p>
+         <div className="cta-row">
+-          <a className="btn btn-primary" href="/pricing">Get Started Today 🚀</a>
+-          <a className="btn btn-ghost" href="/dashboard">Learn More</a>
++          <a className="btn btn-primary" href="/pricing">Compare plans</a>
++          <a className="btn btn-secondary" href="/dashboard">See a sample group</a>
+         </div>
+       </section>
+ 
+-      <div className="shot">
+-        <img src="/hero-dashboard.png" alt="Tallyroom dashboard" />
+-      </div>
+-
+-      <section className="features">
+-        <div className="card">
+-          <div className="card-icon">⚡</div>
+-          <h3>Lightning Fast</h3>
+-          <p>Experience blazing-fast performance that takes your expense tracking to the next level.</p>
+-        </div>
+-        <div className="card">
+-          <div className="card-icon">🔒</div>
+-          <h3>Secure &amp; Reliable</h3>
+-          <p>Enterprise-grade security ensures your data is always safe, secure, and protected.</p>
+-        </div>
+-        <div className="card">
+-          <div className="card-icon">🤝</div>
+-          <h3>Seamless Collaboration</h3>
+-          <p>Collaborate effortlessly with your team and unlock new levels of productivity.</p>
++      <figure className="preview">
++        <div className="preview-scroll">
++          <table className="ledger">
++            <thead>
++              <tr><th>Date</th><th>Expense</th><th>Paid by</th><th>Amount</th><th>Split</th><th>Status</th></tr>
++            </thead>
++            <tbody>
++              {expenses.slice(0, 4).map((e) => (
++                <tr key={e.what}>
++                  <td>{e.date}</td><td>{e.what}</td><td>{e.paidBy}</td><td>₹{e.amount.toLocaleString("en-IN")}</td><td>{e.split}</td><td>{e.status}</td>
++                </tr>
++              ))}
++            </tbody>
++          </table>
+         </div>
++        <figcaption>Sample group: Flat 4B, Indiranagar. <a href="/dashboard">Open the full ledger</a></figcaption>
++      </figure>
++
++      <section className="capabilities">
++        <h2>What a group can do</h2>
++        <dl>
++          <div>
++            <dt>Split by who was there</dt>
++            <dd>Each expense is divided between the people it was for: the electricity bill four ways, a dinner three.</dd>
++          </div>
++          <div>
++            <dt>Recurring bills</dt>
++            <dd>Wi-Fi, electricity and gas repeat each month instead of being entered again. <span className="plan-note">Plus and up</span></dd>
++          </div>
++          <div>
++            <dt>Six currencies</dt>
++            <dd>INR, USD, EUR, GBP, SGD and AED, converted at daily exchange rates. <span className="plan-note">Plus and up</span></dd>
++          </div>
++          <div>
++            <dt>One account pays for the flat</dt>
++            <dd>A single paid plan covers everyone in the group, so housemates don't each need to subscribe.</dd>
++          </div>
++        </dl>
+       </section>
+     </main>
+   );
+diff --git a/lib/sampleGroup.js b/lib/sampleGroup.js
+new file mode 100644
+index 0000000..a241e17
+--- /dev/null
++++ b/lib/sampleGroup.js
+@@ -0,0 +1,7 @@
++export const expenses = [
++  { date: "Oct 1", what: "Groceries — Nature's Basket", paidBy: "Arjun", amount: 2840.5, split: "4 ways", status: "Unsettled" },
++  { date: "Sep 30", what: "Electricity bill (Sept)", paidBy: "Maya", amount: 3125, split: "4 ways", status: "Settled" },
++  { date: "Sep 28", what: "Wi-Fi — ACT Fibernet", paidBy: "Kabir", amount: 1179, split: "4 ways", status: "Unsettled" },
++  { date: "Sep 27", what: "Dinner at Toit", paidBy: "Arjun", amount: 4620, split: "3 ways", status: "Unsettled" },
++  { date: "Sep 25", what: "Cooking gas refill", paidBy: "Neha", amount: 903, split: "4 ways", status: "Settled" },
++];

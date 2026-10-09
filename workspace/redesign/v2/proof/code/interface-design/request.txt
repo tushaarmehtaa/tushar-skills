@@ -1,0 +1,1 @@
+Redesign the dashboard page (app/dashboard) so it works as the real home screen for a flat sharing expenses: who owes whom, what needs settling, recent activity. Implement it in the existing Next.js + plain CSS setup.

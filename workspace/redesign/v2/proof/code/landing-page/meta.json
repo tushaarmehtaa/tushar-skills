@@ -1,0 +1,30 @@
+{
+  "skill": "landing-page",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill landing-page -a claude-code -y (project scope, .claude/skills/landing-page; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "landing-page",
+      "args": "Rework the Tallyroom homepage so it convinces housemates to sign up. Currently says nothing specific about the product. Build the improved page in the codebase."
+    }
+  ],
+  "skillFileReads": [],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 12,
+    "Read": 3,
+    "Write": 4
+  },
+  "durationSec": 168,
+  "costUsd": 0.8172818000000001,
+  "numTurns": 24,
+  "isError": false,
+  "diffStat": " 5 files changed, 183 insertions(+), 65 deletions(-)",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "Full homepage rewrite: new headline, live example-flat card replacing the placeholder PNG, how-it-works, plan-gated features, closing CTA; nav trimmed 7->3 links and 'Start free trial' -> 'See plans'. Kept a purple gradient hero (darkened for contrast), so the result still carries some of the original template look. Saw another process on port 3456 (concurrent run) and avoided it. All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

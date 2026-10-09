@@ -1,0 +1,1 @@
+People keep getting confused by the invite screen in src/InviteTeam.tsx. The button labels, errors and empty state don't really say anything. Fix the wording so it tells people what actually happens. Look at api.ts for how it behaves.

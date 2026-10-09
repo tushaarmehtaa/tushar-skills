@@ -724,12 +724,47 @@ function validateSkillHistory(skillDirectories) {
   }
 }
 
+function validateSkillProfiles(skillDirectories) {
+  const read = (relative) => JSON.parse(fs.readFileSync(path.join(REPO_ROOT, relative), "utf8"));
+  const expected = sorted(skillDirectories);
+  const profiles = read("site/lib/skill-profiles.json");
+  const groupIds = ["shape", "build", "ship", "grow"];
+  if (!sameValues(sorted(Object.keys(profiles.skills ?? {})), expected)) {
+    addError("site/lib/skill-profiles.json: profiles differ from package directories");
+  }
+  const ordered = groupIds.flatMap((group) => profiles.groupOrder?.[group] ?? []);
+  if (!sameValues(sorted(ordered), expected)) {
+    addError("site/lib/skill-profiles.json: groupOrder must list every skill exactly once");
+  }
+  for (const [slug, profile] of Object.entries(profiles.skills ?? {})) {
+    if (!groupIds.includes(profile.group)) addError(`skill-profiles: ${slug}.group is not one of ${groupIds.join(", ")}`);
+    if (!profiles.groupOrder?.[profile.group]?.includes(slug)) addError(`skill-profiles: ${slug} is not listed under its group`);
+    if (profile.next !== null && !skillDirectories.includes(profile.next)) addError(`skill-profiles: ${slug}.next points at unknown skill ${profile.next}`);
+    for (const field of ["outcome", "useWhen", "skipWhen", "why", "outputContract"]) {
+      if (typeof profile[field] !== "string" || !profile[field].trim()) addError(`skill-profiles: ${slug}.${field} is empty`);
+    }
+  }
+  const skillsSh = read("skills.sh.json");
+  const shOrder = (skillsSh.groupings ?? []).map((g) => g.skills);
+  if (JSON.stringify(shOrder) !== JSON.stringify(groupIds.map((g) => profiles.groupOrder?.[g]))) {
+    addError("skills.sh.json: groupings must match site/lib/skill-profiles.json groupOrder");
+  }
+  const proof = read("site/lib/skill-proof.json");
+  for (const [slug, entry] of Object.entries(proof)) {
+    if (!skillDirectories.includes(slug)) addError(`skill-proof: unknown skill ${slug}`);
+    for (const image of [entry.images?.before, entry.images?.after].filter(Boolean)) {
+      if (!fs.existsSync(path.join(REPO_ROOT, "site", "public", image))) addError(`skill-proof: ${slug} image missing ${image}`);
+    }
+  }
+}
+
 validateRootLicense();
 validatePackageLicenses();
 
 const skillDirectories = getSkillDirectories();
 validateSkillEvals(skillDirectories);
 validateSkillHistory(skillDirectories);
+validateSkillProfiles(skillDirectories);
 const parsedSkills = loadParsedSkills(skillDirectories);
 for (const slug of skillDirectories) {
   validateFrontmatter(slug, parsedSkills.get(slug));

@@ -1,0 +1,330 @@
+diff --git a/app/Nav.jsx b/app/Nav.jsx
+index 5bb3371..fd825d5 100644
+--- a/app/Nav.jsx
++++ b/app/Nav.jsx
+@@ -3,15 +3,11 @@ export default function Nav() {
+     <nav className="topnav">
+       <a className="logo" href="/">Tallyroom</a>
+       <div className="links">
+-        <a href="/">Home</a>
+         <a href="/pricing">Pricing</a>
+-        <a href="/dashboard">Dashboard</a>
+         <a href="/pricing#faq">FAQ</a>
+-        <a href="/dashboard">Groups</a>
+-        <a href="/dashboard">Activity</a>
+-        <a href="/pricing">For Teams</a>
++        <a href="/dashboard">Dashboard</a>
+       </div>
+-      <a className="nav-cta" href="/pricing">Start free trial</a>
++      <a className="nav-cta" href="/pricing">See plans</a>
+     </nav>
+   );
+ }
+diff --git a/app/dashboard/page.jsx b/app/dashboard/page.jsx
+index 6df0053..8adbe45 100644
+--- a/app/dashboard/page.jsx
++++ b/app/dashboard/page.jsx
+@@ -1,20 +1,16 @@
+-const expenses = [
+-  { date: "Oct 1", what: "Groceries — Nature's Basket", paidBy: "Arjun", amount: 2840.5, split: "4 ways", status: "Unsettled" },
+-  { date: "Sep 30", what: "Electricity bill (Sept)", paidBy: "Maya", amount: 3125, split: "4 ways", status: "Settled" },
+-  { date: "Sep 28", what: "Wi-Fi — ACT Fibernet", paidBy: "Kabir", amount: 1179, split: "4 ways", status: "Unsettled" },
+-  { date: "Sep 27", what: "Dinner at Toit", paidBy: "Arjun", amount: 4620, split: "3 ways", status: "Unsettled" },
+-  { date: "Sep 25", what: "Cooking gas refill", paidBy: "Neha", amount: 903, split: "4 ways", status: "Settled" },
+-];
++import { exampleFlat, inr } from "../../lib/exampleFlat";
++
++const { expenses } = exampleFlat;
+ 
+ export default function Dashboard() {
+   const total = expenses.reduce((s, e) => s + e.amount, 0);
+   return (
+     <main className="page">
+-      <h1>Flat 4B — Indiranagar</h1>
++      <h1>{exampleFlat.name}</h1>
+       <div className="stats">
+-        <div className="stat"><span>Total this month</span><strong>₹{total.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</strong></div>
+-        <div className="stat"><span>You owe</span><strong>₹1,842</strong></div>
+-        <div className="stat"><span>You are owed</span><strong>₹710</strong></div>
++        <div className="stat"><span>Total this month</span><strong>{inr(total)}</strong></div>
++        <div className="stat"><span>You owe</span><strong>{inr(exampleFlat.youOwe)}</strong></div>
++        <div className="stat"><span>You are owed</span><strong>{inr(exampleFlat.youAreOwed)}</strong></div>
+       </div>
+       <table className="ledger">
+         <thead>
+@@ -23,7 +19,7 @@ export default function Dashboard() {
+         <tbody>
+           {expenses.map((e) => (
+             <tr key={e.what}>
+-              <td>{e.date}</td><td>{e.what}</td><td>{e.paidBy}</td><td>₹{e.amount.toLocaleString("en-IN")}</td><td>{e.split}</td><td>{e.status}</td>
++              <td>{e.date}</td><td>{e.what}</td><td>{e.paidBy}</td><td>{inr(e.amount)}</td><td>{e.split}</td><td>{e.status}</td>
+               <td><button className="icon-btn" aria-label="Edit">✎</button><button className="icon-btn" aria-label="Delete">✕</button></td>
+             </tr>
+           ))}
+diff --git a/app/globals.css b/app/globals.css
+index fb6ad9e..4d22d77 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -2,26 +2,6 @@
+ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1a1a2e; background: #fff; }
+ a { color: inherit; }
+ 
+-.hero {
+-  text-align: center;
+-  padding: 120px 24px 96px;
+-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a855f7 100%);
+-  color: #fff;
+-}
+-.eyebrow { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.18); font-size: 14px; margin-bottom: 24px; }
+-.hero h1 { font-size: 64px; line-height: 1.05; max-width: 900px; margin: 0 auto 24px; background: linear-gradient(90deg, #fff, #e9d5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+-.lede { font-size: 20px; max-width: 680px; margin: 0 auto 40px; opacity: 0.9; }
+-.cta-row { display: flex; gap: 16px; justify-content: center; }
+-.btn { padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: 600; }
+-.btn-primary { background: #fff; color: #764ba2; box-shadow: 0 10px 30px rgba(118,75,162,0.4); }
+-.btn-ghost { border: 1px solid rgba(255,255,255,0.5); color: #fff; }
+-
+-.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 80px auto; padding: 0 24px; }
+-.card { padding: 32px; border-radius: 20px; background: #fff; box-shadow: 0 20px 40px rgba(102,126,234,0.15); border: 1px solid #ede9fe; text-align: center; }
+-.card-icon { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; background: linear-gradient(135deg, #667eea, #a855f7); display: grid; place-items: center; font-size: 26px; }
+-.card h3 { margin: 0 0 8px; }
+-.card p { color: #6b7280; margin: 0; }
+-
+ .page { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+ .sub { color: #6b7280; }
+ .compare { width: 960px; border-collapse: collapse; margin-top: 32px; }
+@@ -42,8 +22,6 @@ a { color: inherit; }
+ .links a { font-size: 13px; text-decoration: none; padding: 2px 0; color: #4b5563; }
+ .nav-cta { margin-left: auto; font-size: 13px; padding: 6px 12px; border-radius: 8px; background: #764ba2; color: #fff; text-decoration: none; }
+ 
+-.shot { max-width: 1100px; margin: -48px auto 0; padding: 0 24px; }
+-.shot img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+ 
+ .plan-actions { display: flex; gap: 8px; margin-top: 24px; }
+ .mini-btn { font-size: 12px; padding: 3px 8px; border-radius: 6px; background: #764ba2; color: #fff; text-decoration: none; }
+@@ -51,3 +29,57 @@ a { color: inherit; }
+ .faq { margin-top: 64px; max-width: 680px; }
+ .faq h3 { margin: 24px 0 6px; font-size: 17px; }
+ .faq p { margin: 0; color: #4b5563; }
++
++/* Homepage */
++:focus-visible { outline: 3px solid #a855f7; outline-offset: 2px; }
++.hero { text-align: center; padding: 96px 24px 136px; background: linear-gradient(135deg, #4c3fa8 0%, #764ba2 100%); color: #fff; }
++.eyebrow { display: inline-block; margin: 0 0 20px; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.16); font-size: 14px; }
++.hero h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.08; max-width: 860px; margin: 0 auto 24px; }
++.lede { font-size: clamp(17px, 2.2vw, 20px); line-height: 1.5; max-width: 660px; margin: 0 auto 32px; }
++.cta-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; }
++.cta-note { margin: 20px 0 0; font-size: 15px; }
++.btn { display: inline-block; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: 600; }
++.btn-primary { background: #fff; color: #5b3a8c; }
++.btn-ghost { border: 1px solid rgba(255,255,255,0.6); color: #fff; }
++.btn-solid { background: #764ba2; color: #fff; }
++.text-link { color: #5b3a8c; font-weight: 600; }
++
++.preview { max-width: 820px; margin: -88px auto 0; padding: 0 20px; }
++.preview-frame { background: #fff; border: 1px solid #ede9fe; border-radius: 20px; box-shadow: 0 30px 60px rgba(40,20,80,0.15); padding: 24px; }
++.preview-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
++.preview-head h2 { margin: 0; font-size: 20px; }
++.fixture-tag { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: #f3f4f6; color: #4b5563; }
++.preview-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 12px; margin: 20px 0; }
++.preview-stats div { padding: 14px 16px; border-radius: 12px; background: #f5f3ff; }
++.preview-stats dt { font-size: 13px; color: #4b5563; }
++.preview-stats dd { margin: 4px 0 0; font-size: 22px; font-weight: 700; }
++.preview-list { list-style: none; margin: 0; padding: 0; }
++.preview-list li { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid #f0edf8; }
++.pl-main, .pl-side { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
++.pl-side { align-items: flex-end; text-align: right; flex-shrink: 0; }
++.pl-main span { font-size: 14px; color: #4b5563; }
++.status { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #fef3c7; color: #78350f; }
++.status.settled { background: #dcfce7; color: #14532d; }
++
++.section { max-width: 960px; margin: 88px auto; padding: 0 24px; }
++.section h2 { font-size: clamp(26px, 4vw, 34px); margin: 0 0 28px; }
++.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
++.steps li { counter-increment: step; }
++.steps li::before { content: counter(step); display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 12px; border-radius: 50%; background: #f5f3ff; color: #5b3a8c; font-weight: 700; }
++.steps h3 { margin: 0 0 6px; font-size: 18px; }
++.steps p, .bill-list dd, .close p { margin: 0; color: #4b5563; line-height: 1.55; }
++.bill-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px 40px; margin: 0; }
++.bill-list dt { font-weight: 700; margin-bottom: 4px; }
++.plan-tag { display: block; margin-top: 6px; font-size: 13px; color: #5b3a8c; font-weight: 600; }
++.close { text-align: center; max-width: 640px; }
++.close h2 { margin-bottom: 12px; }
++.close p { margin-bottom: 28px; }
++
++@media (max-width: 720px) {
++  .topnav { flex-wrap: wrap; gap: 12px 20px; padding: 14px 20px; white-space: normal; }
++  .links { order: 3; width: 100%; gap: 20px; }
++  .hero { padding: 64px 20px 112px; }
++  .preview-frame { padding: 18px; }
++  .preview-stats div { padding: 10px 12px; }
++  .preview-stats dd { font-size: 17px; }
++}
+diff --git a/app/page.jsx b/app/page.jsx
+index 47bce33..e362621 100644
+--- a/app/page.jsx
++++ b/app/page.jsx
+@@ -1,39 +1,115 @@
++import { exampleFlat, inr } from "../lib/exampleFlat";
++
++export const metadata = {
++  title: "Tallyroom — split rent, bills and groceries with your housemates",
++  description:
++    "One shared ledger for your flat. Log an expense when you pay, and everyone sees what they owe. Free for one group of up to 4 housemates.",
++};
++
++const steps = [
++  {
++    title: "Make a group for your flat",
++    body: "Add your housemates once. Every expense from then on is split between the people in the group.",
++  },
++  {
++    title: "Log it when you pay",
++    body: "Groceries, the electricity bill, a gas refill. Enter who paid and who it's split between, including dinners only three of you went to.",
++  },
++  {
++    title: "Settle with one number",
++    body: "Each housemate sees what they owe and what they're owed. Mark expenses settled once the money moves.",
++  },
++];
++
++const bills = [
++  ["Recurring bills", "Rent, Wi-Fi and utilities repeat every month without anyone re-entering them.", "Plus and up"],
++  ["Receipt scanning", "Photograph the grocery receipt instead of typing it in.", "Plus: 50 a month · Household: unlimited"],
++  ["Multi-currency", "INR, USD, EUR, GBP, SGD and AED at daily exchange rates, for the trip or the housemate paid abroad.", "Plus and up"],
++  ["Export to CSV", "Take the whole ledger with you when someone moves out.", "Household and up"],
++];
++
+ export default function Home() {
++  const { expenses } = exampleFlat;
++  const total = expenses.reduce((s, e) => s + e.amount, 0);
++
+   return (
+     <main>
+       <section className="hero">
+-        <span className="eyebrow">✨ Introducing Tallyroom</span>
+-        <h1>Revolutionize the Way You Manage Shared Expenses</h1>
++        <p className="eyebrow">For shared flats and houses</p>
++        <h1>Know who owes what in your flat, without the spreadsheet</h1>
+         <p className="lede">
+-          Unlock the power of seamless, AI-driven expense splitting. Tallyroom is the
+-          all-in-one platform that empowers you to effortlessly elevate your financial
+-          harmony with friends, roommates, and beyond.
++          Log rent, groceries and bills as they happen. Tallyroom splits each one and keeps a
++          running balance for every housemate, so settling up is one number instead of a
++          group-chat argument.
+         </p>
+         <div className="cta-row">
+-          <a className="btn btn-primary" href="/pricing">Get Started Today 🚀</a>
+-          <a className="btn btn-ghost" href="/dashboard">Learn More</a>
++          <a className="btn btn-primary" href="/pricing">See plans</a>
++          <a className="btn btn-ghost" href="#example">See an example flat</a>
+         </div>
++        <p className="cta-note">Free for one group of up to 4 housemates. One paid account covers everyone.</p>
+       </section>
+ 
+-      <div className="shot">
+-        <img src="/hero-dashboard.png" alt="Tallyroom dashboard" />
+-      </div>
+-
+-      <section className="features">
+-        <div className="card">
+-          <div className="card-icon">⚡</div>
+-          <h3>Lightning Fast</h3>
+-          <p>Experience blazing-fast performance that takes your expense tracking to the next level.</p>
++      <section id="example" className="preview" aria-labelledby="preview-title">
++        <div className="preview-frame">
++          <div className="preview-head">
++            <h2 id="preview-title">{exampleFlat.name}</h2>
++            <span className="fixture-tag">Example group</span>
++          </div>
++          <dl className="preview-stats">
++            <div><dt>Spent this month</dt><dd>{inr(total)}</dd></div>
++            <div><dt>You owe</dt><dd>{inr(exampleFlat.youOwe)}</dd></div>
++            <div><dt>You are owed</dt><dd>{inr(exampleFlat.youAreOwed)}</dd></div>
++          </dl>
++          <ul className="preview-list">
++            {expenses.map((e) => (
++              <li key={e.what}>
++                <div className="pl-main">
++                  <strong>{e.what}</strong>
++                  <span>{e.paidBy} paid · split {e.split} · {e.date}</span>
++                </div>
++                <div className="pl-side">
++                  <strong>{inr(e.amount)}</strong>
++                  <span className={e.status === "Settled" ? "status settled" : "status"}>{e.status}</span>
++                </div>
++              </li>
++            ))}
++          </ul>
+         </div>
+-        <div className="card">
+-          <div className="card-icon">🔒</div>
+-          <h3>Secure &amp; Reliable</h3>
+-          <p>Enterprise-grade security ensures your data is always safe, secure, and protected.</p>
+-        </div>
+-        <div className="card">
+-          <div className="card-icon">🤝</div>
+-          <h3>Seamless Collaboration</h3>
+-          <p>Collaborate effortlessly with your team and unlock new levels of productivity.</p>
++      </section>
++
++      <section className="section" aria-labelledby="how-title">
++        <h2 id="how-title">How it works</h2>
++        <ol className="steps">
++          {steps.map((s) => (
++            <li key={s.title}>
++              <h3>{s.title}</h3>
++              <p>{s.body}</p>
++            </li>
++          ))}
++        </ol>
++      </section>
++
++      <section className="section" aria-labelledby="bills-title">
++        <h2 id="bills-title">Made for the bills a flat actually has</h2>
++        <dl className="bill-list">
++          {bills.map(([name, body, plan]) => (
++            <div key={name}>
++              <dt>{name}</dt>
++              <dd>{body} <span className="plan-tag">{plan}</span></dd>
++            </div>
++          ))}
++        </dl>
++      </section>
++
++      <section className="section close" aria-labelledby="close-title">
++        <h2 id="close-title">Only one of you has to pay</h2>
++        <p>
++          The free plan covers one group of up to 4 people. If you need more, Plus is $3 a month for
++          up to 20 members, and that one subscription covers the whole flat. Cancel anytime.
++        </p>
++        <div className="cta-row">
++          <a className="btn btn-solid" href="/pricing">See plans</a>
++          <a className="text-link" href="/pricing#faq">Read the FAQ</a>
+         </div>
+       </section>
+     </main>
+diff --git a/lib/exampleFlat.js b/lib/exampleFlat.js
+new file mode 100644
+index 0000000..0797082
+--- /dev/null
++++ b/lib/exampleFlat.js
+@@ -0,0 +1,18 @@
++// Example group shown on the dashboard mock and the homepage preview. Not customer data.
++export const exampleFlat = {
++  name: "Flat 4B — Indiranagar",
++  youOwe: 1842,
++  youAreOwed: 710,
++  expenses: [
++    { date: "Oct 1", what: "Groceries — Nature's Basket", paidBy: "Arjun", amount: 2840.5, split: "4 ways", status: "Unsettled" },
++    { date: "Sep 30", what: "Electricity bill (Sept)", paidBy: "Maya", amount: 3125, split: "4 ways", status: "Settled" },
++    { date: "Sep 28", what: "Wi-Fi — ACT Fibernet", paidBy: "Kabir", amount: 1179, split: "4 ways", status: "Unsettled" },
++    { date: "Sep 27", what: "Dinner at Toit", paidBy: "Arjun", amount: 4620, split: "3 ways", status: "Unsettled" },
++    { date: "Sep 25", what: "Cooking gas refill", paidBy: "Neha", amount: 903, split: "4 ways", status: "Settled" },
++  ],
++};
++
++export const inr = (n) => {
++  const digits = Number.isInteger(n) ? 0 : 2;
++  return "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: digits, maximumFractionDigits: digits });
++};

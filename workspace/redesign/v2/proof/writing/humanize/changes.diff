@@ -1,0 +1,36 @@
+diff --git a/announcement.md b/announcement.md
+index 1e7a729..d2e0534 100644
+--- a/announcement.md
++++ b/announcement.md
+@@ -1,21 +1,19 @@
+-# Introducing Ledgerly Sync: The Future of Small-Business Bookkeeping Is Here
++# Ledgerly Sync is live
+ 
+-In today's fast-paced business landscape, small-business owners are constantly juggling countless responsibilities. That's why we're thrilled to announce Ledgerly Sync, a powerful, seamless, and cutting-edge solution designed to revolutionize the way you manage your books.
++Today we're launching Ledgerly Sync. It connects your bank accounts, payment processors, and invoicing tools to Ledgerly, so you can see all of your finances in one place.
+ 
+-Ledgerly Sync isn't just a feature — it's a game-changer. By seamlessly connecting your bank accounts, payment processors, and invoicing tools, it empowers you to unlock unprecedented visibility into your finances. Whether you're a solo freelancer or a growing team of fifteen, Ledgerly Sync is here to help you thrive.
++It works the same whether you're a solo freelancer or a team of fifteen:
+ 
+-Here's what you can expect:
++- **Setup takes minutes.** Connect your accounts and you're done.
++- **Your cash flow is current.** Data updates in real time, so you're never looking at last week's numbers.
++- **Your data is encrypted.** We use bank-grade encryption.
+ 
+-- **Effortless Integration:** Connect your accounts in minutes, not hours.
+-- **Real-Time Insights:** Stay on top of your cash flow with up-to-the-minute data.
+-- **Robust Security:** Rest easy knowing your data is protected by bank-grade encryption.
++Sync also categorizes transactions for you by matching them automatically. During the beta, 212 businesses had 94% of their transactions matched with no manual work.
+ 
+-But that's not all. Furthermore, Ledgerly Sync leverages advanced matching technology to automatically categorize transactions, saving you countless hours every month. In our beta, 212 businesses matched 94% of their transactions without lifting a finger. It's worth noting that some bank connections in Canada still require a manual CSV upload while we finish the integration.
++One caveat: some Canadian bank connections still need a manual CSV upload. We're finishing that integration now.
+ 
+-At the end of the day, we believe that bookkeeping shouldn't be a burden. It should be a breeze. That's the vision that drives everything we do here at Ledgerly, and we can't wait to embark on this exciting journey with you.
++Ledgerly Sync is available today on the Growth plan ($29/month). If you're on Starter, you can try it free for 30 days.
+ 
+-Ledgerly Sync is available today on the Growth plan ($29/month). Existing Starter customers can try it free for 30 days.
+-
+-Ready to transform your business? Dive in today and experience the difference for yourself!
++Give it a try, and tell us what you think.
+ 
+ — The Ledgerly Team

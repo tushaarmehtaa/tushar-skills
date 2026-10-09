@@ -1,0 +1,8 @@
+{
+  "skill": "product-spec",
+  "kind": "document",
+  "title": "A one-paragraph idea turned into calls engineering can build on",
+  "before": "- Edits should show up for everyone. We do NOT have real-time collaborative editing today; notes save on blur and last write wins.\n- Should invitees need Pro? Not sure. Sales wants it free for invitees to spread the product.\n- Deleting a shared folder: what happens to other people's copies? Unclear.",
+  "after": "| # | Call | Why |\n|---|---|---|\n| D1 | One canonical folder, **no per-member copies**. Members access the owner's folder; nothing gets duplicated. | The \"what happens to other people's copies\" question goes away because there are no copies. |\n| D2 | **Last-write-wins is not allowed on shared notes.** Saves carry a `base_version`. A stale save becomes a **conflicted copy** next to the original, and the server does it atomically. | With several editors on blur-save, LWW silently loses meeting notes. That's the worst failure this feature can have. Real-time co-editing doesn't fit in 6 weeks. |\n| D3 | \"Edits show up for everyone\" means **within about 30 seconds**, via refresh-on-focus plus polling. It does not mean real-time. | Meets the ask (\"we all see the same notes\") without a sync engine. |\n\u2026\n| D7 | Deleting a shared folder **soft-deletes it for everyone**. Members are emailed. Support can restore it for 30 days. | Follows from D1. Confirmation still needed (Q2). |",
+  "caption": "From the 335-line spec in docs/shared-folders-spec.md, which also covers an authorization matrix, 15 acceptance criteria, a six-week slice plan, and open questions with owners and dates."
+}

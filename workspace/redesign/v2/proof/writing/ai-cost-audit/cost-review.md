@@ -1,0 +1,122 @@
+# Quillnote AI cost review: September 2026
+
+## Short answer
+
+- **September AI spend: $13,819** (modeled from the usage export, not from an invoice).
+- **Per user:** $0.29 per monthly active user (48,000 MAU). Spread across paying users only, it's **$4.46 per Pro subscriber**, against $8 of revenue.
+- **AI cost was 56% of subscription revenue** ($13,819 / $24,800).
+- **Most of the cost is the free tier, not Pro.** Features free users get cost $10,511 (76%). The Pro-only chat feature costs $3,308 (24%). An average free user costs about $0.22/month. An average Pro user costs about $1.29/month, which leaves plenty of margin on $8. The margin problem comes from the ~44,900 free users, and from one Pro feature running on the most expensive model.
+- **Cuts with no product change: about $1.1k–3.6k/month (8–26%).** These are batching the weekly digest and not re-summarizing unchanged notes.
+- **Cuts that need a quality test first: up to about $3.5k/month more.** These are auto-tag on Haiku and chat on a cheaper model. Neither should ship without an eval.
+- **One cut people will probably suggest doesn't hold up yet:** prompt caching for search rerank. The export contradicts the note behind it (see §4).
+
+## 1. Scope and evidence
+
+| Item | Value | Evidence class |
+|---|---|---|
+| Period | September 2026 | — |
+| Source | `usage-2026-09.csv`, 5 features, provider-style token counts | Metered usage export (bottom-up) |
+| Prices | Sonnet 4.5 $3/$15, Haiku 4.5 $1/$5, Opus 4.1 $15/$75 per M input/output tokens; cached reads 10% of input; Batch 50% off | **From `context.md` only.** I couldn't reach the official pricing page from this session (fetch was denied), so these weren't checked against https://docs.claude.com/en/docs/about-claude/pricing. Check them before acting. |
+| Users and revenue | 48,000 MAU, 3,100 Pro at $8/month = $24,800 | `context.md` |
+| Invoice | **Not provided** | Can't reconcile (see §6) |
+| Excluded | Retries, failed calls, non-prod environments, embeddings, infra, payment fees, taxes and credits | Not in the export |
+
+## 2. Spend by feature
+
+Formula: `cost = input_tokens/1e6 × input_rate + output_tokens/1e6 × output_rate`
+
+| Feature | Model | Calls | In / out tokens per call | Monthly cost | Cost per 1k calls | Share | Tier |
+|---|---|---:|---|---:|---:|---:|---|
+| note_summary | Sonnet 4.5 | 412,000 | 3,000 / 200 | **$4,944** | $12.00 | 36% | Free + Pro |
+| ask_your_notes | **Opus 4.1** | 21,000 | 8,000 / 500 | **$3,308** | **$157.50** | 24% | Pro only |
+| search_rerank | Haiku 4.5 | 1,840,000 | 1,600 / 10 | $3,036 | $1.65 | 22% | Free + Pro |
+| auto_tag | Sonnet 4.5 | 655,000 | 600 / 10 | $1,277 | $1.95 | 9% | Free + Pro |
+| weekly_digest | Sonnet 4.5 | 38,000 | 8,000 / 600 | $1,254 | $33.00 | 9% | Free + Pro |
+| **Total** | | 2,966,000 | | **$13,819** | | 100% | |
+
+Input tokens are 74% of spend. Changes that shrink or discount input matter most.
+
+## 3. Per-user economics
+
+| Metric | Formula | Value |
+|---|---|---:|
+| AI cost per MAU | $13,819 / 48,000 | $0.29 |
+| AI cost per Pro subscriber (all cost loaded on payers) | $13,819 / 3,100 | $4.46 |
+| Free-tier feature cost per MAU | $10,511 / 48,000 | $0.22 |
+| Chat cost per Pro subscriber | $3,308 / 3,100 | $1.07 |
+| Estimated cost of an average Pro user | $0.22 + $1.07 | ~$1.29 (16% of $8) |
+| Estimated cost of serving free users | $0.22 × 44,900 | ~$9,830 |
+
+**Assumption:** Pro users use the shared features at the average per-MAU rate. The export has no per-user or per-plan breakdown, so I can't give p50/p95 per user or find heavy users. Splitting usage by plan, and ideally by user, is the most useful telemetry to add (see §7).
+
+## 4. What to cut, ranked
+
+### A. Batch the weekly digest: save ~$627/month (no product change)
+- **Evidence:** the digest is sent Sunday night and nobody reads it before Monday 9am. A batch job usually finishes well inside that window.
+- **Math:** $1,254 × 50% = $627.
+- **Risk:** Low. Output is the same model and prompt, only processed asynchronously. Check the current Batch API completion window and discount on the official page, then submit Saturday or early Sunday.
+- **Rollback:** Go back to synchronous calls for any batch that misses a deadline. Track delivery time per send.
+
+### B. Don't re-summarize unchanged notes: save ~$500–3,000/month (no product change)
+- **Evidence:** the export notes say it "runs on every note save, even unchanged notes."
+- **Change:** Hash the note content and skip the call when the hash matches the last summary. Optionally also wait a few seconds after the last edit (debounce), so a burst of autosaves triggers one call.
+- **Math:** every 10% of calls avoided saves $494. **We don't know the unchanged share**, and the export can't tell us. The $500–3,000 range assumes 10–60% of saves are no-ops. Log hash hits for one week to replace that guess with a measured number.
+- **Risk:** Very low. Users see the same summary they'd get anyway.
+
+### C. Move auto_tag to Haiku 4.5: save up to ~$851/month (eval required)
+- **Evidence:** the task picks 1–3 tags from a fixed list of 40. It's a short, narrow classification.
+- **Math:** $1,277 on Sonnet becomes $426 on Haiku.
+- **Quality gate:** Run both models on 500–1,000 real notes. Ship only if tag agreement with Sonnet (or human labels) is within an agreed tolerance, for example ≥95% set overlap. Then canary to 10% and watch how often users edit or remove tags.
+- **Rollback:** Feature flag back to Sonnet.
+
+### D. Re-evaluate the model behind ask_your_notes: save up to ~$2,600/month (eval required, highest product risk)
+- **Evidence:** this is the only Opus 4.1 path. It costs $0.158 per chat turn, 13× a note summary, for 0.7% of calls.
+- **Math:** on Sonnet 4.5 at these token counts it would cost $662 instead of $3,308, saving $2,646. Also check the current official pricing page for newer Opus-tier models. A newer Opus may give Opus-level quality for less than 4.1, which would be a lower-risk move.
+- **Quality gate:** This is the paid flagship feature, so be strict. Build an eval set of real Pro questions with reference answers or grading criteria, and compare answer quality, faithfulness to the user's notes, and latency. Canary to a slice of Pro users and watch thumbs-down rate, follow-up rephrasing, and Pro churn.
+- **Note:** even unchanged, chat costs about $1.07 per Pro user per month. It isn't what's hurting margin. Don't trade Pro quality for savings that the free tier could provide.
+
+### E. Prompt caching for search_rerank: **savings not proven**
+- **Note in the export:** "same 2,400-token system prompt on every call."
+- **Measured data:** the average input is **1,600 tokens per call** (2,944M / 1.84M). A 2,400-token fixed prefix on every call is impossible with that average. Either the note is stale (the prompt has shrunk), or the calls are counted differently than assumed.
+- **Implication:** the ~$4.0k saving the note implies (2,400 × 1.84M × 90% off) can't be real, because it's larger than rerank's whole input bill ($2,944). The theoretical ceiling, with all input as cache reads, is about $2,650, and the realistic number is lower:
+  - Cache writes cost extra. Check the rate on the official page.
+  - Prompt caching has a minimum cacheable prefix length that varies by model. A prefix of 1,600 tokens or less may be below Haiku 4.5's minimum, which would make caching impossible. Check this first.
+- **Next step:** Log the actual system-prompt token count from a live request. Then check the minimum and write rates before putting caching on the roadmap.
+
+### Summary
+
+| Change | Monthly savings | Confidence | Quality risk | Effort |
+|---|---:|---|---|---|
+| A. Batch weekly_digest | $627 | High (depends on verifying prices) | None | Low |
+| B. Skip unchanged notes | $500–3,000 | Medium (unchanged share unknown) | None | Low |
+| C. auto_tag → Haiku | $0–851 | Medium (eval pending) | Low–medium | Low |
+| D. Chat model re-eval | $0–2,646 | Low (eval pending) | **High** | Medium |
+| E. Rerank caching | Unknown, < $2,650 | Low (data contradiction) | None | Low–medium |
+| **A + B (no product change)** | **~$1,100–3,600** | | | |
+| **All, if evals pass** | **~$1,100–7,100** | | | |
+
+With A+B, AI cost drops from 56% to about 41–51% of revenue. If every eval passes, it falls to about 27–38%. These are projections, not measured results.
+
+## 5. Scenarios
+
+| Scenario | Monthly AI cost | % of $24,800 revenue |
+|---|---:|---:|
+| September baseline (measured) | $13,819 | 56% |
+| A + B, low end (10% of saves unchanged) | ~$12,700 | 51% |
+| A + B, high end (60% of saves unchanged) | ~$10,200 | 41% |
+| A + B + C + D, all evals pass | ~$6,700–9,300 | 27–38% |
+| Free tier grows 2× and Pro stays flat, no changes (projection) | ~$23,650 | 95% |
+
+The last row is the real risk. Free usage scales cost with no revenue behind it. If free MAU grows faster than Pro, no model swap will keep up. That's a product and pricing decision, for example free-tier summary limits or summaries on demand instead of on every save. I'd leave it to the product team, but Finance should know it's the deciding variable.
+
+## 6. Reconciliation
+
+No invoice or billing-dashboard export was provided, so I can't reconcile the $13,819 bottom-up figure to actual billed spend. Retries, failed calls, staging and dev traffic, and any non-Anthropic services all add to the bill and wouldn't appear here. **Next step:** pull the September Anthropic invoice and compute `variance = billed − $13,819`. Any variance above a few percent needs explaining before these savings figures are trusted.
+
+## 7. Measurement plan
+
+1. **Before any change:** get the September invoice, and add a `plan` (free/pro) tag and a hashed `user_id` to usage logs.
+2. **A and B (this sprint):** ship behind flags, then compare one week of token spend per feature against the September daily average. For A, track digest delivery time. For B, track the hash-hit rate.
+3. **C and D:** offline eval first, then a 10% canary for two weeks. Watch spend, quality metric, p95 latency, error rate, and the user signals listed above. Roll back if quality falls outside the agreed tolerance.
+4. **E:** measure the real prompt length and the cache eligibility rules first. Only then estimate savings.
+5. **Re-run this review on October data**, using actual numbers instead of projections.

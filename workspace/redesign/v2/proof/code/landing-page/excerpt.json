@@ -1,0 +1,14 @@
+{
+  "skill": "landing-page",
+  "kind": "before-after",
+  "title": "A homepage that says what Tallyroom does",
+  "before": "-        <h1>Revolutionize the Way You Manage Shared Expenses</h1>\n+        <p className=\"eyebrow\">For shared flats and houses</p>\n+        <h1>Know who owes what in your flat, without the spreadsheet</h1>\n         <p className=\"lede\">\n-          Unlock the power of seamless, AI-driven expense splitting. Tallyroom is the\n-          all-in-one platform that empowers you to effortlessly elevate your financial\n-          harmony with friends, roommates, and beyond.",
+  "after": "- **Headline:** \"Know who owes what in your flat, without the spreadsheet.\" The line under it says you log rent, groceries and bills as you pay, Tallyroom splits each one, and settling up is one number.\n- **Main button:** \"See plans\", going to `/pricing`. Under it: \"Free for one group of up to 4 housemates. One paid account covers everyone.\" That second line answers the most likely question from someone's housemates, and comes from your pricing FAQ. …\n1. **Nobody can actually sign up yet.** There's no signup page, the free plan has no button, and the \"Choose Plus\" / \"Choose Household\" buttons only go to the dashboard mock. Every button on the new homepage leads to that dead end, so this is the biggest thing stopping signups.",
+  "caption": "Copy built from the pricing table and FAQ, a live example flat instead of a placeholder image, and a flag that the page has no working signup path.",
+  "images": [
+    "landing-page/before-desktop.png",
+    "landing-page/after-desktop.png",
+    "landing-page/before-mobile.png",
+    "landing-page/after-mobile.png"
+  ]
+}

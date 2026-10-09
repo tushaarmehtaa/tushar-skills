@@ -1,0 +1,7 @@
+{
+  "skill": "decision-doc",
+  "kind": "table",
+  "title": "Three search options scored against the team's real constraints",
+  "after": "| Driver | Status quo | Postgres FTS | Meilisearch | Algolia |\n|---|---|---|---|---|\n| Live by Jan 6 | n/a | Likely (prototype exists; full estimate needed) | Likely (2-wk estimate) | Likely, *if* the CFO approves in time |\n| Filters | No | Yes; counts are custom work | Yes | Yes |\n| Ingredient search | No | Yes | Yes | Yes |\n| No new on-call | Yes | **Yes** | **No** | Yes |\n| Cost | $0 | $0 | Hosting only | ~$1,100/mo, CFO sign-off |\n\u2026\n\nPostgres is the only option with no hard \"no\" on the top five drivers. Meilisearch fails the on-call constraint, and Algolia hits the cost approval gate. **The answer flips** if typo tolerance turns out to be the main complaint, or if the Postgres production estimate comes in well over Sam's 2 weeks.",
+  "caption": "From docs/search-decision.md. It recommends Postgres at medium confidence, writes up the dissenting view fairly, and names the two cheap checks that would flip the call before the Oct 20 deadline."
+}

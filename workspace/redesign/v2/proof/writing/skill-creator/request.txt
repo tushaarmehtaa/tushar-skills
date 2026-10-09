@@ -1,0 +1,1 @@
+I do the workflow in workflow.md by hand every Friday. Package it so my coding agent can do it for me next time. Put whatever you create under skills/ in this folder.

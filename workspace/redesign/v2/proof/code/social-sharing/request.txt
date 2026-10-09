@@ -1,0 +1,1 @@
+When I paste Tallyroom links into WhatsApp or X there's no preview card, just a bare URL. Fix the share previews for the home and pricing pages. Production will be https://tallyroom.app (not launched yet).

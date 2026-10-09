@@ -1,0 +1,74 @@
+diff --git a/index.html b/index.html
+index 4cf7bde..106656e 100644
+--- a/index.html
++++ b/index.html
+@@ -1,28 +1,55 @@
+ <!doctype html>
+ <html lang="en">
+-<head><meta charset="utf-8"><title>Tidepool - Next-Gen Scheduling</title></head>
++<head><meta charset="utf-8"><title>Tidepool - Shift scheduling for independent vet clinics</title></head>
+ <body>
+   <header>
+-    <h1>Unlock the Power of Next-Generation Scheduling</h1>
+-    <p>Tidepool is an all-in-one AI-powered platform that streamlines your workflow and empowers your team to achieve more.</p>
+-    <a href="/signup">Get Started</a>
++    <h1>Stop spending Monday morning texting people to cover sick calls.</h1>
++    <p>Tidepool is shift scheduling for independent veterinary clinics. It drafts your weekly rota from staff availability and your coverage rules, and when someone calls in sick, it texts eligible staff and fills the shift for you.</p>
++    <a href="/signup">Start your 30-day free trial</a>
++    <p>No card required. Built for clinics with 2-12 vets and 5-40 staff.</p>
+   </header>
++
+   <section>
+-    <h2>Why Tidepool?</h2>
+-    <ul>
+-      <li>Seamless integrations</li>
+-      <li>Powerful automation</li>
+-      <li>Enterprise-grade security</li>
+-    </ul>
++    <h2>The spreadsheet rota, and the Monday that follows it</h2>
++    <p>We hear the same story from clinic managers: they build the week in a spreadsheet, then lose Monday morning to sick-call texts. In our onboarding survey of 38 managers, the average was 4.5 hours a week spent on scheduling.</p>
+   </section>
++
+   <section>
+-    <h2>Trusted by teams everywhere</h2>
+-    <p>Join thousands of happy customers.</p>
++    <h2>How Tidepool works</h2>
++    <h3>A draft rota that follows your coverage rules</h3>
++    <p>Enter staff availability and your clinic's minimum coverage, like "always 1 vet + 2 techs on surgery days." Tidepool builds a draft of the week that meets those rules.</p>
++    <h3>Sick calls covered by text</h3>
++    <p>When someone calls in sick, Tidepool texts the staff who are eligible for that shift, starting with whoever has the fewest hours that week. The first person to reply YES gets the shift.</p>
++    <h3>Hours exported to payroll</h3>
++    <p>Send worked hours straight to Gusto or ADP. Those are the two payroll tools we support today.</p>
+   </section>
++
++  <section>
++    <h2>What clinics say</h2>
++    <blockquote>
++      <p>"Sick calls used to wreck my Monday. Now I find out it's covered when I get in."</p>
++      <footer>Dana R., practice manager, Riverbend Animal Hospital</footer>
++    </blockquote>
++    <p>61 independent clinics across the US and Canada pay for Tidepool. After 8 weeks, the median manager we surveyed reported spending 1.5 hours a week on scheduling (self-reported, 22 managers).</p>
++  </section>
++
++  <section>
++    <h2>Questions managers ask before switching</h2>
++    <h3>"My staff won't install another app."</h3>
++    <p>They don't need to. Shift offers arrive as plain SMS, and staff reply YES to take one.</p>
++    <h3>"We already use our PIMS for appointments."</h3>
++    <p>Keep using it. Tidepool schedules staff shifts only and never touches your appointments.</p>
++    <h3>Is it AI?</h3>
++    <p>No. The rota builder is a constraint solver: it builds the rota from the availability and coverage rules you give it.</p>
++    <h3>What about security?</h3>
++    <p>Tidepool has completed a SOC 2 Type I audit. Our SOC 2 Type II audit is in progress.</p>
++  </section>
++
+   <section>
+     <h2>Pricing</h2>
+-    <p>Flexible plans for every team. Contact us to learn more.</p>
+-    <a href="/signup">Get Started</a>
++    <p>$6 per staff member per month, billed monthly. Minimum $60 a month.</p>
++    <p>Try it free for 30 days. No card required.</p>
++    <a href="/signup">Start your 30-day free trial</a>
+   </section>
+ </body>
+ </html>

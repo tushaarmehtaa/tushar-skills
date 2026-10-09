@@ -1,0 +1,19 @@
+{
+  "skill": "product-experiments",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill product-experiments -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 53.8,
+  "costUsd": 0.25083540000000004,
+  "numTurns": 9,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "product-experiments"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill,Bash(python3:*)",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote results/readout.md: detected SRM (chi2 20.9), linked it to the Safari crash window, computed break-even of 35 missing successes to erase the +2.0pp lift (verified), flagged missing exposure event and slower onboarding, wrote a pre-registered ship rule."
+}

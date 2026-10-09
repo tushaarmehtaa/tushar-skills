@@ -1,0 +1,422 @@
+{
+  "groupOrder": {
+    "shape": [
+      "user-insights",
+      "product-teardown",
+      "decision-doc",
+      "product-spec"
+    ],
+    "build": [
+      "agent-instructions",
+      "supabase",
+      "auth-implementation",
+      "interface-design",
+      "ui-copy",
+      "ai-product-development",
+      "payments-with-dodo",
+      "credit-metering",
+      "rate-limit",
+      "email-with-resend"
+    ],
+    "ship": [
+      "remove-ai-slop",
+      "mobile-first",
+      "performance-diagnosis",
+      "search-ready",
+      "social-sharing",
+      "readme",
+      "deploy-check",
+      "changelog",
+      "skill-creator"
+    ],
+    "grow": [
+      "landing-copy",
+      "landing-page",
+      "image-editing",
+      "demo-video",
+      "analytics",
+      "product-launch",
+      "cold-outreach",
+      "humanize",
+      "product-experiments",
+      "ai-cost-audit",
+      "fundraising"
+    ]
+  },
+  "skills": {
+    "user-insights": {
+      "group": "shape",
+      "outcome": "Segments, cohorts and funnels from your event data, with every metric defined.",
+      "useWhen": "Use when product, event, billing or interview data has to inform a product decision.",
+      "skipWhen": "Skip it if you want personas from snapshot columns or proof of cause; observational results stay non-causal.",
+      "why": "i wanted product calls backed by event history, not guesses from a last_active_at column or a convenient threshold.",
+      "next": "product-teardown",
+      "outputContract": "Distinguish two states:\n\n- **Executed analysis:** evidence ledger, metric definitions, data-quality findings, results with denominators/uncertainty, limitations, and decisions.\n- **Query plan:** schema mapping, executable queries, expected columns, validation queries, and interpretation rules—no invented results.\n\nFor either state, include justified segments/cohorts only, privacy notes, alternative explanations, recommended action, and how to test it.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "product-teardown": {
+      "group": "shape",
+      "outcome": "A findings table on a product's copy, onboarding and pricing, each tied to evidence.",
+      "useWhen": "Use when you want to learn from another product's positioning, copy, UX, onboarding, pricing or trust signals.",
+      "skipWhen": "Skip it if you want to copy a product's words or assets, or guess its revenue from screenshots.",
+      "why": "teardowns only helped when they pointed at my own product. so it asks what you're building first and ends in principles you can apply.",
+      "next": "decision-doc",
+      "outputContract": "Return:\n\n- scope and evidence ledger;\n- concise journey or page narrative;\n- findings table with evidence, lens, impact, confidence, and recommendation;\n- strengths worth preserving;\n- weaknesses or unanswered objections;\n- transferable principles mapped to the user's product, including when not to apply them;\n- access gaps and next evidence to collect.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "decision-doc": {
+      "group": "shape",
+      "outcome": "A decision record with options, tradeoffs, an owner, a first action and a review date.",
+      "useWhen": "Use when a person or team must choose between approaches or record a choice already made.",
+      "skipWhen": "Skip it when the choice is settled and you need the build plan; product-spec turns a decision into scope.",
+      "why": "i kept falling into the \"i'll just try both\" spiral. this forces one decision, an owner and the trigger that reopens it.",
+      "next": "product-spec",
+      "outputContract": "Return a concise decision record with:\n\n- title, date, status, owner, participants;\n- decision statement and deadline;\n- context, constraints, and decision drivers;\n- evidence and assumptions;\n- options, including status quo where relevant;\n- comparison and strongest argument for/against each;\n- decision, confidence, and rationale;\n- consequences and what is being given up;\n- first action, owner, due date;\n- review/expiry trigger and supersession links;\n- unresolved risks or dissent.\n\nOffer to save it only when the user requested a file or the workspace convention clearly supports one.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "product-spec": {
+      "group": "shape",
+      "outcome": "A buildable spec: scope, flows, data, permissions, slices and acceptance criteria.",
+      "useWhen": "Use when planning a new product or a change before implementation starts.",
+      "skipWhen": "Skip it while the choice between approaches is still open; settle that with decision-doc first.",
+      "why": "i had separate product-brief and mvp-spec skills. merged them so one spec runs from audience to acceptance criteria, without a forced interview.",
+      "next": "agent-instructions",
+      "outputContract": "For a brief, return audience/trigger, problem/evidence, promise/mechanism, smallest value path, scope, exclusions, success signals, assumptions, and open questions.\n\nFor a buildable or change spec, add flows/states, architecture fit, data and authorization, interfaces, non-functional requirements, rollout/migration, vertical slices, acceptance criteria, verification, risks, and decisions. For an audit, return findings with evidence, impact, and required correction rather than silently rewriting product intent.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "agent-instructions": {
+      "group": "build",
+      "outcome": "Scoped AGENTS.md, CLAUDE.md or Cursor rules built from what your repo actually runs.",
+      "useWhen": "Use when coding-agent guidance is missing, stale, duplicated or conflicting.",
+      "skipWhen": "Skip it if you want generic agent advice or a file for every vendor; it writes only what the repo proves, for the runtime you name.",
+      "why": "i wanted agent files that say which commands actually ran, not ones copied from a stale readme.",
+      "next": "supabase",
+      "outputContract": "When editing, deliver:\n\n1. the requested instruction file or files;\n2. a short scope summary naming which directories and runtimes they govern;\n3. a command table with verification labels;\n4. conflicts resolved, preserved, or still requiring a decision;\n5. any facts deliberately omitted because they were unverified or too volatile.\n\nKeep files concise enough to scan, but let repository complexity determine length. Prefer concrete imperatives and paths over explanatory essays.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "supabase": {
+      "group": "build",
+      "outcome": "Supabase tables with migrations, grants, RLS, typed clients and denied-access tests.",
+      "useWhen": "Use when integrating Supabase or repairing data access and tenant isolation.",
+      "skipWhen": "Skip it if you are not on Supabase, or want the same four CRUD policies stamped on every table.",
+      "why": "an older version stamped four crud policies on every table. the rebuild designs grants and rls from who owns each row.",
+      "next": "auth-implementation",
+      "outputContract": "Report tables/functions/storage changed, migration files, grants and RLS policies with auth strategy, client/session changes, type-generation command/result, negative authorization tests, and remaining linked-project/dashboard/production steps.",
+      "outputSource": "Output",
+      "proofTier": "contract"
+    },
+    "auth-implementation": {
+      "group": "build",
+      "outcome": "Sign-in, sessions and an access matrix enforced next to every protected read and write.",
+      "useWhen": "Use when adding sign-in, identity sync, account linking, roles or access control.",
+      "skipWhen": "Skip it if you want a new identity provider picked for you; it keeps the one you have unless you decide to switch.",
+      "why": "started as wire-auth: provider, db sync, rls and race conditions in one pass. now it also tests every protected route as the wrong user.",
+      "next": "interface-design",
+      "outputContract": "Report provider/version and identity model, files/migrations changed, access matrix and enforcement points, sync strategy, RLS/grants, environment-variable names, automated verification evidence, and manual dashboard/backfill/production checks.",
+      "outputSource": "Output",
+      "proofTier": "contract"
+    },
+    "interface-design": {
+      "group": "build",
+      "outcome": "A working interface whose tokens, states and layout follow from the product's job.",
+      "useWhen": "Use when creating or redesigning pages, dashboards, workflows or components.",
+      "skipWhen": "Skip it when only the words are wrong (ui-copy) or a finished page only breaks on phones (mobile-first).",
+      "why": "the rebuild took my personal house style out of this. it extends the design system you already have before inventing one.",
+      "next": "ui-copy",
+      "outputContract": "Deliver:\n\n1. implemented code or the explicitly requested design artifact;\n2. a short rationale connecting major decisions to product, content, and interaction evidence;\n3. the component/state coverage completed;\n4. assets, dependencies, or content requirements introduced;\n5. verification results at representative viewports and states;\n6. known gaps that still affect usability or fidelity.\n\nIf exploration was requested, provide genuinely distinct directions with tradeoffs and a recommended choice. Do not vary only palette and font.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "ui-copy": {
+      "group": "build",
+      "outcome": "Interface copy for every state, written against what the product actually does.",
+      "useWhen": "Use when buttons, forms, errors, empty states or notifications must match system behavior and voice.",
+      "skipWhen": "Skip it for marketing pages (landing-copy) or to force a casual, lowercase voice onto the product.",
+      "why": "i wanted errors and empty states that say what failed, what is safe and what to do next, matched to real behavior.",
+      "next": "ai-product-development",
+      "outputContract": "### Audit\n\nDeliver manifest coverage, prioritized findings, exact source locations, before/after repairs grounded in behavior, decisions to preserve, and states or channels that could not be inspected.\n\n### Generate or flow rewrite\n\nOrganize copy by flow and state rather than a fixed list of fields:\n\n```text\n[Flow / screen / state]\nPurpose and system behavior:\nVisible copy:\nActions and destinations:\nAccessible names or announcements:\nVariables and localization notes:\nSource/content owner:\n```\n\n### Implement\n\nUpdate the correct source of truth, preserve unrelated strings, and report files changed, migrations or message-ID changes, rendered states checked, and unverified channels.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "ai-product-development": {
+      "group": "build",
+      "outcome": "An AI feature with a typed server contract, every UI state, evals and cost controls.",
+      "useWhen": "Use when building AI into an app or auditing an AI feature before it ships.",
+      "skipWhen": "Skip it for a repo-wide AI cost and margin audit; ai-cost-audit owns that.",
+      "why": "began as an ai-streaming recipe. grew into the whole product path: ui states, tool permissions, evals and usage settlement.",
+      "next": "payments-with-dodo",
+      "outputContract": "Report the chosen interaction and why, server/UI paths changed, state coverage, safety and permission boundaries, evaluation results, latency/cost observations, usage-settlement behavior, verification evidence, and remaining provider or production setup.",
+      "outputSource": "Output",
+      "proofTier": "run"
+    },
+    "payments-with-dodo": {
+      "group": "build",
+      "outcome": "Dodo checkout, subscriptions and verified webhooks driving server-side entitlements.",
+      "useWhen": "Use when adding Dodo billing or auditing its full lifecycle.",
+      "skipWhen": "Skip it if you bill through another provider; it will not install Dodo beside one without a migration plan.",
+      "why": "i had separate dodo pricing and webhook skills. now it's one lifecycle, and a return url never counts as proof of payment.",
+      "next": "credit-metering",
+      "outputContract": "Report product/entitlement mapping, SDK and environment detected, files/migrations changed, checkout/portal paths, webhook inbox and state transitions, payload minimization/access/retention decisions, server enforcement points, test evidence/event IDs, and exact dashboard/production steps still required.",
+      "outputSource": "Output",
+      "proofTier": "contract"
+    },
+    "credit-metering": {
+      "group": "build",
+      "outcome": "Usage credits on an append-only ledger with reserve, capture, release and refund.",
+      "useWhen": "Use when an app meters consumable usage with credits.",
+      "skipWhen": "Skip it for plain subscriptions with nothing consumable to meter; payments-with-dodo covers billing itself.",
+      "why": "credits were something i wired from scratch on every product. this treats them as a ledger, so retries and concurrent spends stay correct.",
+      "next": "rate-limit",
+      "outputContract": "Report the denomination and policies, schema/migrations, ledger operations and invariants, protected usage paths, provider/product mapping, UI reconciliation, verification evidence, and remaining dashboard or production setup.",
+      "outputSource": "Output",
+      "proofTier": "run"
+    },
+    "rate-limit": {
+      "group": "build",
+      "outcome": "Upstash limits on Next.js routes with trusted identifiers, 429 headers and outage rules.",
+      "useWhen": "Use when protecting Next.js routes from abuse or runaway cost.",
+      "skipWhen": "Skip it if you are not on Upstash Redis, or expect rate limits alone to stop abuse; they are one layer.",
+      "why": "the first version failed open on every redis error and trusted x-forwarded-for. now each route picks its outage rule and ip comes from the platform.",
+      "next": "email-with-resend",
+      "outputContract": "Report the policy table, identifier trust model, files/env names changed, outage behavior, response headers, layered controls, automated test evidence, and remaining Upstash/deployment configuration.",
+      "outputSource": "Output",
+      "proofTier": "contract"
+    },
+    "email-with-resend": {
+      "group": "build",
+      "outcome": "Consent-aware Resend email with queues, suppression, idempotency and signed webhooks.",
+      "useWhen": "Use when an app needs transactional, lifecycle or campaign email through Resend.",
+      "skipWhen": "Skip it for cold email to people who never signed up; that is cold-outreach.",
+      "why": "began as ship-email, a list of resend gotchas like domain verification and failed sends that don't throw. now it covers consent and suppression.",
+      "next": "remove-ai-slop",
+      "outputContract": "Report message classes and triggers, files/templates/jobs changed, sender and environment-variable names, consent/preferences/suppression behavior, webhook and idempotency design, verification evidence/message IDs, and remaining DNS/dashboard/production checks.",
+      "outputSource": "Output",
+      "proofTier": "contract"
+    },
+    "remove-ai-slop": {
+      "group": "ship",
+      "outcome": "A ranked report of generic design and copy patterns, with exact before and after fixes.",
+      "useWhen": "Use when an interface looks or reads generic and you want rendered evidence before changing it.",
+      "skipWhen": "Skip it for prose voice edits (humanize) or to impose a new house style on the interface.",
+      "why": "came out of cleaning ai slop off this site. it stops at a before and after report and changes nothing until i approve.",
+      "next": "mobile-first",
+      "outputContract": "Stop before editing. Lead with a prioritized summary ranked by user impact, frequency, confidence, and repair cost. In focused work, report all in-scope findings. In representative or exhaustive work, group repeated source decisions so the report does not duplicate the same repair for every rendered instance. Use these sections when applicable:\n\n```text\nCOPY MANIFEST COVERAGE\nScope: [surfaces, routes, channels, locales, states]\nUnavailable: [anything not inspected]\nUnique source decisions: [count]  Rendered instances: [count]\nBaseline: [hard bans, unverified claims, convergence clusters]\n\nHARD SLOP — REMOVE\nH1. [route, file:line] — [pattern]\n    Before: [exact original]\n    After: [verified replacement, deletion, or BLOCKED — CONTENT REQUIRED]\n    Evidence: [exact code plus rendered evidence]\n    Why it fails: [specific diagnosis]\n    Verdict: Remove it.\n\nCONTEXTUAL SLOP\nC1. [route, file:line] — [pattern, score, HIGH or MEDIUM confidence]\n    Verdict: [STRONG PRESUMPTION, CONTEXTUAL SIGNAL, or CANDIDATE]\n    Before: [exact original]\n    After: [product-specific repair or BLOCKED — CONTENT REQUIRED]\n    Evidence: [repetition, mismatch, co-occurrence, render or copy manifest]\n\nCOPY CONVERGENCE\nCC1. [convergence type and normalized pattern or term, score, confidence]\n     Instances: [routes, states, files, and exact excerpts]\n     Impact: [how unrelated jobs were flattened or terminology drifted]\n     Repair: [which source decisions change and which terminology stays]\n     Why it fails: [unrelated jobs forced through one voice or template]\n\nQUALITY DEFECTS\nQ1. [route, file:line] — [accessibility, semantics, performance, claim, or state-integrity issue]\n    Evidence: [code, behavior, source, or contradiction]\n    Impact: [user, trust, task, or compliance consequence]\n    Provenance: [verified, unverified, contradicted, or not applicable]\n    Recommendation: [repair, provenance request, or blocked status]\n\nDECISIONS TO PRESERVE\nP1. [element] — [why it is intentional, specific, and effective]\n```\n\nCritique the artifact, not its author. Be direct about objective hard slop: write “This placeholder is exposed as finished copy. Remove it,” not “You may want to consider refining it.” For visual defaults, state the rendered evidence and confidence rather than presenting taste as fact.\n\nFor every actionable source decision, show the exact before and after when the replacement can be grounded in repository evidence. When content or product intent is missing, state the required decision instead of generating speculative alternatives. Use real product copy and existing tokens rather than placeholders. Ground rewritten claims in cited repository evidence. Treat `UNVERIFIED` and `BLOCKED — CONTENT REQUIRED` as report-only statuses; never write them into user-facing copy. When rendering is available, compare the same route, viewport, state, data, and animation setting.\n\nDo not use canonical replacements such as flat black, one accent, 8px radii, a two-column list, uniformly terse prose, or default casual voice unless the product evidence supports them. State the intended design or copy job first, then propose the smallest repair that performs it.",
+      "outputSource": "Phase 7: Report findings and fixes",
+      "proofTier": "run"
+    },
+    "mobile-first": {
+      "group": "ship",
+      "outcome": "Measured narrow-screen fixes with before and after numbers at 320, 375, 768 and 1440.",
+      "useWhen": "Use when a page clips, overflows, stacks poorly or fails on touch.",
+      "skipWhen": "Skip it when the page's structure or message is wrong; fix that with landing-page or interface-design first.",
+      "why": "i wanted phone fixes measured against a baseline, not a desktop layout squeezed until the overflow stops.",
+      "next": "performance-diagnosis",
+      "outputContract": "For an audit, provide the measurement table, ranked findings, preserved strengths, and sequenced repairs without editing files.\n\nFor a repair or build, report:\n\n- the observed failures and chosen responsive transformations;\n- files changed and meaningful product tradeoffs;\n- before/after measurements where a baseline existed;\n- widths, zoom levels, states, inputs, and motion preferences tested;\n- real-device or production checks that remain.\n\nDo not claim “mobile complete” from a single screenshot or the absence of document overflow.",
+      "outputSource": "Deliver",
+      "proofTier": "run"
+    },
+    "performance-diagnosis": {
+      "group": "ship",
+      "outcome": "A measured baseline, a root cause or ranked hypotheses, and before and after numbers.",
+      "useWhen": "Use when an app is slow, spikes resources, reload-loops, regresses or fails Web Vitals.",
+      "skipWhen": "Skip it if you want a quick fix without a reproduction; it measures first and edits only when asked.",
+      "why": "i wanted slowdowns traced to a measured cause before anyone touches code. a big package is a lead, not a verdict.",
+      "next": "search-ready",
+      "outputContract": "Report symptom and reproduction, baseline, evidence, root cause or ranked remaining hypotheses, files changed only if authorized, before/after metrics, correctness checks, confidence level, and next measurement. Do not claim a cause or improvement without observed evidence.",
+      "outputSource": "Output",
+      "proofTier": "run"
+    },
+    "search-ready": {
+      "group": "ship",
+      "outcome": "Prioritized SEO, schema and AI-crawler fixes per route, checked against the live site.",
+      "useWhen": "Use when preparing or maintaining a live site for search and answer engines.",
+      "skipWhen": "Skip it if you expect guaranteed rankings or AI citations; it never promises either.",
+      "why": "seo was the thing i never set up. seo-ready and aeo-ready merged into this, and it keeps live behavior apart from repo intent.",
+      "next": "social-sharing",
+      "outputContract": "Return mode-relevant sections:\n\n- scope and evidence sources;\n- prioritized findings with affected URLs/templates, severity, confidence, and fix;\n- live-vs-repository discrepancies;\n- route-level metadata/schema/indexation matrix;\n- implemented changes with file paths;\n- content opportunities grounded in current evidence;\n- validator and deployed verification results;\n- unresolved blockers and maintenance cadence.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "social-sharing": {
+      "group": "ship",
+      "outcome": "Correct canonical URLs, Open Graph tags and preview images for every shared route.",
+      "useWhen": "Use when shared links show missing, stale, generic, private or wrong previews.",
+      "skipWhen": "Skip it for indexation, sitemaps and schema; search-ready owns that.",
+      "why": "began as og-image. now each route gets a canonical url, tags and a preview image, checked in the rendered html, not just source.",
+      "next": "readme",
+      "outputContract": "For each defect, report:\n\n```text\n[route family and representative URL]\nSource: [file:line or generator]\nResolved value: [observed tag, URL, or image response]\nExpected behavior: [route contract]\nImpact: [wrong identity, missing preview, stale image, privacy risk, or broken action]\nRepair: [specific source change]\nVerification: [automated and deployed check]\n```\n\nSeparate source-code candidates from defects confirmed in rendered HTML or image responses.\n\nFor repair or implementation work, also return:\n\n- files and route families changed;\n- metadata sources, canonical policy, and image fallback implemented;\n- representative or exhaustive coverage manifest, including every enumerated image response in exhaustive mode;\n- local and deployed checks with observed status, content type, dimensions, and resolved values;\n- cache/debugger state and any refresh still pending;\n- routes, dynamic sets, credentials, or production checks that remain unverified.",
+      "outputSource": "Audit findings",
+      "proofTier": "run"
+    },
+    "readme": {
+      "group": "ship",
+      "outcome": "A README checked against the repo, with each command marked as run or documented only.",
+      "useWhen": "Use when repository documentation is missing, inaccurate or hard to follow.",
+      "skipWhen": "Skip it if you want badges, banners and GIFs for show; it adds visuals only when they explain something.",
+      "why": "i wanted readmes where every install command was run or labelled, so a stranger's first try works.",
+      "next": "deploy-check",
+      "outputContract": "In generate or repair mode, deliver the updated `README.md` and a short report containing:\n\n- primary audience and reader job;\n- authoritative sources used;\n- commands and examples actually executed;\n- sections added, removed, or intentionally omitted;\n- links, assets, badges, and license status checked;\n- limitations or setup paths that remain unverified.\n\nIn audit mode, deliver prioritized findings and proposed replacements for the most consequential defects. Do not rewrite only the lowest-scoring cosmetic sections.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "deploy-check": {
+      "group": "ship",
+      "outcome": "A READY, BLOCKED or NEEDS CONFIRMATION verdict with the evidence behind it.",
+      "useWhen": "Use before deploying, pushing or approving a release.",
+      "skipWhen": "Skip it if you want it to deploy for you; it never pushes or deploys without separate permission.",
+      "why": "one of my first four skills. it saved me from pushing broken typescript, committing a .env file and deploying without running migrations.",
+      "next": "changelog",
+      "outputContract": "Report release base/head and scope, commands with exit status, blockers, warnings, migrations and rollout order, config/secrets findings without values, external confirmations, rollback/roll-forward notes, and the evidence behind the verdict. Never say “safe to push” solely because type checking passed.",
+      "outputSource": "Output",
+      "proofTier": "run"
+    },
+    "changelog": {
+      "group": "ship",
+      "outcome": "Changelog copy from a verified git range, each item traced to its commits.",
+      "useWhen": "Use when preparing weekly updates, release summaries or social changelog cards.",
+      "skipWhen": "Skip it to judge whether a release is safe to ship; run deploy-check for that.",
+      "why": "changelogs were the thing i never wrote. in a seeded eval it scored 1.00 against 0.43 without it and caught the breaking change 3 of 3 times.",
+      "next": "skill-creator",
+      "outputContract": "Deliver the requested artifact plus:\n\n```text\nRange: [commits/tags/dates and branch]\nAudience and channel: [who/where]\nRelease status: [verified live, released, unreleased, or mixed]\nItems: [final count]\nProvenance: [item -> commits or paths]\nStatistics: [definitions and values, if used]\nArtifacts: [paths and dimensions]\nLimitations: [deployment or content facts not verified]\n```\n\nFor a prose-only request, do not create HTML. For an audit request, stop at findings and proposed copy unless the user also asked for edits.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "skill-creator": {
+      "group": "ship",
+      "outcome": "A portable SKILL.md package with routed references, validation and behavioral evals.",
+      "useWhen": "Use when authoring, improving, merging or validating SKILL.md packages.",
+      "skipWhen": "Skip it for a one-off prompt; it packages workflows you repeat.",
+      "why": "i measured codex shortening skill descriptions as catalogs grew to 209 skills. rear-loaded words vanished, so this front-loads the trigger.",
+      "next": "landing-copy",
+      "outputContract": "Deliver:\n\n- the complete package, including changed resources;\n- a concise behavior summary and trigger boundary;\n- validation and eval results;\n- resources added, removed, or rerouted;\n- preserved behavior and intentional breaking changes;\n- remaining limitations or untested environments.\n\nRead [the authoring guide](references/guide.md) when selecting a multi-file resource structure, designing eval cases, merging packages, or diagnosing portability and routing failures.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "landing-copy": {
+      "group": "grow",
+      "outcome": "A landing-page copy deck built on one defensible claim and the proof behind it.",
+      "useWhen": "Use when product, pricing, campaign or waitlist pages need clearer positioning.",
+      "skipWhen": "Skip it if the page needs proof you don't have; it flags the gap instead of inventing numbers or urgency.",
+      "why": "one of my oldest skills. the rebuild stopped it forcing terse startup voice on every product. it starts from the claim you can prove.",
+      "next": "landing-page",
+      "outputContract": "### Audit or targeted rewrite\n\n```text\nPage job and intended buyer:\nCore claim and proof status:\nPriority findings: [impact, evidence, and source location]\nBefore -> after: [for grounded repairs]\nContent required: [missing facts, proof, or product decisions]\nPreserve: [effective language or structure]\nVerification and experiment recommendations:\n```\n\n### Generate or positioning\n\nDeliver:\n\n1. claim/evidence ledger;\n2. message architecture with the question each section answers;\n3. complete copy deck labelled by section and component;\n4. CTA destinations and commitment level;\n5. proof, asset, and content requirements;\n6. assumptions, excluded claims, and implementation notes;\n7. optional variants only when they test a stated hypothesis.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "landing-page": {
+      "group": "grow",
+      "outcome": "A built or repaired landing page around one visitor, one decision and real proof.",
+      "useWhen": "Use when a marketing page must do one clear job and needs building, repair or an audit.",
+      "skipWhen": "Skip it when only the words are wrong (landing-copy) or only the phone layout breaks (mobile-first).",
+      "why": "i wanted one skill that owns the page's argument and hands copy, design and mobile work to the skills built for them.",
+      "next": "image-editing",
+      "outputContract": "Return the implemented page or requested artifact, then summarize:\n\n- the visitor, decision, claim, and proof used;\n- material structure and design decisions;\n- what was changed and directly verified;\n- assumptions, missing evidence, and production work still requiring authorization;\n- the post-release measurement plan.\n\nIn audit mode, change nothing. Rank findings by their effect on comprehension, trust, action, accessibility, and performance, then recommend the smallest coherent repair.",
+      "outputSource": "Deliver",
+      "proofTier": "run"
+    },
+    "image-editing": {
+      "group": "grow",
+      "outcome": "Edited images that keep product identity, exact text and earlier approved changes.",
+      "useWhen": "Use when a supplied image needs reference-based edits or successive revisions.",
+      "skipWhen": "Skip it if no image-editing tool or API is configured; installing it grants no model access.",
+      "why": "made alongside my gpt image 2.5 guide. it edits from the last approved base and checks exact copy each round. runtime support is untested.",
+      "next": "demo-video",
+      "outputContract": "Return the image files, the model identity if exposed, which changes passed inspection, and specific unresolved defects. For a revision chain, identify the chosen base and final output. Do not claim measured fidelity, superiority, or cross-runtime compatibility without an actual recorded test.",
+      "outputSource": "Deliver",
+      "proofTier": "contract"
+    },
+    "demo-video": {
+      "group": "grow",
+      "outcome": "A Remotion demo with a timed beat sheet, script, captions and rendered files.",
+      "useWhen": "Use when a product or technical claim needs a storyboard or a rendered video.",
+      "skipWhen": "Skip it if you want motion for its own sake; every beat has to show proof of the claim.",
+      "why": "started as remotion-video with springs and beat-synced audio. now the claim and the proof decide the motion.",
+      "next": "analytics",
+      "outputContract": "Deliver the requested combination of:\n\n- treatment and timed beat sheet;\n- narration and on-screen script;\n- asset/capture manifest with provenance;\n- Remotion source and composition IDs;\n- caption file or embedded captions;\n- rendered files named by format;\n- representative stills or review frames;\n- verification report including technical and editorial checks.\n\nState which formats share a timeline and which were independently composed.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "analytics": {
+      "group": "grow",
+      "outcome": "An event plan with metric contracts, plus error tracking and health checks wired in.",
+      "useWhen": "Use when designing events, consent-aware tracking, error monitoring, health checks or dashboards.",
+      "skipWhen": "Skip it for A/B tests and staged rollouts; product-experiments owns assignment and exposure.",
+      "why": "started as add-analytics: posthog, sentry and a health endpoint. now every metric gets a definition before any tracking call goes in.",
+      "next": "product-launch",
+      "outputContract": "Report:\n\n- questions the system now answers and the event/monitoring plan;\n- metric contracts for activation, retention, or other implemented measures;\n- providers reused, added, or deliberately omitted;\n- files and environment-variable names changed;\n- dashboard routes/components, aggregate queries, access policy, freshness, and rendered states when applicable;\n- privacy, consent, identity, sampling, and retention decisions;\n- verification performed with event IDs or observed responses;\n- dashboard, DNS, token, alerting, and production checks still required.",
+      "outputSource": "Output",
+      "proofTier": "run"
+    },
+    "product-launch": {
+      "group": "grow",
+      "outcome": "A launch plan with positioning, a few channels, a tested signup path and metrics.",
+      "useWhen": "Use when preparing a product launch or learning from one.",
+      "skipWhen": "Skip it if you want ranking hacks for platform algorithms; it claims no knowledge of opaque rankings.",
+      "why": "gtm-launch carried channel folklore like the best launch day. the rebuild swapped it for dated platform rules and a dry run.",
+      "next": "cold-outreach",
+      "outputContract": "Return only mode-relevant sections:\n\n- launch context and evidence/assumption ledger;\n- positioning and target action;\n- channel plan and asset dependencies;\n- implementation changes and conversion-path notes;\n- measurement and attribution plan;\n- dry-run findings, operations, rollback, and owners;\n- follow-up schedule or postmortem with decisions.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "cold-outreach": {
+      "group": "grow",
+      "outcome": "A send-ready cold message or sequence, with facts to confirm kept out of the copy.",
+      "useWhen": "Use when contacting prospects, investors, partners or candidates you don't know yet.",
+      "skipWhen": "Skip it for email to your own users; email-with-resend handles consent-based product email.",
+      "why": "cold email was one of my first skills. merged with sequences, it now separates verified facts from guesses and stops at an opt-out.",
+      "next": "humanize",
+      "outputContract": "For a single message, return:\n\n- subject or channel opener;\n- send-ready body;\n- one meaningfully different opening when useful;\n- facts requiring confirmation and source notes, separate from copy.\n\nFor a sequence, return a table with touch, timing rationale, channel, purpose, copy, stop condition, and measurement. For an audit, identify the issue, evidence, impact, and rewrite. For reply handling, return send-ready copy plus the intended next state.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "humanize": {
+      "group": "grow",
+      "outcome": "Your draft without generic AI patterns, still in your voice, with the changes listed.",
+      "useWhen": "Use when writing sounds synthetic, repetitive, over-polished or unlike its author.",
+      "skipWhen": "Skip it when the substance is the problem; landing-copy, cold-outreach, readme or ui-copy fix content.",
+      "why": "i wanted ai tells removed without trading my voice for someone else's terse house style.",
+      "next": "product-experiments",
+      "outputContract": "Adapt the output to the size and mode.\n\nFor edit mode:\n\n1. Return the complete edited draft without inline commentary.\n2. Add a short `What changed` section grouped by material pattern or structural decision.\n3. Add `Preserved` when naming deliberate voice choices helps the user trust the edit.\n4. Add `Needs you` only for unresolved facts, claims, or voice decisions.\n\nFor a one-line or very short edit, return the edit and one sentence of rationale; do not force four empty sections.\n\nFor detect mode, list the pattern, exact excerpt, evidence tier, consequence, and repair direction. Also identify specific passages that already work. Do not rewrite unless requested.",
+      "outputSource": "Output",
+      "proofTier": "run"
+    },
+    "product-experiments": {
+      "group": "grow",
+      "outcome": "An experiment with stable assignment, logged exposure and a decision rule set in advance.",
+      "useWhen": "Use when testing product behavior with flags, exposure tracking, staged releases or A/B tests.",
+      "skipWhen": "Skip it if you want a ship call from underpowered data; it reports invalid or inconclusive instead.",
+      "why": "began as posthog feature flags. a flag without exposure data is release control, so now it writes the test plan before the code.",
+      "next": "ai-cost-audit",
+      "outputContract": "Return the applicable artifact:\n\n- experiment brief and analysis plan;\n- implementation changes and event schemas;\n- pre-launch validation report;\n- staged rollout/rollback plan;\n- analysis with data-quality checks, effect sizes, uncertainty, and limitations;\n- decision record with follow-up and flag cleanup.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "ai-cost-audit": {
+      "group": "grow",
+      "outcome": "Cost per action, user and plan from real usage, with savings ranked by risk.",
+      "useWhen": "Use when AI cost, margin, pricing, model choice or savings must be measured or verified.",
+      "skipWhen": "Skip it if you want a cheaper model picked from a price table; it needs eval data and current official prices.",
+      "why": "model-audit and economics were two of my first four skills. merged here, with prices fetched fresh instead of from a stale table.",
+      "next": "fundraising",
+      "outputContract": "Return only sections supported by the selected mode:\n\n- scope and evidence ledger;\n- model/media call inventory with file paths and ownership;\n- assumptions and data gaps;\n- formulas with units and a scenario table;\n- highest-cost paths and invoice reconciliation;\n- prioritized changes with savings ranges and quality gates;\n- verification results or an explicit measurement plan.\n\nCite every time-sensitive price with an official source and retrieval date.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    },
+    "fundraising": {
+      "group": "grow",
+      "outcome": "A candid raise or no-raise call, a claim-to-evidence map and round math that adds up.",
+      "useWhen": "Use when deciding whether to raise, preparing a raise or improving an active one.",
+      "skipWhen": "Skip it if you want claims without evidence; unsupported traction, logos or investor interest get flagged.",
+      "why": "merged my pmarca and pitch-vc skills. named frameworks are optional lenses now, and every pitch claim needs evidence.",
+      "next": null,
+      "outputContract": "Return the sections required by the selected mode, such as:\n\n- candid fit/fundability assessment and financing alternatives;\n- strongest defensible narrative and claim-to-evidence map;\n- metric, market, and operating evidence gaps;\n- round amount/use/milestone/runway logic;\n- investor-fit shortlist with sources and conflict notes;\n- slide headlines or memo outline;\n- objection handling, diligence requests, and next actions.",
+      "outputSource": "Output contract",
+      "proofTier": "run"
+    }
+  }
+}

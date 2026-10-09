@@ -1,0 +1,15 @@
+{
+  "skill": "mobile-first",
+  "kind": "table",
+  "title": "Sideways scroll removed at every phone width",
+  "after": "**Page width, before → after** (measured in a headless browser on a production build):\n\n| Width | Home | Pricing | Dashboard |\n|---|---|---|---|\n| 320px | 788 → 320 | 984 → 320 | 904 → 320 |\n| 375px | 787 → 375 | 984 → 375 | 904 → 375 |\n| 768px | 787 → 768 | 984 → 768 | 904 → 768 |\n| 1440px | no change | no change | no change |\n…\n  - Edit/Delete went from 20px to 44px on touch screens and 32px with a mouse. 20px was below the WCAG AA minimum of 24px.\n  - \"Choose Plus/Household\" went from 21px tall to 44px. This also makes them bigger on desktop.",
+  "caption": "Measured page widths before and after. An independent Playwright check at 390px matched: 788→390, 984→390, 905→390.",
+  "images": [
+    "mobile-first/before-mobile-pricing.png",
+    "mobile-first/after-mobile-pricing.png",
+    "mobile-first/before-mobile-dashboard.png",
+    "mobile-first/after-mobile-dashboard.png",
+    "mobile-first/before-mobile.png",
+    "mobile-first/after-mobile.png"
+  ]
+}

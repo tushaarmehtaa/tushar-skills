@@ -1,0 +1,8 @@
+{
+  "skill": "skill-creator",
+  "kind": "document",
+  "title": "A Friday chore packaged as a skill, with its past mistakes built in",
+  "before": "Mistakes I've made before: including a refactor because the title sounded exciting; calling something \"Fixed\" when it was really a new behavior; forgetting the platform tag.",
+  "after": "Judge by what changed, not by how exciting the title sounds. A refactor titled \"New sync engine\" is still a refactor. This exact mistake has happened before.\n\u2026\n\"Fixed\" is only correct when the old behavior was a bug. If the PR adds new behavior or changes intended behavior, it belongs in New or Improved even when its title says `fix:`. Read the body and diff summary when you're unsure.\n\u2026\n## 5. Verify before reporting\n\nCheck the saved file against this list and fix anything that fails:\n\n- [ ] Every item traces back to a PR that survived the filter, and no internal, chore, refactor, or test PR made it in.\n- [ ] No customer names, engineer names or GitHub handles, internal ticket IDs (such as `ABC-123` or `#123`), PR numbers, or branch names appear. Merge-commit text like \"from alice/branch\" is a common way these leak.",
+  "caption": "From skills/release-notes/SKILL.md. The run also wrote a git-collection script and 12 eval prompts. It could not execute them in the headless session; a post-run check of the script passed (posthoc-test.txt)."
+}

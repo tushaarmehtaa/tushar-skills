@@ -3,65 +3,59 @@
   "notGrouped": "bottom",
   "groupings": [
     {
-      "title": "Build",
-      "description": "Implement product infrastructure with the failure modes already handled.",
+      "title": "Shape",
+      "description": "Decide what to make before you make it.",
       "skills": [
-        "auth-implementation",
+        "user-insights",
+        "product-teardown",
+        "decision-doc",
+        "product-spec"
+      ]
+    },
+    {
+      "title": "Build",
+      "description": "Wire the parts every product needs.",
+      "skills": [
+        "agent-instructions",
         "supabase",
+        "auth-implementation",
+        "interface-design",
+        "ui-copy",
+        "ai-product-development",
         "payments-with-dodo",
         "credit-metering",
         "rate-limit",
-        "email-with-resend",
-        "analytics",
-        "ai-product-development",
-        "product-experiments"
+        "email-with-resend"
       ]
     },
     {
       "title": "Ship",
       "description": "Get a release out and keep it healthy.",
       "skills": [
-        "deploy-check",
+        "remove-ai-slop",
+        "mobile-first",
         "performance-diagnosis",
-        "changelog",
+        "search-ready",
+        "social-sharing",
         "readme",
-        "agent-instructions",
+        "deploy-check",
+        "changelog",
         "skill-creator"
       ]
     },
     {
-      "title": "Design",
-      "description": "Interfaces and copy that do not read as generated.",
-      "skills": [
-        "interface-design",
-        "landing-page",
-        "mobile-first",
-        "remove-ai-slop",
-        "ui-copy",
-        "humanize",
-        "image-editing",
-        "demo-video"
-      ]
-    },
-    {
       "title": "Grow",
-      "description": "Launch, get found, and reach people.",
+      "description": "Find people, earn trust, and learn what works.",
       "skills": [
-        "product-launch",
         "landing-copy",
-        "search-ready",
-        "social-sharing",
+        "landing-page",
+        "image-editing",
+        "demo-video",
+        "analytics",
+        "product-launch",
         "cold-outreach",
-        "user-insights"
-      ]
-    },
-    {
-      "title": "Decide",
-      "description": "Specs, teardowns, costs, and money decisions with evidence attached.",
-      "skills": [
-        "product-spec",
-        "decision-doc",
-        "product-teardown",
+        "humanize",
+        "product-experiments",
         "ai-cost-audit",
         "fundraising"
       ]

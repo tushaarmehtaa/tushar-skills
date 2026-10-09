@@ -1,0 +1,7 @@
+{
+  "skill": "ai-cost-audit",
+  "kind": "table",
+  "title": "$13,819 of AI spend, broken down and ranked by what is safe to cut",
+  "after": "| Change | Monthly savings | Confidence | Quality risk | Effort |\n|---|---:|---|---|---|\n| A. Batch weekly_digest | $627 | High (depends on verifying prices) | None | Low |\n| B. Skip unchanged notes | $500\u20133,000 | Medium (unchanged share unknown) | None | Low |\n| C. auto_tag \u2192 Haiku | $0\u2013851 | Medium (eval pending) | Low\u2013medium | Low |\n| D. Chat model re-eval | $0\u20132,646 | Low (eval pending) | **High** | Medium |\n| E. Rerank caching | Unknown, < $2,650 | Low (data contradiction) | None | Low\u2013medium |\n| **A + B (no product change)** | **~$1,100\u20133,600** | | | |\n\u2026\n- **Implication:** the ~$4.0k saving the note implies (2,400 \u00d7 1.84M \u00d7 90% off) can't be real, because it's larger than rerank's whole input bill ($2,944).",
+  "caption": "From cost-review.md. Every per-feature cost reconciles with the CSV and the stated rates. The run caught that the export's \"2,400-token prompt\" note contradicts the logged 1,600-token average, so it refused to bank the caching savings."
+}

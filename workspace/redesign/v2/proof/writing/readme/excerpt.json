@@ -1,0 +1,7 @@
+{
+  "skill": "readme",
+  "kind": "document",
+  "title": "A README checked against real runs of the CLI",
+  "after": "## Usage\n\n```text\nmdtally <file.md...> [--json] [--wpm=N]\n```\n\n| Option    | Effect                                                  |\n| --------- | ------------------------------------------------------- |\n| `--json`  | Print results as a JSON array instead of tab-separated lines |\n| `--wpm=N` | Reading speed in words per minute (default `230`)       |\n\nYou can pass any number of files. If you pass none, mdtally prints the usage line and exits with status `2`.\n\u2026\nLimitations:\n\n- `--wpm` is not validated. A non-numeric value such as `--wpm=abc` prints `NaN min`.\n- A missing or unreadable file stops the run with a Node.js error, and no results are printed for the other files.\n- Any other argument that starts with `--` is ignored without a warning.",
+  "caption": "From README.md. Example output was copied from real runs, tests and lint were executed, and the run documented three rough edges it found (NaN on a bad --wpm, a crash on a missing file, silently ignored flags) instead of hiding them."
+}

@@ -1,0 +1,135 @@
+# Harborline — Raise / No-Raise Recommendation
+
+*Prepared 2026-10-09 from `pitch-summary.md` (data as of Sept 2026). Everything below uses the founders' figures. Items marked **hypothesis** have not been checked.*
+
+---
+
+## 1. Bottom line
+
+**Don't start a $2.5M institutional seed in January with the current story. Fix the runway now, and spend Q4–Q1 finding out whether Harborline can be a venture-scale company. Raise a seed only if that work turns up real evidence.**
+
+Three reasons:
+
+1. **On current pricing the market is too small for venture.** At $99/month, every US independent bike shop combined is worth about **$4.75M ARR**. Adding Canada and the UK brings it to about **$7.7M ARR**. That's 100% market share. Seed investors need a believable path to a much bigger company, and the $99 bike-shop product doesn't give them one yet.
+2. **A January start means raising with very little cash.** At $28k/month net burn, cash is about $126k on Jan 1 (≈4.5 months left) and runs out around **May 2027**. Seed rounds often take a few months. You'd be negotiating against your own runway.
+3. **Growth is slowing at the moment you'd be telling a growth story.** Growth fell from ~10%/month to ~6%/month. In January investors will see a ~$210k ARR company (6% projection) whose growth is decelerating. That's hard to fund on a 5–6 person hiring plan.
+
+This is **not** a verdict that Harborline is a bad business. Churn is low for SMB software (1.8%/month), 40% of new shops come from referrals, the founders know the market well, and the product solves a real cash problem for shops. It may be a very good **capital-efficient business** that doesn't fit the venture model. The plan below helps you find out which one it is, cheaply, before you commit.
+
+---
+
+## 2. The numbers that drive the decision
+
+| Metric | Value | Note |
+|---|---|---|
+| MRR / ARR | $13,860 / ~$166k | 140 shops × $99 |
+| 6-month growth | $7.9k → $13.9k (1.75×) | ≈9.8%/mo compounded. Last 2 months ~6%/mo |
+| Logo churn | 1.8%/mo | ≈20%/yr. Average shop stays ~55 months |
+| Lifetime revenue per shop | ~$5,400 | Before gross margin (gross margin not provided) |
+| Penetration | 140 / 4,000 = 3.5% of US | Already a measurable share of a small market |
+| Cash / net burn | $210k / $28k/mo | ~7.5 months. Out around May 2027 |
+| Implied gross spend | ~$42k/mo | **Assumes** $28k is net burn (revenue already subtracted). **Confirm.** |
+| Break-even MRR (flat costs) | ~$42k ≈ 425 shops | ~19 months at 6%/mo, ~12 months at 10%/mo. Either way, beyond the runway |
+
+**Ceiling math (the central problem):**
+
+| Scenario | Shops | Price/mo | ARR at 100% share |
+|---|---|---|---|
+| US bike only, today's price | 4,000 | $99 | $4.75M |
+| US + CA + UK bike | 6,500 | $99 | $7.7M |
+| US + CA + UK bike, 3× price | 6,500 | $300 | $23.4M |
+| Series A bar (rough heuristic: ~$1M ARR) at $99 | **~840 shops** | $99 | $1M = **21% of all US bike shops** |
+
+With $1,188/year per customer, nearly everything in a venture story gets hard. Hitting fundable milestones means taking a large share of the market. Outbound sales economics are also weak: a salesperson costing ~$100k/year has to close ~85 net new shops a year just to cover their own first-year salary. That undercuts the "+2 salespeople" part of the current plan.
+
+---
+
+## 3. What would make it venture-scale (all hypotheses, so test them)
+
+The bike-shop subscription is a **wedge**, not the venture case. Investors will want at least one of these, backed by evidence:
+
+1. **Much higher revenue per shop.** The software forecasts stockouts and drafts POs, so it touches the shop's whole parts budget. If a shop buys roughly $150–500k of parts a year (**hypothesis, so measure it in your own data**), $99 is a tiny share of the value you create. Test tiered pricing ($199/$299, multi-location, or priced on purchase volume).
+2. **Monetizing the purchasing flow.** You already send POs to the 6 biggest distributors. Possible models: distributor referral fees, a take rate on order volume, inventory financing / net terms for shops, or demand data sold to distributors and brands. This is the clearest route to a bigger market, because revenue would then follow purchase volume rather than the number of shops. Caveat: getting paid by distributors can undermine shop trust if they think you're neutral. Test that directly.
+3. **Expansion to other verticals that actually works.** Outdoor, ski, run, paddle, and other specialty retail have the same shape: independent shops, a few dominant distributors, seasonal inventory. The plan treats this as funded expansion. Investors will want it **shown before the round**: a handful of non-bike shops live, with the CTO's integration approach shown to carry over to their POS systems and distributors. Market sizes for these verticals haven't been checked. Size them from the bottom up (count of shops × realistic price) with sources.
+4. **Better growth economics.** Referrals (40%) and trade shows suggest growth through channels rather than direct sales. Formal partnerships with POS vendors or distributors could lower CAC enough to make a fast land-grab believable.
+
+If none of these shows real signal by March, the honest answer is **build to profitability**, which is a good outcome for a business with this churn and founder–market fit.
+
+---
+
+## 4. The recommended plan
+
+### Phase 0 — Now through November: get off the cliff
+- **Cut net burn so runway reaches ≥12 months.** Options: a modest raise from existing angels, cost cuts, or both. Example: a **$250–400k SAFE/bridge from existing pre-seed angels** (extension terms, no new price fight). It reaches ~15–20 months of runway at current burn, or longer with cuts.
+- Look at costs line by line. Find out what in the ~$42k/month gross spend can wait.
+- **Price increase for new customers starting now.** Grandfather existing shops, or move them over with notice. This is the fastest way to add runway, and it tests pricing power for later.
+- Alternatives are small at this ARR but worth a quick check: revenue-based financing (likely only a fraction of ARR), small-business loans. A strategic check from a distributor is possible but brings conflict and neutrality risk. Treat it carefully.
+
+### Phase 1 — Nov through March: run the venture experiments
+Set pass/fail bars in advance. Suggested targets (adjust them, but write them down):
+
+| Test | Signal that supports venture | Signal that supports bootstrapping |
+|---|---|---|
+| Pricing | New shops convert at ≥$199 with similar win rate; existing shops accept an upgrade tier | Conversion collapses above $99 |
+| Purchase-flow monetization | ≥1 distributor agrees to a paid referral/data pilot, or ≥10 shops opt into financing or terms | Distributors decline; shops object |
+| Adjacent verticals | 10–20 paying non-bike shops, integration reused with little new work | Each vertical needs custom integration work and a separate sales motion |
+| Growth | Back to ≥8–10%/mo without cold-calling hours rising at the same rate | Stays ~5–6% and depends on the CEO's time |
+| Retention | Cohort data confirms ≤2%/mo logo churn and net revenue retention >100% after the price change | Churn rises with price |
+
+Also measure: gross margin, CAC by channel (cold call vs. trade show vs. referral), payback period, monthly cohort retention curves, and parts spend per shop (from your own PO data).
+
+### Phase 2 — March decision
+- **If 2–3 tests pass → raise a seed in Q2 2027**, starting with ≥12 months of runway in the bank. Size it to the milestone, not to the hiring list (see §5).
+- **If they don't → go for profitability.** Break-even is about 425 shops at today's price, and fewer after a price increase. Keep the angels informed. You can still raise later from strength, or never.
+
+---
+
+## 5. If you do raise: how to shape the round
+
+**Amount follows the milestone.** Define the Series A milestone first, then work backwards. Example: "$1–1.5M ARR across bike plus one adjacent vertical, ≥X% of revenue from purchase-flow monetization, NRR >100%." Cost the team needed to get there over ~18–24 months, then add a buffer.
+
+**Rethink use of funds.** "3 engineers + 2 salespeople + outdoor/ski + UK" is four bets at once. Investors will ask why each one is needed.
+- Engineering: justified if it builds the purchase-flow and multi-vertical platform.
+- Sales: weak at $1,188 ACV. Prefer channel and partnership roles, or one person for adjacent verticals, after pricing is fixed.
+- UK: put this off. It's a different distributor network, currency, and support load, and it adds few shops compared with US adjacent verticals.
+
+**Valuation and dilution.** No valuation can be justified until there's evidence for §3. As a sanity check: $2.5M at 20% dilution implies a $12.5M post-money, about **75× today's ARR**. Only a venture-scale expansion story backs that up; the bike-shop SaaS on its own doesn't. A smaller round (e.g. $1–1.5M) at a lower price, raised from strength in Q2, may leave founders with more ownership than a big round raised under runway pressure. Pull current comparable seed terms from investors and recent founder data before you anchor on a number. Nothing in this memo is a market benchmark.
+
+**Investor targets (no list exists yet, so build it in Phase 1):** vertical-SaaS seed funds, SMB/retail-tech and commerce-infrastructure investors, fintech-for-SMB investors (if the purchase-flow thesis holds), and angels from POS, distribution, or outdoor-industry backgrounds. For each, check from current primary sources (firm site, partner posts, recent deals): stage, check size, thesis, and **portfolio conflicts**, particularly POS and retail-inventory companies.
+
+---
+
+## 6. Likely investor objections and honest answers
+
+| Objection | Honest answer today | What would make it stronger |
+|---|---|---|
+| "4,000 shops × $99 isn't a market." | It's correct for the current product. | Pricing test results, purchase-flow revenue, adjacent-vertical customers |
+| "Growth is decelerating." | It's 6%/mo, down from 10%, mostly from founder-led sales. | Return to higher growth through repeatable channels |
+| "Why can't the POS vendors build this?" | **Needs an answer.** Distributor integrations plus forecasting may be the moat. Prove it. | Distributor partnerships, forecast accuracy data, shops' switching behavior |
+| "You're raising with 4 months of cash." | Avoid this entirely with Phase 0. | ≥12 months runway at launch |
+| "Is the bike-shop count shrinking?" | **Not checked.** The 4,000 figure comes from the founders. | Sourced industry data on US independent bike dealer count and trend |
+
+---
+
+## 7. Open questions for the founders (answers would change parts of this)
+
+1. Is the $28k/month burn **net** (after revenue) or **gross**? If gross, net burn is ~$14k and runway is ~15 months, which lowers the urgency a lot.
+2. Gross margin, and CAC by channel?
+3. Monthly cohort retention. Is 1.8% churn stable across cohorts?
+4. Which POS systems do customers use, and do outdoor/ski shops use the same ones?
+5. Do any of the 6 distributors already treat Harborline orders differently (faster fulfillment, rebates)? Have any approached you?
+6. Annual parts spend per shop, from your own PO data.
+7. What do the pre-seed angels want, and will they extend?
+8. Do the founders *want* a venture outcome (big swing, dilution, a board) or a profitable company they control? Make this choice deliberately before raising.
+
+---
+
+## 8. Next actions (this month)
+
+- [ ] Answer Q1 (net vs. gross burn). It decides how urgent Phase 0 is.
+- [ ] Talk to existing angels about a bridge or extension.
+- [ ] Ship a higher price for new signups. Draft a migration plan for existing shops.
+- [ ] Write down the Phase 1 pass/fail bars and the March decision date.
+- [ ] Start 2–3 non-bike pilot conversations and 1–2 distributor conversations.
+- [ ] Pull a sourced count of US independent bike shops and its trend.
+- [ ] Set up a metrics sheet: MRR by cohort, churn, CAC by channel, gross margin, parts spend per shop.

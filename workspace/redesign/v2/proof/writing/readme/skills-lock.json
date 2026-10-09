@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "readme": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "readme/SKILL.md",
+      "computedHash": "70c3edb08911c85af74010502398061f7c6d06d589d00be0a24c8b763329ba60"
+    }
+  }
+}

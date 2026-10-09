@@ -1,0 +1,20 @@
+{
+  "skill": "skill-creator",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill skill-creator -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 107.4,
+  "costUsd": 0.49702860000000004,
+  "numTurns": 16,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "skill-creator",
+      "args": "Package the workflow in workflow.md as a skill under skills/ in this folder"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Created skills/release-notes/ (SKILL.md, scripts/collect_prs.py, evals/evals.md with 12 cases). The run could not execute its script/test (Bash approval) and wrote its test harness OUTSIDE the fixture (scratchpad/tests/test_collect.sh); it was moved to _written-outside-fixture/. Post-run, I executed that test against the script: it passed all cases (posthoc-test.txt). That check is mine, not the run's."
+}

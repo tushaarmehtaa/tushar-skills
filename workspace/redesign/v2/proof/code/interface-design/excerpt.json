@@ -1,0 +1,13 @@
+{
+  "skill": "interface-design",
+  "kind": "screenshots",
+  "title": "Dashboard redesigned as the flat's home screen",
+  "after": "**What's on the page**\n- **Your position:** \"You owe ₹1,365.87\", followed by the action that clears it (\"Pay Arjun ₹1,365.87\"). Owing is shown in amber and being owed in green, and the words say which it is, so the colour isn't the only signal.\n- **To settle:** the fewest payments needed to clear everyone's balances, each with a **Record payment** button. A one-line note explains that balances are combined, which is why you might pay someone you never directly owed. …\n- The numbers are correct. The four balances sum to zero. Adding ₹4,000 paid by Kabir correctly moves him from −₹1,365.87 to +₹1,634.13.",
+  "caption": "A table of expenses became a settle-up screen: your position, fewest payments, balances and activity, with the money math checked.",
+  "images": [
+    "interface-design/before-desktop.png",
+    "interface-design/after-desktop.png",
+    "interface-design/before-mobile.png",
+    "interface-design/after-mobile.png"
+  ]
+}

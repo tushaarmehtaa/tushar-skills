@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "skill-creator": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "skill-creator/SKILL.md",
+      "computedHash": "5cdf16b503bb9d5e4c6f77f9b2a5cd4bf074a9d7ecfb72cf18997fe7bdca0ee5"
+    }
+  }
+}

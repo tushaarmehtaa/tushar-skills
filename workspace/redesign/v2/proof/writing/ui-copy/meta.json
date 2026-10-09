@@ -1,0 +1,19 @@
+{
+  "skill": "ui-copy",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill ui-copy -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 49.8,
+  "costUsd": 0.25326139999999997,
+  "numTurns": 7,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "ui-copy"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Rewrote all strings in src/InviteTeam.tsx from api.ts behavior, added label/hint and role=status/alert, widened the fallback error to all unhandled codes (behavior change, disclosed). Not typechecked (no build setup). Minor inaccuracy: the generic error always says invalid addresses block the batch, even for network failures."
+}

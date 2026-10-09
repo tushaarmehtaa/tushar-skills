@@ -1,0 +1,19 @@
+{
+  "skill": "user-insights",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill user-insights -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 70.3,
+  "costUsd": 0.33165920000000004,
+  "numTurns": 8,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "user-insights"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote insights.md. Pooled rates/CIs verified by hand against the CSV (19.5% vs 33.0%, gap 13.6pp). Caught an interviewee timeline that contradicts the bug ship date. Bash/python needed approval so it calculated by hand."
+}

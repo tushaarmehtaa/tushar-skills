@@ -1,0 +1,20 @@
+{
+  "skill": "readme",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill readme -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 46.1,
+  "costUsd": 0.2908148,
+  "numTurns": 25,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "readme",
+      "args": "Write a README for this repo (none exists)."
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill,Bash(node:*),Bash(npm test),Bash(npm run lint),Bash(git log:*),Bash(git status),Bash(ls:*)",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote README.md; ran npm test, lint, and the CLI to copy real output; documented 3 rough edges found by probing (NaN wpm, crash on missing file, ignored flags) and the missing LICENSE file. Did not run npm install -g."
+}

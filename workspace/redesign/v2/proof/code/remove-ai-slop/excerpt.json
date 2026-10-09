@@ -1,0 +1,14 @@
+{
+  "skill": "remove-ai-slop",
+  "kind": "before-after",
+  "title": "Homepage copy and design, de-slopped",
+  "before": "-        <h1>Revolutionize the Way You Manage Shared Expenses</h1>\n+        <h1>Track shared bills and see who owes whom.</h1>\n         <p className=\"lede\">\n-          Unlock the power of seamless, AI-driven expense splitting. Tallyroom is the\n-          all-in-one platform that empowers you to effortlessly elevate your financial\n-          harmony with friends, roommates, and beyond.",
+  "after": "**New copy.** Every line comes from something already in the repo: the pricing table, the FAQ, or the sample dashboard data.\n- **Headline:** \"Track shared bills and see who owes whom.\"\n- **Subheading:** says you log who paid, split it between the people it was for, and get a running balance. …\n- **Purple gradients and effects:** removed the gradient background, the gradient-filled headline, the glow shadows, and the gradient emoji icon tiles. The hero is now left-aligned on white. I kept the purple you already use (`#764ba2`) as the single accent, so it still matches the nav button, pricing buttons and chat widget.",
+  "caption": "Run rewrote the hero from claims the repo could back up and removed the gradient/emoji template. It left the overflowing nav alone and said so.",
+  "images": [
+    "remove-ai-slop/before-desktop.png",
+    "remove-ai-slop/after-desktop.png",
+    "remove-ai-slop/before-mobile.png",
+    "remove-ai-slop/after-mobile.png"
+  ]
+}

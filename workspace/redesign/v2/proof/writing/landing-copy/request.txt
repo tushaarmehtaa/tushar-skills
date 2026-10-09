@@ -1,0 +1,1 @@
+Our landing page (index.html) isn't converting and it reads like every other SaaS site. Rewrite the page copy using the real facts in product-notes.md. Don't invent numbers.

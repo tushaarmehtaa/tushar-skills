@@ -1,0 +1,31 @@
+{
+  "skill": "mobile-first",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill mobile-first -a claude-code -y (project scope, .claude/skills/mobile-first; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "mobile-first",
+      "args": "Tallyroom site: page scrolls sideways on phones, pricing table and dashboard ledger run off screen, buttons are tiny. Fix for phones without changing page behavior."
+    }
+  ],
+  "skillFileReads": [],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 14,
+    "Write": 1,
+    "Edit": 5,
+    "Read": 8
+  },
+  "durationSec": 231,
+  "costUsd": 0.9257681999999998,
+  "numTurns": 31,
+  "isError": false,
+  "diffStat": " 3 files changed, 77 insertions(+), 46 deletions(-)",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "CSS-only plus table wrappers. Its reported width table matches my independent Playwright measurement at 390px (home 788->390, pricing 984->390, dashboard 905->390). Pricing table now scrolls inside its box; Household/Team columns hidden off-screen at 390 with no visible scroll hint. All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

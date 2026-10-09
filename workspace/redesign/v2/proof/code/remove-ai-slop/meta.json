@@ -1,0 +1,31 @@
+{
+  "skill": "remove-ai-slop",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill remove-ai-slop -a claude-code -y (project scope, .claude/skills/remove-ai-slop; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "remove-ai-slop",
+      "args": "Audit the Tallyroom homepage, strip generic AI-generated design and copy, and apply the fixes."
+    }
+  ],
+  "skillFileReads": [],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 9,
+    "Read": 7,
+    "Write": 2,
+    "Edit": 1
+  },
+  "durationSec": 131,
+  "costUsd": 0.7638004,
+  "numTurns": 22,
+  "isError": false,
+  "diffStat": " 4 files changed, 79 insertions(+), 54 deletions(-)",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "Rewrote hero copy, removed gradient/emoji/glow tiles, replaced 3MB placeholder image with a real sample-expense table, extracted lib/sampleGroup.js. Took its own headless-Chrome screenshots (written to /tmp, outside the fixture). Explicitly declined to fix nav overflow (out of scope) and listed it; independent measurement confirms home still 788px wide at 390px. Did not ask for approval before applying (request said 'apply the fixes'). All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

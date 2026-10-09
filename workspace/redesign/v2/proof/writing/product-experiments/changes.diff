@@ -1,0 +1,70 @@
+diff --git a/results/readout.md b/results/readout.md
+new file mode 100644
+index 0000000..8d57867
+--- /dev/null
++++ b/results/readout.md
+@@ -0,0 +1,64 @@
++# Onboarding checklist test: readout
++
++**Test:** 4-step onboarding checklist vs. control, new web signups, 2026-09-01 to 2026-09-14
++**Data:** `results/onboarding_checklist_summary.csv`, `results/brief.md` (aggregate counts only)
++**Decision: Don't ship Monday. The result isn't valid yet.**
++
++## Short answer
++
++The checklist arm does look up, by +2.0 pp on the primary metric. But the test lost about 640 users from the checklist arm, and the lift depends on who those users were. If they're the Safari users who hit the crash, they probably did badly, and counting them would wipe out the lift completely. We can't tell from this data whether the checklist helps. It might, and the follow-up below should take days, not another full test.
++
++## 1. Data validity: the test fails
++
++**Sample ratio mismatch (SRM).** Assignment was meant to be 50/50.
++
++| Arm | Assigned | Expected at 50/50 |
++|---|---|---|
++| Control | 10,120 | 9,800 |
++| Checklist | 9,480 | 9,800 |
++
++χ² = 20.9, p ≈ 5 × 10⁻⁶. A gap this big doesn't happen by chance. The checklist arm is missing about 640 users compared with control.
++
++**Likely cause.** From 2026-09-06 to 09-08 the checklist page crashed for Safari users running ad blockers and sent them back to the login page. Those users most likely never got recorded as assigned. That makes the missing users a skewed group: they hit a broken experience, so they're the ones least likely to succeed. The checklist arm we're left with is tilted toward users who were going to do well anyway.
++
++**No real exposure data.** `exposed_users` is just a copy of `assigned_users`, so we can't tell who actually saw the checklist, and we can't check where in the flow users dropped out.
++
++## 2. Results as reported (not valid, for reference only)
++
++| Metric | Control | Checklist | Diff | 95% CI |
++|---|---|---|---|---|
++| **created_3_notes_day7 (primary)** | 35.0% | 37.0% | **+2.0 pp** | +0.6 to +3.3 |
++| created_first_note_day1 | 65.0% | 67.0% | +2.0 pp | +0.7 to +3.3 |
++| active_week2 (guardrail) | 30.0% | 31.0% | +1.0 pp | −0.3 to +2.3 |
++| support tickets week 1 (guardrail) | 1.40% | 1.38% | −0.02 pp | −0.35 to +0.31 |
++| median onboarding time | 212 s | 248 s | +36 s (+17%) | n/a |
++
++The CIs are simple two-proportion normal intervals, and they assume the samples are valid. The SRM means they aren't.
++
++## 3. How much the missing users matter
++
++Put the 640 missing users back into the checklist arm, so it's 10,120 users, the same as control:
++
++- **If 35 or fewer of them reached 3 notes (≤5.5%), the lift is zero.**
++- **If none of them reached 3 notes:** checklist 34.65% vs. control 35.0%, a diff of −0.35 pp (CI −1.7 to +1.0). The checklist would look neutral or slightly worse.
++- **If they did as well as control (35%):** checklist 36.9%, and the lift holds at about +1.9 pp.
++
++These users were sent back to the login page by a crash, so a low success rate is the more likely case. Either way, the conclusion hangs on a number we don't have.
++
++## 4. Other notes
++
++- **The hypothesis was about speed, but onboarding got slower.** The hypothesis says the checklist gets users to "aha" faster, yet median onboarding time went up by 36 s. That may just be the checklist's own steps taking time, but we can't claim "faster."
++- **The "install iOS app" step** is aimed at web signups. It's worth checking whether that step is where users drop off.
++- **Guardrails look flat.** That's encouraging, but they come from the same biased sample.
++- **Confirm the data pull date.** All signups have now had their full 7-day and week-2 windows (the last ones closed 2026-09-28). Make sure the CSV was pulled after that date, not partway through the test.
++
++## 5. What would let us ship
++
++In order, fastest first:
++
++1. **Find the missing 640 users.** Compare the flag tool's assignment log (or the hash run over all signups) with the analysis table. If the flag tool assigned them but the analysis dropped them, add them back as intent-to-treat, count them by their actual outcomes, and re-run the analysis. If the lift survives and SRM clears, that's a valid result. **This could be done in a few days.**
++2. **Re-run excluding signups from 2026-09-06 to 09-08 in both arms.** Do this with daily data. If SRM disappears on the remaining days and the lift holds, that's strong supporting evidence, though it doesn't replace step 1.
++3. **Add a real exposure event** (`onboarding_checklist_exposed`, logged once per user when the checklist renders, with experiment key, version, and variant). Use the same render point in control. Add this before any re-run.
++4. **If 1 and 2 can't clear the SRM:** re-run the test for 2 weeks with exposure logging, a daily SRM check, and a kill rule on page errors by browser.
++
++**Ship rule (set now, before we look again):** ship if, on a sample with no SRM (p > 0.01), the 95% CI for created_3_notes_day7 is above 0 and active_week2 and support tickets show no significant harm.

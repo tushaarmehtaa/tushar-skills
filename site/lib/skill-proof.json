@@ -1,0 +1,528 @@
+{
+  "remove-ai-slop": {
+    "request": "Our Tallyroom homepage looks and reads like every other AI-generated startup site. Go through it, strip out the generic stuff, and apply the fixes.",
+    "summary": "Rewrote the Tallyroom hero from facts already in the repo and removed the gradients, emoji tiles and placeholder image.",
+    "excerpt": [
+      "\"Revolutionize the Way You Manage Shared Expenses\" and the \"unlock… seamless… empowers… elevate your financial harmony\" paragraph never said what the product does. It also claimed \"AI-driven,\" and nothing in the repo shows AI.",
+      "\"Get Started Today 🚀\" / \"Learn More\" didn't say where they lead. They now read \"Compare plans\" (goes to /pricing) and \"See a sample group\" (goes to /dashboard).",
+      "`hero-dashboard.png` was a grey wireframe on a grainy gradient, 3 MB, with alt text calling it the Tallyroom dashboard. I replaced it with a real table of four expenses from the sample group."
+    ],
+    "images": {
+      "before": "/proof/remove-ai-slop/before.jpg",
+      "after": "/proof/remove-ai-slop/after.jpg",
+      "caption": "Tallyroom homepage at 1440px. The gradient hero and wireframe image became plain copy and a real expense table."
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 131,
+      "triggered": "auto",
+      "filesChanged": 4
+    },
+    "caveat": "It left the nav overflowing at 390px and listed that as out of scope."
+  },
+  "interface-design": {
+    "request": "Redesign the dashboard page (app/dashboard) so it works as the real home screen for a flat sharing expenses: who owes whom, what needs settling, recent activity. Implement it in the existing Next.js + plain CSS setup.",
+    "summary": "Rebuilt the dashboard as a settle-up screen: your balance, the fewest payments to clear debts, and recent activity.",
+    "excerpt": [
+      "Your position: \"You owe ₹1,365.87\", followed by the action that clears it (\"Pay Arjun ₹1,365.87\"). Owing is shown in amber and being owed in green, and the words say which it is, so the colour isn't the only signal.",
+      "To settle: the fewest payments needed to clear everyone's balances, each with a Record payment button. A one-line note explains that balances are combined, which is why you might pay someone you never directly owed.",
+      "Undo: recording a payment, deleting an expense and adding one all show a message with Undo, so nothing needs a confirmation step.",
+      "The numbers are correct. The four balances sum to zero. Adding ₹4,000 paid by Kabir correctly moves him from −₹1,365.87 to +₹1,634.13."
+    ],
+    "images": {
+      "before": "/proof/interface-design/before.jpg",
+      "after": "/proof/interface-design/after.jpg",
+      "caption": "Tallyroom dashboard at 1440px. A flat expense table became a settle-up screen with balances and payments."
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 326,
+      "triggered": "auto",
+      "filesChanged": 5
+    },
+    "caveat": "It replaced the old Settled flags with made-up payment records, and changes are lost on reload."
+  },
+  "landing-page": {
+    "request": "Rework the Tallyroom homepage so it actually convinces housemates to sign up. Right now it says nothing specific about the product. Build the improved page in the codebase.",
+    "summary": "Rewrote the Tallyroom homepage around who owes what in a flat, with a live example flat in place of a placeholder image.",
+    "excerpt": [
+      "Headline: \"Know who owes what in your flat, without the spreadsheet.\" The line under it says you log rent, groceries and bills as you pay, Tallyroom splits each one, and settling up is one number.",
+      "Product preview: the old `hero-dashboard.png` was a 3 MB placeholder with grey bars and no real content. In its place is a live view of the dashboard's example flat: real ₹ amounts, who paid, how each bill is split, and settled/unsettled.",
+      "Wording removed: \"AI-driven\", \"Enterprise-grade\" and \"Lightning Fast\", because nothing in the product backs them up.",
+      "Nobody can actually sign up yet. There's no signup page, the free plan has no button, and the \"Choose Plus\" / \"Choose Household\" buttons only go to the dashboard mock."
+    ],
+    "images": {
+      "before": "/proof/landing-page/before.jpg",
+      "after": "/proof/landing-page/after.jpg",
+      "caption": "Tallyroom homepage at 1440px. Generic claims and a wireframe image became specific copy and an example flat."
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 168,
+      "triggered": "auto",
+      "filesChanged": 5
+    },
+    "caveat": "It kept a purple gradient hero, so some of the original template look remains."
+  },
+  "mobile-first": {
+    "request": "On my phone the Tallyroom site is broken: the page scrolls sideways, the pricing table and the dashboard ledger run off the screen, and the buttons are tiny. Fix it for phones without changing what the pages do.",
+    "summary": "Stopped sideways scrolling on phones, made both tables scroll inside their own box, and grew buttons to 44px.",
+    "excerpt": [
+      "The 768px row means tablets were broken too, because the nav alone was 787px wide.",
+      "Pricing table: it scrolls sideways inside its own area, and the Feature column stays pinned so each row stays readable while you scroll. Column headers wrap on phones so more plans fit on screen.",
+      "Edit/Delete went from 20px to 44px on touch screens and 32px with a mouse. 20px was below the WCAG AA minimum of 24px."
+    ],
+    "table": {
+      "head": [
+        "Width",
+        "Home",
+        "Pricing",
+        "Dashboard"
+      ],
+      "rows": [
+        [
+          "320px",
+          "788 → 320",
+          "984 → 320",
+          "904 → 320"
+        ],
+        [
+          "375px",
+          "787 → 375",
+          "984 → 375",
+          "904 → 375"
+        ],
+        [
+          "768px",
+          "787 → 768",
+          "984 → 768",
+          "904 → 768"
+        ],
+        [
+          "1440px",
+          "no change",
+          "no change",
+          "no change"
+        ]
+      ]
+    },
+    "images": {
+      "before": "/proof/mobile-first/before-mobile.jpg",
+      "after": "/proof/mobile-first/after-mobile.jpg",
+      "caption": "Tallyroom homepage at 390px. The nav and hero no longer run off the right edge."
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 231,
+      "triggered": "auto",
+      "filesChanged": 3
+    },
+    "caveat": "At 390px the Household and Team pricing columns sit off-screen with no scroll hint."
+  },
+  "social-sharing": {
+    "request": "When I paste Tallyroom links into WhatsApp or X there's no preview card, just a bare URL. Fix the share previews for the home and pricing pages. Production will be https://tallyroom.app (not launched yet).",
+    "summary": "Added site metadata, per-page canonical and OG tags, and generated 1200x630 preview images for home and pricing.",
+    "excerpt": [
+      "Why there was no card: the app set no metadata at all, so pages had no title, description, OG/Twitter tags or preview image.",
+      "I didn't use the existing hero screenshot because it's a placeholder wireframe and the wrong shape for a share card. I also kept the homepage's \"AI-driven\" and \"enterprise-grade security\" wording off the cards, since I couldn't confirm either claim from the code.",
+      "Each page has one canonical URL, and it matches `og:url` (`https://tallyroom.app` and `https://tallyroom.app/pricing`). All the `og:*` and `twitter:*` tags are there."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 95,
+      "triggered": "auto",
+      "filesChanged": 6
+    },
+    "caveat": "The preview cards are plain text on the homepage's old purple gradient."
+  },
+  "changelog": {
+    "request": "Write up what we shipped this week for our users, something I can post on X.",
+    "summary": "Drafted a 271-character X post covering three shipped items and listed which commits it held back and why.",
+    "excerpt": [
+      "I've written a post, but most of this week's commits shouldn't be announced yet. Several of them would make the post untrue.",
+      "> This week on Tallyroom 🧾\n>\n> • A new top nav across the site, so you can get to Pricing and the FAQ from any page\n> • A first look at the product on the homepage\n> • A pricing FAQ that covers switching plans and who pays in a shared group\n>\n> More soon, with real billing next.",
+      "\"INR, USD, EUR, GBP, SGD and AED, with daily exchange rates\" in the FAQ. Nothing in `app/` or `lib/` handles currencies or exchange rates. I'd remove or soften that answer before people see it."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 27,
+      "triggered": "auto",
+      "filesChanged": 0
+    },
+    "caveat": "It wrote the post as text only and made no visual card."
+  },
+  "deploy-check": {
+    "request": "I'm about to push this to production on Vercel tonight. Is it safe to ship? Don't deploy or push anything, just tell me.",
+    "summary": "Ran the build, traced the Stripe key fallback into a browser bundle, and returned a BLOCKED verdict with three blockers.",
+    "excerpt": [
+      "Verdict: BLOCKED. Don't ship this tonight. The build passes, but the pricing page's checkout buttons don't take payment, and the code handles the Stripe secret key in a way that will leak it to the browser.",
+      "The file is imported by a client component (`app/pricing/CheckoutButton.jsx`), so the fallback string ends up in the JavaScript sent to browsers. I confirmed it's in `.next/static/chunks/2d53bce1f47f897f.js`.",
+      "Rollback: this is a static Next.js site with no database, so if something goes wrong you can promote the previous deployment in Vercel. That only helps if a previous good deployment exists; this would be the first."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 39,
+      "triggered": "auto",
+      "filesChanged": 0
+    },
+    "caveat": "It had no access to the Vercel project, so production environment variables went unchecked."
+  },
+  "performance-diagnosis": {
+    "request": "The Tallyroom homepage feels slow to load, especially on mobile. There's a noticeable blank pause before anything shows up. Figure out why.",
+    "summary": "Traced the blank pause to a render-blocking chat widget script and measured it on a throttled phone profile.",
+    "excerpt": [
+      "The blank pause comes from the SupportDesk chat widget script. It's loaded in the page `<head>` and freezes the browser for about 350ms before anything can be drawn. Removing it in a test cut the time to first content roughly in half.",
+      "Blocking the widget cut first paint by about 385ms. The browser's slow-task log showed a single 350ms task that goes away when the widget is blocked.",
+      "In `app/layout.jsx`, load the widget with `next/script` and `strategy=\"lazyOnload\"` (or at least `afterInteractive`) instead of a plain tag in `<head>`."
+    ],
+    "table": {
+      "head": [
+        "Setup",
+        "First content on screen",
+        "Main content on screen",
+        "HTML parsed",
+        "Fully loaded"
+      ],
+      "rows": [
+        [
+          "Current site",
+          "788",
+          "780",
+          "755",
+          "16,758"
+        ],
+        [
+          "Widget script blocked",
+          "404",
+          "404",
+          "394",
+          "16,747"
+        ],
+        [
+          "Hero image blocked",
+          "768",
+          "768",
+          "756",
+          "1,218"
+        ]
+      ]
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 253,
+      "triggered": "auto",
+      "filesChanged": 0
+    },
+    "caveat": "Timings come from a simulated phone, not real users, so the deltas are the evidence."
+  },
+  "search-ready": {
+    "request": "We launch Tallyroom next week at https://tallyroom.app (not live yet). Get the site ready so Google can find and index it properly, and fix whatever is missing in the code.",
+    "summary": "Added titles, canonicals, robots.txt, a sitemap, noindex on the demo dashboard, and WebSite structured data.",
+    "excerpt": [
+      "`/dashboard` could have been indexed. It's linked from the menu and the homepage, but it's an app screen showing made-up demo data. It's now marked \"don't index\" in `app/dashboard/page.jsx`. I deliberately didn't block it in `robots.txt`, because that would stop Google from seeing the \"don't index\" tag.",
+      "I didn't add FAQ markup for the pricing questions, because Google no longer shows those for sites like this.",
+      "Google decides when it indexes and ranks the site. These changes remove the blockers on your side; they can't guarantee timing or position."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 128,
+      "triggered": "auto",
+      "filesChanged": 9
+    },
+    "caveat": "It also edited the checkout code to drop a key prefix, a fix outside the SEO request."
+  },
+  "agent-instructions": {
+    "request": "Set up instructions for the coding agents that work in this repo. We use both Claude Code and Codex.",
+    "summary": "Wrote one AGENTS.md for Codex plus a CLAUDE.md that imports it, after running the repo's test and lint commands.",
+    "excerpt": [
+      "I've added two files: `AGENTS.md` holds all the instructions, and `CLAUDE.md` pulls them in with an import, so Codex and Claude Code read the same text. Nothing is committed yet.",
+      "The default reading speed (230 words per minute) is set in two places, `src/count.js` and `bin/mdtally.js`, so they have to change together.",
+      "The lint script names each file it checks, so any new source file has to be added to it by hand."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 56,
+      "triggered": "auto",
+      "filesChanged": 2
+    }
+  },
+  "decision-doc": {
+    "request": "We have to pick how to do search for Driftwood. My messy notes are in search-notes.md. Write it up so Priya can make the call and the team can see why, save it under docs/.",
+    "summary": "Turned messy notes into a decision doc recommending Postgres search, with two checks that could flip the call.",
+    "excerpt": [
+      "Why Postgres: it's the only option that doesn't fail one of the team's hard constraints. Meilisearch would mean running a new service, which breaks \"no new on-call.\" Algolia's ~$1,100/month is over the $500 limit, so it needs CFO sign-off.",
+      "Sort the 41 August search tickets into typo, ingredient, filter and other. If typo complaints are the biggest group, Meilisearch becomes the better choice.",
+      "Sam's case for Meilisearch is written up fairly as the main counterargument, alongside Maya's preference for Postgres."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 63,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "Owners and due dates for the next steps are its own suggestions, flagged for checking."
+  },
+  "humanize": {
+    "request": "This launch announcement in announcement.md reads like a press-release robot wrote it. Can you make it sound like an actual person on our team wrote it? Keep the facts. Edit the file in place.",
+    "summary": "Rewrote a press-release launch post in plain language and kept every fact, from the beta numbers to the price.",
+    "excerpt": [
+      "Sync also categorizes transactions for you by matching them automatically. During the beta, 212 businesses had 94% of their transactions matched with no manual work.",
+      "One caveat: some Canadian bank connections still need a manual CSV upload. We're finishing that integration now.",
+      "Canada limitation: It was hidden behind \"It's worth noting.\" It now has its own short paragraph, so it reads as a straight answer rather than a buried disclaimer.",
+      "I dropped \"saving you countless hours every month\" because the draft gives no number to back it up. If you have a real figure from the beta, add it back."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 35,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It kept the vague \"bank-grade encryption\" line because the brief said to keep the facts."
+  },
+  "landing-copy": {
+    "request": "Our landing page (index.html) isn't converting and it reads like every other SaaS site. Rewrite the page copy using the real facts in product-notes.md. Don't invent numbers.",
+    "summary": "Rewrote a vet-clinic scheduling page from product notes, swapping vague claims for sourced facts and real pricing.",
+    "excerpt": [
+      "Hero: \"Unlock the Power of Next-Generation Scheduling\" became \"Stop spending Monday morning texting people to cover sick calls.\" It now says who it's for (vet clinics) and how it works (draft rota, cover by text).",
+      "No \"saves 3 hours\" or \"67% less time\". The 4.5-hour figure is an average from 38 managers at onboarding. The 1.5-hour figure is a median from 22 managers after 8 weeks, and it's self-reported.",
+      "The quote: \"Dana R., Riverbend Animal Hospital\" is marked as a fictional sample in the notes. Replace it with a real quote you have permission to use."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 43,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It did not view the page in a browser, so the layout went unchecked."
+  },
+  "product-spec": {
+    "request": "Turn idea.md into something engineering can actually build from in the next 6 weeks. Make the calls you can, flag the ones you can't. Save it under docs/.",
+    "summary": "Turned a short idea doc into a 6-week shared folders spec with weekly milestones and owners for open decisions.",
+    "excerpt": [
+      "No more \"last write wins\" for shared notes. Each save checks which version of the note it started from. If someone else saved in between, the later save becomes a \"conflicted copy\" next to the original, so no edit is ever lost.",
+      "\"Edits show up for everyone\" means within about 30 seconds, not real-time. The app refreshes when you switch back to it and checks for changes while a shared note or folder is open. Real-time co-editing is explicitly left out. If conflicted copies go above 5% of saves, that's the signal to build it.",
+      "Who pays (founder and sales, by 10/23). Sales' \"free for invitees\" idea is untested. The spec tracks how many invitees are new signups so you'll have evidence."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 188,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "With no app code in the repo, its architecture details are assumptions to confirm."
+  },
+  "readme": {
+    "request": "This repo has no README. Write one for it.",
+    "summary": "Wrote a README for a small Node CLI and checked every example against real runs.",
+    "excerpt": [
+      "Both example outputs in the README are copied from real runs on `test/sample.md`.",
+      "`--wpm=abc` prints `NaN min`, and a missing file crashes with a Node error (exit 1) before any results print.",
+      "The README lists three rough edges as limitations rather than hiding them: `--wpm` isn't validated, one bad file stops the whole run, and unknown `--` flags are silently ignored.",
+      "`package.json` says MIT, but there's no `LICENSE` file, and the README says so."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 46,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It did not test a global install, so only the install-from-checkout steps are verified."
+  },
+  "ui-copy": {
+    "request": "People keep getting confused by the invite screen in src/InviteTeam.tsx. The button labels, errors and empty state don't really say anything. Fix the wording so it tells people what actually happens. Look at api.ts for how it behaves.",
+    "summary": "Rewrote every label, error and empty state on an invite screen to match what the API actually does.",
+    "excerpt": [
+      "Before, any code other than the three handled ones showed no message at all, so the screen went silent. The fallback message now covers every error that isn't too-many or seats-exceeded.",
+      "\"No invites were sent\" for the seats error assumes the server rejects the whole batch."
+    ],
+    "table": {
+      "head": [
+        "Where",
+        "Before",
+        "After"
+      ],
+      "rows": [
+        [
+          "Heading",
+          "Team Management",
+          "Invite your team"
+        ],
+        [
+          "Intro",
+          "Please enter the emails of users…",
+          "We'll email each person an invite. Invites expire after 7 days, and you're only billed for a seat when someone accepts."
+        ],
+        [
+          "Input",
+          "placeholder \"Enter emails\", no label",
+          "A visible \"Email addresses\" label, an example placeholder, and a hint: separate addresses with commas or spaces, up to 20 at a time"
+        ],
+        [
+          "Seat count",
+          "3 seats remaining (said \"1 seats\" when one was left)",
+          "3 seats left on your plan / 1 seat left on your plan"
+        ],
+        [
+          "Button",
+          "Submit / Loading...",
+          "Send invites / Send 3 invites (counts as you type) / Sending invites…"
+        ],
+        [
+          "Success",
+          "Success!",
+          "Sent 3 invites. They expire in 7 days. (`sentCount` was stored before but never shown)"
+        ],
+        [
+          "Too many addresses",
+          "Error: Invalid input.",
+          "You've entered 24 addresses. You can send up to 20 at a time, so remove some and send the rest afterward."
+        ],
+        [
+          "Not enough seats",
+          "Oops! Something went wrong.",
+          "Not enough seats. You're inviting 5 people, but your plan has 3 seats left. No invites were sent. Remove some addresses or add seats to your plan."
+        ],
+        [
+          "Any other failure",
+          "An error has occurred. Please try again later.",
+          "Couldn't send invites. If any address isn't valid, none are sent, so check the list and try again. Your addresses are still here."
+        ],
+        [
+          "Empty state",
+          "No data.",
+          "Removed. It showed before anything was typed and told people nothing; the label and hint now cover that state."
+        ]
+      ]
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 50,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It did not typecheck or render the screen, since the repo has no build setup."
+  },
+  "user-insights": {
+    "request": "I talked to three Quillnote users (interviews/) and exported our activation numbers (activation.csv, see README-data.md). What should we fix first and how sure can we be? Write it up in insights.md.",
+    "summary": "Read three interviews and activation data, ranked the Apple Notes import bug first, and said how sure it could be.",
+    "excerpt": [
+      "Fix the Apple Notes import date bug first. We can be sure it's hurting new users, but not yet how much fixing it will add to activation.",
+      "Users who import from Apple Notes activate at about 60% of the rate of users who start blank. Week-4 active is 19.5% for importers vs 33.0% for blank starters, a gap of 13.6 points (95% CI 10.8–16.3).",
+      "One interview doesn't fit the June 30 date. Marco signed up around April and still hit the date reset. Either the bug is older than we think or there's a second cause."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 70,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It worked out the rates and confidence intervals by hand, so the decimals need a rerun."
+  },
+  "fundraising": {
+    "request": "We are thinking about raising a seed round starting in January. Our one-pager is pitch-summary.md. Should we raise, and if so what should the plan look like? Save your recommendation as raise-plan.md.",
+    "summary": "Advised against a January seed raise, with a runway fix now and pass/fail tests to settle the question by March.",
+    "excerpt": [
+      "I'd hold off on the $2.5M seed in January. Fix your runway now, spend roughly November to March testing whether Harborline can grow into a venture-sized company, and decide in March.",
+      "You'd be raising with almost no cash left. At $28k/month burn you'd have about 4.5 months of money on January 1 and run out around May 2027. Rounds often take months, so you'd be negotiating against that deadline.",
+      "One open question could change the urgency. I assumed the $28k/month burn already accounts for revenue, because $210k ÷ $28k matches your 7.5 months of runway. If $28k is total spending before revenue, you're actually losing about $14k a month and have about 15 months of runway."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 92,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It checked no outside data, so the shop count and market sizes are unverified."
+  },
+  "product-experiments": {
+    "request": "We ran the onboarding checklist test for two weeks. Results and notes are in results/. The PM wants to ship Monday because the numbers look up. Can we? Put your answer in results/readout.md.",
+    "summary": "Read a two-week A/B result, found the arms were uneven by about 640 users, and advised against shipping Monday.",
+    "excerpt": [
+      "My answer is no, don't ship Monday. The checklist arm does look better, but the test result isn't valid as it stands.",
+      "The arms are uneven. Assignment was meant to be 50/50, but control has 10,120 users and the checklist arm has 9,480. A gap that size is very unlikely to be chance (p ≈ 5×10⁻⁶). About 640 users are missing from the checklist arm.",
+      "The lift depends on those users. The primary metric (3 notes created by day 7) is up 2.0 percentage points: 37.0% vs 35.0%. If 35 or fewer of the 640 missing users would have reached 3 notes, the lift disappears."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 54,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It worked only from a two-row summary CSV, so the Sept 6 to 8 crash check is still open."
+  },
+  "skill-creator": {
+    "request": "I do the workflow in workflow.md by hand every Friday. Package it so my coding agent can do it for me next time. Put whatever you create under skills/ in this folder.",
+    "summary": "Packaged a manual Friday release-notes routine as a skill with a PR collection script and 12 test prompts.",
+    "excerpt": [
+      "Each of the three mistakes you listed has its own rule and check. The skill is used for requests like \"write the release notes\" or \"what did we ship to customers this week\", but not for internal summaries like standup notes.",
+      "Date range: it starts from the date of your most recent notes file rather than \"last friday\". That avoids missing or repeating PRs if a week is skipped or you run it on a different day.",
+      "Leaks: merge commits contain things like \"from alice/QN-412-acme-export\", so the final check specifically looks for names, handles and ticket or PR numbers."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 107,
+      "triggered": "auto",
+      "filesChanged": 3
+    },
+    "caveat": "Neither the skill nor its helper script was run, so both are untested."
+  },
+  "ai-cost-audit": {
+    "request": "Finance says AI is eating our margin. Here is last month of usage (usage-2026-09.csv) and context (context.md). What are we actually spending per user, and what can we cut without making the product worse? Write it up in cost-review.md.",
+    "summary": "Costed a month of AI usage per user, traced the margin loss to the free tier, and ranked four cuts by savings.",
+    "excerpt": [
+      "September AI spend comes to $13,819. That's $0.29 per monthly active user, or $4.46 per Pro subscriber if the whole bill is charged to paying users. Revenue is $24,800, so AI cost is 56% of it.",
+      "Where the margin goes: mostly the free tier. Features free users get account for $10,511 (76% of spend).",
+      "Batch the weekly digest: about $627/month. Nobody reads it before Monday 9am, so slower processing changes nothing for users.",
+      "The search-rerank caching idea doesn't hold up yet. The export's note says every call sends the same 2,400-token prompt, but the logged average input is only 1,600 tokens per call. Both can't be true."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 114,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "Prices come from the provided context and were not checked against official pricing."
+  }
+}

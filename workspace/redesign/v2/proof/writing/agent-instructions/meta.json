@@ -1,0 +1,19 @@
+{
+  "skill": "agent-instructions",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill agent-instructions -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 55.5,
+  "costUsd": 0.3792324,
+  "numTurns": 18,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "agent-instructions"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill,Bash(node:*),Bash(npm test),Bash(npm run lint),Bash(git log:*),Bash(git status),Bash(ls:*)",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote AGENTS.md + CLAUDE.md (@AGENTS.md import). Ran npm test/lint/CLI before documenting. NOTE: made one WebFetch to code.claude.com/docs/en/memory that succeeded (pre-approved docs domain), so this run used network beyond the npx install. Its version claim (v2.1.277 AGENTS.md support) comes from that fetch and was not independently checked."
+}

@@ -1,0 +1,20 @@
+{
+  "skill": "product-spec",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill product-spec -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 188.2,
+  "costUsd": 0.6514854,
+  "numTurns": 12,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "product-spec",
+      "args": "Turn idea.md into a buildable spec for a 6-week engineering build. Make the calls you can, flag the ones you can't. Save under docs/."
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote 335-line docs/shared-folders-spec.md: decision table, flows, data model, authz matrix, 15 acceptance criteria, 6-week slices, rollout, open questions with owners. Architecture details are labeled assumptions (no product code in fixture). Longest and most expensive run."
+}

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "humanize": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "humanize/SKILL.md",
+      "computedHash": "2557476aa70eb783b3617cc474d496dbb9999da6bb977daa72049428fbf86d0a"
+    }
+  }
+}

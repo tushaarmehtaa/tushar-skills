@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "fundraising": {
+      "source": "tushaarmehtaa/tushar-skills",
+      "sourceType": "github",
+      "skillPath": "fundraising/SKILL.md",
+      "computedHash": "b6e28e867f2d3e98953c34e5464922104696bf486b8f86b8e588dbd377925578"
+    }
+  }
+}

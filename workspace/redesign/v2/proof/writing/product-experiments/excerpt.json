@@ -1,0 +1,8 @@
+{
+  "skill": "product-experiments",
+  "kind": "report",
+  "title": "\"The numbers look up\" meets a sample ratio mismatch",
+  "before": "PM wants to ship on Monday. Asked: \"the numbers look up, can we ship?\"",
+  "after": "**Decision: Don't ship Monday. The result isn't valid yet.**\n\u2026\n\u03c7\u00b2 = 20.9, p \u2248 5 \u00d7 10\u207b\u2076. A gap this big doesn't happen by chance. The checklist arm is missing about 640 users compared with control.\n\u2026\n- **If 35 or fewer of them reached 3 notes (\u22645.5%), the lift is zero.**\n- **If none of them reached 3 notes:** checklist 34.65% vs. control 35.0%, a diff of \u22120.35 pp (CI \u22121.7 to +1.0). The checklist would look neutral or slightly worse.\n- **If they did as well as control (35%):** checklist 36.9%, and the lift holds at about +1.9 pp.\n\nThese users were sent back to the login page by a crash, so a low success rate is the more likely case. Either way, the conclusion hangs on a number we don't have.",
+  "caption": "From results/readout.md. The run caught the 10,120 vs 9,480 split, tied it to the Safari crash window, and showed exactly how many missing users it takes to erase the +2.0 pp lift."
+}

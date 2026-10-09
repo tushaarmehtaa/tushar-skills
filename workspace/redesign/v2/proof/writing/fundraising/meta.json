@@ -1,0 +1,19 @@
+{
+  "skill": "fundraising",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill fundraising -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 91.5,
+  "costUsd": 0.31276160000000003,
+  "numTurns": 5,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "fundraising"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote raise-plan.md: market ceiling math, runway at a January start, pass/fail tests for a March decision, round shaping, objections, open questions. Arithmetic spot-checked (4,000 x $99 x 12 = $4.75M; break-even ~425 shops). Did not suggest a valuation; uses a stated rough Series A heuristic (~$1M ARR)."
+}

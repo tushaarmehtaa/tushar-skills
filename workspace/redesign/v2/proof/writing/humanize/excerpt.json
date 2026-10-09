@@ -1,0 +1,8 @@
+{
+  "skill": "humanize",
+  "kind": "before-after",
+  "title": "A launch post that stops sounding like a press release",
+  "before": "In today's fast-paced business landscape, small-business owners are constantly juggling countless responsibilities. That's why we're thrilled to announce Ledgerly Sync, a powerful, seamless, and cutting-edge solution designed to revolutionize the way you manage your books.\n\nLedgerly Sync isn't just a feature \u2014 it's a game-changer. By seamlessly connecting your bank accounts, payment processors, and invoicing tools, it empowers you to unlock unprecedented visibility into your finances.\u2026But that's not all. Furthermore, \u2026It's worth noting that some bank connections in Canada still require a manual CSV upload while we finish the integration.",
+  "after": "Today we're launching Ledgerly Sync. It connects your bank accounts, payment processors, and invoicing tools to Ledgerly, so you can see all of your finances in one place.\u2026\n\nSync also categorizes transactions for you by matching them automatically. During the beta, 212 businesses had 94% of their transactions matched with no manual work.\n\nOne caveat: some Canadian bank connections still need a manual CSV upload. We're finishing that integration now.",
+  "caption": "Edited in place. Filler and stock phrases are gone, the beta numbers and the Canadian CSV caveat stay, and the run flagged one unsupported claim it dropped."
+}

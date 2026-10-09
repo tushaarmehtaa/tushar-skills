@@ -1,0 +1,32 @@
+{
+  "skill": "interface-design",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill interface-design -a claude-code -y (project scope, .claude/skills/interface-design; identical to repo copy)",
+  "triggered": "auto",
+  "skillInvocations": [
+    {
+      "skill": "interface-design",
+      "args": "Redesign app/dashboard as the home screen for a flat sharing expenses: who owes whom, what needs settling, recent activity. Next.js + plain CSS."
+    }
+  ],
+  "skillFileReads": [],
+  "toolCounts": {
+    "Skill": 1,
+    "Bash": 15,
+    "Write": 5,
+    "Grep": 1,
+    "Edit": 1,
+    "Read": 5
+  },
+  "durationSec": 326,
+  "costUsd": 1.2475223999999998,
+  "numTurns": 31,
+  "isError": false,
+  "diffStat": " 5 files changed, 660 insertions(+), 38 deletions(-)",
+  "flags": "--output-format stream-json --verbose --permission-mode acceptEdits --setting-sources project,local --allowedTools Bash Read Edit Write Glob Grep Skill TodoWrite Task Agent --disallowedTools WebFetch WebSearch",
+  "notes": "Built a new client component FlatHome.jsx + lib/ledger.js (paise math, min-payments settle-up) + lib/flat-fixture.js; 660 insertions. Changed fixture semantics: replaced 'Settled' flags with invented payment records and fixed the inconsistent 'You owe 1,842'. Also made nav scroll horizontally. Independent check: /dashboard 390px wide at 390 viewport (was 905). All 9 runs launched concurrently with --setting-sources project,local so the user's global ~/.claude skills (which include older same-name changelog/remove-ai-slop/search-ready) and global CLAUDE.md were NOT loaded; only the project-installed skill plus built-ins were visible. Model: claude-opus-5-5 (account default). Fixture: Next.js 16.1.6 'Tallyroom' with deliberate flaws."
+}

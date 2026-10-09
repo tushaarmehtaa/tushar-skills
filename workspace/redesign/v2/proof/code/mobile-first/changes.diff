@@ -1,0 +1,185 @@
+diff --git a/app/dashboard/page.jsx b/app/dashboard/page.jsx
+index 6df0053..1c9b02e 100644
+--- a/app/dashboard/page.jsx
++++ b/app/dashboard/page.jsx
+@@ -16,19 +16,21 @@ export default function Dashboard() {
+         <div className="stat"><span>You owe</span><strong>₹1,842</strong></div>
+         <div className="stat"><span>You are owed</span><strong>₹710</strong></div>
+       </div>
+-      <table className="ledger">
+-        <thead>
+-          <tr><th>Date</th><th>Expense</th><th>Paid by</th><th>Amount</th><th>Split</th><th>Status</th><th></th></tr>
+-        </thead>
+-        <tbody>
+-          {expenses.map((e) => (
+-            <tr key={e.what}>
+-              <td>{e.date}</td><td>{e.what}</td><td>{e.paidBy}</td><td>₹{e.amount.toLocaleString("en-IN")}</td><td>{e.split}</td><td>{e.status}</td>
+-              <td><button className="icon-btn" aria-label="Edit">✎</button><button className="icon-btn" aria-label="Delete">✕</button></td>
+-            </tr>
+-          ))}
+-        </tbody>
+-      </table>
++      <div className="table-scroll" role="region" aria-label="Expense ledger" tabIndex={0}>
++        <table className="ledger">
++          <thead>
++            <tr><th>Date</th><th>Expense</th><th>Paid by</th><th>Amount</th><th>Split</th><th>Status</th><th></th></tr>
++          </thead>
++          <tbody>
++            {expenses.map((e) => (
++              <tr key={e.what}>
++                <td>{e.date}</td><td>{e.what}</td><td>{e.paidBy}</td><td>₹{e.amount.toLocaleString("en-IN")}</td><td>{e.split}</td><td>{e.status}</td>
++                <td><button className="icon-btn" aria-label="Edit">✎</button><button className="icon-btn" aria-label="Delete">✕</button></td>
++              </tr>
++            ))}
++          </tbody>
++        </table>
++      </div>
+     </main>
+   );
+ }
+diff --git a/app/globals.css b/app/globals.css
+index fb6ad9e..77769b1 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -4,50 +4,77 @@ a { color: inherit; }
+ 
+ .hero {
+   text-align: center;
+-  padding: 120px 24px 96px;
++  padding: clamp(56px, 12vw, 120px) 20px clamp(64px, 10vw, 96px);
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a855f7 100%);
+   color: #fff;
+ }
+ .eyebrow { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.18); font-size: 14px; margin-bottom: 24px; }
+-.hero h1 { font-size: 64px; line-height: 1.05; max-width: 900px; margin: 0 auto 24px; background: linear-gradient(90deg, #fff, #e9d5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+-.lede { font-size: 20px; max-width: 680px; margin: 0 auto 40px; opacity: 0.9; }
+-.cta-row { display: flex; gap: 16px; justify-content: center; }
+-.btn { padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: 600; }
++.hero h1 { font-size: clamp(34px, 7vw + 12px, 64px); overflow-wrap: break-word; line-height: 1.05; max-width: 900px; margin: 0 auto 24px; background: linear-gradient(90deg, #fff, #e9d5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
++.lede { font-size: clamp(17px, 1vw + 14px, 20px); max-width: 680px; margin: 0 auto 40px; opacity: 0.9; }
++.cta-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
++.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 28px; border-radius: 12px; text-decoration: none; font-weight: 600; }
+ .btn-primary { background: #fff; color: #764ba2; box-shadow: 0 10px 30px rgba(118,75,162,0.4); }
+ .btn-ghost { border: 1px solid rgba(255,255,255,0.5); color: #fff; }
+ 
+-.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 80px auto; padding: 0 24px; }
++.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 24px; max-width: 1100px; margin: clamp(48px, 8vw, 80px) auto; padding: 0 24px; }
+ .card { padding: 32px; border-radius: 20px; background: #fff; box-shadow: 0 20px 40px rgba(102,126,234,0.15); border: 1px solid #ede9fe; text-align: center; }
+ .card-icon { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; background: linear-gradient(135deg, #667eea, #a855f7); display: grid; place-items: center; font-size: 26px; }
+ .card h3 { margin: 0 0 8px; }
+ .card p { color: #6b7280; margin: 0; }
+ 
+-.page { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
++.page { max-width: 1100px; margin: 0 auto; padding: clamp(28px, 6vw, 48px) 20px; }
++.table-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
++.table-scroll:focus-visible { outline: 2px solid #764ba2; outline-offset: 2px; }
+ .sub { color: #6b7280; }
+-.compare { width: 960px; border-collapse: collapse; margin-top: 32px; }
++.compare { width: 100%; min-width: 640px; border-collapse: collapse; margin-top: 32px; }
+ .compare th, .compare td { padding: 14px 18px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: nowrap; }
+ .compare thead th { background: #f5f3ff; }
++.compare tbody th { position: sticky; left: 0; background: #fff; }
++.compare thead th:first-child { position: sticky; left: 0; z-index: 1; }
+ 
+-.stats { display: flex; gap: 16px; margin: 24px 0; }
+-.stat { flex: 0 0 240px; padding: 20px; border-radius: 16px; background: #f5f3ff; display: flex; flex-direction: column; gap: 6px; }
++.stats { display: flex; flex-wrap: wrap; gap: 16px; margin: 24px 0; }
++.stat { flex: 1 1 200px; max-width: 240px; padding: 20px; border-radius: 16px; background: #f5f3ff; display: flex; flex-direction: column; gap: 6px; }
+ .stat span { color: #6b7280; font-size: 14px; }
+ .stat strong { font-size: 28px; }
+-.ledger { width: 100%; min-width: 880px; border-collapse: collapse; }
++.ledger { width: 100%; border-collapse: collapse; }
+ .ledger th, .ledger td { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: nowrap; }
+-.icon-btn { width: 20px; height: 20px; padding: 0; font-size: 11px; border: 0; background: none; cursor: pointer; }
++.icon-btn { width: 32px; height: 32px; padding: 0; font-size: 15px; border-radius: 8px; border: 0; background: none; cursor: pointer; }
+ 
+ .topnav { display: flex; align-items: center; gap: 32px; padding: 16px 32px; border-bottom: 1px solid #ede9fe; white-space: nowrap; }
+ .logo { font-weight: 800; font-size: 20px; text-decoration: none; }
+ .links { display: flex; gap: 28px; }
+ .links a { font-size: 13px; text-decoration: none; padding: 2px 0; color: #4b5563; }
+-.nav-cta { margin-left: auto; font-size: 13px; padding: 6px 12px; border-radius: 8px; background: #764ba2; color: #fff; text-decoration: none; }
++.nav-cta { margin-left: auto; font-size: 13px; padding: 8px 14px; border-radius: 8px; background: #764ba2; color: #fff; text-decoration: none; }
+ 
+ .shot { max-width: 1100px; margin: -48px auto 0; padding: 0 24px; }
+-.shot img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
++.shot img { display: block; width: 100%; height: auto; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+ 
+-.plan-actions { display: flex; gap: 8px; margin-top: 24px; }
+-.mini-btn { font-size: 12px; padding: 3px 8px; border-radius: 6px; background: #764ba2; color: #fff; text-decoration: none; }
++.plan-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
++.mini-btn { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 600; padding: 10px 18px; border-radius: 10px; background: #764ba2; color: #fff; text-decoration: none; }
+ 
+ .faq { margin-top: 64px; max-width: 680px; }
+ .faq h3 { margin: 24px 0 6px; font-size: 17px; }
+ .faq p { margin: 0; color: #4b5563; }
++
++.icon-btn:hover { background: #f5f3ff; }
++
++@media (max-width: 960px) {
++  .topnav { flex-wrap: wrap; gap: 4px 12px; padding: 8px 16px; white-space: normal; }
++  .logo { flex: 1 0 auto; display: inline-flex; align-items: center; min-height: 44px; }
++  .nav-cta { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; font-size: 15px; }
++  .links { order: 1; flex: 1 1 100%; flex-wrap: wrap; gap: 0 4px; margin: 0 -10px; }
++  .links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; font-size: 15px; }
++  .compare th, .compare td, .ledger th, .ledger td { padding: 10px; }
++}
++
++@media (max-width: 640px) {
++  /* Room to scroll the last content clear of the fixed support-chat bubble. */
++  body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
++  .stat { flex: 1 1 100%; max-width: none; padding: 16px 20px; }
++  .compare thead th { white-space: normal; min-width: 7em; vertical-align: bottom; }
++  .compare tbody th { white-space: normal; min-width: 8em; }
++}
++
++@media (pointer: coarse) {
++  .icon-btn { width: 44px; height: 44px; font-size: 17px; }
++}
+diff --git a/app/pricing/page.jsx b/app/pricing/page.jsx
+index 24a5dae..4523c1c 100644
+--- a/app/pricing/page.jsx
++++ b/app/pricing/page.jsx
+@@ -15,24 +15,26 @@ export default function Pricing() {
+     <main className="page">
+       <h1>Pricing</h1>
+       <p className="sub">Simple plans for every household. Cancel anytime.</p>
+-      <table className="compare">
+-        <thead>
+-          <tr>
+-            <th>Feature</th>
+-            <th>Free</th>
+-            <th>Plus — $3/mo</th>
+-            <th>Household — $6/mo</th>
+-            <th>Team — $12/mo</th>
+-          </tr>
+-        </thead>
+-        <tbody>
+-          {rows.map((r) => (
+-            <tr key={r[0]}>
+-              {r.map((c, i) => (i === 0 ? <th key={i}>{c}</th> : <td key={i}>{c}</td>))}
++      <div className="table-scroll" role="region" aria-label="Plan comparison" tabIndex={0}>
++        <table className="compare">
++          <thead>
++            <tr>
++              <th>Feature</th>
++              <th>Free</th>
++              <th>Plus — $3/mo</th>
++              <th>Household — $6/mo</th>
++              <th>Team — $12/mo</th>
+             </tr>
+-          ))}
+-        </tbody>
+-      </table>
++          </thead>
++          <tbody>
++            {rows.map((r) => (
++              <tr key={r[0]}>
++                {r.map((c, i) => (i === 0 ? <th key={i}>{c}</th> : <td key={i}>{c}</td>))}
++              </tr>
++            ))}
++          </tbody>
++        </table>
++      </div>
+       <div className="plan-actions">
+         <CheckoutButton plan="plus">Choose Plus</CheckoutButton>
+         <CheckoutButton plan="household">Choose Household</CheckoutButton>

@@ -1,0 +1,19 @@
+{
+  "skill": "decision-doc",
+  "date": "2026-10-09",
+  "claudeVersion": "2.1.295 (Claude Code)",
+  "installMethod": "npx skills add tushaarmehtaa/tushar-skills --skill decision-doc -a claude-code -y (project scope, rc=0)",
+  "triggered": "auto",
+  "durationSec": 63.0,
+  "costUsd": 0.26830519999999997,
+  "numTurns": 6,
+  "isError": false,
+  "exitCode": 0,
+  "skillToolCalls": [
+    {
+      "skill": "decision-doc"
+    }
+  ],
+  "flags": "--output-format json --permission-mode acceptEdits --setting-sources project,local --allowedTools Read,Edit,Write,Glob,Grep,Skill",
+  "notes": "Run with --setting-sources project,local (added to the requested command) so the user's global ~/.claude/CLAUDE.md writing rules and ~/.claude/skills copies did not load; a probe confirmed only the project skill plus built-ins were visible. Installed copy is byte-identical to the local repo folder. Fixture is synthetic. Skill tool call confirmed in transcript.jsonl. Wrote docs/search-decision.md: options incl. status quo, comparison table, dissent, cheap checks before deadline, review triggers. Treats 'nobody wants new on-call' as a hard constraint, which is a slightly stronger reading than the notes."
+}

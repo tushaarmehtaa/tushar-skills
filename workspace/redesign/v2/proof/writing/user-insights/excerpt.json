@@ -1,0 +1,7 @@
+{
+  "skill": "user-insights",
+  "kind": "report",
+  "title": "Three interviews and a cohort export, ranked with honest confidence",
+  "after": "**Recommendation:** Fix the Apple Notes import date bug first. Title-only search comes second.\n\u2026\n| | Import (n=1,680) | Blank (n=2,095) | Gap (blank \u2212 import) |\n|---|---:|---:|---:|\n| Tag by day 7 | 22.9% (20.8\u201324.9) | 36.3% (34.2\u201338.3) | 13.4 pp (10.5\u201316.3) |\n| Active week 4 | 19.5% (17.6\u201321.4) | 33.0% (31.0\u201335.0) | 13.6 pp (10.8\u201316.3) |\n\n- The gap is not noise. It is about 13\u201314 pp, and every one of the four weeks falls within about 1 pp of the pooled rates.\n\u2026\n3. **Marco's timing doesn't fit the stated ship date.** \u2026",
+  "caption": "From insights.md. Pooled rates and intervals check out against the CSV. The run also noticed that one interviewee hit the bug months before its recorded ship date, and refused to promise an activation lift."
+}

@@ -1,0 +1,1 @@
+Finance says AI is eating our margin. Here is last month of usage (usage-2026-09.csv) and context (context.md). What are we actually spending per user, and what can we cut without making the product worse? Write it up in cost-review.md.

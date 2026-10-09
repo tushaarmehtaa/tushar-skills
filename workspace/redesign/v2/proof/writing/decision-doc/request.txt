@@ -1,0 +1,1 @@
+We have to pick how to do search for Driftwood. My messy notes are in search-notes.md. Write it up so Priya can make the call and the team can see why, save it under docs/.

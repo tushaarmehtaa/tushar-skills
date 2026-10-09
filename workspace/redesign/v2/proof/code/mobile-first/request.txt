@@ -1,0 +1,1 @@
+On my phone the Tallyroom site is broken: the page scrolls sideways, the pricing table and the dashboard ledger run off the screen, and the buttons are tiny. Fix it for phones without changing what the pages do.
