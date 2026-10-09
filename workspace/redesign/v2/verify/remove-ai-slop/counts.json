@@ -1,0 +1,144 @@
+{
+ "skill": "remove-ai-slop",
+ "discovery": {
+  "total": "15/15",
+  "byPhrasing": {
+   "p1-ai-generated": {
+    "prompt": "Our Tallyroom homepage looks and reads like every other AI-generated startup site. What's generic about it? Just tell me, don't edit anything.",
+    "fired": 5,
+    "runs": 5
+   },
+   "p2-slop": {
+    "prompt": "Check this app's design and copy for AI slop. Report only, no edits.",
+    "fired": 5,
+    "runs": 5
+   },
+   "p3-no-keywords": {
+    "prompt": "Be honest: does our landing page look like a template anyone could have shipped? Point out what makes it feel that way. Don't change any files.",
+    "fired": 5,
+    "runs": 5
+   }
+  },
+  "mechanism": "Skill tool_use in stream-json, confirmed in Claude Code session log; runs stopped once the call was observed"
+ },
+ "explicit": {
+  "total": "5/5",
+  "mechanism": "slash-command expansion: session log shows <command-name>/remove-ai-slop</command-name> and 'Base directory for this skill: <fixture>/.claude/skills/remove-ai-slop'"
+ },
+ "workflowQuality": {
+  "with": {
+   "n": 3,
+   "scores": [
+    0.867,
+    0.867,
+    0.933
+   ],
+   "mean": 0.889
+  },
+  "without": {
+   "n": 3,
+   "scores": [
+    0.6,
+    0.467,
+    0.867
+   ],
+   "mean": 0.645
+  },
+  "delta": 0.244,
+  "perCriterion": {
+   "R1": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "R2": {
+    "with": "3/3",
+    "without": "2/3"
+   },
+   "R3": {
+    "with": "1/3",
+    "without": "1/3"
+   },
+   "R4": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "R5": {
+    "with": "3/3",
+    "without": "0/3"
+   },
+   "R6": {
+    "with": "2/3",
+    "without": "0/3"
+   },
+   "R7": {
+    "with": "3/3",
+    "without": "1/3"
+   },
+   "R8": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "R9": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "R10": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "R11": {
+    "with": "3/3",
+    "without": "3/3"
+   }
+  }
+ },
+ "install": {
+  "command": "npx skills add tushaarmehtaa/tushar-skills --skill remove-ai-slop -a claude-code -y",
+  "scope": "project (./.claude/skills/remove-ai-slop)",
+  "skillMdSha256": "1cb2c72dc17167fad9face8b9ec4d7d74e7a4ce90f508697115344db9e6c701e",
+  "byteIdenticalToRepo": true,
+  "references": "no bundled references"
+ },
+ "update": {
+  "command": "npx skills update -p -y (also tried: update <slug> -p -y, bare update)",
+  "restoredDrift": false,
+  "observed": "CLI reported 'All project skills are up to date'; drifted SKILL.md hash unchanged; re-running npx skills add restored a byte-identical package (verified on landing-copy)"
+ },
+ "removal": {
+  "command": "npx skills remove remove-ai-slop -y",
+  "clean": true,
+  "lockfile": {
+   "version": 1,
+   "skills": {}
+  },
+  "emptyDirLeft": ".claude/skills/ (empty)"
+ },
+ "invalidRunsReplaced": [
+  "explicit-3-sessionlimit"
+ ],
+ "registeredSkillsInRuns": [
+  "remove-ai-slop",
+  "deep-research",
+  "design",
+  "design-sync",
+  "dataviz",
+  "update-config",
+  "verify",
+  "debug",
+  "code-review",
+  "simplify",
+  "batch",
+  "fewer-permission-prompts",
+  "doctor",
+  "loop",
+  "schedule",
+  "claude-api",
+  "workflow-authoring",
+  "run",
+  "run-skill-generator",
+  "plugin-authoring"
+ ],
+ "claudeVersion": "2.1.295",
+ "model": "claude-opus-5-5",
+ "totalRunCostUsd": 5.59
+}

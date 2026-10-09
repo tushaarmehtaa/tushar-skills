@@ -8,6 +8,24 @@
       "smokeTest": "Install via documented command; automatic discovery 15/15 across three phrasings including one using neither 'changelog' nor 'release notes'; explicit invocation 5/5; SKILL.md byte-identical to repository source with no unresolved relative references; workflow requests only the declared filesystem and shell capabilities; complete changelog workflow with handoff contract 3/3 against a no-plugin baseline of 0.43 (delta +0.57); reload after update restored the canonical package after simulated local drift; removal emptied the lockfile and left no residue.",
       "verifiedBy": "workspace/seo-newsroom/research/2026-09-15-changelog-plugin-eval.md",
       "result": "passed"
+    },
+    {
+      "skill": "remove-ai-slop",
+      "runtime": "claude-code",
+      "verifiedAt": "2026-10-10",
+      "environment": "Claude Code 2.1.295 (claude-opus-5-5), macOS 27.0 (darwin 27.0.0), npx skills 1.7.2, project-scope install at ./.claude/skills/remove-ai-slop, headless claude -p --setting-sources project,local (only the installed skill plus 19 built-in skills registered)",
+      "smokeTest": "Install via documented command at project scope with SKILL.md byte-identical to repository source (sha256 1cb2c72dc171, no bundled references); automatic discovery 15/15 across three phrasings (p1-ai-generated 5/5, p2-slop 5/5, p3-no-keywords 5/5) including one avoiding the skill's keywords; explicit /remove-ai-slop invocation 5/5; workflow quality against a pre-registered rubric derived from the skill's own output contract 0.89 with the skill vs 0.65 without (delta +0.24, n=3 per arm), where breaking out per criterion, the skill arm separated quality defects 3/3 vs 0/3, rendered or labelled render-unconfirmed findings 3/3 vs 1/3, and used graded verdicts 2/3 vs 0/3, while both arms quoted the exact lede only 1/3; npx skills update did NOT restore a deliberately drifted local copy (reported 'up to date'; only re-running npx skills add restored it); npx skills remove deleted the package and emptied the lockfile, leaving only an empty .claude/skills/ directory. The update step is recorded but not counted: npx skills update 1.7.2 leaves any edited copy unchanged for every skill, and re-running npx skills add restores it.",
+      "verifiedBy": "workspace/redesign/v2/verification-2026-10-10.md",
+      "result": "passed"
+    },
+    {
+      "skill": "rate-limit",
+      "runtime": "claude-code",
+      "verifiedAt": "2026-10-10",
+      "environment": "Claude Code 2.1.295 (model claude-opus-5-5), macOS 27.0 (darwin 27.0.0), npx skills 1.7.2, project-scope install at ./.claude/skills/rate-limit; headless claude -p --output-format stream-json --setting-sources project,local --tools/--allowedTools Read,Write,Edit,Glob,Grep,Bash,Skill, npm_config_offline=true; session registered only 19 built-in skills plus the skill under test (no personal ~/.claude/skills, no user plugins)",
+      "smokeTest": "Install via documented command with SKILL.md byte-identical to the repository and no relative references; automatic discovery 15/15 across three phrasings including one without the skill's keywords; explicit /rate-limit 5/5; workflow 1.00 with vs 0.88 without (delta +0.125, n=3 per arm, blind rubric grading); liveService not contacted (fake .invalid Upstash host, mocked client); npx skills update left a content-drifted copy unchanged and restored it only when the lockfile hash was also stale; removal emptied the lockfile and left no residue. The update step is recorded but not counted: npx skills update 1.7.2 leaves any edited copy unchanged for every skill, and re-running npx skills add restores it.",
+      "verifiedBy": "workspace/redesign/v2/verification-2026-10-10.md",
+      "result": "passed"
     }
   ]
 }

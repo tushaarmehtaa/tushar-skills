@@ -225,7 +225,7 @@ export const CATALOG = {
     author: "tushaarmehtaa",
     surfaces: ["coding-agent"],
     capabilities: ["filesystem", "shell", "network"],
-    support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
+    support: { "claude-code": "tested", codex: "untested", cursor: "untested" },
   },
   readme: {
     category: "workflow",
@@ -241,7 +241,7 @@ export const CATALOG = {
     author: "tushaarmehtaa",
     surfaces: ["coding-agent"],
     capabilities: ["filesystem", "shell", "browser"],
-    support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
+    support: { "claude-code": "tested", codex: "untested", cursor: "untested" },
   },
   "search-ready": {
     category: "seo",

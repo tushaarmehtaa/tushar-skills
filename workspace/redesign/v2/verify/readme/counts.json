@@ -1,0 +1,410 @@
+{
+ "skill": "readme",
+ "discovery": {
+  "d1-readme-word": {
+   "prompt": "The README in this repo is out of date. Fix it so it matches what the tool actually does.",
+   "fired": 5,
+   "runs": [
+    {
+     "run": "d1-readme-word-with-1",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 10,
+     "costUsd": 0.558,
+     "prompt": "The README in this repo is out of date. Fix it so it matches what the tool actually does.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d1-readme-word-with-2",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 11,
+     "costUsd": 0.5567,
+     "prompt": "The README in this repo is out of date. Fix it so it matches what the tool actually does.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d1-readme-word-with-3",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 9,
+     "costUsd": 0.5495,
+     "prompt": "The README in this repo is out of date. Fix it so it matches what the tool actually does.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d1-readme-word-with-4",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 8,
+     "costUsd": 0.5392,
+     "prompt": "The README in this repo is out of date. Fix it so it matches what the tool actually does.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d1-readme-word-with-5",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 8,
+     "costUsd": 0.5032,
+     "prompt": "The README in this repo is out of date. Fix it so it matches what the tool actually does.",
+     "maxTurns": 12
+    }
+   ]
+  },
+  "d2-audit": {
+   "prompt": "Can you check whether our README.md is accurate against the code? Tell me what's wrong with it before changing anything.",
+   "fired": 5,
+   "runs": [
+    {
+     "run": "d2-audit-with-1",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 6,
+     "costUsd": 0.488,
+     "prompt": "Can you check whether our README.md is accurate against the code? Tell me what's wrong with it before changing anything.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d2-audit-with-2",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 6,
+     "costUsd": 0.4703,
+     "prompt": "Can you check whether our README.md is accurate against the code? Tell me what's wrong with it before changing anything.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d2-audit-with-3",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 6,
+     "costUsd": 0.4889,
+     "prompt": "Can you check whether our README.md is accurate against the code? Tell me what's wrong with it before changing anything.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d2-audit-with-4",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 6,
+     "costUsd": 0.4742,
+     "prompt": "Can you check whether our README.md is accurate against the code? Tell me what's wrong with it before changing anything.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d2-audit-with-5",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 6,
+     "costUsd": 0.4863,
+     "prompt": "Can you check whether our README.md is accurate against the code? Tell me what's wrong with it before changing anything.",
+     "maxTurns": 12
+    }
+   ]
+  },
+  "d3-no-keyword": {
+   "prompt": "Someone tried mdtally yesterday and the install command on the project's front page didn't work, and neither did the example. Sort out that front page so a newcomer can get from install to a first successful run.",
+   "fired": 5,
+   "runs": [
+    {
+     "run": "d3-no-keyword-with-1",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 8,
+     "costUsd": 0.5492,
+     "prompt": "Someone tried mdtally yesterday and the install command on the project's front page didn't work, and neither did the example. Sort out that front page so a newcomer can get from install to a first successful run.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d3-no-keyword-with-2",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "error_max_turns",
+     "numTurns": 13,
+     "costUsd": 0.6446,
+     "prompt": "Someone tried mdtally yesterday and the install command on the project's front page didn't work, and neither did the example. Sort out that front page so a newcomer can get from install to a first successful run.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d3-no-keyword-with-3",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 9,
+     "costUsd": 0.5531,
+     "prompt": "Someone tried mdtally yesterday and the install command on the project's front page didn't work, and neither did the example. Sort out that front page so a newcomer can get from install to a first successful run.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d3-no-keyword-with-4",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 12,
+     "costUsd": 0.5986,
+     "prompt": "Someone tried mdtally yesterday and the install command on the project's front page didn't work, and neither did the example. Sort out that front page so a newcomer can get from install to a first successful run.",
+     "maxTurns": 12
+    },
+    {
+     "run": "d3-no-keyword-with-5",
+     "skillToolCalls": [
+      {
+       "skill": "readme",
+       "toolIndex": 1
+      }
+     ],
+     "skillInjected": true,
+     "subtype": "success",
+     "numTurns": 9,
+     "costUsd": 0.556,
+     "prompt": "Someone tried mdtally yesterday and the install command on the project's front page didn't work, and neither did the example. Sort out that front page so a newcomer can get from install to a first successful run.",
+     "maxTurns": 12
+    }
+   ]
+  }
+ },
+ "explicit": {
+  "prompt": "/readme rewrite this repo's README so it matches the code",
+  "runs": [
+   {
+    "run": "explicit-with-1",
+    "skillToolCalls": [],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 7,
+    "costUsd": 0.5796,
+    "prompt": "/readme rewrite this repo's README so it matches the code",
+    "maxTurns": 8
+   },
+   {
+    "run": "explicit-with-2",
+    "skillToolCalls": [],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 7,
+    "costUsd": 0.5471,
+    "prompt": "/readme rewrite this repo's README so it matches the code",
+    "maxTurns": 8
+   },
+   {
+    "run": "explicit-with-3",
+    "skillToolCalls": [],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 7,
+    "costUsd": 0.5763,
+    "prompt": "/readme rewrite this repo's README so it matches the code",
+    "maxTurns": 8
+   },
+   {
+    "run": "explicit-with-4",
+    "skillToolCalls": [],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 7,
+    "costUsd": 0.5703,
+    "prompt": "/readme rewrite this repo's README so it matches the code",
+    "maxTurns": 8
+   },
+   {
+    "run": "explicit-with-5",
+    "skillToolCalls": [],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 7,
+    "costUsd": 0.5645,
+    "prompt": "/readme rewrite this repo's README so it matches the code",
+    "maxTurns": 8
+   }
+  ],
+  "loaded": 5
+ },
+ "workflowRuns": {
+  "with": [
+   {
+    "run": "workflow-with-1",
+    "skillToolCalls": [
+     {
+      "skill": "readme",
+      "toolIndex": 1
+     }
+    ],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 9,
+    "costUsd": 0.5698,
+    "prompt": "Rewrite this CLI's README so it is accurate, and verify that a clean install and the minimal example actually work. This machine is offline, so don't use the network. Put a short report of what you changed and checked in your reply.",
+    "maxTurns": 80
+   },
+   {
+    "run": "workflow-with-2",
+    "skillToolCalls": [
+     {
+      "skill": "readme",
+      "toolIndex": 1
+     }
+    ],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 8,
+    "costUsd": 0.5741,
+    "prompt": "Rewrite this CLI's README so it is accurate, and verify that a clean install and the minimal example actually work. This machine is offline, so don't use the network. Put a short report of what you changed and checked in your reply.",
+    "maxTurns": 80
+   },
+   {
+    "run": "workflow-with-3",
+    "skillToolCalls": [
+     {
+      "skill": "readme",
+      "toolIndex": 1
+     }
+    ],
+    "skillInjected": true,
+    "subtype": "success",
+    "numTurns": 9,
+    "costUsd": 0.5697,
+    "prompt": "Rewrite this CLI's README so it is accurate, and verify that a clean install and the minimal example actually work. This machine is offline, so don't use the network. Put a short report of what you changed and checked in your reply.",
+    "maxTurns": 80
+   }
+  ],
+  "without": [
+   {
+    "run": "workflow-without-1",
+    "skillToolCalls": [],
+    "skillInjected": false,
+    "subtype": "success",
+    "numTurns": 6,
+    "costUsd": 0.4998,
+    "prompt": "Rewrite this CLI's README so it is accurate, and verify that a clean install and the minimal example actually work. This machine is offline, so don't use the network. Put a short report of what you changed and checked in your reply.",
+    "maxTurns": 80
+   },
+   {
+    "run": "workflow-without-2",
+    "skillToolCalls": [],
+    "skillInjected": false,
+    "subtype": "success",
+    "numTurns": 6,
+    "costUsd": 0.5098,
+    "prompt": "Rewrite this CLI's README so it is accurate, and verify that a clean install and the minimal example actually work. This machine is offline, so don't use the network. Put a short report of what you changed and checked in your reply.",
+    "maxTurns": 80
+   },
+   {
+    "run": "workflow-without-3",
+    "skillToolCalls": [],
+    "skillInjected": false,
+    "subtype": "success",
+    "numTurns": 7,
+    "costUsd": 0.5157,
+    "prompt": "Rewrite this CLI's README so it is accurate, and verify that a clean install and the minimal example actually work. This machine is offline, so don't use the network. Put a short report of what you changed and checked in your reply.",
+    "maxTurns": 80
+   }
+  ]
+ },
+ "invalidRunsQuarantined": [
+  "d1-readme-word-with-2",
+  "d1-readme-word-with-3",
+  "d1-readme-word-with-4",
+  "d1-readme-word-with-5",
+  "d2-audit-with-1",
+  "d2-audit-with-2",
+  "d2-audit-with-3",
+  "d2-audit-with-4",
+  "d2-audit-with-5",
+  "d3-no-keyword-with-1",
+  "d3-no-keyword-with-2",
+  "d3-no-keyword-with-3",
+  "d3-no-keyword-with-4",
+  "d3-no-keyword-with-5",
+  "explicit-with-1",
+  "explicit-with-2",
+  "explicit-with-3",
+  "explicit-with-4",
+  "explicit-with-5"
+ ],
+ "discoveryTotal": "15/15",
+ "explicitTotal": "5/5",
+ "firstToolWasSkill": true,
+ "validRunCostUsd": 14.09
+}

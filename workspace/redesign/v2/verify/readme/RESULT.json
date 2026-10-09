@@ -1,0 +1,46 @@
+{
+  "skill": "readme",
+  "runtime": "claude-code",
+  "verifiedAt": "2026-10-10",
+  "environment": "Claude Code 2.1.295 (model claude-opus-5-5), macOS 27.0 (darwin 27.0.0), npx skills 1.7.2, project-scope install at ./.claude/skills/readme; headless claude -p --output-format stream-json --setting-sources project,local --tools/--allowedTools Read,Write,Edit,Glob,Grep,Bash,Skill, npm_config_offline=true; session registered only 19 built-in skills plus the skill under test (no personal ~/.claude/skills, no user plugins)",
+  "smokeTest": "Install via documented command with SKILL.md byte-identical to the repository and no relative references; automatic discovery 15/15 across three phrasings including one without the skill's keywords; explicit /readme 5/5; workflow 1.00 with vs 1.00 without (delta +0.000, n=3 per arm, blind rubric grading); npx skills update left a content-drifted copy unchanged and restored it only when the lockfile hash was also stale; removal emptied the lockfile and left no residue.",
+  "result": "partial",
+  "criteria": {
+    "discovery>=12/15": "15/15",
+    "explicit 5/5": "5/5",
+    "skillMean>baselineMean": {
+      "with": 1.0,
+      "without": 1.0,
+      "delta": 0.0,
+      "met": false
+    },
+    "updateRestoresDrift": {
+      "contentOnlyDrift": false,
+      "driftPlusStaleLockHash": true
+    },
+    "removalClean": true
+  },
+  "unmetCriteria": [
+    "workflow quality: skill mean 1.00 is not greater than baseline 1.00 (baseline at rubric ceiling)",
+    "update: npx skills update did not restore a content-drifted copy; restored only when the lockfile hash was also stale"
+  ],
+  "evidence": {
+    "rubric": "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/RUBRIC.md",
+    "counts": "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/counts.json",
+    "workflowScores": "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/workflow-scores.json",
+    "runs": "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/runs",
+    "lifecycleLogs": [
+      "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/lifecycle-update.log",
+      "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/lifecycle-remove-after-update.log",
+      "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/lifecycle-remove-pristine.log"
+    ],
+    "invalidatedRuns": "/private/tmp/claude-501/-Users-tushaarmehtaa-Dev-active-tushar-skills/81e3fad1-dbf9-4173-b0ed-6969aba0f9aa/scratchpad/verify/readme/invalid-session-limit (19 runs aborted by a session usage limit, quarantined and rerun, not counted)"
+  },
+  "notes": [
+    "Discovery runs capped at 12 turns and explicit runs at 8; every Skill call happened at tool index 1, so the cap did not affect counts.",
+    "Explicit /slug expands client-side (no Skill tool_use in stream-json); success = skill body present in the session transcript and the run completing without a usage-limit error.",
+    "Agents used system temp dirs (mktemp) for clean-install checks, outside the fixture.",
+    "n=3 per arm; one grader pass per run.",
+    "Baseline Claude already fixed every seeded defect and ran a clean tarball install in 3/3, so this fixture cannot show the skill's contribution, like the changelog invention-pressure case. Neither arm stated the audience/reader job explicitly."
+  ]
+}

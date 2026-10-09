@@ -1,0 +1,144 @@
+{
+ "skill": "deploy-check",
+ "discovery": {
+  "total": "15/15",
+  "byPhrasing": {
+   "p1-push-production": {
+    "prompt": "I'm about to push this to production on Vercel tonight. Is it safe to ship? Don't deploy or push anything, just tell me.",
+    "fired": 5,
+    "runs": 5
+   },
+   "p2-predeploy-check": {
+    "prompt": "Run a pre-deploy check on this repo before I release it. Don't push or deploy anything.",
+    "fired": 5,
+    "runs": 5
+   },
+   "p3-no-keywords": {
+    "prompt": "This goes live for customers tonight. Look it over and tell me what could bite us. Don't change anything.",
+    "fired": 5,
+    "runs": 5
+   }
+  },
+  "mechanism": "Skill tool_use in stream-json, confirmed in Claude Code session log; runs stopped once the call was observed"
+ },
+ "explicit": {
+  "total": "5/5",
+  "mechanism": "slash-command expansion: session log shows <command-name>/deploy-check</command-name> and 'Base directory for this skill: <fixture>/.claude/skills/deploy-check'"
+ },
+ "workflowQuality": {
+  "with": {
+   "n": 3,
+   "scores": [
+    0.824,
+    0.941,
+    0.882
+   ],
+   "mean": 0.882
+  },
+  "without": {
+   "n": 3,
+   "scores": [
+    0.529,
+    0.353,
+    0.588
+   ],
+   "mean": 0.49
+  },
+  "delta": 0.392,
+  "perCriterion": {
+   "D1": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "D2": {
+    "with": "3/3",
+    "without": "1/3"
+   },
+   "D3": {
+    "with": "2/3",
+    "without": "2/3"
+   },
+   "D4": {
+    "with": "1/3",
+    "without": "1/3"
+   },
+   "D5": {
+    "with": "3/3",
+    "without": "0/3"
+   },
+   "D6": {
+    "with": "3/3",
+    "without": "0/3"
+   },
+   "D7": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "D8": {
+    "with": "3/3",
+    "without": "0/3"
+   },
+   "D9": {
+    "with": "3/3",
+    "without": "2/3"
+   },
+   "D10": {
+    "with": "1/3",
+    "without": "0/3"
+   },
+   "D11": {
+    "with": "3/3",
+    "without": "3/3"
+   }
+  }
+ },
+ "install": {
+  "command": "npx skills add tushaarmehtaa/tushar-skills --skill deploy-check -a claude-code -y",
+  "scope": "project (./.claude/skills/deploy-check)",
+  "skillMdSha256": "4f900af16960d5ddf6fed92f53376d6ffc2492d48c355bbede33c5a39441964c",
+  "byteIdenticalToRepo": true,
+  "references": "no bundled references"
+ },
+ "update": {
+  "command": "npx skills update -p -y (also tried: update <slug> -p -y, bare update)",
+  "restoredDrift": false,
+  "observed": "CLI reported 'All project skills are up to date'; drifted SKILL.md hash unchanged; re-running npx skills add restored a byte-identical package (verified on landing-copy)"
+ },
+ "removal": {
+  "command": "npx skills remove deploy-check -y",
+  "clean": true,
+  "lockfile": {
+   "version": 1,
+   "skills": {}
+  },
+  "emptyDirLeft": ".claude/skills/ (empty)"
+ },
+ "invalidRunsReplaced": [
+  "explicit-3-harnesscrash"
+ ],
+ "registeredSkillsInRuns": [
+  "deploy-check",
+  "deep-research",
+  "design",
+  "design-sync",
+  "dataviz",
+  "update-config",
+  "verify",
+  "debug",
+  "code-review",
+  "simplify",
+  "batch",
+  "fewer-permission-prompts",
+  "doctor",
+  "loop",
+  "schedule",
+  "claude-api",
+  "workflow-authoring",
+  "run",
+  "run-skill-generator",
+  "plugin-authoring"
+ ],
+ "claudeVersion": "2.1.295",
+ "model": "claude-opus-5-5",
+ "totalRunCostUsd": 2.9
+}

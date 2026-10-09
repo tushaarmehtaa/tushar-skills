@@ -1,0 +1,142 @@
+{
+ "skill": "landing-copy",
+ "discovery": {
+  "total": "15/15",
+  "byPhrasing": {
+   "p1-landing-copy": {
+    "prompt": "Rewrite the landing page copy in landing.md using what's in notes/. Reply with the copy, don't write files.",
+    "fired": 5,
+    "runs": 5
+   },
+   "p2-positioning": {
+    "prompt": "Our homepage messaging is weak. Rework the positioning and hero for Handover using notes/. Reply only, no files.",
+    "fired": 5,
+    "runs": 5
+   },
+   "p3-no-keywords": {
+    "prompt": "Visitors from our vet newsletter leave without starting a trial. Using notes/, work out what we should be telling them instead. Reply only, no files.",
+    "fired": 5,
+    "runs": 5
+   }
+  },
+  "mechanism": "Skill tool_use in stream-json, confirmed in Claude Code session log; runs stopped once the call was observed"
+ },
+ "explicit": {
+  "total": "5/5",
+  "mechanism": "slash-command expansion: session log shows <command-name>/landing-copy</command-name> and 'Base directory for this skill: <fixture>/.claude/skills/landing-copy'"
+ },
+ "workflowQuality": {
+  "with": {
+   "n": 3,
+   "scores": [
+    0.867,
+    0.8,
+    0.8
+   ],
+   "mean": 0.822
+  },
+  "without": {
+   "n": 3,
+   "scores": [
+    0.733,
+    0.733,
+    0.733
+   ],
+   "mean": 0.733
+  },
+  "delta": 0.089,
+  "perCriterion": {
+   "L1": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "L2": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "L3": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "L4": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "L5": {
+    "with": "0/3",
+    "without": "0/3"
+   },
+   "L6": {
+    "with": "3/3",
+    "without": "0/3"
+   },
+   "L7": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "L8": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "L9": {
+    "with": "1/3",
+    "without": "0/3"
+   },
+   "L10": {
+    "with": "3/3",
+    "without": "3/3"
+   },
+   "L11": {
+    "with": "3/3",
+    "without": "3/3"
+   }
+  }
+ },
+ "install": {
+  "command": "npx skills add tushaarmehtaa/tushar-skills --skill landing-copy -a claude-code -y",
+  "scope": "project (./.claude/skills/landing-copy)",
+  "skillMdSha256": "23d171d39c855c28cd341c55c8dd0c1024f716a79cd588c7f44340126f1bc269",
+  "byteIdenticalToRepo": true,
+  "references": "both bundled references (references/claim-first.md, references/guide.md) byte-identical"
+ },
+ "update": {
+  "command": "npx skills update -p -y (also tried: update <slug> -p -y, bare update)",
+  "restoredDrift": false,
+  "observed": "CLI reported 'All project skills are up to date'; drifted SKILL.md hash unchanged; re-running npx skills add restored a byte-identical package (verified on landing-copy)"
+ },
+ "removal": {
+  "command": "npx skills remove landing-copy -y",
+  "clean": true,
+  "lockfile": {
+   "version": 1,
+   "skills": {}
+  },
+  "emptyDirLeft": ".claude/skills/ (empty)"
+ },
+ "invalidRunsReplaced": [],
+ "registeredSkillsInRuns": [
+  "landing-copy",
+  "deep-research",
+  "design",
+  "design-sync",
+  "dataviz",
+  "update-config",
+  "verify",
+  "debug",
+  "code-review",
+  "simplify",
+  "batch",
+  "fewer-permission-prompts",
+  "doctor",
+  "loop",
+  "schedule",
+  "claude-api",
+  "workflow-authoring",
+  "run",
+  "run-skill-generator",
+  "plugin-authoring"
+ ],
+ "claudeVersion": "2.1.295",
+ "model": "claude-opus-5-5",
+ "totalRunCostUsd": 1.96
+}

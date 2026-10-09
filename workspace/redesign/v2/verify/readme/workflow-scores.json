@@ -1,0 +1,53 @@
+{
+  "with": {
+    "scores": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0
+  },
+  "without": {
+    "scores": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0
+  },
+  "delta": 0.0,
+  "perCriterion": {
+    "install-accurate": {
+      "with": 3,
+      "without": 3
+    },
+    "usage-accurate": {
+      "with": 3,
+      "without": 3
+    },
+    "observable-result": {
+      "with": 3,
+      "without": 3
+    },
+    "no-unsubstantiated-claims": {
+      "with": 3,
+      "without": 3
+    },
+    "license-honest": {
+      "with": 3,
+      "without": 3
+    },
+    "clean-install-executed": {
+      "with": 3,
+      "without": 3
+    },
+    "tests-executed": {
+      "with": 3,
+      "without": 3
+    },
+    "report-contract": {
+      "with": 3,
+      "without": 3
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "with": {
+    "scores": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0
+  },
+  "without": {
+    "scores": [
+      0.875,
+      0.875,
+      0.875
+    ],
+    "mean": 0.875
+  },
+  "delta": 0.125,
+  "perCriterion": {
+    "trusted-user-key": {
+      "with": 3,
+      "without": 3
+    },
+    "anon-ip-trust": {
+      "with": 3,
+      "without": 1
+    },
+    "namespaced-policies": {
+      "with": 3,
+      "without": 3
+    },
+    "429-headers": {
+      "with": 3,
+      "without": 3
+    },
+    "outage-behavior": {
+      "with": 3,
+      "without": 2
+    },
+    "tests-pass": {
+      "with": 3,
+      "without": 3
+    },
+    "repo-checks-run": {
+      "with": 3,
+      "without": 3
+    },
+    "report-contract": {
+      "with": 3,
+      "without": 3
+    }
+  }
+}
