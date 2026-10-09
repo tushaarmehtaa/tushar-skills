@@ -67,7 +67,7 @@ export function SkillDetail({
           </div>
           <blockquote className="skill-why">
             <p>{profile.why}</p>
-            <footer>Tushar, on why this skill exists</footer>
+            <footer>The thinking behind it</footer>
           </blockquote>
           <InstallBox slug={skill.slug} support={skill.support} />
         </div>
