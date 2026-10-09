@@ -1,7 +1,5 @@
 @import "tailwindcss";
-@import "./canvas.css";
-@import "./visual-direction.css";
-@import "./library.css";
+@import "./site.css";
 
 @theme {
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -70,36 +68,12 @@ body {
 }
 
 .animate-fade-up { animation: none; }
-.animate-fade-in { animation: none; }
 
 /* ═══════ TYPE PRIMITIVES ═══════ */
 
-.terminal-heading {
-  font-family: var(--font-sans);
-  letter-spacing: -0.02em;
-  text-transform: none;
-}
-
-.terminal-caption {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  letter-spacing: 0;
-  color: var(--color-muted);
-}
-
 /* ═══════ PANEL ═══════ */
 
-.terminal-panel {
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: var(--color-surface);
-}
-
 /* ═══════ TABLE HEADER RULE ═══════ */
-
-.terminal-rule {
-  border-top: 1px solid var(--color-border);
-}
 
 /* ═══════ INSTALL BOX ═══════ */
 
@@ -113,19 +87,6 @@ body {
 
 /* ═══════ SKILL ROW ═══════ */
 
-.skill-row {
-  border-radius: 3px;
-  transition: background-color 130ms ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .skill-row:hover { background-color: var(--color-surface-raised); }
-}
-
-.skill-row:hover .skill-row-command {
-  color: var(--color-accent);
-}
-
 /* ═══════ COPY BUTTON ═══════ */
 
 @keyframes copy-pulse {
@@ -138,17 +99,7 @@ body {
 
 /* ═══════ DIVIDER ═══════ */
 
-.divider {
-  height: 1px;
-  background: var(--color-border);
-}
-
 /* ═══════ SKILL COUNT ═══════ */
-
-.skill-count {
-  color: var(--color-accent);
-  font-weight: 600;
-}
 
 /* ═══════ TAG ═══════ */
 
@@ -162,14 +113,6 @@ body {
 }
 
 /* ═══════ BACK LINK ═══════ */
-
-.back-link {
-  transition: color 130ms ease-out, transform 130ms ease-out;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .back-link:hover { transform: translateX(-3px); }
-}
 
 /* ═══════ PROSE ═══════ */
 
@@ -269,10 +212,6 @@ body {
 }
 
 button, a { -webkit-tap-highlight-color: transparent; }
-
-@media (max-width: 640px) {
-  .terminal-heading { letter-spacing: -0.01em; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

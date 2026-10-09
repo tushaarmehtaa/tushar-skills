@@ -61,7 +61,7 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
   - [x] tablet duplicate category controls gone
   - [x] CHANGELOG and /changelog brought up to date (five missing releases, 10 Sep to 9 Oct, including guides leaving the homepage). The "30 skills" lines are historical and correct for their dates
   - [ ] skills.sh still lists 64 skills including retired names
-  - [ ] CSS still in three layers (globals, canvas, visual-direction) plus library.css
+  - [x] CSS consolidated: 453 dead rules removed, canvas/visual-direction/library merged into site.css (globals.css keeps tokens and base). 4 files, ~2,750 lines became 2 files, 1,433 lines; pixel-identical on 21 page states
 
 ### Definition of done
 - [x] Zero placeholder visuals
@@ -71,7 +71,7 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 - [x] No horizontal overflow 320–1440 on core pages (tested)
 - [ ] ≥15 skills fully verified in Claude Code (21 single real runs done; full verification method not yet run)
 - [ ] Lighthouse mobile ≥95 performance and accessibility
-- [ ] One CSS file
+- [x] One site stylesheet (site.css) plus globals.css for tokens and base
 - [x] Tests green (31 browser, 21 unit), validation and production build pass
 - [ ] skills.sh retired names cleared
 
