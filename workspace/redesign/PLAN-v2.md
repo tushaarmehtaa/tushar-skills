@@ -97,3 +97,20 @@ Tushar's feedback: the run logs, verification rows and verbatim dumps were too m
 - [x] Cut from pages: run log, caveats, "From the reply, word for word", raw code/CSV, Tested in / Full verification / Updated / Package facts, "Use it when". Verified badge by the title only for verified skills
 - [x] "What you get back" averages 97 words (was 300–400); no overflow at 320px on any of the 34 skill pages; 31 browser + 21 unit tests pass
 - Audit trail (excerpts, before/after, run metadata) stays in site/lib/skill-proof.json and workspace/redesign/v2/proof/
+
+## v4 · 10 Oct: hero and image-editing (live, main 7a48d7c)
+Tushar's feedback: "Great work", not "Good work", on one line; the subheadline was mellow; use GitHub stars and skills.sh installs well; anyone landing should instantly get what the skills do. Paper: "v4 · Hero · Desktop" and "v4 · Hero · Mobile".
+- [x] Headline "Great work starts with a useful skill." on one line from 640px up, two lines on phones; OG image updated
+- [x] Subheadline: "34 skills that turn Claude Code, Codex or Cursor into a product team. Spec the idea, wire auth and payments, block the bad deploy, write the launch."
+- [x] Three real results in the hero (deploy-check BLOCKED, performance-diagnosis 788 → 404 ms, humanize cut clichés), each linking to its skill; sideways scroll on phones, a row of three on tablets, stacked beside the install on desktop
+- [x] Header: installs stay; "Open source on GitHub" replaces the 12-star count until stars reach 100
+- [x] image-editing real run: one OpenAI image edit (banner attached as reference), every word exact on independent check; an earlier run recolored pixels without the API to guarantee exact text. Key from Tushar's tweetbuzz repo, used for these runs only and deleted after. All 34 skills now show a real run
+- [x] Result labels by what the skill did: made, changed, built, found
+- [x] First skill row stays on the first screen at 390, 768 and 1440px; no overflow at 320px on any page; 31 browser + 21 unit tests pass; CI green
+
+### Still open
+- [ ] deploy-check printed a fake secret in 2 of 3 verification runs; tightening its SKILL.md rule needs Tushar's OK, then re-verify
+- [ ] Re-verify landing-copy (skipped its evidence table) and readme (fixture showed no lift)
+- [~] skills.sh retired names: contained on the site, removal needs Tushar to contact skills.sh
+- [ ] Paper still shows v2/v3 frames as designed, not the final shipped skill pages
+- [~] Voice-line review page: 34 lines seeded, no edits from Tushar yet
