@@ -90,3 +90,10 @@ Legend: [x] done and checked · [~] partly done · [ ] not started
 - [x] Real runs for the remaining 12 skills (code skills on the Tallyroom fixture with test keys, caveats say what was not exercised); 33 of 34 skills now show a real run with a before/after. image-editing stays contract-only (needs an image-model key)
 - [x] Full verification (changelog method): remove-ai-slop and rate-limit verified and recorded; deploy-check (printed a fake secret 2/3), landing-copy (skipped its evidence table), readme (fixture showed no lift) stay unverified. Report: workspace/redesign/v2/verification-2026-10-10.md
 - [x] Merge redesign-v2 into main (fast-forward, approved by Tushar)
+
+## v3 · 10 Oct: less information, designed results (live, main af84ddf)
+Tushar's feedback: the run logs, verification rows and verbatim dumps were too much for visitors, and "What you get back" was a pile of text outside remove-ai-slop.
+- [x] Skill pages show "you asked → what you got": one designed card per skill (verdict, findings with bars or stats, built, rewrite, screenshots) from site/lib/skill-results.json; every number traced to the run (Paper: "v3 · Result cards")
+- [x] Cut from pages: run log, caveats, "From the reply, word for word", raw code/CSV, Tested in / Full verification / Updated / Package facts, "Use it when". Verified badge by the title only for verified skills
+- [x] "What you get back" averages 97 words (was 300–400); no overflow at 320px on any of the 34 skill pages; 31 browser + 21 unit tests pass
+- Audit trail (excerpts, before/after, run metadata) stays in site/lib/skill-proof.json and workspace/redesign/v2/proof/
