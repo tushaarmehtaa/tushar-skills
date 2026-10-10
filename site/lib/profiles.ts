@@ -62,6 +62,8 @@ export interface SkillResult {
   ask: string;
   type: "findings" | "verdict" | "built" | "rewrite" | "screenshots";
   headline: string;
+  /** Overrides the label above the headline when the type's default doesn't fit. */
+  eyebrow?: string;
   bars?: { label: string; rows: { label: string; value: number; display: string; tone?: Tone }[] };
   stats?: { value: string; label: string }[];
   notes?: { tone: Tone; title: string; text: string }[];

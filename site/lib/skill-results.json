@@ -921,6 +921,7 @@
   "image-editing": {
     "ask": "Put our launch banner on a laptop screen on a wooden desk for the launch tweet. Every word and number has to stay exactly as it is.",
     "type": "screenshots",
+    "eyebrow": "What it made",
     "headline": "One OpenAI image edit. Every word and number on the banner came through exact.",
     "chips": [
       "Banner attached, not described",

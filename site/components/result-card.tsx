@@ -1,5 +1,13 @@
 import type { SkillResult } from "@/lib/profiles";
 
+const EYEBROW: Record<SkillResult["type"], string> = {
+  findings: "What it found",
+  verdict: "What it found",
+  built: "What it built",
+  rewrite: "What it found",
+  screenshots: "What it changed",
+};
+
 /** "You asked → what you got", designed for the kind of result a skill produces. */
 export function ResultCard({
   slug,
@@ -58,7 +66,7 @@ export function ResultCard({
             </div>
           ) : (
             <div>
-              <span className="result-eyebrow">{result.type === "built" ? "What it built" : "What it found"}</span>
+              <span className="result-eyebrow">{result.eyebrow ?? EYEBROW[result.type]}</span>
               <p className="result-headline">{result.headline}</p>
             </div>
           )}
