@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
               fontWeight: 500,
             }}
           >
-            {skill || "Good work starts with a useful skill."}
+            {skill || "Great work starts with a useful skill."}
           </div>
           <div style={{ fontSize: 21, lineHeight: 1.5, color: "#60646C" }}>
             {(

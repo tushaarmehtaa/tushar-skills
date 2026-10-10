@@ -478,7 +478,7 @@
       "next": "demo-video",
       "outputContract": "Return the image files, the model identity if exposed, which changes passed inspection, and specific unresolved defects. For a revision chain, identify the chosen base and final output. Do not claim measured fidelity, superiority, or cross-runtime compatibility without an actual recorded test.",
       "outputSource": "Deliver",
-      "proofTier": "contract",
+      "proofTier": "run",
       "checks": [
         "Each requested change and preserved detail checked separately",
         "Exact copy checked with OCR and visual inspection",

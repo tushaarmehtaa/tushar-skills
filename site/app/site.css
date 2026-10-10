@@ -672,6 +672,8 @@ main#main-content {
 }
 .nav-proof a { min-height: 44px; display: inline-flex; align-items: center; gap: 4px; }
 .nav-proof b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.nav-stars::before { content: "★ "; }
+.nav-stars:empty { display: none; }
 .primary-navigation { order: 2; }
 .menu-toggle { order: 4; }
 @media (min-width: 1024px) {
@@ -718,27 +720,72 @@ main#main-content {
 .command-prose { font: 14px/22px var(--font-sans); }
 .command-prose .command-text > span { white-space: normal; }
 
-/* Hero */
+/* Hero: the headline runs the full width, the install sits left, three real runs sit right. */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: 64px;
-  align-items: end;
+  grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+  gap: 32px 64px;
+  align-items: start;
   padding: 56px 0 40px;
 }
 .hero h1 {
-  font-size: clamp(44px, 4.4vw, 62px);
-  line-height: 1.03;
+  grid-column: 1 / -1;
+  font-size: min(76px, calc((min(100vw, 1440px) - 96px) / 15.8));
+  line-height: 1.05;
   font-weight: 600;
   letter-spacing: -0.05em;
   color: var(--color-heading);
-  text-wrap: balance;
+  white-space: nowrap;
 }
-.hero-line { display: block; white-space: nowrap; }
+.hero-line { display: inline; }
 .hero h1 em { font-style: normal; color: var(--color-accent); }
-.hero-side { display: grid; gap: 16px; max-width: 580px; justify-self: end; width: 100%; }
-.hero-side > p:first-child { font-size: 17px; line-height: 27px; }
+.hero-side { display: grid; gap: 18px; }
+.hero-side > p:first-child { font-size: 20px; line-height: 30px; color: var(--color-heading); letter-spacing: -0.01em; }
 .hero-hint { font-size: 13px; line-height: 18px; }
+.hero-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.hero-result {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  transition: border-color 150ms ease;
+}
+.hero-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font: 700 12px/1 var(--font-mono);
+  white-space: nowrap;
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+}
+.hero-badge[data-tone="bad"] { color: #b3402a; background: #f6e3dd; letter-spacing: 0.06em; }
+.hero-badge[data-tone="cut"] { font-weight: 400; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); }
+.hero-result-text { display: grid; gap: 3px; min-width: 0; }
+.hero-result-text strong { font-size: 16px; line-height: 22px; font-weight: 600; color: var(--color-heading); }
+.hero-result-text span { font-size: 14px; line-height: 20px; }
+.hero-result-skill { font: 13px/1 var(--font-mono); color: var(--color-accent); white-space: nowrap; }
+@media (hover: hover) and (pointer: fine) {
+  .hero-result:hover { border-color: var(--color-border-hover); }
+}
+/* Below 1280px the runs need the full width, so the hero stacks. */
+@media (max-width: 1279px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .hero-side { max-width: 760px; }
+  .hero-results { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hero-result { height: 100%; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px; padding: 14px 16px; }
+  .hero-badge { justify-self: start; height: 26px; }
+  .hero-result-text strong { font-size: 15px; line-height: 21px; }
+  .hero-result-text span { display: none; }
+  .hero-result-skill { font-size: 12px; }
+}
 
 /* Filter bar */
 .filter-bar {
@@ -924,8 +971,8 @@ main#main-content {
 
 /* Tablet */
 @media (max-width: 1023px) {
-  .hero { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 36px 0 28px; }
-  .hero-side { justify-self: start; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 36px 0 28px; }
+  .hero-side { max-width: 640px; }
   .filter-bar { flex-direction: column-reverse; align-items: stretch; gap: 12px; }
   .search { width: 100%; }
   .group-tabs { overflow-x: auto; scrollbar-width: none; margin-inline: -48px; padding-inline: 48px; }
@@ -942,8 +989,28 @@ main#main-content {
 /* Phone */
 @media (max-width: 639px) {
   .hero { padding: 24px 0 20px; gap: 14px; }
-  .hero h1 { font-size: min(56px, calc((100vw - 40px) / 7.7)); line-height: 1.02; letter-spacing: -0.055em; }
+  .hero h1 { font-size: min(56px, calc((100vw - 40px) / 8.1)); line-height: 1.02; letter-spacing: -0.055em; }
+  .hero-line { display: block; }
   .hero-side > p:first-child { font-size: 15px; line-height: 22px; }
+  /* Phones: the runs scroll sideways so the first skill still lands on the first screen. */
+  .hero-results {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: -20px;
+    padding-inline: 20px;
+    scroll-padding-inline: 20px;
+  }
+  .hero-results::-webkit-scrollbar { display: none; }
+  .hero-results li { flex: 0 0 82%; scroll-snap-align: start; }
+  .hero-result { height: 100%; grid-template-columns: auto minmax(0, 1fr); gap: 8px 12px; padding: 12px 14px; align-content: start; }
+  .hero-badge { height: 24px; font-size: 11px; justify-self: start; }
+  .hero-result-skill { justify-self: end; font-size: 12px; }
+  .hero-result-text { grid-column: 1 / -1; grid-row: 2; }
+  .hero-result-text strong { font-size: 15px; line-height: 21px; }
+  .hero-result-text span { display: none; }
   .hero-hint { display: none; }
   .command { font-size: 12.5px; line-height: 19px; padding-left: 14px; gap: 10px; }
   .command-copy span { display: none; }
@@ -1224,6 +1291,7 @@ main#main-content {
 .shots figcaption.strong { color: var(--color-heading); font-weight: 500; }
 .shots.phone { grid-template-columns: repeat(2, minmax(0, 240px)); }
 .shots.phone img { aspect-ratio: 390 / 844; }
+.shots.wide img { aspect-ratio: 16 / 9; object-position: center; }
 .still { margin: 0; }
 .still img { display: block; width: 100%; height: auto; border: 1px solid var(--color-border); border-radius: 8px; }
 

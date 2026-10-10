@@ -28,6 +28,14 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-10-10",
+    entries: [
+      { type: "site", text: "all 34 skill pages now show a real run as a result card: what you asked, and what came back" },
+      { type: "update", text: "image-editing ran for real: one OpenAI image edit put a launch banner on a laptop, and every word came through exact" },
+      { type: "site", text: "new homepage hero with three real results: a blocked deploy, a 788 → 404 ms first paint, and a launch post without the press-release voice" },
+    ],
+  },
+  {
     date: "2026-10-09",
     entries: [
       { type: "site", text: "rebuilt the library around skill names: every row and page leads with its /name, grouped into shape, build, ship and grow" },

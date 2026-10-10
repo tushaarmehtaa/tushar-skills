@@ -1202,5 +1202,45 @@
       }
     },
     "still": "/proof/demo-video/frame.jpg"
+  },
+  "image-editing": {
+    "request": "For our launch tweet I want a photo of this banner (banner.png) showing on a laptop screen on a wooden desk, natural light, slightly angled. Every word and number on the banner has to stay exactly as it is. Use OpenAI's image model for this; the key is set as OPENAI_API_KEY in the environment. Save it as banner-laptop.png.",
+    "summary": "Put the Tallyroom launch banner on a laptop in a desk photo with one OpenAI image edit, then checked every word and number against the original.",
+    "excerpt": [
+      "I zoomed into the screen and compared it line by line with banner.png. Every word and number matches.",
+      "Model: gpt-image-2.5-sunburst, using OpenAI's image edit endpoint with your banner attached.",
+      "A book on the right edge has made-up text on it (\"The Daily\"). The keyboard letters are blurry and not real characters.",
+      "There was no OCR tool installed, so this was a visual check only. That's my review; you should still look it over yourself before posting."
+    ],
+    "images": {
+      "before": "/proof/image-editing/before.jpg",
+      "after": "/proof/image-editing/after.jpg",
+      "caption": "Tallyroom launch banner, then the same banner on a laptop after one image edit.",
+      "wide": true,
+      "alt": {
+        "before": "Tallyroom launch banner: Tallyroom 2.0 is live, with an expense card",
+        "after": "The same Tallyroom banner on a laptop screen on a wooden desk, every word unchanged"
+      }
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.296",
+      "date": "2026-10-10",
+      "durationSec": 97,
+      "triggered": "auto",
+      "filesChanged": 2
+    },
+    "caveat": "The text check was visual. No OCR tool was installed.",
+    "pair": {
+      "kind": "screenshots",
+      "before": {
+        "label": "Your banner",
+        "image": "/proof/image-editing/before.jpg"
+      },
+      "after": {
+        "label": "After /image-editing",
+        "image": "/proof/image-editing/after.jpg"
+      }
+    }
   }
 }

@@ -50,10 +50,9 @@ export function HeaderNav({ installs, stars }: { installs: string | null; stars:
             href="https://github.com/tushaarmehtaa/tushar-skills"
             target="_blank"
             rel="noopener noreferrer"
-            title="Stars on GitHub"
           >
-            ★ <b>{stars}</b>
-            <span className="nav-proof-long"> on GitHub</span>
+            <span className="nav-proof-long">Open source on </span>GitHub
+            <b className="nav-stars">{stars}</b>
           </a>
         </div>
         <button

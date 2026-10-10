@@ -9,10 +9,11 @@ export function ResultCard({
 }: {
   slug: string;
   result: SkillResult;
-  images?: { before: string; after: string };
+  images?: { before: string; after: string; wide?: boolean; alt?: { before: string; after: string } };
   still?: string;
 }) {
   const phone = images?.before.includes("-mobile");
+  const [w, h] = phone ? [600, 1298] : images?.wide ? [1200, 675] : [1200, 833];
   return (
     <div className="result">
       <p className="ask">
@@ -63,15 +64,15 @@ export function ResultCard({
           )}
 
           {result.type === "screenshots" && images && (
-            <figure className={phone ? "shots phone" : "shots"}>
+            <figure className={phone ? "shots phone" : images.wide ? "shots wide" : "shots"}>
               <div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={images.before} alt={`Sample project before /${slug}`} width={phone ? 600 : 1200} height={phone ? 1298 : 833} loading="lazy" />
+                <img src={images.before} alt={images.alt?.before ?? `Sample project before /${slug}`} width={w} height={h} loading="lazy" />
                 <figcaption>Before</figcaption>
               </div>
               <div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={images.after} alt={`Sample project after one /${slug} run`} width={phone ? 600 : 1200} height={phone ? 1298 : 833} loading="lazy" />
+                <img src={images.after} alt={images.alt?.after ?? `Sample project after one /${slug} run`} width={w} height={h} loading="lazy" />
                 <figcaption className="strong">After</figcaption>
               </div>
             </figure>

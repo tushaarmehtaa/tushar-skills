@@ -10,7 +10,7 @@ test.describe("slashskills platform", () => {
   test("keeps core pages within the mobile viewport", async ({ page }) => {
     await page.goto("/");
     await expectNoDocumentOverflow(page);
-    await expect(page.getByRole("heading", { name: "Good work starts with a useful skill." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Great work starts with a useful skill." })).toBeVisible();
 
     await page.goto("/cold-outreach");
     await expectNoDocumentOverflow(page);
@@ -73,17 +73,13 @@ test.describe("slashskills platform", () => {
     }
   });
 
-  test("falls back to the output contract when there is no sample run", async ({ page }) => {
+  test("shows image-editing's real run as a before and after", async ({ page }) => {
     await page.goto("/image-editing");
     await expectNoDocumentOverflow(page);
     const output = page.getByRole("region", { name: "What you get back" });
-    await expect(output.getByText(/^From the skill's .+ section$/)).toBeVisible();
-    await expect(output.locator(".contract")).not.toBeEmpty();
-    await expect(
-      output.getByText("No sample run here. This skill works against your own accounts or keys, so it runs on your project, not ours."),
-    ).toBeVisible();
-    await expect(output.getByText("From a real run on a sample project")).toHaveCount(0);
-    await expect(output.getByRole("img")).toHaveCount(0);
+    await expect(output.getByText("From a real run on a sample project")).toBeVisible();
+    await expect(output.getByRole("img")).toHaveCount(2);
+    await expect(output.getByText("Banner attached, not described")).toBeVisible();
   });
 
   test("renders the new skill packages without mobile overflow", async ({ page }) => {

@@ -38,7 +38,7 @@ export interface SkillProof {
   summary: string;
   excerpt: string[];
   table?: { head: string[]; rows: string[][] };
-  images?: { before: string; after: string; caption: string };
+  images?: { before: string; after: string; caption: string; wide?: boolean; alt?: { before: string; after: string } };
   pair?: {
     kind: "screenshots" | "text" | "code" | "data";
     before: ProofSide;
