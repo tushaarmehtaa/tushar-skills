@@ -777,8 +777,9 @@ main#main-content {
 }
 /* Below 1280px the runs need the full width, so the hero stacks. */
 @media (max-width: 1279px) {
-  .hero { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .hero-side { max-width: 760px; }
+  .hero-hint { display: none; }
   .hero-results { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .hero-result { height: 100%; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px; padding: 14px 16px; }
   .hero-badge { justify-self: start; height: 26px; }
