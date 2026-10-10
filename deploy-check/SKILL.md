@@ -13,7 +13,7 @@ Assess release readiness without deploying or pushing unless the user separately
 1. Detect repository root, workspaces, package managers, CI config, deploy target, release branch/base, and current worktree state. Do not assume `origin/main` exists.
 2. Determine release scope from the merge base or deployment range. Include committed, staged, unstaged, and untracked files as separate categories. Never overwrite or discard user changes.
 3. Run the project’s existing verification commands in the same order/configuration as CI where feasible: formatting/lint, type checks, unit/integration tests, build, and relevant smoke tests. Do not use `npx` to download an undeclared checker when the project already defines scripts or lockfiles.
-4. Scan staged content and release diff for likely credentials, private keys, tokens, connection strings, and accidentally tracked environment files. Filename matching alone is insufficient. Do not print discovered secret values.
+4. Scan staged content and release diff for likely credentials, private keys, tokens, connection strings, and accidentally tracked environment files. Filename matching alone is insufficient. Never print a discovered secret value, even one that looks fake, test-mode, placeholder, or already exposed. Name the file, line, variable, and key type, and show at most the key prefix (for example `sk_test_…`). Redact values in quoted code, command output, and build-artifact excerpts too.
 5. Review dependency and lockfile changes, runtime/engine changes, generated artifacts, and known deployment-platform constraints. Report what was inspected; do not imply a vulnerability audit unless one actually ran.
 6. Review migrations for target, ordering, backward compatibility, lock/rewrite risk, data backfill, expand-contract sequencing, and rollback/roll-forward plan. Never casually instruct the user to run a production migration before compatible code is deployed.
 7. Diff environment-variable references and deployment config. Classify each value as public/server-secret/build-time/runtime and mark production presence as verified only if the target environment was actually inspected.
@@ -29,4 +29,4 @@ Return one of:
 
 ## Output
 
-Report release base/head and scope, commands with exit status, blockers, warnings, migrations and rollout order, config/secrets findings without values, external confirmations, rollback/roll-forward notes, and the evidence behind the verdict. Never say “safe to push” solely because type checking passed.
+Report release base/head and scope, commands with exit status, blockers, warnings, migrations and rollout order, config/secrets findings without values, external confirmations, rollback/roll-forward notes, and the evidence behind the verdict. Always include a rollback section: how to return to the previous deploy, and which steps (migrations, data writes, sent messages) a code rollback does not undo. Never say “safe to push” solely because type checking passed.

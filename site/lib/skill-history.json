@@ -51,8 +51,8 @@
   },
   "deploy-check": {
     "added": "2026-03-01",
-    "updated": "2026-08-08",
-    "changes": 5
+    "updated": "2026-10-10",
+    "changes": 6
   },
   "email-with-resend": {
     "added": "2026-03-07",
