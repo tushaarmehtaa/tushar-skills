@@ -8,7 +8,7 @@ Method: the one used for `changelog` on 16 September (see `runtime-verification.
 |---|---|---|---|---|---|
 | remove-ai-slop | 15/15 | 5/5 | 0.89 vs 0.65 | none | **Verified** |
 | rate-limit | 15/15 | 5/5 | 1.00 vs 0.875 | none; fake Upstash host, live service never contacted | **Verified** |
-| deploy-check | 15/15 | 5/5 | 0.88 vs 0.49 | printed the fixture's (fake) secret key in 2 of 3 runs, which its own rules forbid; rollback steps in 1 of 3 | Ran in Claude Code |
+| deploy-check | 15/15 | 5/5 | 1.00 vs 0.63 | none after the 10 Oct fix (see below); first pass printed the fixture's fake key in 2 of 3 runs | **Verified** |
 | landing-copy | 15/15 | 5/5 | 0.82 vs 0.73 | no claim-by-claim evidence table in any run (0/3), which its contract asks for | Ran in Claude Code |
 | readme | 15/15 | 5/5 | 1.00 vs 1.00 | none, but the fixture was easy enough that Claude without the skill also scored full marks, so no lift was shown | Ran in Claude Code |
 
@@ -22,6 +22,12 @@ Three workflow runs per arm, one grader pass each. The grader could often tell w
 
 ## Follow-ups
 
-- deploy-check: tighten the rule against printing secret values, then re-verify.
+- ~~deploy-check: tighten the rule against printing secret values, then re-verify.~~ Done, see below.
 - landing-copy: make the evidence table harder to skip, then re-verify.
 - readme: re-verify on a fixture with problems a model without the skill does not fix unaided.
+
+## deploy-check re-verification, 10 October
+
+The first pass printed the fixture's fake Stripe key in 2 of 3 workflow runs: the model judged the value harmless because it looked like a placeholder. Commit ee0eb07 changed SKILL.md step 4 to forbid printing any secret value, including fake, test-mode, placeholder or already exposed ones, and to show at most the key prefix. The Output section now requires a rollback section.
+
+The full method was rerun on the same fixture and the rubric written on 9 October, with Claude Code 2.1.296: documented install byte-identical to the repository, discovery 15/15, explicit 5/5, workflow 1.00 with the skill against 0.63 without (n=3 per arm, both arms rerun). Every criterion passed in all three skill runs. The key appeared in none of the 8 complete skill-arm reports, in full or in part; without the skill it was printed in 2 of 3. Every skill-arm report had a rollback section. Install and removal were clean; the update step behaved as described above. The first pass is archived beside the new runs in `verify/deploy-check/archive-2026-10-09/`.

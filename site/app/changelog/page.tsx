@@ -31,6 +31,7 @@ const RELEASES: Release[] = [
     date: "2026-10-10",
     entries: [
       { type: "site", text: "all 34 skill pages now show a real run as a result card: what you asked, and what came back" },
+      { type: "fix", text: "deploy-check no longer prints secret keys, even ones that look fake, and always says how to roll back; re-verified in Claude Code" },
       { type: "update", text: "image-editing ran for real: one OpenAI image edit put a launch banner on a laptop, and every word came through exact" },
       { type: "site", text: "new homepage hero with three real results: a blocked deploy, a 788 → 404 ms first paint, and a launch post without the press-release voice" },
     ],

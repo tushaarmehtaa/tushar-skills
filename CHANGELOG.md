@@ -8,6 +8,7 @@ All notable changes to tushar-skills.
 
 - rebuilt the site around skill names: every row and page leads with its /name, grouped into shape, build, ship and grow, with one taxonomy shared with skills.sh.json
 - added real Claude Code runs on sample projects for all 34 skills, each shown on its page as a result card; `image-editing` ran once against OpenAI's image edit endpoint and kept every word on the banner exact
+- `deploy-check` no longer prints secret values that look fake or test-only, and always includes a rollback section; re-verified in Claude Code (15/15 discovery, 5/5 explicit, 1.00 vs 0.63 without the skill)
 - rewrote the homepage hero: one-line headline, a subheadline that says what the skills do, and three real results linking to their skills; the header shows "Open source on GitHub" until stars pass 100
 - moved the install-all command into the homepage hero, added an inline installer that remembers the agent and copies a prompt, and moved guides off the homepage
 - added generated skill history and validation that keeps profiles, proof, skills.sh groupings and package directories in sync

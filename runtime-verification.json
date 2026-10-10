@@ -26,6 +26,15 @@
       "smokeTest": "Install via documented command with SKILL.md byte-identical to the repository and no relative references; automatic discovery 15/15 across three phrasings including one without the skill's keywords; explicit /rate-limit 5/5; workflow 1.00 with vs 0.88 without (delta +0.125, n=3 per arm, blind rubric grading); liveService not contacted (fake .invalid Upstash host, mocked client); npx skills update left a content-drifted copy unchanged and restored it only when the lockfile hash was also stale; removal emptied the lockfile and left no residue. The update step is recorded but not counted: npx skills update 1.7.2 leaves any edited copy unchanged for every skill, and re-running npx skills add restores it.",
       "verifiedBy": "workspace/redesign/v2/verification-2026-10-10.md",
       "result": "passed"
+    },
+    {
+      "skill": "deploy-check",
+      "runtime": "claude-code",
+      "verifiedAt": "2026-10-10",
+      "environment": "Claude Code 2.1.296 (model claude-opus-5-5), macOS 27.0 (darwin 27.0.0), npx skills 1.7.2, project-scope install at ./.claude/skills/deploy-check; headless claude -p --output-format stream-json --setting-sources project,local --allowedTools Bash,Read,Edit,Write,Glob,Grep,Skill,TodoWrite (WebFetch and WebSearch disallowed); session registered only built-in skills plus the skill under test",
+      "smokeTest": "Re-verified after the 10 Oct fix that forbids printing secret values even when they look fake and requires a rollback section. Install via documented command with SKILL.md byte-identical to the repository (sha256 e7f23332ab31); automatic discovery 15/15 across three phrasings including one without the skill's keywords; explicit /deploy-check 5/5; workflow 1.00 with vs 0.63 without (delta +0.37, n=3 per arm, blind grading against the rubric written 9 Oct). The fixture's fake Stripe key appeared in none of the 8 complete skill-arm reports, in full or in part (without the skill it was printed in 2 of 3); every report had a rollback section. Removal emptied the lockfile and left no residue. The update step is recorded but not counted: npx skills update 1.7.2 leaves any edited copy unchanged for every skill, and re-running npx skills add restores it. Nothing was pushed or deployed and the fixture's uncommitted changes survived every run.",
+      "verifiedBy": "workspace/redesign/v2/verification-2026-10-10.md",
+      "result": "passed"
     }
   ]
 }

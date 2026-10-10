@@ -109,7 +109,7 @@ Tushar's feedback: "Great work", not "Good work", on one line; the subheadline w
 - [x] First skill row stays on the first screen at 390, 768 and 1440px; no overflow at 320px on any page; 31 browser + 21 unit tests pass; CI green
 
 ### Still open
-- [ ] deploy-check printed a fake secret in 2 of 3 verification runs; tightening its SKILL.md rule needs Tushar's OK, then re-verify
+- [x] deploy-check fixed (ee0eb07: no secret values even when they look fake; rollback section required) and re-verified: 15/15, 5/5, 1.00 vs 0.63, no key in 8 of 8 reports. Now Verified
 - [ ] Re-verify landing-copy (skipped its evidence table) and readme (fixture showed no lift)
 - [~] skills.sh retired names: contained on the site, removal needs Tushar to contact skills.sh
 - [ ] Paper still shows v2/v3 frames as designed, not the final shipped skill pages
