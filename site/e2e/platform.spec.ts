@@ -63,7 +63,9 @@ test.describe("slashskills platform", () => {
     await expectNoDocumentOverflow(page);
     const output = page.getByRole("region", { name: "What you get back" });
     await expect(output.getByRole("heading", { name: "What you get back" })).toBeVisible();
-    await expect(output.getByText("Real run on a sample project", { exact: true })).toBeVisible();
+    await expect(output.getByText("From a real run on a sample project", { exact: true })).toBeVisible();
+    await expect(output.locator(".ask")).toBeVisible();
+    await expect(output.locator(".result-headline")).not.toBeEmpty();
     for (const name of ["Sample project before /remove-ai-slop", "Sample project after one /remove-ai-slop run"]) {
       const image = output.getByRole("img", { name });
       await image.scrollIntoViewIfNeeded();
@@ -80,7 +82,7 @@ test.describe("slashskills platform", () => {
     await expect(
       output.getByText("No sample run here. This skill works against your own accounts or keys, so it runs on your project, not ours."),
     ).toBeVisible();
-    await expect(output.getByText("Real run on a sample project")).toHaveCount(0);
+    await expect(output.getByText("From a real run on a sample project")).toHaveCount(0);
     await expect(output.getByRole("img")).toHaveCount(0);
   });
 

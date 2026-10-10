@@ -1,0 +1,921 @@
+{
+  "remove-ai-slop": {
+    "ask": "Our homepage looks and reads like every other AI-generated startup site. Strip out the generic stuff and apply the fixes.",
+    "type": "screenshots",
+    "headline": "The hype and gradients are gone. Every new line comes from facts in the repo.",
+    "chips": [
+      "Unbacked \"AI-driven\" claim cut",
+      "3 MB wireframe → real table"
+    ]
+  },
+  "interface-design": {
+    "ask": "Redesign the dashboard as the real home screen for a shared flat: who owes whom, what needs settling, recent activity.",
+    "type": "screenshots",
+    "headline": "It opens on what you owe and the one payment that clears it.",
+    "chips": [
+      "Fewest payments to settle up",
+      "Undo instead of confirm steps"
+    ]
+  },
+  "landing-page": {
+    "ask": "Rework our homepage so it actually convinces housemates to sign up. Right now it says nothing specific about the product.",
+    "type": "screenshots",
+    "headline": "It leads with who owes what in your flat and shows the real product.",
+    "chips": [
+      "Free for up to 4 housemates",
+      "No made-up testimonials or stats"
+    ]
+  },
+  "mobile-first": {
+    "ask": "On my phone the site scrolls sideways, the tables run off the screen and the buttons are tiny. Fix it without changing what the pages do.",
+    "type": "screenshots",
+    "headline": "The pricing page was 984px wide on a 320px phone. Now it fits.",
+    "chips": [
+      "Tables scroll in their own box",
+      "Edit/Delete: 20px → 44px"
+    ]
+  },
+  "social-sharing": {
+    "ask": "When I paste our links into WhatsApp or X there's no preview card, just a bare URL. Fix it for the home and pricing pages.",
+    "type": "built",
+    "headline": "Home and pricing now share as a large card with title, description and image.",
+    "groups": [
+      {
+        "title": "Home page",
+        "rows": [
+          {
+            "label": "Image",
+            "value": "1200×630, built in the brand gradient"
+          },
+          {
+            "label": "Canonical",
+            "value": "https://tallyroom.app"
+          }
+        ]
+      },
+      {
+        "title": "Pricing page",
+        "rows": [
+          {
+            "label": "Title",
+            "value": "Pricing · Tallyroom"
+          },
+          {
+            "label": "Description",
+            "value": "the real plans and prices"
+          },
+          {
+            "label": "Canonical",
+            "value": "https://tallyroom.app/pricing"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "All og:* and twitter:* tags set",
+      "Kept \"AI-driven\" off the cards",
+      "Build passes"
+    ]
+  },
+  "changelog": {
+    "ask": "Write up what we shipped this week for our users, something I can post on X.",
+    "type": "findings",
+    "headline": "A post you can use, with the commits that would make it untrue left out.",
+    "stats": [
+      {
+        "value": "271",
+        "label": "characters, ready for X"
+      },
+      {
+        "value": "8",
+        "label": "commits reviewed"
+      }
+    ],
+    "notes": [
+      {
+        "tone": "good",
+        "title": "In the post",
+        "text": "The new top nav, a first look at the product on the homepage, and the pricing FAQ."
+      },
+      {
+        "tone": "bad",
+        "title": "Left out",
+        "text": "The checkout buttons. They take no payment and put part of the Stripe key in a public URL."
+      },
+      {
+        "tone": "bad",
+        "title": "Also left out",
+        "text": "The currency FAQ answer. Nothing in the code handles currencies or exchange rates."
+      }
+    ]
+  },
+  "deploy-check": {
+    "ask": "I'm about to push this to production on Vercel tonight. Is it safe to ship? Don't deploy or push anything, just tell me.",
+    "type": "verdict",
+    "headline": "Don't ship this tonight.",
+    "verdict": {
+      "label": "BLOCKED",
+      "tone": "bad"
+    },
+    "reasons": [
+      {
+        "tone": "bad",
+        "title": "The Stripe secret key ships to the browser",
+        "text": "A client component imports lib/checkout.js, so the key's fallback value ends up in a public JavaScript file."
+      },
+      {
+        "tone": "bad",
+        "title": "Checkout doesn't take payment",
+        "text": "The pricing buttons point at a placeholder, so nobody can pay."
+      },
+      {
+        "tone": "good",
+        "title": "The build passes. Nothing was pushed or deployed."
+      }
+    ]
+  },
+  "performance-diagnosis": {
+    "ask": "Our homepage feels slow to load, especially on mobile. There's a blank pause before anything shows up. Figure out why.",
+    "type": "findings",
+    "headline": "A chat widget script freezes every page for 350ms before anything can draw.",
+    "bars": {
+      "label": "First content on screen, phone test",
+      "rows": [
+        {
+          "label": "Current site",
+          "value": 788,
+          "display": "788 ms",
+          "tone": "bad"
+        },
+        {
+          "label": "Hero image blocked",
+          "value": 768,
+          "display": "768 ms"
+        },
+        {
+          "label": "Widget script blocked",
+          "value": 404,
+          "display": "404 ms",
+          "tone": "good"
+        }
+      ]
+    },
+    "notes": [
+      {
+        "tone": "good",
+        "title": "The fix",
+        "text": "Load the widget with next/script and lazyOnload instead of a plain tag in <head>."
+      },
+      {
+        "tone": "open",
+        "title": "Second problem",
+        "text": "A 3.1 MB hero PNG takes most of the 16.7s full load on a slow connection."
+      }
+    ]
+  },
+  "search-ready": {
+    "ask": "We launch next week. Get the site ready so Google can find and index it properly, and fix whatever is missing in the code.",
+    "type": "findings",
+    "headline": "Titles, descriptions, sitemap and robots.txt were all missing. Now they're in.",
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Demo kept out",
+        "text": "/dashboard shows made-up data, so it's marked noindex rather than blocked in robots.txt."
+      },
+      {
+        "tone": "good",
+        "title": "Key leak closed",
+        "text": "Plan links carried the first 7 characters of the Stripe secret key into Google's copy. Removed."
+      },
+      {
+        "tone": "open",
+        "title": "Copy still vague",
+        "text": "The homepage doesn't say what Tallyroom does, which gives Google little to work with."
+      }
+    ]
+  },
+  "agent-instructions": {
+    "ask": "Set up instructions for the coding agents that work in this repo. We use both Claude Code and Codex.",
+    "type": "findings",
+    "headline": "One AGENTS.md for both tools, with CLAUDE.md importing it.",
+    "notes": [
+      {
+        "tone": "good",
+        "title": "One source",
+        "text": "CLAUDE.md is just @AGENTS.md, so Codex and Claude Code read the same text."
+      },
+      {
+        "tone": "good",
+        "title": "Commands checked",
+        "text": "npm test, npm run lint and the CLI example were all run before being written down."
+      },
+      {
+        "tone": "good",
+        "title": "Traps written down",
+        "text": "The 230 words-per-minute default lives in two files that have to change together."
+      }
+    ]
+  },
+  "decision-doc": {
+    "ask": "We have to pick how to do search. My messy notes are in search-notes.md. Write it up so Priya can make the call and the team can see why.",
+    "type": "findings",
+    "headline": "Build search on Postgres for now. Confidence: medium.",
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Why Postgres",
+        "text": "The only option that breaks no hard constraint. Meilisearch adds on-call, Algolia is over the $500 limit."
+      },
+      {
+        "tone": "open",
+        "title": "Could flip it",
+        "text": "Sort the 41 August search tickets. If typo complaints lead, Meilisearch becomes the better choice."
+      },
+      {
+        "tone": "open",
+        "title": "Missing estimate",
+        "text": "Sam's Meilisearch estimate is 2 weeks. Get a comparable Postgres estimate from Maya before Oct 20."
+      }
+    ]
+  },
+  "humanize": {
+    "ask": "This launch announcement reads like a press-release robot wrote it. Make it sound like a person on our team wrote it, and keep the facts.",
+    "type": "rewrite",
+    "headline": "Same facts, none of the press-release voice.",
+    "rewrite": {
+      "beforeTitle": "Your draft",
+      "before": "In today's fast-paced business landscape, small-business owners are constantly juggling countless responsibilities. That's why we're thrilled to announce Ledgerly Sync, a powerful, seamless, and cutting-edge solution designed to revolutionize the way you manage your books.",
+      "afterTitle": "After /humanize",
+      "after": "Today we're launching Ledgerly Sync. It connects your bank accounts, payment processors, and invoicing tools to Ledgerly, so you can see all of your finances in one place.",
+      "cut": [
+        "In today's fast-paced business landscape",
+        "thrilled to announce",
+        "powerful, seamless, and cutting-edge",
+        "revolutionize"
+      ]
+    }
+  },
+  "landing-copy": {
+    "ask": "Our landing page isn't converting and reads like every other SaaS site. Rewrite the copy from the real facts in product-notes.md. Don't invent numbers.",
+    "type": "rewrite",
+    "headline": "It says who it's for and what it does. Every claim comes from your notes.",
+    "rewrite": {
+      "beforeTitle": "Your hero",
+      "before": "Unlock the Power of Next-Generation Scheduling\n\nTidepool is an all-in-one AI-powered platform that streamlines your workflow and empowers your team to achieve more.",
+      "afterTitle": "After /landing-copy",
+      "after": "Stop spending Monday morning texting people to cover sick calls.\n\nTidepool is shift scheduling for independent veterinary clinics. It drafts your weekly rota from staff availability and your coverage rules, and when someone calls in sick, it texts eligible staff and fills the shift for you.",
+      "cut": [
+        "AI-powered",
+        "Enterprise-grade security",
+        "Join thousands of happy customers.",
+        "Contact us to learn more."
+      ],
+      "note": "Pricing now states the real terms: $6 per staff member per month, $60 minimum, 30-day trial with no card."
+    }
+  },
+  "product-spec": {
+    "ask": "Turn idea.md into something engineering can actually build from in the next 6 weeks. Make the calls you can and flag the ones you can't.",
+    "type": "findings",
+    "headline": "A 6-week shared folders plan, with every open call given an owner and a date.",
+    "notes": [
+      {
+        "tone": "good",
+        "title": "No lost edits",
+        "text": "A clashing save becomes a conflicted copy next to the original, so no edit is ever lost."
+      },
+      {
+        "tone": "good",
+        "title": "Not real-time",
+        "text": "Edits show up within about 30 seconds. Real-time editing waits until conflicts top 5% of saves."
+      },
+      {
+        "tone": "open",
+        "title": "Founder decides",
+        "text": "Who pays, by 10/23, and what deleting a shared folder does, by 10/30."
+      }
+    ]
+  },
+  "readme": {
+    "ask": "This repo has no README. Write one for it.",
+    "type": "findings",
+    "headline": "A README for mdtally where every example output comes from a real run.",
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Examples tested",
+        "text": "Both sample outputs were copied from real runs on test/sample.md."
+      },
+      {
+        "tone": "open",
+        "title": "Rough edges listed",
+        "text": "Unchecked --wpm, one bad file stopping the run and ignored unknown flags are named as limitations."
+      },
+      {
+        "tone": "open",
+        "title": "License gap",
+        "text": "package.json says MIT but there's no LICENSE file, and the README says so."
+      }
+    ]
+  },
+  "ui-copy": {
+    "ask": "People keep getting confused by our invite screen. The buttons, errors and empty state say nothing. Fix the wording so it says what actually happens.",
+    "type": "rewrite",
+    "headline": "Every message now says what happened and what to do next.",
+    "rewrite": {
+      "beforeTitle": "Seats error, before",
+      "before": "Oops! Something went wrong.",
+      "afterTitle": "After /ui-copy",
+      "after": "Not enough seats. You're inviting 5 people, but your plan has 3 seats left. No invites were sent. Remove some addresses or add seats to your plan.",
+      "cut": [
+        "Team Management",
+        "Success!",
+        "Error: Invalid input.",
+        "No data."
+      ],
+      "note": "\"Submit\" became \"Send 3 invites\", counting as you type."
+    }
+  },
+  "user-insights": {
+    "ask": "I talked to three users and exported our activation numbers. What should we fix first, and how sure can we be?",
+    "type": "findings",
+    "headline": "Fix the Apple Notes import date bug first.",
+    "bars": {
+      "label": "Still active in week 4",
+      "rows": [
+        {
+          "label": "Started blank",
+          "value": 33.0,
+          "display": "33.0%"
+        },
+        {
+          "label": "Imported Apple Notes",
+          "value": 19.5,
+          "display": "19.5%",
+          "tone": "bad"
+        }
+      ]
+    },
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Not noise",
+        "text": "The gap shows up in all four signup weeks."
+      },
+      {
+        "tone": "open",
+        "title": "Still open",
+        "text": "One interview predates the bug, so there may be a second cause."
+      }
+    ]
+  },
+  "fundraising": {
+    "ask": "We're thinking about raising a seed round starting in January. Here's our one-pager. Should we raise, and if so, what should the plan look like?",
+    "type": "findings",
+    "headline": "Hold off on the $2.5M seed in January. Test the bigger story, decide in March.",
+    "stats": [
+      {
+        "value": "~4.5 months",
+        "label": "of cash left on January 1"
+      },
+      {
+        "value": "~$4.75M",
+        "label": "a year if every US shop paid $99/month"
+      },
+      {
+        "value": "10% → 6%",
+        "label": "monthly growth, slowing"
+      }
+    ],
+    "notes": [
+      {
+        "tone": "good",
+        "title": "This month",
+        "text": "Ask your angels for a $250k–400k extension and raise the price for new customers."
+      },
+      {
+        "tone": "open",
+        "title": "Could change it",
+        "text": "If the $28k burn is before revenue, you're losing about $14k a month with about 15 months of runway."
+      }
+    ]
+  },
+  "product-experiments": {
+    "ask": "We ran the onboarding checklist test for two weeks. The PM wants to ship Monday because the numbers look up. Can we?",
+    "type": "findings",
+    "headline": "Don't ship Monday. The lift may come from users the test lost.",
+    "bars": {
+      "label": "Users per arm, meant to be 50/50",
+      "rows": [
+        {
+          "label": "Control",
+          "value": 10120,
+          "display": "10,120"
+        },
+        {
+          "label": "Checklist",
+          "value": 9480,
+          "display": "9,480",
+          "tone": "bad"
+        }
+      ]
+    },
+    "notes": [
+      {
+        "tone": "bad",
+        "title": "Fragile lift",
+        "text": "Up 2.0 points, but it disappears if 35 or fewer of the 640 missing users would have succeeded."
+      },
+      {
+        "tone": "bad",
+        "title": "Slower, not faster",
+        "text": "Median onboarding time went up by 36 seconds."
+      },
+      {
+        "tone": "open",
+        "title": "Fastest path",
+        "text": "Find the 640 users in the flag tool's assignment log and re-run. Days, not another two-week test."
+      }
+    ]
+  },
+  "skill-creator": {
+    "ask": "I do the workflow in workflow.md by hand every Friday. Package it so my coding agent can do it for me next time.",
+    "type": "findings",
+    "headline": "Your Friday release notes are now a skill, with 12 test prompts.",
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Past mistakes",
+        "text": "Each of the three mistakes you listed has its own rule and check."
+      },
+      {
+        "tone": "good",
+        "title": "No skipped weeks",
+        "text": "It starts from your latest notes file, not \"last friday\", so a skipped week doesn't drop PRs."
+      },
+      {
+        "tone": "good",
+        "title": "Never publishes",
+        "text": "It writes the notes file but never commits or publishes it, and asks before overwriting."
+      }
+    ]
+  },
+  "ai-cost-audit": {
+    "ask": "Finance says AI is eating our margin. Here's last month's usage. What are we spending per user, and what can we cut without making the product worse?",
+    "type": "findings",
+    "headline": "The free tier is eating the margin, not model choice.",
+    "stats": [
+      {
+        "value": "$13,819",
+        "label": "September AI spend"
+      },
+      {
+        "value": "56%",
+        "label": "of revenue"
+      },
+      {
+        "value": "76%",
+        "label": "spent on features free users get"
+      }
+    ],
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Invisible cuts",
+        "text": "Batching the weekly digest and skipping unchanged notes save about $1.1k–3.6k a month."
+      },
+      {
+        "tone": "open",
+        "title": "Caching idea",
+        "text": "The rerank prompt sizes don't add up. Measure the real prompt before planning that saving."
+      }
+    ]
+  },
+  "supabase": {
+    "ask": "Move our dashboard off hard-coded data onto Supabase, so people only ever see the flats they belong to. Don't push anything to the remote project yet.",
+    "type": "built",
+    "headline": "The dashboard reads real flats from Supabase, and you only see your own.",
+    "groups": [
+      {
+        "title": "Tables",
+        "rows": [
+          {
+            "label": "groups",
+            "value": "a flat; whoever creates it is owner"
+          },
+          {
+            "label": "group_members",
+            "value": "the people in it, account optional"
+          },
+          {
+            "label": "expenses, expense_shares",
+            "value": "who paid and who owes what"
+          }
+        ]
+      },
+      {
+        "title": "Who can do what",
+        "rows": [
+          {
+            "label": "Signed out",
+            "value": "nothing"
+          },
+          {
+            "label": "Member",
+            "value": "see and edit the flat's expenses"
+          },
+          {
+            "label": "Owner",
+            "value": "manage members, rename, delete"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "36 access-rule tests pass",
+      "Magic-link sign-in added",
+      "Nothing pushed to remote"
+    ]
+  },
+  "auth-implementation": {
+    "ask": "Anyone can open our dashboard right now. Add Clerk sign-in so only signed-in people reach it and checkout, and people only see their own groups.",
+    "type": "built",
+    "headline": "Signed-out visitors go to sign-in. Members only see their own groups.",
+    "groups": [
+      {
+        "title": "/dashboard",
+        "rows": [
+          {
+            "label": "Signed out",
+            "value": "sent to sign-in"
+          },
+          {
+            "label": "Not a member",
+            "value": "\"No groups yet\""
+          },
+          {
+            "label": "Member",
+            "value": "their groups only"
+          }
+        ]
+      },
+      {
+        "title": "/checkout/<plan>",
+        "rows": [
+          {
+            "label": "Signed out",
+            "value": "sign in, then back to checkout"
+          },
+          {
+            "label": "Signed in",
+            "value": "continues to checkout"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "Another group's ID → 404",
+      "Group data stays server-only",
+      "Stripe key leak removed"
+    ]
+  },
+  "ai-product-development": {
+    "ask": "Add a quick-add box: someone types \"paid 2400 for groceries, split with Maya and Kabir\" and gets a draft expense to confirm. Use OpenAI.",
+    "type": "built",
+    "headline": "A typed note becomes an editable draft. Nothing is added until you confirm.",
+    "groups": [
+      {
+        "title": "POST /api/quick-add",
+        "rows": [
+          {
+            "label": "Unknown name",
+            "value": "left out, with a warning"
+          },
+          {
+            "label": "No split given",
+            "value": "everyone, with a warning"
+          },
+          {
+            "label": "Bad or future date",
+            "value": "falls back to today"
+          }
+        ]
+      },
+      {
+        "title": "Limits",
+        "rows": [
+          {
+            "label": "Note length",
+            "value": "300 characters"
+          },
+          {
+            "label": "Rate limit",
+            "value": "10 per minute"
+          },
+          {
+            "label": "OpenAI timeout",
+            "value": "15 seconds"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "Key stays on the server",
+      "Notes are never logged",
+      "Model output checked first"
+    ]
+  },
+  "payments-with-dodo": {
+    "ask": "Replace the placeholder checkout with real Dodo Payments subscriptions for Plus and Household. Paid features should actually unlock when someone pays.",
+    "type": "built",
+    "headline": "Plus and Household start a real Dodo subscription. The server enforces the plan.",
+    "groups": [
+      {
+        "title": "What paying unlocks",
+        "rows": [
+          {
+            "label": "Free",
+            "value": "1 group"
+          },
+          {
+            "label": "Plus",
+            "value": "unlimited groups"
+          },
+          {
+            "label": "Household",
+            "value": "unlimited groups, CSV export"
+          }
+        ]
+      },
+      {
+        "title": "/api/webhooks/dodo",
+        "rows": [
+          {
+            "label": "Bad signature",
+            "value": "rejected with 401"
+          },
+          {
+            "label": "Database down",
+            "value": "503, so Dodo retries"
+          },
+          {
+            "label": "Repeat delivery",
+            "value": "saved once, harmless"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "Asked about accounts first",
+      "Return link never unlocks",
+      "30 tests pass"
+    ]
+  },
+  "credit-metering": {
+    "ask": "Plus includes 50 receipt scans a month. Build the allowance with a 100-scan top-up, and make sure a double-click or retry never charges twice.",
+    "type": "built",
+    "headline": "Plus gets 50 scans a month, top-ups add 100, and a retry is charged once.",
+    "groups": [
+      {
+        "title": "POST /api/scans",
+        "rows": [
+          {
+            "label": "Each scan",
+            "value": "holds 1 credit, kept on success"
+          },
+          {
+            "label": "OCR fails",
+            "value": "credit returned"
+          },
+          {
+            "label": "Same scan ID again",
+            "value": "saved result, no charge"
+          }
+        ]
+      },
+      {
+        "title": "Credits",
+        "rows": [
+          {
+            "label": "Plus",
+            "value": "50 a month, no rollover"
+          },
+          {
+            "label": "Top-up",
+            "value": "100 scans, never expire"
+          },
+          {
+            "label": "Order used",
+            "value": "monthly first, then top-up"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "10 same-ID requests → 1 charge",
+      "30 scans vs 5 credits → 5 run",
+      "25 tests pass"
+    ]
+  },
+  "rate-limit": {
+    "ask": "We're adding a route that calls a paid OCR service and one that emails invite links. Create them and stop people from hammering them.",
+    "type": "built",
+    "headline": "Both routes are limited, and they stay shut when Redis is down.",
+    "groups": [
+      {
+        "title": "POST /api/receipts/scan",
+        "rows": [
+          {
+            "label": "Per visitor",
+            "value": "5 at once, then 1 every 2 min"
+          },
+          {
+            "label": "Everyone combined",
+            "value": "300 an hour"
+          }
+        ]
+      },
+      {
+        "title": "POST /api/invites",
+        "rows": [
+          {
+            "label": "Per visitor",
+            "value": "10 an hour"
+          },
+          {
+            "label": "Per recipient",
+            "value": "3 a day"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "Redis down → rejects with 503",
+      "Spoofed IP headers ignored",
+      "12 tests pass"
+    ]
+  },
+  "email-with-resend": {
+    "ask": "When someone adds an expense, the people it's split with should get a short email, and new users should get a welcome email. Use Resend.",
+    "type": "built",
+    "headline": "Welcome and split emails are built, ready to call once signup exists.",
+    "groups": [
+      {
+        "title": "sendWelcomeEmail(user)",
+        "rows": [
+          {
+            "label": "When",
+            "value": "right after a new user is saved"
+          }
+        ]
+      },
+      {
+        "title": "sendExpenseSplitEmails(expense)",
+        "rows": [
+          {
+            "label": "Who gets it",
+            "value": "everyone in the split but the adder"
+          },
+          {
+            "label": "Shows",
+            "value": "the total and their share"
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "A retry never sends twice",
+      "User text escaped in HTML",
+      "Bad address: no retry"
+    ]
+  },
+  "analytics": {
+    "ask": "We launch next week and can't see anything. Show me how many visitors reach pricing and click a plan, and tell me when the app throws errors.",
+    "type": "built",
+    "headline": "Pricing visits, plan clicks and app errors are wired up for launch.",
+    "groups": [
+      {
+        "title": "PostHog",
+        "rows": [
+          {
+            "label": "Pricing visitors",
+            "value": "page views on /pricing"
+          },
+          {
+            "label": "Plan clicks",
+            "value": "plan_selected, plus or household"
+          },
+          {
+            "label": "Funnel",
+            "value": "/pricing → plan_selected"
+          }
+        ]
+      },
+      {
+        "title": "Sentry",
+        "rows": [
+          {
+            "label": "Errors",
+            "value": "browser, server rendering, requests"
+          },
+          {
+            "label": "Full crash",
+            "value": "fallback page with \"Try again\""
+          }
+        ]
+      }
+    ],
+    "chips": [
+      "Query strings scrubbed",
+      "Local dev not counted",
+      "Tracing off to keep costs down"
+    ]
+  },
+  "product-launch": {
+    "ask": "We're launching to flatmates in Bangalore on October 21. My notes are in launch-notes.md. Work out the launch and tell me what isn't ready.",
+    "type": "findings",
+    "headline": "The app can't yet do what the launch is meant to measure.",
+    "notes": [
+      {
+        "tone": "bad",
+        "title": "Product missing",
+        "text": "No signup, group creation, invites or expense logging. About 5 days of work."
+      },
+      {
+        "tone": "bad",
+        "title": "Unbacked claims",
+        "text": "\"AI-driven\", \"Start free trial\" and features that don't exist are on the site."
+      },
+      {
+        "tone": "open",
+        "title": "Go/no-go",
+        "text": "Fri Oct 17: two outsiders sign up, share a flat through WhatsApp and log 5 expenses."
+      }
+    ]
+  },
+  "cold-outreach": {
+    "ask": "I want to get Tallyroom in front of the person in prospect.md. Write the email I should send her.",
+    "type": "rewrite",
+    "headline": "It opens with her own Sep 29 post and asks for a 20-minute call.",
+    "rewrite": {
+      "beforeTitle": "Her post",
+      "before": "Our #1 resident complaint this quarter isn't rent or maintenance. It's money between flatmates.",
+      "afterTitle": "Your opener",
+      "after": "Your Sep 29 post said Nestfold's top resident complaint this quarter is money between flatmates (the gas cylinder, the party), and that your team gets pulled in when it shouldn't.",
+      "note": "Says plainly you're pre-launch: 31 people in 2 test flats, no co-living operator customers yet."
+    }
+  },
+  "product-teardown": {
+    "ask": "Before we rewrite our homepage, show me how Splitwise sells itself: what works, what doesn't, and what we should take for ours.",
+    "type": "findings",
+    "headline": "Cut the hype, name the job, and lead with one subscription for the whole flat.",
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Works",
+        "text": "The headline says what it does: \"Split expenses with friends.\""
+      },
+      {
+        "tone": "bad",
+        "title": "Doesn't",
+        "text": "Pro has no price anywhere on the page."
+      },
+      {
+        "tone": "open",
+        "title": "Take this",
+        "text": "Show \"from $3/mo\" and cut the 7-link nav to Pricing, FAQ, Log in and the main button."
+      }
+    ]
+  },
+  "demo-video": {
+    "ask": "Make a ~30-second demo video we can post with our launch announcement on X. Render it to an MP4.",
+    "type": "findings",
+    "headline": "A 32-second MP4 that works with the sound off, built from your sample dashboard.",
+    "stats": [
+      {
+        "value": "32s",
+        "label": "length"
+      },
+      {
+        "value": "1920×1080",
+        "label": "16:9 for X"
+      },
+      {
+        "value": "0.8 MB",
+        "label": "file size"
+      }
+    ],
+    "notes": [
+      {
+        "tone": "good",
+        "title": "Sound off",
+        "text": "X autoplays muted, so all the messaging is on-screen text."
+      },
+      {
+        "tone": "good",
+        "title": "Honest claims",
+        "text": "Claims come from the pricing page only, and a \"Sample group data\" label stays on screen."
+      }
+    ]
+  }
+}

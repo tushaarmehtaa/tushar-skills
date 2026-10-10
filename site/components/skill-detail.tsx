@@ -7,6 +7,7 @@ import { TrackedLink } from "./tracked-link";
 import { Clamp } from "./clamp";
 import { Crumb } from "./crumb";
 import { LatestGuides } from "./latest-guides";
+import { ResultCard } from "./result-card";
 import { AGENTS, AGENT_IDS, CAPABILITY_LABELS } from "@/lib/agents";
 import { supportsChatGPT } from "@/lib/catalog";
 import { createClaudeAppViewModel } from "@/lib/skill-presentation";
@@ -19,8 +20,7 @@ import {
   getHistory,
   getProfile,
   getProof,
-  speak,
-  type SkillProof,
+  getResult,
 } from "@/lib/profiles";
 import type { Skill } from "@/lib/skills";
 
@@ -49,6 +49,7 @@ export function SkillDetail({
 }) {
   const profile = getProfile(skill.slug);
   const proof = getProof(skill.slug);
+  const result = getResult(skill.slug);
   const history = getHistory(skill.slug);
   const group = GROUPS[profile.group];
   const verified = AGENT_IDS.filter((agent) => skill.support[agent] === "tested");
@@ -60,11 +61,16 @@ export function SkillDetail({
         <div className="skill-main">
           <Crumb items={[{ label: "Skills", href: "/" }, { label: group.label, href: `/?group=${profile.group}` }, { label: skill.slug }]} />
           <h1 className="skill-name">/{skill.slug}</h1>
+          {verified.length > 0 && (
+            <p className="verified-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+                <path d="m5 12 5 5L20 7" />
+              </svg>
+              Verified in {verified.map((a) => AGENTS[a].label).join(", ")}
+            </p>
+          )}
           <p className="skill-lead">{profile.outcome}</p>
-          <div className="skill-when">
-            <p>{speak(profile.useWhen)}</p>
-            <p>{profile.skipWhen}</p>
-          </div>
+          <p className="skill-skip">{profile.skipWhen}</p>
           <blockquote className="skill-why">
             <p>{profile.why}</p>
             <footer>The thinking behind it</footer>
@@ -86,22 +92,6 @@ export function SkillDetail({
               </div>
             )}
             <div>
-              <dt>Tested in</dt>
-              <dd className={verified.length || proof ? "fact-good" : undefined}>
-                {verified.length
-                  ? `Verified in ${verified.map((a) => AGENTS[a].label).join(", ")}`
-                  : proof
-                    ? `Ran in ${proof.run.agent}, ${formatDate(proof.run.date).replace(/ \d{4}$/, "")}`
-                    : "Not run yet"}
-              </dd>
-            </div>
-            {!verified.length && proof && (
-              <div className="fact-extra">
-                <dt>Full verification</dt>
-                <dd>Not yet</dd>
-              </div>
-            )}
-            <div className="fact-extra">
               <dt>Works in</dt>
               <dd>
                 {[
@@ -114,20 +104,7 @@ export function SkillDetail({
               <dt>Needs</dt>
               <dd>{skill.capabilities.map((c) => CAPABILITY_LABELS[c]).join(", ") || "Nothing beyond the agent"}</dd>
             </div>
-            {history && (
-              <div className="fact-extra">
-                <dt>Updated</dt>
-                <dd>{formatDate(history.updated)}</dd>
-              </div>
-            )}
-            <div className="fact-extra">
-              <dt>Package</dt>
-              <dd>
-                SKILL.md · {skillLines} lines
-                {renderedFiles.length > 0 && ` + ${renderedFiles.length} reference${renderedFiles.length === 1 ? "" : "s"}`} · {skill.license}
-              </dd>
-            </div>
-            <div className="fact-extra">
+            <div>
               <dt>Source</dt>
               <dd>
                 <a href={githubFileUrl(skill.slug, "SKILL.md")} target="_blank" rel="noopener noreferrer">
@@ -136,25 +113,16 @@ export function SkillDetail({
               </dd>
             </div>
           </dl>
-          <input type="checkbox" id="facts-all" className="facts-toggle sr-only" />
-          <label htmlFor="facts-all" className="facts-more">
-            All facts
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </label>
         </aside>
       </div>
 
       <section className="skill-section" aria-labelledby="get-back">
         <div className="section-head">
           <h2 id="get-back">What you get back</h2>
-          <span className={proof ? "section-note fact-good" : "section-note"}>
-            {proof ? "Real run on a sample project" : `From the skill's ${profile.outputSource} section`}
-          </span>
+          <span className="section-note">{result ? "From a real run on a sample project" : `From the skill's ${profile.outputSource} section`}</span>
         </div>
-        {proof ? (
-          <ProofRun proof={proof} slug={skill.slug} />
+        {result ? (
+          <ResultCard slug={skill.slug} result={result} images={proof?.images} still={proof?.still} />
         ) : (
           <>
             <div className="contract prose" dangerouslySetInnerHTML={{ __html: outputHtml }} />
@@ -243,103 +211,6 @@ export function SkillDetail({
         </Link>
       )}
     </article>
-  );
-}
-
-function ProofRun({ proof, slug }: { proof: SkillProof; slug: string }) {
-  const minutes = Math.floor(proof.run.durationSec / 60);
-  const seconds = proof.run.durationSec % 60;
-  return (
-    <div className="proof">
-      <p className="proof-summary">{proof.summary}</p>
-      {proof.pair?.before.text?.trim() !== proof.request.trim() && (
-        <div className="proof-request">
-          <span>The request</span>
-          <p>{proof.request}</p>
-        </div>
-      )}
-      {proof.pair ? (
-        <ProofPair pair={proof.pair} slug={slug} />
-      ) : (
-        proof.images && (
-          <ProofPair
-            slug={slug}
-            pair={{
-              kind: "screenshots",
-              before: { label: "Before", image: proof.images.before },
-              after: { label: "After one run", image: proof.images.after },
-            }}
-          />
-        )
-      )}
-      {proof.still && (
-        <figure className="proof-still">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={proof.still} alt={`A frame from the video the /${slug} run rendered`} width={1200} height={676} loading="lazy" />
-          <figcaption>A frame from the rendered video</figcaption>
-        </figure>
-      )}
-      {proof.table && (
-        <div className="proof-table">
-          <table>
-            <thead>
-              <tr>{proof.table.head.map((cell) => <th key={cell} scope="col">{cell}</th>)}</tr>
-            </thead>
-            <tbody>
-              {proof.table.rows.map((row, i) => (
-                <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      <div className="proof-excerpt">
-        <span>From the reply, word for word</span>
-        {proof.excerpt.map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
-        ))}
-      </div>
-      <p className="proof-record">
-        <span>{proof.run.agent} {proof.run.version}</span>
-        <span>{proof.run.triggered === "auto" ? "Picked the skill on its own" : "Invoked by name"}</span>
-        <span>{minutes ? `${minutes} min ${seconds} s` : `${seconds} s`}</span>
-        {proof.run.filesChanged !== null && <span>{proof.run.filesChanged} file{proof.run.filesChanged === 1 ? "" : "s"} changed</span>}
-        {proof.caveat && <span>{proof.caveat}</span>}
-      </p>
-    </div>
-  );
-}
-
-/** Strip the indentation every line shares, so quoted code starts at the left edge. */
-function dedent(text: string) {
-  const lines = text.split("\n");
-  const indents = lines.filter((l) => l.trim()).map((l) => l.match(/^[ \t]*/)![0].length);
-  const cut = indents.length ? Math.min(...indents) : 0;
-  return lines.map((l) => l.slice(cut)).join("\n");
-}
-
-function ProofPair({ pair, slug }: { pair: NonNullable<SkillProof["pair"]>; slug: string }) {
-  const phone = pair.kind === "screenshots" && (pair.before.image ?? "").includes("-mobile");
-  return (
-    <figure className={`pair pair-kind-${pair.kind}${phone ? " phone" : ""}`}>
-      {[pair.before, pair.after].map((side, i) => (
-        <div key={i} className={i === 0 ? "pair-side pair-before" : "pair-side pair-after"}>
-          <span className="pair-label">{side.label}</span>
-          {side.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={side.image}
-              alt={i === 0 ? `Sample project before /${slug}` : `Sample project after one /${slug} run`}
-              width={phone ? 600 : 1200}
-              height={phone ? 1298 : 833}
-              loading="lazy"
-            />
-          ) : (
-            <pre className="pair-text">{pair.kind === "text" ? side.text : dedent(side.text ?? "")}</pre>
-          )}
-        </div>
-      ))}
-    </figure>
   );
 }
 
