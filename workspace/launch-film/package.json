@@ -1,0 +1,24 @@
+{
+  "name": "slashskills-launch-film",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "schedule": "node scripts/schedule.mjs",
+    "audio": "node scripts/schedule.mjs && python3 audio/score.py",
+    "stills": "node scripts/stills.mjs",
+    "render": "remotion render LaunchWeek out/slashskills-launch-4k.mp4 --scale=2 --crf=14 --x264-preset=slow --audio-bitrate=320k --overwrite && ffmpeg -y -loglevel error -i out/slashskills-launch-4k.mp4 -vf scale=1920:1080:flags=lanczos -c:v libx264 -preset slow -crf 16 -pix_fmt yuv420p -c:a copy -movflags +faststart out/slashskills-launch-1080p.mp4",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.533",
+    "@remotion/google-fonts": "4.0.533",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.533",
+    "simple-icons": "16.23.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}
