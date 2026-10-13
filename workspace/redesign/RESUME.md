@@ -2,6 +2,8 @@
 
 > **Shipped, 14 October 2026:** brand v3 merged to main as `6ba5aba` and live on slashskills.xyz. CI and the Vercel production deploy passed.
 >
+> **Mascot, 14 October 2026:** the floating astronaut left the orbit. A 16-pose pixel astronaut now walks, dances, waves on hover and cheers on copy on top of the footer install bar (`site/components/brand/mascot.tsx`). Poses are drawn by `workspace/redesign/mascot/mascot_poses.py` into `site/public/brand/mascot-sheet.png`; boards live on the Paper page "v3 · Mascot moves · 14 Oct".
+>
 > **Built on** branch `brand-v3`. Brand v3 (direction F, "catalog as texture") is ported into `site/`. Approved prototype: `workspace/redesign/home/` (static HTML). Real implementation: `site/components/brand/*`, `site/app/brand.css` (generated from the prototype CSS, class collisions renamed with `v-`), `site/lib/brand*.ts`, `site/lib/installs-snapshot.json` (13 Oct counts, used when the skills.sh OIDC token is missing). Home, all 35 skill pages, header (mobile menu), footer (two-line install, crisp half-orbit) are new. Guides, changelog, requirements and 404 keep their layouts on the new tokens, header and footer. Removed: old library, install box, result card, header nav, github stars, ~21 KB of dead legacy CSS.
 > Verify: `cd site && npm test && npm run build && npx playwright test` (34 browser + 21 unit tests pass). Preview: `npx next dev --port 3100`.
 > Open: guides/changelog/requirements are restyled by token only, not redesigned. No changelog entry for the redesign yet. Result-card detail (bars, stats) was dropped in favour of the prototype run panel.

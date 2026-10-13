@@ -1,0 +1,169 @@
+{
+ "frame": [
+  32,
+  36
+ ],
+ "columns": 4,
+ "poses": [
+  {
+   "index": 0,
+   "slug": "idle",
+   "name": "Idle",
+   "note": "standing on the bar",
+   "frame": [
+    0,
+    0
+   ]
+  },
+  {
+   "index": 1,
+   "slug": "blink",
+   "name": "Blink",
+   "note": "idle breath, eyes shut",
+   "frame": [
+    1,
+    0
+   ]
+  },
+  {
+   "index": 2,
+   "slug": "step-l",
+   "name": "Step left",
+   "note": "walk frame, left foot up",
+   "frame": [
+    2,
+    0
+   ]
+  },
+  {
+   "index": 3,
+   "slug": "step-r",
+   "name": "Step right",
+   "note": "walk frame, right foot up",
+   "frame": [
+    3,
+    0
+   ]
+  },
+  {
+   "index": 4,
+   "slug": "hop",
+   "name": "Hop",
+   "note": "little bounce between steps",
+   "frame": [
+    0,
+    1
+   ]
+  },
+  {
+   "index": 5,
+   "slug": "wave-high",
+   "name": "Wave high",
+   "note": "hover hello, arm up",
+   "frame": [
+    1,
+    1
+   ]
+  },
+  {
+   "index": 6,
+   "slug": "wave-out",
+   "name": "Wave out",
+   "note": "hover hello, arm swings out",
+   "frame": [
+    2,
+    1
+   ]
+  },
+  {
+   "index": 7,
+   "slug": "hands-up",
+   "name": "Hands up",
+   "note": "the \\o/ on copy",
+   "frame": [
+    3,
+    1
+   ]
+  },
+  {
+   "index": 8,
+   "slug": "arms-out",
+   "name": "Arms out",
+   "note": "airplane, mid dance",
+   "frame": [
+    0,
+    2
+   ]
+  },
+  {
+   "index": 9,
+   "slug": "disco",
+   "name": "Disco point",
+   "note": "one up, one down",
+   "frame": [
+    1,
+    2
+   ]
+  },
+  {
+   "index": 10,
+   "slug": "groove-l",
+   "name": "Groove left",
+   "note": "lean left, kick right",
+   "frame": [
+    2,
+    2
+   ]
+  },
+  {
+   "index": 11,
+   "slug": "groove-r",
+   "name": "Groove right",
+   "note": "lean right, kick left",
+   "frame": [
+    3,
+    2
+   ]
+  },
+  {
+   "index": 12,
+   "slug": "squat",
+   "name": "Squat",
+   "note": "drop low, feet wide",
+   "frame": [
+    0,
+    3
+   ]
+  },
+  {
+   "index": 13,
+   "slug": "jump",
+   "name": "Jump",
+   "note": "copy cheer, top of the jump",
+   "frame": [
+    1,
+    3
+   ]
+  },
+  {
+   "index": 14,
+   "slug": "land",
+   "name": "Land",
+   "note": "squash on landing",
+   "frame": [
+    2,
+    3
+   ]
+  },
+  {
+   "index": 15,
+   "slug": "look",
+   "name": "Look",
+   "note": "eyes follow the cursor",
+   "frame": [
+    3,
+    3
+   ]
+  }
+ ]
+}
