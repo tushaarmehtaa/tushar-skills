@@ -1,8 +1,6 @@
-import { HeaderNav } from "./header-nav";
-import { GithubStars } from "./github-stars";
-import { formatInstalls, getInstallStats } from "@/lib/installs";
+import { HeaderNav } from "./brand/header-nav";
+import { getAllSkills } from "@/lib/skills";
 
-export async function Header() {
-  const stats = await getInstallStats();
-  return <HeaderNav installs={stats ? formatInstalls(stats.total) : null} stars={<GithubStars min={100} />} />;
+export function Header() {
+  return <HeaderNav slugs={getAllSkills().map((s) => s.slug)} />;
 }

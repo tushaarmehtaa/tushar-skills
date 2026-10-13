@@ -2,6 +2,7 @@ import { WorkflowStrip } from "@/components/workflow-strip";
 import { Crumb } from "@/components/crumb";
 import { skillHref } from "@/lib/canvas";
 import Link from "next/link";
+import { SkillIcon } from "@/components/brand/skill-icon";
 import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -64,7 +65,7 @@ export default function CompatibilityPage() {
           <section aria-labelledby="matrix-heading">
             <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
               <div>
-                <h2 id="matrix-heading" className="text-lg font-medium text-[var(--color-heading)]">Skill requirements</h2>
+                <h2 id="matrix-heading" className="sec-h">Skill requirements</h2>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-2">
                 <Link href="/guides/claude-app" className="inline-flex items-center gap-2 text-sm text-[var(--color-accent)] hover:text-[var(--color-heading)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]">
@@ -96,7 +97,7 @@ export default function CompatibilityPage() {
                   {skills.map((skill) => (
                     <tr key={skill.slug} className="group bg-[var(--color-bg)] transition-colors hover:bg-[var(--color-surface)]">
                       <th className="sticky left-0 z-10 border-r border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-3 font-[family-name:var(--font-mono)] text-xs font-semibold text-[var(--color-heading)] transition-colors group-hover:bg-[var(--color-surface)]">
-                        <Link href={skillHref(skill.slug)} className="hover:text-[var(--color-accent)]">{skill.name}</Link>
+                        <Link href={skillHref(skill.slug)} className="req-skill"><span className="req-ico"><SkillIcon slug={skill.slug} /></span>{skill.name}</Link>
                       </th>
                       <td className="px-3 py-3 font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text)]">
                         {skill.surfaces.includes("claude-app") ? "local + chat" : "local"}
@@ -112,7 +113,7 @@ export default function CompatibilityPage() {
           </section>
 
           <section className="scope-note">
-            <h2 className="mb-2 text-base font-medium text-[var(--color-heading)]">Not included in v1</h2>
+            <h2 className="sec-h">Not included in v1</h2>
             <p className="text-sm leading-relaxed text-[var(--color-text)]">
               Copilot, Gemini, and OpenAI plugin packaging are outside v1. OpenAI support is local Codex Agent Skills only. Raw ZIP downloads remain available for inspection and complete multi-file transfer.
             </p>

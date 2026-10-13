@@ -4,12 +4,13 @@ for (const width of [390, 1440]) {
   test(`guide discovery and package download at ${width}px`, async ({ page, request }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
-    await expect(page.getByRole("region", { name: "Skills", exact: true })).toBeVisible();
+    await expect(page.locator("#skills")).toBeVisible();
     await expect(page.getByRole("heading", { name: "Latest guides", exact: true })).toHaveCount(0);
     await expect(page.locator('main a[href^="/guides"]')).toHaveCount(0);
+    await expect(page.locator("main #guides")).toHaveCount(0);
     await page.screenshot({ path: testInfo.outputPath("homepage-skills.png") });
-    if (width < 640) await page.getByRole("contentinfo").getByRole("link", { name: "Guides", exact: true }).click();
-    else await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Guides", exact: true }).click();
+    if (width < 721) await page.getByRole("contentinfo").getByRole("link", { name: "Guides", exact: true }).click();
+    else await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: /Guides/ }).click();
     await expect(page.getByRole("heading", { name: "Latest guides" })).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath("guides-index.png") });
     await page.locator("#guides").getByRole("link").filter({ hasText: "Build an image-editing skill" }).click();
@@ -41,7 +42,7 @@ for (const width of [390, 1440]) {
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await page.getByRole("link", { name: "Get the skill-creator workflow" }).click();
     await expect(page).toHaveURL(/\/skill-creator$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("/skill-creator");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("/skill-creator");
     await expect(page.getByRole("region", { name: "Install /skill-creator" })).toBeVisible();
     const sitemap = await (await request.get("/sitemap.xml")).text();
     for (const path of ["/guides/image-editing-skills", "/guides/astra-skill-instructions", "/image-editing"]) {

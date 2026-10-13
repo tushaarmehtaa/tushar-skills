@@ -1,21 +1,41 @@
 @import "tailwindcss";
 @import "./site.css";
+@import "./brand.css";
 
 @theme {
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-display: var(--font-cal), var(--font-geist-sans), system-ui, sans-serif;
 
-  --color-bg: #FFFFFF;
-  --color-surface: #F5F7F5;
-  --color-surface-raised: #EEF3EF;
-  --color-border: #DCDDE1;
-  --color-border-hover: #858B89;
-  --color-muted: #60646C;
-  --color-text: #60646C;
-  --color-heading: #17191C;
-  --color-accent: #345847;
-  --color-accent-dim: #EEF3EF;
+  --color-bg: #FAF9F5;
+  --color-surface: #F3F0E6;
+  --color-surface-raised: #F3F0E6;
+  --color-border: #E4E0D3;
+  --color-border-hover: #B8AF96;
+  --color-muted: #7B7A72;
+  --color-text: #5C574B;
+  --color-heading: #0A0A0A;
+  --color-accent: #0A0A0A;
+  --color-accent-dim: #F3F0E6;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Brand v3 tokens. Paper, ink and one amber. */
+:root {
+  --paper: #FAF9F5;
+  --paper-2: #F3F0E6;
+  --ink: #0A0A0A;
+  --amber: #F59E0B;
+  --amber-soft: #FDE9BF;
+  --muted: #7B7A72;
+  --soft: #5C574B;
+  --line: #E4E0D3;
+  --faint: #DDD6C3;
+  --ease-io: cubic-bezier(0.77, 0, 0.175, 1);
+  --gutter: clamp(20px, 6vw, 88px);
+  --display: var(--font-cal), var(--font-geist-sans), system-ui, sans-serif;
+  --sans: var(--font-geist-sans), system-ui, sans-serif;
+  --mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 /* ═══════ BASE ═══════ */
@@ -29,7 +49,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  font-feature-settings: "ss01" on, "cv01" on;
+  overflow-x: clip;
 }
 
 .skip-link {
@@ -38,7 +58,7 @@ body {
   left: 1rem;
   top: 1rem;
   transform: translateY(-200%);
-  border: 1px solid var(--color-accent);
+  border: 2px solid var(--amber);
   background: var(--color-bg);
   color: var(--color-heading);
   padding: 0.65rem 0.8rem;
@@ -51,8 +71,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: var(--amber);
+  color: var(--ink);
 }
 
 /* ═══════ ENTRANCE ANIMATIONS ═══════ */
@@ -75,16 +95,6 @@ body {
 
 /* ═══════ TABLE HEADER RULE ═══════ */
 
-/* ═══════ INSTALL BOX ═══════ */
-
-.install-box {
-  transition: border-color 150ms ease;
-}
-
-.install-box:hover {
-  border-color: var(--color-border-hover);
-}
-
 /* ═══════ SKILL ROW ═══════ */
 
 /* ═══════ COPY BUTTON ═══════ */
@@ -100,17 +110,6 @@ body {
 /* ═══════ DIVIDER ═══════ */
 
 /* ═══════ SKILL COUNT ═══════ */
-
-/* ═══════ TAG ═══════ */
-
-.tag {
-  transition: border-color 130ms ease, color 130ms ease;
-}
-
-.tag:hover {
-  border-color: var(--color-accent-dim);
-  color: var(--color-accent);
-}
 
 /* ═══════ BACK LINK ═══════ */
 

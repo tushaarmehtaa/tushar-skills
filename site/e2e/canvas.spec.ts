@@ -30,23 +30,30 @@ test("mobile menu focus and clipboard failure", async ({ page }) => {
   await page.goto("/");
   const menu = page.getByRole("button", { name: "Open menu" });
   await menu.click();
-  await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
+  const panel = page.getByRole("navigation", { name: "Menu" });
+  await expect(panel).toBeVisible();
+  await expect(panel.getByRole("link")).toHaveCount(4);
   await page.keyboard.press("Escape");
+  await expect(panel).toBeHidden();
   await expect(menu).toBeFocused();
+  await menu.click();
+  await panel.getByRole("link", { name: /Guides/ }).click();
+  await expect(page).toHaveURL(/\/guides$/);
   await page.goto("/interface-design");
   const installer = page.getByRole("region", { name: "Install /interface-design" });
   await expect(installer.getByRole("combobox", { name: "Install for" })).toHaveValue(
     "global",
   );
-  await page.evaluate(() =>
+  await page.evaluate(() => {
     Object.defineProperty(navigator.clipboard, "writeText", {
       configurable: true,
       value: () => Promise.reject(new Error("Denied")),
-    }),
-  );
-  await installer.getByRole("button", { name: "Copy", exact: true }).click();
+    });
+    document.execCommand = () => false;
+  });
+  await installer.getByRole("button", { name: "Copy install command" }).click();
   await expect(
-    installer.getByRole("button", { name: "Select and copy", exact: true }),
+    installer.getByRole("button", { name: "Select the command and copy it" }),
   ).toBeVisible();
   await expect(installer.getByRole("status")).toHaveText(
     "Copy failed. Select the command and copy it manually.",
@@ -54,34 +61,35 @@ test("mobile menu focus and clipboard failure", async ({ page }) => {
 });
 test("search typing, group filter and return path", async ({ page }) => {
   await page.goto("/");
+  await page.keyboard.press("/");
   const search = page.getByRole("searchbox", { name: "Search skills" });
   await search.pressSequentially("interface-design", { delay: 10 });
   await expect(search).toHaveValue("interface-design");
   await expect(page).toHaveURL(/q=interface-design/);
-  await expect(page.locator(".row").first()).toContainText("/interface-design");
-  await page.locator(".row").first().click();
+  await expect(page.locator(".v-row").first()).toContainText("interface-design");
+  await page.locator(".v-row").first().getByRole("link").click();
   await expect(page).toHaveURL(/\/interface-design$/);
   await page.goBack();
   await expect(search).toHaveValue("interface-design");
-  await expect(page.locator(".row").first()).toContainText("/interface-design");
-  const build = page.getByRole("button", { name: /^Build\s*10$/ });
+  await expect(page.locator(".v-row").first()).toContainText("interface-design");
+  const build = page.getByRole("tab", { name: /^build\s*10$/i });
   await build.click();
   await expect(search).toHaveValue("");
-  await expect(build).toHaveAttribute("aria-pressed", "true");
+  await expect(build).toHaveAttribute("aria-selected", "true");
   await expect(page).toHaveURL(/group=build/);
-  await expect(page.locator(".row")).toHaveCount(10);
-  await expect(page.getByRole("heading", { level: 2, name: "Build" })).toBeVisible();
-  await expect(page.getByRole("heading", { level: 2, name: "Ship" })).toHaveCount(0);
+  await expect(page.locator(".v-row")).toHaveCount(10);
   await page.reload();
-  await expect(build).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".row")).toHaveCount(10);
+  await expect(build).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator(".v-row")).toHaveCount(10);
+  await page.keyboard.press("/");
   await search.fill("zzzz-unmatched");
   await expect(page.getByText("Nothing matches that.")).toBeVisible();
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await expect(search).toHaveValue("");
-  await expect(page.locator(".row")).toHaveCount(10);
-  await page.getByRole("button", { name: /^All\s*35$/ }).click();
-  await expect(page.locator(".row")).toHaveCount(35);
+  await expect(page.locator(".v-row")).toHaveCount(10);
+  await page.getByRole("tab", { name: /^all\s*35$/i }).click();
+  await page.keyboard.press("l");
+  await expect(page.locator(".v-row")).toHaveCount(35);
   await expect(page).not.toHaveURL(/group=/);
 });
 test("commands for all runtimes and scopes; exact raw source copy", async ({
@@ -92,8 +100,8 @@ test("commands for all runtimes and scopes; exact raw source copy", async ({
   await page.goto("/interface-design");
   const installer = page.getByRole("region", { name: "Install /interface-design" });
   for (const [agent, label] of [
-    ["codex", "Codex"],
     ["claude-code", "Claude Code"],
+    ["codex", "Codex"],
     ["cursor", "Cursor"],
   ]) {
     await installer.getByRole("tab", { name: label, exact: true }).click();
@@ -102,10 +110,8 @@ test("commands for all runtimes and scopes; exact raw source copy", async ({
         .getByRole("combobox", { name: "Install for" })
         .selectOption(scope);
       const command = `npx skills add tushaarmehtaa/tushar-skills --skill interface-design${scope === "global" ? " -g" : ""} -a ${agent} -y`;
-      await expect(installer.locator(".command-text")).toHaveText(command);
-      await installer
-        .getByRole("button", { name: /^(Copy|Copied)$/ })
-        .click();
+      await expect(installer.locator(".cmd")).toHaveAttribute("data-command", command);
+      await installer.getByRole("button", { name: /^Cop/ }).click();
       await expect
         .poll(() => page.evaluate(() => navigator.clipboard.readText()))
         .toBe(command);
@@ -120,16 +126,17 @@ test("commands for all runtimes and scopes; exact raw source copy", async ({
 });
 test("discovery uses one consistent treatment for every skill", async ({ page }) => {
   await page.goto("/");
-  const rows = page.locator(".row");
+  await page.keyboard.press("l");
+  const rows = page.locator(".v-row");
   await expect(rows).toHaveCount(35);
-  const names = await rows.locator(".row-name").allTextContents();
-  for (const [i, name] of names.entries()) {
-    expect(name, `row ${i}`).toMatch(/^\/[a-z0-9-]+$/);
-    const href = await rows.nth(i).getAttribute("href");
-    expect(href, name).toMatch(new RegExp(`/${name.slice(1)}$`));
-    expect(await rows.nth(i).locator(".row-outcome").textContent(), name).toBeTruthy();
+  for (let i = 0; i < 35; i++) {
+    const link = rows.nth(i).locator(".nm .rl");
+    const name = (await link.textContent())!;
+    expect(name, `row ${i}`).toMatch(/^[a-z0-9-]+$/);
+    expect(await link.getAttribute("href"), name).toMatch(new RegExp(`/${name}$`));
+    expect(await rows.nth(i).locator(".ds").textContent(), name).toBeTruthy();
+    await expect(rows.nth(i).locator(".ico svg"), name).toHaveCount(1);
   }
-  await expect(page.locator(".rows img")).toHaveCount(0);
   await page.goto("/interface-design");
   await expect(page.getByText(/Illustrative concept/)).toHaveCount(0);
 });
@@ -144,7 +151,7 @@ test("all catalog routes, guides, archives, metadata and recovery", async ({
     expect(response.status(), path).toBe(200);
     const html = await response.text();
     expect(html).toContain(`href="${skill.url}"`);
-    expect(html, path).toContain(`${skill.slug}</h1>`);
+    expect(html, path).toContain(`${skill.slug}</span>`);
     const zip = await request.get(`/zips/${skill.slug}.zip`);
     expect(zip.status()).toBe(200);
     expect((await zip.body()).subarray(0, 2).toString()).toBe("PK");

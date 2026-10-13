@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cal_Sans, Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { KeyNav } from "@/components/brand/key-nav";
 import "./globals.css";
 
-const GeistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "optional" });
-const GeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "optional" });
+const GeistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
+const GeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+const CalSans = Cal_Sans({ subsets: ["latin"], weight: "400", variable: "--font-cal", display: "swap" });
 
 // Keep a single public identity. Preview deployments must never become canonical.
 const siteUrl = "https://www.slashskills.xyz";
@@ -75,7 +77,7 @@ const jsonLd = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#FFFFFF",
+  themeColor: "#FAF9F5",
 };
 
 export default function RootLayout({
@@ -84,7 +86,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${CalSans.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -94,6 +96,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
         {children}
+        <KeyNav />
         <Analytics />
       </body>
     </html>

@@ -40,7 +40,7 @@ export default function GuidesPage() {
           <section aria-labelledby="installation-guides">
             <h2
               id="installation-guides"
-              className="mb-6 text-lg font-medium text-[var(--color-heading)]"
+              className="sec-h"
             >
               Installation guides
             </h2>
@@ -50,7 +50,7 @@ export default function GuidesPage() {
                 href={AGENTS[id].guideRoute}
                 className="runtime-guide-row"
               >
-                <RuntimeLogo runtime={id} decorative className="h-7 w-7" />
+                <span className="rg-ico"><RuntimeLogo runtime={id} decorative className="h-7 w-7" /></span>
                 <h3>{AGENTS[id].label}</h3>
                 <p>
                   Installs to <code>{AGENTS[id].globalDirectory}</code>. Run a skill with{" "}
@@ -61,7 +61,7 @@ export default function GuidesPage() {
             ))}
           </section>
           <section className="chat-guide-links">
-            <h2>Using a chat app?</h2>
+            <h2 className="sec-h">Using a chat app?</h2>
             <p>Check which skills work in your app and how to upload them.</p>
             <div>
               <Link href="/guides/chatgpt" className="text-button">

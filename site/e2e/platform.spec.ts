@@ -10,13 +10,12 @@ test.describe("slashskills platform", () => {
   test("keeps core pages within the mobile viewport", async ({ page }) => {
     await page.goto("/");
     await expectNoDocumentOverflow(page);
-    await expect(page.getByRole("heading", { name: "Great work starts with a useful skill." })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName("good work starts with a useful skill.");
 
     await page.goto("/cold-outreach");
     await expectNoDocumentOverflow(page);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("/cold-outreach");
-    await expect(page.getByRole("heading", { name: "What you get back" })).toBeVisible();
-    await expect(page.locator("main [data-status]:not(.command-copy)")).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("/cold-outreach");
+    await expect(page.locator("main [data-status]")).toHaveCount(0);
 
     await page.goto("/compatibility");
     await expectNoDocumentOverflow(page);
@@ -47,27 +46,31 @@ test.describe("slashskills platform", () => {
     );
     expect(chat.has("decision-doc")).toBe(true);
     await page.goto("/");
-    const rows = page.locator(".row");
+    await page.keyboard.press("l");
+    const rows = page.locator(".v-row");
     await expect(rows).toHaveCount(35);
     for (let i = 0; i < 35; i++) {
       const row = rows.nth(i);
-      const slug = (await row.locator(".row-name").textContent())!.slice(1);
-      await expect(row.getByText("Chat too", { exact: true }), slug).toHaveCount(chat.has(slug) ? 1 : 0);
+      const slug = (await row.locator(".nm .rl").textContent())!;
+      await expect(row.locator(".badge.tagchat"), slug).toHaveCount(chat.has(slug) ? 1 : 0);
     }
-    await page.getByRole("searchbox", { name: "Search skills" }).fill("decision-doc");
-    await expect(page.getByRole("link", { name: /^\/decision-doc/ })).toContainText("Chat too");
   });
 
   test("shows a real run with loaded before and after shots", async ({ page }) => {
-    await page.goto("/remove-ai-slop");
+    await page.goto("/landing-page");
     await expectNoDocumentOverflow(page);
-    const output = page.getByRole("region", { name: "What you get back" });
-    await expect(output.getByRole("heading", { name: "What you get back" })).toBeVisible();
-    await expect(output.getByText("From a real run on a sample project", { exact: true })).toBeVisible();
-    await expect(output.locator(".ask")).toBeVisible();
-    await expect(output.locator(".result-headline")).not.toBeEmpty();
-    for (const name of ["Sample project before /remove-ai-slop", "Sample project after one /remove-ai-slop run"]) {
-      const image = output.getByRole("img", { name });
+    const output = page.getByRole("region", { name: /What you get back/ });
+    await expect(output.getByRole("heading", { name: /What you get back/ })).toBeVisible();
+    await expect(output.getByText(/recorded run/)).toBeVisible();
+    await output.locator(".pane").scrollIntoViewIfNeeded();
+    await expect(output.locator(".aprompt")).toBeVisible();
+    await expect(output.locator(".pane.s4")).toBeVisible({ timeout: 15000 });
+    await expect(output.locator(".aprompt .live")).toContainText("convinces");
+    await expect(output.locator(".said")).not.toBeEmpty();
+    const images = output.locator(".wimg img");
+    await expect(images).toHaveCount(2);
+    for (let i = 0; i < 2; i++) {
+      const image = images.nth(i);
       await image.scrollIntoViewIfNeeded();
       await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth)).toBeGreaterThan(0);
     }
@@ -76,9 +79,9 @@ test.describe("slashskills platform", () => {
   test("shows image-editing's real run as a before and after", async ({ page }) => {
     await page.goto("/image-editing");
     await expectNoDocumentOverflow(page);
-    const output = page.getByRole("region", { name: "What you get back" });
-    await expect(output.getByText("From a real run on a sample project")).toBeVisible();
-    await expect(output.getByRole("img")).toHaveCount(2);
+    const output = page.getByRole("region", { name: /What you get back/ });
+    await expect(output.getByText(/recorded run/)).toBeVisible();
+    await expect(output.locator(".wimg img")).toHaveCount(2);
     await expect(output.getByText("Banner attached, not described")).toBeVisible();
   });
 
@@ -86,9 +89,9 @@ test.describe("slashskills platform", () => {
     for (const slug of ["humanize", "landing-page", "mobile-first"]) {
       await page.goto(`/${slug}`);
       await expectNoDocumentOverflow(page);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(`/${slug}`);
+      await expect(page.getByRole("heading", { level: 1 })).toContainText(`/${slug}`);
       await expect(page.getByRole("region", { name: `Install /${slug}` })).toBeVisible();
-      await expect(page.locator(".skill-lead")).not.toBeEmpty();
+      await expect(page.locator(".skout")).not.toBeEmpty();
     }
   });
 });

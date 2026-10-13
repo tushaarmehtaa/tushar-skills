@@ -1,4 +1,5 @@
 import { getVercelOidcToken } from "@vercel/functions/oidc";
+import snapshot from "./installs-snapshot.json";
 
 const SOURCE = "tushaarmehtaa/tushar-skills";
 const ENDPOINT = `https://www.skills.sh/api/v1/skills?source=${SOURCE}&per_page=500`;
@@ -44,4 +45,11 @@ export function formatInstalls(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K`;
   return String(n);
+}
+
+/** Live counts when the OIDC token exists, otherwise the last committed snapshot. */
+export async function getInstallData(): Promise<{ total: number; bySlug: Record<string, number>; live: boolean }> {
+  const live = await getInstallStats();
+  if (live) return { ...live, live: true };
+  return { total: snapshot.total, bySlug: snapshot.bySlug, live: false };
 }

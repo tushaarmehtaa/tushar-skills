@@ -1,3 +1,11 @@
+# Resume here — 13 October 2026 (brand v3, local only)
+
+> **Current:** branch `brand-v3`, nothing committed, nothing deployed. Brand v3 (direction F, "catalog as texture") is ported into `site/`. Approved prototype: `workspace/redesign/home/` (static HTML). Real implementation: `site/components/brand/*`, `site/app/brand.css` (generated from the prototype CSS, class collisions renamed with `v-`), `site/lib/brand*.ts`, `site/lib/installs-snapshot.json` (13 Oct counts, used when the skills.sh OIDC token is missing). Home, all 35 skill pages, header (mobile menu), footer (two-line install, crisp half-orbit) are new. Guides, changelog, requirements and 404 keep their layouts on the new tokens, header and footer. Removed: old library, install box, result card, header nav, github stars, ~21 KB of dead legacy CSS.
+> Verify: `cd site && npm test && npm run build && npx playwright test` (34 browser + 21 unit tests pass). Preview: `npx next dev --port 3100`.
+> Open: guides/changelog/requirements are restyled by token only, not redesigned. No changelog entry for the redesign yet. Result-card detail (bars, stats) was dropped in favour of the prototype run panel.
+
+---
+
 # Resume here — 6 October 2026
 
 > **Shipped, 10 October 2026:** v2 is merged to main and live. Status checklist and open follow-ups: [PLAN-v2.md](PLAN-v2.md). Verification report: [v2/verification-2026-10-10.md](v2/verification-2026-10-10.md).

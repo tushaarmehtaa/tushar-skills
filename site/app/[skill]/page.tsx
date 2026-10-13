@@ -3,7 +3,8 @@ import { skillHref } from "@/lib/canvas";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { SkillDetail } from "@/components/skill-detail";
-import { getInstallStats } from "@/lib/installs";
+import { getInstallData } from "@/lib/installs";
+import { buildBrandSkills } from "@/lib/brand";
 import { getAllSkills, getSkill } from "@/lib/skills";
 import { packageFileAnchor, renderMarkdown } from "@/lib/markdown";
 import { serializeJsonLd } from "@/lib/json-ld";
@@ -92,21 +93,24 @@ export default async function SkillPage({
     about: skill.tags.map((name) => ({ "@type": "Thing", name })),
   };
 
-  const installs = (await getInstallStats())?.bySlug[skill.slug] ?? null;
+  const data = await getInstallData();
+  const installs = data.bySlug[skill.slug] ?? null;
+  const popular = buildBrandSkills(data.bySlug).find((s) => s.slug === skill.slug)?.popular ?? false;
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="v3">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <Header />
-      <main id="main-content" className="page">
+      <main id="main-content" className="v3">
         <SkillDetail
           skill={skill}
           contentHtml={contentHtml}
           outputHtml={outputHtml}
           renderedFiles={renderedFiles}
           installs={installs}
+          popular={popular}
           next={next}
         />
       </main>
