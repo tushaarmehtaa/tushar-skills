@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { FooterScene } from "./brand/footer-scene";
 import { CmdBar } from "./brand/copy-button";
-import { MascotBar } from "./brand/mascot";
 import { GitHubMark } from "./brand/logos";
 import { CountUp } from "./brand/count-up";
 import { SKILL_DISPLAY } from "@/lib/canvas";
@@ -48,14 +47,12 @@ export async function Footer() {
           <div className="finstall">
             <h4>Install</h4>
             <p>One line gets all 35. Add --skill name for just one.</p>
-            <MascotBar>
-              <CmdBar text={FOOTER_COMMAND} analytics={{ agent: "claude-code", skill: "all" }}>
-                <div className="cmd" data-command={FOOTER_COMMAND}>
-                  <span className="ln"><span className="p">$</span>npx skills add tushaarmehtaa/tushar-skills</span>
-                  <span className="ln">-g -a claude-code -y</span>
-                </div>
-              </CmdBar>
-            </MascotBar>
+            <CmdBar text={FOOTER_COMMAND} analytics={{ agent: "claude-code", skill: "all" }}>
+              <div className="cmd" data-command={FOOTER_COMMAND}>
+                <span className="ln"><span className="p">$</span>npx skills add tushaarmehtaa/tushar-skills</span>
+                <span className="ln">-g -a claude-code -y</span>
+              </div>
+            </CmdBar>
           </div>
         </div>
       </div>
@@ -63,7 +60,7 @@ export async function Footer() {
       <div className="wrap">
         <div className="legal">
           <span><CountUp value={total} /> installs on skills.sh</span>
-          <span className="mono hint" style={{ fontSize: 12 }}>hover an icon to pause the orbit</span>
+          <span className="mono hint" style={{ fontSize: 12 }}>hover an icon to pause the orbit · click the astronaut</span>
         </div>
       </div>
     </footer>

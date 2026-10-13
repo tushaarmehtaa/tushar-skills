@@ -11,10 +11,12 @@ interface Tile { slug: string; ring: Ring; phase: number; wob: number }
 /** Half the universe: 35 skill icons on three orbits above a crisp horizon. Hover an icon to pause. */
 export function FooterScene({ skills }: { skills: { slug: string; flow: string }[] }) {
   const scene = useRef<HTMLDivElement>(null);
+  const astro = useRef<HTMLButtonElement>(null);
   const tileEls = useRef<(HTMLAnchorElement | null)[]>([]);
   const [dims, setDims] = useState({ w: 0, h: 0 });
   const [decor, setDecor] = useState<{ tw: { x: number; y: number; d: number }[]; dust: { x: number; y: number; s: number }[] }>({ tw: [], dust: [] });
-  const sim = useRef({ sMul: 1, sTarget: 1, th: 0, visible: false });
+  const [spin, setSpin] = useState(false);
+  const sim = useRef({ sMul: 1, sTarget: 1, mx: 0, my: 0, ax: 0, ay: 0, th: 0, visible: false });
 
   useEffect(() => {
     const el = scene.current;
@@ -54,7 +56,8 @@ export function FooterScene({ skills }: { skills: { slug: string; flow: string }
         tiles.push({ slug: skills[idx].slug, ring, phase: (i / ring.n) * Math.PI * 2 + ri * 0.7, wob: ((idx * 37) % 60) / 10 });
       }
     });
-    return { w, h, cx, cy, rings, tiles };
+    const aw = wide ? 270 : 170;
+    return { w, h, cx, cy, rings, tiles, aw, astroTop: cy - aw * (wide ? 0.8 : 0.72) };
   }, [dims, skills]);
 
   useEffect(() => {
@@ -89,6 +92,9 @@ export function FooterScene({ skills }: { skills: { slug: string; flow: string }
         node.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${sc})`;
         node.style.zIndex = depth > 0.5 ? "10" : "1";
       });
+      S.ax += (S.mx * 20 - S.ax) * 0.06;
+      S.ay += (S.my * 10 - S.ay) * 0.06;
+      if (astro.current) astro.current.style.transform = `translate(${S.ax}px,${S.ay}px)`;
     };
     const frame = (now: number) => {
       const dt = Math.min(64, now - last);
@@ -122,12 +128,40 @@ export function FooterScene({ skills }: { skills: { slug: string; flow: string }
     };
   }, [layout]);
 
+  function sparkBurst() {
+    const el = scene.current;
+    const a = astro.current;
+    if (!el || !a || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const r = a.getBoundingClientRect();
+    const sr = el.getBoundingClientRect();
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("i");
+      s.className = "spark";
+      s.style.cssText = `left:${r.left - sr.left + r.width / 2}px;top:${r.top - sr.top + r.height / 2}px;z-index:20`;
+      el.appendChild(s);
+      const ang = Math.random() * Math.PI * 2;
+      const d = 90 + Math.random() * 110;
+      s.animate(
+        [
+          { transform: "translate(0,0) scale(1)", opacity: 1 },
+          { transform: `translate(${Math.cos(ang) * d}px,${Math.sin(ang) * d}px) scale(.3)`, opacity: 0 },
+        ],
+        { duration: 900, easing: "cubic-bezier(0.23,1,0.32,1)" },
+      ).onfinish = () => s.remove();
+    }
+  }
+
   const flowOf = (slug: string) => skills.find((s) => s.slug === slug)?.flow ?? "";
 
   return (
     <div
       className="scene"
       ref={scene}
+      onPointerMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        sim.current.mx = (e.clientX - r.left - r.width / 2) / r.width;
+        sim.current.my = (e.clientY - r.top - r.height / 2) / r.height;
+      }}
       onMouseOver={(e) => {
         if ((e.target as HTMLElement).closest(".tile")) sim.current.sTarget = 0;
       }}
@@ -145,6 +179,22 @@ export function FooterScene({ skills }: { skills: { slug: string; flow: string }
               <ellipse key={i} cx={layout.cx} cy={layout.cy} rx={r.rx} ry={r.ry} fill="none" stroke={["#D3CCB6", "#E0DAC8", "#E8E3D3"][i]} strokeWidth="1.5" strokeDasharray="2 9" strokeLinecap="round" />
             ))}
           </svg>
+          <button
+            type="button"
+            ref={astro}
+            className={`astro ${spin ? "spin" : ""}`}
+            style={{ width: layout.aw, marginLeft: -layout.aw / 2, top: layout.astroTop, marginTop: 0 }}
+            aria-label="The slashskills astronaut. Click to spin it."
+            onClick={() => {
+              setSpin(false);
+              requestAnimationFrame(() => setSpin(true));
+              window.setTimeout(() => setSpin(false), 950);
+              sparkBurst();
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/astronaut.png" alt="" width={579} height={564} />
+          </button>
           {layout.tiles.map((t, i) => (
             <Link
               key={t.slug}

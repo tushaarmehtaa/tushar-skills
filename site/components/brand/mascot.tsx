@@ -19,8 +19,11 @@ const START_X = 16;
 const sum = (s: Seq) => s.reduce((t, [, ms]) => t + ms, 0);
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
-/** The pixel astronaut living on top of an install bar: walks, dances, waves on hover, cheers on copy. */
-export function MascotBar({ children }: { children: ReactNode }) {
+/**
+ * The pixel astronaut living on top of an install bar: walks, dances, waves on hover, cheers on copy.
+ * `floor` names the child it walks on when that is narrower than the lane.
+ */
+export function MascotBar({ children, className = "", floor }: { children: ReactNode; className?: string; floor?: string }) {
   const lane = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const sprite = useRef<HTMLDivElement>(null);
@@ -67,7 +70,8 @@ export function MascotBar({ children }: { children: ReactNode }) {
         play(IDLE, true);
         brainTimer = window.setTimeout(() => next("walk"), rand(2500, 5000));
       } else if (phase === "walk") {
-        const max = Math.max(0, ln.clientWidth - W);
+        const ground = (floor && ln.querySelector(floor)?.getBoundingClientRect().width) || ln.clientWidth;
+        const max = Math.max(0, ground - W);
         let to = rand(0, max);
         if (Math.abs(to - x) < 60) to = x > max / 2 ? rand(0, max / 3) : rand((max * 2) / 3, max);
         const dur = Math.abs(to - x) / SPEED;
@@ -132,11 +136,11 @@ export function MascotBar({ children }: { children: ReactNode }) {
       stop();
       api.current = null;
     };
-  }, []);
+  }, [floor]);
 
   return (
     <div
-      className="mascot-lane"
+      className={`mascot-lane ${className}`}
       ref={lane}
       onClickCapture={(e) => {
         if ((e.target as HTMLElement).closest(".copy")) api.current?.cheer();
