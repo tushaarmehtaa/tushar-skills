@@ -14,11 +14,11 @@ test("long queries reflow and empty search has a working recovery", async ({
   await expect(page.getByText("Nothing matches that.")).toBeVisible();
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await expect(page.getByRole("searchbox")).toHaveValue("");
-  await expect(page.getByRole("button", { name: /^Grow\s*11$/ })).toHaveAttribute(
+  await expect(page.getByRole("button", { name: /^Grow\s*12$/ })).toHaveAttribute(
     "aria-pressed",
     "true",
   );
-  await expect(page.locator(".row")).toHaveCount(11);
+  await expect(page.locator(".row")).toHaveCount(12);
   await page.getByRole("button", { name: /^All\s*35$/ }).click();
   await expect(page.locator(".row")).toHaveCount(35);
 });
