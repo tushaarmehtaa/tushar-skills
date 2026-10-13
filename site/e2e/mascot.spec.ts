@@ -32,15 +32,31 @@ test("the astronaut holds still for reduced motion", async ({ page }) => {
   expect(await page.locator(".mascot-sprite").evaluate((n) => getComputedStyle(n).backgroundPosition)).toBe("0px 0px");
 });
 
-test("the pixel astronaut only walks where the tabs give it ground", async ({ page }) => {
+test("the pixel astronaut never walks on air: it hops down past the last tab", async ({ page }) => {
+  // Fixed randomness: it idles, then heads right past Cursor, which forces the hop down to the command bar.
+  await page.addInitScript(() => (Math.random = () => 0.9));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
-  const tabs = (await page.locator(".hero-mascot .tabs").boundingBox())!.width;
-  let furthest = 0;
-  for (let i = 0; i < 40; i++) {
-    furthest = Math.max(furthest, await page.locator(".hero-mascot .mascot").evaluate((n) => new DOMMatrixReadOnly(getComputedStyle(n).transform).m41));
-    await page.waitForTimeout(250);
+  const lane = page.locator(".hero-mascot");
+  await lane.locator(".install").evaluate((n) => Promise.all(n.getAnimations().map((a) => a.finished)));
+  const tabs = await lane.locator(".tab").evaluateAll((ns) => ns.map((n) => n.getBoundingClientRect().toJSON()));
+  const edge = Math.max(...tabs.map((r) => r.right));
+  const left = tabs[0].left;
+  const top = tabs[0].top;
+  const bar = (await lane.locator(".cmdbar").boundingBox())!;
+  const seen = { tabs: 0, bar: 0, hop: 0 };
+  for (let i = 0; i < 140; i++) {
+    const s = (await lane.locator(".mascot-sprite").boundingBox())!;
+    const feetY = s.y + s.height - 6;
+    const feetX = s.x + s.width / 2;
+    if (Math.abs(feetY - top) <= 1 && feetX >= left && feetX <= edge) seen.tabs++;
+    else if (Math.abs(feetY - bar.y) <= 1 && feetX >= bar.x && feetX <= bar.x + bar.width) seen.bar++;
+    else {
+      expect(Math.abs(feetX - edge), `floating at x=${feetX}, y=${feetY}`).toBeLessThanOrEqual(70);
+      seen.hop++;
+    }
+    await page.waitForTimeout(100);
   }
-  expect(furthest).toBeGreaterThan(16);
-  expect(furthest).toBeLessThanOrEqual(tabs - 64);
+  expect(seen.tabs).toBeGreaterThan(0);
+  expect(seen.bar).toBeGreaterThan(0);
 });

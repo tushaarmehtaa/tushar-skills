@@ -84,7 +84,7 @@ export function Home({ skills, installs }: { skills: BrandSkill[]; installs: num
             <span className="l in" style={{ animationDelay: "110ms" }}>a useful skill<i className="dot" /></span>
           </h1>
           <p className="sub in" style={{ animationDelay: "200ms" }}>One command to get them all.</p>
-          <MascotBar className="hero-mascot" floor=".tabs">
+          <MascotBar className="hero-mascot" upper=".tab" lower=".cmdbar">
             <InstallPanel mode={mode} onMode={choose} className="in" />
           </MascotBar>
           <div className="v-proof in" style={{ animationDelay: "360ms" }}>
