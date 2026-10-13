@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { ogImage } from "@/lib/og";
 import { CommandLine } from "@/components/command-line";
 import { GuideLayout, GuideSection } from "@/components/guide-layout";
 import { RuntimeLogo } from "@/components/runtime-logo";
@@ -68,9 +69,10 @@ export async function generateMetadata({
     description,
     alternates: { canonical: agent.guideRoute },
     openGraph: {
-      title: `${title} — slashskills`,
+      title: `${title} · slashskills`,
       description,
       url: agent.guideRoute,
+      images: ogImage({ title, description }, `${title} · slashskills`),
     },
   };
 }

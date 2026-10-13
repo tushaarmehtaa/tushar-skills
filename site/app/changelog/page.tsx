@@ -2,15 +2,17 @@ import { Crumb } from "@/components/crumb";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import type { Metadata } from "next";
+import { ogImage } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "changelog",
-  description: "What's changed in slashskills — new skills, updates, and fixes.",
+  description: "What changed in slashskills: new skills, updates and fixes.",
   alternates: { canonical: "/changelog" },
   openGraph: {
-    title: "changelog — slashskills",
-    description: "What's changed in slashskills — new skills, updates, and fixes.",
+    title: "changelog · slashskills",
+    description: "What changed in slashskills: new skills, updates and fixes.",
     url: "/changelog",
+    images: ogImage({ title: "Changelog", description: "What changed in slashskills: new skills, updates and fixes." }, "Changelog · slashskills"),
   },
 };
 

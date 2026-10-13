@@ -9,6 +9,7 @@ import { GuideCode } from "./guide-code";
 import { TrackedLink } from "./tracked-link";
 import { renderMarkdown } from "@/lib/markdown";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { ogImage } from "@/lib/og";
 import type { EditorialGuide as Guide } from "@/lib/guides";
 
 export function guideMetadata(guide: Guide): Metadata {
@@ -18,7 +19,7 @@ export function guideMetadata(guide: Guide): Metadata {
     alternates: { canonical: `/guides/${guide.slug}` },
     openGraph: {
       title: guide.title, description: guide.description,
-      images: [{ url: `/api/og?skill=${encodeURIComponent(guide.title)}&description=${encodeURIComponent(guide.description)}`, width: 1200, height: 630, alt: guide.title }],
+      images: ogImage({ title: guide.title, description: guide.description }, guide.title),
       type: "article", url: `/guides/${guide.slug}`, publishedTime: guide.date, modifiedTime: guide.updatedDate ?? guide.date, authors: ["Tushar Mehta"],
     },
   };

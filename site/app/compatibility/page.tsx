@@ -4,6 +4,7 @@ import { skillHref } from "@/lib/canvas";
 import Link from "next/link";
 import { SkillIcon } from "@/components/brand/skill-icon";
 import type { Metadata } from "next";
+import { ogImage } from "@/lib/og";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { RuntimeLogo, RuntimeLogoTile } from "@/components/runtime-logo";
@@ -15,9 +16,10 @@ export const metadata: Metadata = {
   description: "Compare required access and supported surfaces for slashskills across local coding agents and chat apps.",
   alternates: { canonical: "/compatibility" },
   openGraph: {
-    title: "Agent Skills requirements — slashskills",
+    title: "Agent Skills requirements · slashskills",
     description: "Compare required access and supported surfaces for slashskills across local coding agents and chat apps.",
     url: "/compatibility",
+    images: ogImage({ title: "Requirements", description: "Compare required access and supported surfaces for slashskills across local coding agents and chat apps." }, "Requirements · slashskills"),
   },
 };
 

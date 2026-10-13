@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ogImage } from "@/lib/og";
 import { GuideLayout, GuideSection } from "@/components/guide-layout";
 import { RuntimeLogo } from "@/components/runtime-logo";
 import { TrackedLink } from "@/components/tracked-link";
@@ -12,9 +13,10 @@ export const metadata: Metadata = {
   description: "Choose a ChatGPT skill, upload it, or package a reusable workflow as a plugin with a checked decision-doc example and sharing guidance.",
   alternates: { canonical: "/guides/chatgpt" },
   openGraph: {
-    title: "ChatGPT Skills and plugin packaging guide — slashskills",
+    title: "ChatGPT Skills and plugin packaging guide · slashskills",
     description: "Choose a ChatGPT skill, upload it, or package a reusable workflow as a plugin with a checked decision-doc example and sharing guidance.",
     url: "/guides/chatgpt",
+    images: ogImage({ title: "ChatGPT Skills and plugin packaging guide", description: "Choose a ChatGPT skill, upload it, or package a reusable workflow as a plugin with a checked decision-doc example and sharing guidance." }, "ChatGPT Skills and plugin packaging guide · slashskills"),
   },
 };
 

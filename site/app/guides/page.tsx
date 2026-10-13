@@ -2,6 +2,7 @@ import { CanvasIcon } from "@/components/canvas-icon";
 import { Crumb } from "@/components/crumb";
 import { RuntimeLogo } from "@/components/runtime-logo";
 import type { Metadata } from "next";
+import { ogImage } from "@/lib/og";
 import Link from "next/link";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -20,9 +21,10 @@ export const metadata: Metadata = {
     googleBot: { index: false, follow: true },
   },
   openGraph: {
-    title: "Guides — slashskills",
+    title: "Guides · slashskills",
     description: "Installation help and practical workflows for Agent Skills.",
     url: "/guides",
+    images: ogImage({ title: "Guides", description: "Installation help and practical workflows for Agent Skills." }, "Guides · slashskills"),
   },
 };
 

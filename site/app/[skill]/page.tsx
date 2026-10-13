@@ -8,6 +8,7 @@ import { buildBrandSkills } from "@/lib/brand";
 import { getAllSkills, getSkill } from "@/lib/skills";
 import { packageFileAnchor, renderMarkdown } from "@/lib/markdown";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { ogImage } from "@/lib/og";
 import { getProfile } from "@/lib/profiles";
 
 const siteUrl = "https://www.slashskills.xyz";
@@ -29,28 +30,13 @@ export async function generateMetadata({
   const skill = getSkill(slug);
   if (!skill) return {};
 
-  const ogImageUrl = `/api/og?skill=${encodeURIComponent(skill.name)}&description=${encodeURIComponent(skill.description)}`;
-
   return {
     title: `/${skill.name}`,
     description: skill.description,
     openGraph: {
-      title: `/${skill.name} — slashskills`,
+      title: `/${skill.name} · slashskills`,
       description: skill.description,
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: `/${skill.name} — ${skill.description}`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `/${skill.name} — slashskills`,
-      description: skill.description,
-      images: [ogImageUrl],
+      images: ogImage({ skill: skill.name }, `/${skill.name}: ${skill.description}`),
     },
     alternates: {
       canonical: skillHref(slug),

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: siteName,
-    template: `%s — ${siteName}`,
+    template: `%s · ${siteName}`,
   },
   description: siteDescription,
   applicationName: siteName,
@@ -31,20 +31,11 @@ export const metadata: Metadata = {
     title: siteName,
     description: siteDescription,
     url: siteUrl,
-    images: [
-      {
-        url: "/api/og",
-        width: 1200,
-        height: 630,
-        alt: "slashskills — workflows saved as Agent Skills",
-      },
-    ],
+    images: [{ url: "/api/og", width: 1200, height: 630, alt: "slashskills: good work starts with a useful skill" }],
   },
+  // Card type only: X falls back to each page's og:title, og:description and og:image.
   twitter: {
     card: "summary_large_image",
-    title: siteName,
-    description: siteDescription,
-    images: ["/api/og"],
   },
   manifest: "/site.webmanifest",
   alternates: {

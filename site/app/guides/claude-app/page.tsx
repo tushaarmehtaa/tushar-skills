@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ogImage } from "@/lib/og";
 import { GuideLayout, GuideSection } from "@/components/guide-layout";
 import { RuntimeLogo } from "@/components/runtime-logo";
 import { TrackedLink } from "@/components/tracked-link";
@@ -11,9 +12,10 @@ export const metadata: Metadata = {
   description: "Use chat-capable slashskills in the Claude web, desktop, or mobile app without confusing them with local coding workflows.",
   alternates: { canonical: "/guides/claude-app" },
   openGraph: {
-    title: "Claude app skill upload guide — slashskills",
+    title: "Claude app skill upload guide · slashskills",
     description: "Use chat-capable slashskills in the Claude web, desktop, or mobile app without confusing them with local coding workflows.",
     url: "/guides/claude-app",
+    images: ogImage({ title: "Claude app skill upload guide", description: "Use chat-capable slashskills in the Claude web, desktop, or mobile app without confusing them with local coding workflows." }, "Claude app skill upload guide · slashskills"),
   },
 };
 
