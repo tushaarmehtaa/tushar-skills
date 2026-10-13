@@ -36,6 +36,7 @@ export const TASK_GROUPS = {
     "credit-metering",
     "ai-cost-audit",
     "analytics",
+    "who-to-sell-to",
     "cold-outreach",
     "product-experiments",
   ],
@@ -77,6 +78,7 @@ export const TASK_TITLES: Record<string, string> = {
   "credit-metering": "Meter product usage",
   "ai-cost-audit": "Understand your AI costs",
   analytics: "Measure what matters",
+  "who-to-sell-to": "Find who to sell to",
   "cold-outreach": "Start a conversation",
   "product-experiments": "Test what could work",
   humanize: "Make your writing sound human",
@@ -249,6 +251,11 @@ export const SKILL_DISPLAY: Record<
     summary: "Choose useful events and verify your tracking.",
     flow: "Events → Measures",
     icon: "growth",
+  },
+  "who-to-sell-to": {
+    summary: "Find who buys from your real deals.",
+    flow: "Deals → ICP",
+    icon: "search",
   },
   "cold-outreach": {
     summary: "Write relevant outreach with a clear next step.",

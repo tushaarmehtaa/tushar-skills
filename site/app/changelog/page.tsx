@@ -28,6 +28,12 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    date: "2026-10-13",
+    entries: [
+      { type: "skill", text: "added /who-to-sell-to: an interview that finds your ideal customer from your real paid and lost deals, then hands back a one-page report with the ICP up top and the plan behind a click; 35 skills total" },
+    ],
+  },
+  {
     date: "2026-10-10",
     entries: [
       { type: "site", text: "all 34 skill pages now show a real run as a result card: what you asked, and what came back" },

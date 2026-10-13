@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
           </div>
         </div>
         <svg width="320" height="260" viewBox="0 0 620 250">
-          {Array.from({ length: 34 }, (_, j) => (
+          {Array.from({ length: 35 }, (_, j) => (
             <path
               key={j}
               d={`M30 ${28 + j * 5} C180 ${28 + j * 5} 270 ${217 - j * 5} 590 ${217 - j * 5}`}
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
               strokeWidth="1"
             />
           ))}
-          {Array.from({ length: 34 }, (_, j) => (
+          {Array.from({ length: 35 }, (_, j) => (
             <path
               key={`c${j}`}
               d={`M${95 + j * 12} 10 Q${220 + j * 4} 115 ${490 - j * 9} 225`}

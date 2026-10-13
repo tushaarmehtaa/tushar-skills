@@ -113,6 +113,7 @@ test("Claude app gating matches the exact chat-capable whitelist", () => {
     "decision-doc",
     "fundraising",
     "humanize",
+    "who-to-sell-to",
     "landing-copy",
     "product-spec",
     "product-teardown",

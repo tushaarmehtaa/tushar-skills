@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fieldwork: ICP and 90-day plan</title>
+<!--
+  who-to-sell-to report template.
+  This file is a finished EXAMPLE report for a fictional company, Fieldwork.
+  Keep the structure, classes and styles. Replace every piece of content.
+  Delete sections with no content. Remove data-example from <body> when done.
+  Self-contained on purpose: no external fonts, scripts or images.
+-->
+<style>
+  :root {
+    --paper: #ffffff;
+    --ink: #18202c;
+    --sub: #5a6372;
+    --faint: #8a92a0;
+    --rule: #e2e5ea;
+    --wash: #f4f6f8;
+    --card: #18202c;
+    --card-ink: #f3f5f7;
+    --card-sub: #a9b2c0;
+    --fit: #1d7a57;
+    --fit-wash: #e7f3ee;
+    --notfit: #ad3a2c;
+    --notfit-wash: #f8ebe8;
+    --mark: #f3d36b;
+    --measure: 46rem;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+  }
+  main { max-width: var(--measure); margin: 0 auto; padding: 3.5rem 1.5rem 5rem; }
+
+  /* Title block */
+  .masthead { margin-bottom: 2rem; }
+  .masthead h1 {
+    font-size: clamp(2rem, 5vw, 2.9rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    font-weight: 750;
+    margin: 0 0 0.75rem;
+  }
+  .masthead p { margin: 0; color: var(--sub); }
+
+  /* ICP card: the one bold element */
+  .icp {
+    background: var(--card);
+    color: var(--card-ink);
+    border-radius: 14px;
+    padding: 2rem 2rem 1.5rem;
+    margin: 0 0 3rem;
+  }
+  .icp .statement {
+    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    line-height: 1.3;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.75rem;
+  }
+  .icp dl { margin: 0; display: grid; grid-template-columns: 7.5rem 1fr; }
+  .icp dt, .icp dd { padding: 0.8rem 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 0; }
+  .icp dt { color: var(--card-sub); font-weight: 600; }
+  .icp dd.not { color: #f2b8ae; }
+  .icp .foot { margin-top: 1.25rem; color: var(--card-sub); font-size: 0.85rem; }
+  .test { border-bottom: 1px dashed currentColor; }
+
+  /* Sections */
+  section { margin: 0 0 3rem; }
+  h2 {
+    font-size: 1.45rem;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    margin: 0 0 0.6rem;
+    font-weight: 700;
+  }
+  h3 { font-size: 1.02rem; margin: 1.6rem 0 0.5rem; font-weight: 650; }
+  .lead { font-size: 1.08rem; margin: 0 0 1.25rem; max-width: 40rem; }
+  p { margin: 0 0 1rem; max-width: 40rem; }
+
+  /* Tables */
+  .scroll { overflow-x: auto; margin: 0 0 1rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+  th, td { text-align: left; vertical-align: top; padding: 0.6rem 0.75rem 0.6rem 0; border-bottom: 1px solid var(--rule); }
+  th { color: var(--sub); font-weight: 600; border-bottom: 1.5px solid var(--ink); white-space: nowrap; }
+  td.num, th.num { text-align: right; padding-right: 1.5rem; }
+  td:last-child, th:last-child { padding-right: 0; }
+  .won { color: var(--fit); font-weight: 600; }
+  .lost { color: var(--notfit); font-weight: 600; }
+
+  /* Patterns */
+  ol.patterns { padding: 0; margin: 0; list-style: none; counter-reset: p; }
+  ol.patterns li { counter-increment: p; display: grid; grid-template-columns: 2rem 1fr; padding: 0.85rem 0; border-top: 1px solid var(--rule); }
+  ol.patterns li::before { content: counter(p); font-weight: 700; color: var(--fit); }
+  ol.patterns strong { display: block; }
+  ol.patterns span { color: var(--sub); }
+
+  /* Offer ladder: a real sequence, so it's numbered */
+  .ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; margin: 0 0 1.25rem; }
+  .step { padding: 1.1rem 1.1rem 1.25rem; border-left: 1px solid var(--rule); }
+  .step:first-child { border-left: 0; }
+  .step.core { background: var(--fit-wash); }
+  .step .n { color: var(--faint); font-weight: 600; font-size: 0.85rem; }
+  .step h3 { margin: 0.2rem 0 0.35rem; }
+  .step .price { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .step p { color: var(--sub); font-size: 0.9rem; margin: 0; }
+
+  /* Pipeline funnel */
+  .funnel { margin: 0 0 1.5rem; }
+  .bar { display: grid; grid-template-columns: 11rem 1fr; align-items: center; gap: 0.75rem; margin: 0.35rem 0; }
+  .bar .label { color: var(--sub); font-size: 0.92rem; }
+  .bar .fill { background: var(--wash); border-radius: 6px; height: 2rem; position: relative; }
+  .bar .fill i { position: absolute; inset: 0 auto 0 0; background: var(--ink); border-radius: 6px; display: flex; align-items: center; padding-left: 0.6rem; color: #fff; font-style: normal; font-weight: 650; font-size: 0.9rem; white-space: nowrap; }
+
+  /* Lists */
+  ul.plain { padding-left: 1.1rem; margin: 0 0 1rem; }
+  ul.plain li { margin: 0.3rem 0; }
+  ul.checks { list-style: none; padding: 0; margin: 0 0 1rem; }
+  ul.checks li { position: relative; padding: 0.45rem 0 0.45rem 1.9rem; border-top: 1px solid var(--rule); }
+  ul.checks li::before { content: ""; position: absolute; left: 0; top: 0.68rem; width: 1rem; height: 1rem; border: 1.5px solid var(--ink); border-radius: 4px; }
+
+  blockquote { margin: 0 0 1rem; padding: 1rem 1.2rem; background: var(--wash); border-radius: 10px; max-width: 40rem; }
+  .note { background: var(--mark); padding: 0 0.2em; border-radius: 3px; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 1.25rem; color: var(--faint); font-size: 0.85rem; }
+  footer a { color: var(--sub); }
+
+  @media (max-width: 640px) {
+    main { padding-top: 2rem; }
+    .icp { padding: 1.5rem 1.25rem 1.25rem; }
+    .icp dl { grid-template-columns: 1fr; }
+    .icp dt { border-top: 1px solid rgba(255,255,255,0.12); padding-bottom: 0; }
+    .icp dd { border-top: 0; padding-top: 0.2rem; }
+    .ladder { grid-template-columns: 1fr; }
+    .step { border-left: 0; border-top: 1px solid var(--rule); }
+    .step:first-child { border-top: 0; }
+    .bar { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+  @media print {
+    main { padding: 0; max-width: none; }
+    .icp, .step.core, .bar .fill i { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    section, .icp, table, .ladder { break-inside: avoid; }
+  }
+
+  /* Hero layout: ICP card with this-week beside it */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; margin: 0 0 2.25rem; }
+  .hero .icp { margin: 0; }
+  .week { border: 1px solid var(--rule); border-radius: 14px; padding: 1.4rem 1.4rem 0.9rem; }
+  .week h2 { font-size: 1.05rem; margin: 0 0 0.6rem; }
+  .week ul.checks { margin: 0; }
+  .week ul.checks li:first-child { border-top: 0; }
+
+  /* Toolbar */
+  .tools { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 0.5rem; color: var(--sub); font-size: 0.9rem; }
+  .tools button { font: inherit; color: var(--ink); background: none; border: 0; padding: 0.25rem 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .tools button:focus-visible, summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+  .tools button[hidden] { display: none; }
+
+  /* Collapsible sections: each row states its conclusion while closed */
+  details.sec { border-top: 1px solid var(--rule); }
+  details.sec:last-of-type { border-bottom: 1px solid var(--rule); }
+  details.sec > summary { display: grid; grid-template-columns: 1fr 1.25rem; gap: 0 1rem; align-items: center; padding: 1.1rem 0; cursor: pointer; list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  details.sec > summary .t { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.012em; grid-column: 1; }
+  details.sec > summary .c { grid-column: 1; color: var(--sub); max-width: 40rem; }
+  details.sec > summary::after, details.sub > summary::after, details.deal > summary::after { content: ""; width: 0.55rem; height: 0.55rem; border-right: 1.5px solid var(--faint); border-bottom: 1.5px solid var(--faint); transform: rotate(-45deg); transition: transform 0.15s; justify-self: end; }
+  details.sec > summary::after { grid-column: 2; grid-row: 1 / span 2; }
+  details[open] > summary::after { transform: rotate(45deg); }
+  details.sec > .body { padding: 0 0 1.75rem; }
+  details.sec > .body > :first-child { margin-top: 0; }
+
+  /* Nested blocks */
+  details.sub, details.deal { border: 1px solid var(--rule); border-radius: 10px; margin: 0 0 0.6rem; }
+  details.sub > summary, details.deal > summary { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; cursor: pointer; list-style: none; font-weight: 600; }
+  details.sub > summary::after, details.deal > summary::after { margin-left: auto; flex-shrink: 0; }
+  details.deal > summary .who { flex: 1; min-width: 0; }
+  details.sub > .body, details.deal > .body { padding: 0 1rem 1rem; }
+  details.sub > .body > :last-child, details.deal > .body > :last-child { margin-bottom: 0; }
+  details.deal dl { display: grid; grid-template-columns: 7rem 1fr; margin: 0; }
+  details.deal dt, details.deal dd { padding: 0.45rem 0; border-top: 1px solid var(--rule); margin: 0; }
+  details.deal dt { color: var(--sub); font-weight: 600; }
+  .meta { color: var(--faint); font-weight: 500; font-size: 0.88rem; }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    details.deal dl { grid-template-columns: 1fr; }
+    details.deal dt { border-top: 1px solid var(--rule); padding-bottom: 0; }
+    details.deal dd { border-top: 0; padding-top: 0.15rem; }
+  }
+  @media print {
+    .tools { display: none; }
+    details.sec, details.sub, details.deal { break-inside: avoid; }
+  }
+
+</style>
+</head>
+<body data-example="true">
+<main>
+
+  <header class="masthead">
+    <h1>Fieldwork: who buys, when, and the next 90 days</h1>
+    <p>Built from 5 real deals and 1 paid workshop. As of 12 Oct 2026.</p>
+  </header>
+
+  <!-- HERO: ICP card (required) beside the three tasks for this week -->
+  <div class="hero">
+    <div class="icp" aria-label="Ideal customer profile">
+      <p class="statement">Independent vet clinics with 2-5 vets, in the 60 days after opening a second site or losing their bookkeeper.</p>
+      <dl>
+        <dt>Who</dt>
+        <dd>Owner-run veterinary clinics with 8-25 staff and $1-4M in revenue, still on spreadsheets or a part-time bookkeeper</dd>
+        <dt>When</dt>
+        <dd>A second location opens, a partner buys in, the bookkeeper quits, or a tax deadline is missed</dd>
+        <dt>Buyer</dt>
+        <dd>The owner-vet, or a practice manager who brings the owner into the call</dd>
+        <dt>Replaces</dt>
+        <dd>A part-time in-house bookkeeper and the owner's Sunday-night spreadsheets</dd>
+        <dt>Not a fit</dt>
+        <dd class="not">Corporate-owned clinics; no change coming in the next 60 days; only a front-desk contact; owners who won't share read-only bank access</dd>
+      </dl>
+      <p class="foot">Lines marked <span class="test">like this</span> are hypotheses still to test.</p>
+    </div>
+    <aside class="week" aria-label="This week">
+      <h2>This week</h2>
+      <ul class="checks">
+        <li>Build a 45-clinic target list from new-location filings</li>
+        <li>Send the first 10 messages that open with the trigger</li>
+        <li>Write the cleanup-project offer as a one-page scope</li>
+      </ul>
+    </aside>
+  </div>
+
+  <div class="tools">
+    <span>Open any section for the evidence and the plan.</span>
+    <button type="button" id="toggle-all" hidden>Expand all</button>
+  </div>
+
+  <!-- SECTIONS: summary = one-sentence conclusion. Delete any section with no content. -->
+
+  <details class="sec">
+    <summary><span class="t">Goals</span><span class="c">Five retainer clients and $10K a month by the end of the quarter, up from two clients and $4.2K today.</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <thead><tr><th>Goal</th><th>90-day target</th><th>Today</th></tr></thead>
+        <tbody>
+          <tr><td>Retainer clients</td><td>5</td><td>2</td></tr>
+          <tr><td>Monthly recurring revenue</td><td>$10K</td><td>$4.2K</td></tr>
+          <tr><td>Written case studies</td><td>2</td><td>0</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Evidence</span><span class="c">Retainers closed when the owner was on the call and a trigger was live; deals died with a receptionist or head office.</span></summary>
+    <div class="body">
+      <details class="deal">
+        <summary><span class="who">Lakeside Vet Group, 2 sites <span class="meta">Owner</span></span><span class="won">$2.4K/month, 8 months</span></summary>
+        <div class="body"><dl>
+          <dt>Trigger</dt><dd>Second location opened and the bookkeeper quit</dd>
+          <dt>What we did</dt><dd>Cleanup project, then monthly bookkeeping for both sites</dd>
+          <dt>Lesson</dt><dd>A live trigger plus the owner is the fastest close</dd>
+        </dl></div>
+      </details>
+      <details class="deal">
+        <summary><span class="who">Harbor Animal Clinic <span class="meta">Practice manager, then owner</span></span><span class="won">$1.8K/month, 5 months</span></summary>
+        <div class="body"><dl>
+          <dt>Trigger</dt><dd>A new partner bought in</dd>
+          <dt>What we did</dt><dd>Month-end close and partner reporting</dd>
+          <dt>Lesson</dt><dd>The manager got the owner on the call; that is the champion path</dd>
+        </dl></div>
+      </details>
+      <details class="deal">
+        <summary><span class="who">Pinecrest Pets <span class="meta">Practice manager</span></span><span class="won">$600, one-off</span></summary>
+        <div class="body"><dl>
+          <dt>Trigger</dt><dd>Missed a tax deadline</dd>
+          <dt>What we did</dt><dd>One cleanup project</dd>
+          <dt>Lesson</dt><dd>A manager alone buys a project, not a retainer</dd>
+        </dl></div>
+      </details>
+      <details class="deal">
+        <summary><span class="who">Corner Paws <span class="meta">Receptionist</span></span><span class="lost">Lost</span></summary>
+        <div class="body"><dl>
+          <dt>Trigger</dt><dd>None</dd>
+          <dt>Lesson</dt><dd>No authority, no urgency</dd>
+        </dl></div>
+      </details>
+      <details class="deal">
+        <summary><span class="who">Valley Vet Corp <span class="meta">Regional finance</span></span><span class="lost">Lost</span></summary>
+        <div class="body"><dl>
+          <dt>Trigger</dt><dd>None</dd>
+          <dt>Lesson</dt><dd>Corporate-owned, so every approval went to head office</dd>
+        </dl></div>
+      </details>
+      <details class="sub">
+        <summary>Paid workshop</summary>
+        <div class="body"><div class="scroll"><table>
+          <thead><tr><th>Program</th><th>Who came</th><th class="num">Price</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>Month-end close workshop</td><td>14; mostly practice managers</td><td class="num">$199</td><td>3 became retainer leads</td></tr>
+          </tbody>
+        </table></div></div>
+      </details>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Patterns</span><span class="c">Four findings decide the ICP; each traces to specific deals.</span></summary>
+    <div class="body">
+      <ol class="patterns">
+        <li><div><strong>Owners buy; managers scope.</strong><span>Both retainers had the owner on a call. Pinecrest stayed a one-off.</span></div></li>
+        <li><div><strong>Triggers beat budgets.</strong><span>Both retainers began within 30 days of a trigger. Both losses had none.</span></div></li>
+        <li><div><strong>Corporate ownership kills the deal.</strong><span>Valley Vet Corp could not approve anything locally.</span></div></li>
+        <li><div><strong>Every retainer started with a cleanup project.</strong><span>The fixed-price project removed the risk of a first yes.</span></div></li>
+      </ol>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Offer ladder</span><span class="c">Every client climbs three steps: a fixed-price cleanup, a monthly retainer, then planning calls on top.</span></summary>
+    <div class="body">
+      <div class="ladder">
+        <div class="step"><div class="n">Step 1</div><h3>Cleanup</h3><div class="price">$600-1.5K</div><p>One-off catch-up of the books. A low-risk first yes.</p></div>
+        <div class="step core"><div class="n">Step 2</div><h3>Retainer</h3><div class="price">$1.8-2.4K/month</div><p>Monthly close and owner reporting.</p></div>
+        <div class="step"><div class="n">Step 3</div><h3>Planning calls</h3><div class="price">$400 each</div><p>Quarterly cash and hiring planning with the owner.</p></div>
+      </div>
+      <ul class="plain">
+        <li>Anchor price against a part-time bookkeeper, not other firms.</li>
+        <li>Cut scope to match any discount.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Sales plan</span><span class="c">Three more clients needs about 45 targets and 12 owner calls, assuming 1 in 4 qualified calls closes.</span></summary>
+    <div class="body">
+      <details class="sub">
+        <summary>Pipeline math</summary>
+        <div class="body"><div class="funnel" role="img" aria-label="Pipeline: 45 targets, 12 owner calls, 6 proposals, 3 signed">
+          <div class="bar"><span class="label">Target list</span><div class="fill"><i style="width:100%">45</i></div></div>
+          <div class="bar"><span class="label">Owner calls</span><div class="fill"><i style="width:27%">12</i></div></div>
+          <div class="bar"><span class="label">Proposals</span><div class="fill"><i style="width:14%">6</i></div></div>
+          <div class="bar"><span class="label">Signed</span><div class="fill"><i style="width:8%">3</i></div></div>
+        </div></div>
+      </details>
+      <details class="sub">
+        <summary>Qualify before pitching</summary>
+        <div class="body"><ul class="checks">
+          <li>2-5 vets, independently owned</li>
+          <li>Owner on the call, or a manager who will bring them in</li>
+          <li>A trigger in the next 60 days</li>
+          <li>Read-only bank access is acceptable</li>
+        </ul></div>
+      </details>
+      <details class="sub">
+        <summary>Outreach message</summary>
+        <div class="body"><blockquote>Saw you're opening a second location. When Lakeside Vet Group opened theirs, we had both sites' books closed within 6 days of month-end. Want 20 minutes on setting that up before the new site's first payroll?</blockquote></div>
+      </details>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Workshops</span><span class="c">Practice managers want a cleaner month-end, and workshops are how they find us before an owner does.</span></summary>
+    <div class="body">
+      <p>Positioning: "Close your month in 3 days." <span class="note">"Saves 10 hours a week" stays out until three clinics have tracked it.</span></p>
+      <ul class="plain">
+        <li>One live workshop a month, $199</li>
+        <li>A month-end checklist as the take-home</li>
+        <li>An offer of a free books review to attendees whose owner will join a call</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Content</span><span class="c">Content gets owners to recognize us so the first small ask is easy; it doesn't need to close.</span></summary>
+    <div class="body">
+      <details class="sub">
+        <summary>LinkedIn <span class="meta">2 a week</span></summary>
+        <div class="body"><p>Audience: practice managers and owners. Post one client result and one month-end tip.</p></div>
+      </details>
+      <details class="sub">
+        <summary>Newsletter <span class="meta">1 a week</span></summary>
+        <div class="body"><p>Audience: past attendees and leads. One short essay and one checklist.</p></div>
+      </details>
+      <details class="sub">
+        <summary>Vet-owner forums <span class="test">(to test)</span> <span class="meta">3 a week</span></summary>
+        <div class="body"><p>Audience: owners. Answer questions, no pitching. Review after 8 weeks.</p></div>
+      </details>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Time and scorecard</span><span class="c">40 hours a week, weighted to client work and sales.</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <thead><tr><th>Area</th><th class="num">Hours/week</th><th>Weekly metric</th></tr></thead>
+        <tbody>
+          <tr><td>Client work</td><td class="num">20</td><td>Books closed by day 6</td></tr>
+          <tr><td>Sales</td><td class="num">10</td><td>Owner calls booked</td></tr>
+          <tr><td>Workshops</td><td class="num">5</td><td>Attendees who book a review</td></tr>
+          <tr><td>Content</td><td class="num">5</td><td>Replies traced to a post</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary><span class="t">Open questions</span><span class="c">Two things the interview could not settle.</span></summary>
+    <div class="body">
+      <ul class="plain">
+        <li>Does cold outreach reach owners, or only warm introductions? Know after 20 sends.</li>
+        <li>Do clinics outside the first metro area buy at the same price?</li>
+      </ul>
+    </div>
+  </details>
+
+  <footer>
+    Made with <a href="https://www.slashskills.xyz">/who-to-sell-to</a> from slashskills.
+  </footer>
+
+</main>
+<script>
+  // Optional: expand or collapse every section. The page works without it.
+  (function () {
+    var all = document.querySelectorAll("details");
+    var btn = document.getElementById("toggle-all");
+    if (!btn || !all.length) return;
+    btn.hidden = false;
+    btn.addEventListener("click", function () {
+      var open = btn.textContent === "Expand all";
+      all.forEach(function (d) { d.open = open; });
+      btn.textContent = open ? "Collapse all" : "Expand all";
+    });
+    window.addEventListener("beforeprint", function () { all.forEach(function (d) { d.open = true; }); });
+  })();
+</script>
+</body>
+</html>

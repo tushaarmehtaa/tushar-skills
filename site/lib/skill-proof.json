@@ -1,35 +1,487 @@
 {
-  "remove-ai-slop": {
-    "request": "Our Tallyroom homepage looks and reads like every other AI-generated startup site. Go through it, strip out the generic stuff, and apply the fixes.",
-    "summary": "Rewrote the Tallyroom hero from facts already in the repo and removed the gradients, emoji tiles and placeholder image.",
+  "agent-instructions": {
+    "request": "Set up instructions for the coding agents that work in this repo. We use both Claude Code and Codex.",
+    "summary": "Wrote one AGENTS.md for Codex plus a CLAUDE.md that imports it, after running the repo's test and lint commands.",
     "excerpt": [
-      "\"Revolutionize the Way You Manage Shared Expenses\" and the \"unlock… seamless… empowers… elevate your financial harmony\" paragraph never said what the product does. It also claimed \"AI-driven,\" and nothing in the repo shows AI.",
-      "\"Get Started Today 🚀\" / \"Learn More\" didn't say where they lead. They now read \"Compare plans\" (goes to /pricing) and \"See a sample group\" (goes to /dashboard).",
-      "`hero-dashboard.png` was a grey wireframe on a grainy gradient, 3 MB, with alt text calling it the Tallyroom dashboard. I replaced it with a real table of four expenses from the sample group."
+      "I've added two files: `AGENTS.md` holds all the instructions, and `CLAUDE.md` pulls them in with an import, so Codex and Claude Code read the same text. Nothing is committed yet.",
+      "The default reading speed (230 words per minute) is set in two places, `src/count.js` and `bin/mdtally.js`, so they have to change together.",
+      "The lint script names each file it checks, so any new source file has to be added to it by hand."
     ],
-    "images": {
-      "before": "/proof/remove-ai-slop/before.jpg",
-      "after": "/proof/remove-ai-slop/after.jpg",
-      "caption": "Tallyroom homepage at 1440px. The gradient hero and wireframe image became plain copy and a real expense table."
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 56,
+      "triggered": "auto",
+      "filesChanged": 2
+    },
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "package.json",
+        "text": "{\n  \"name\": \"mdtally\",\n  \"version\": \"0.3.1\",\n  \"description\": \"Count words and estimate reading time for Markdown files\",\n  \"type\": \"module\",\n  \"bin\": { \"mdtally\": \"bin/mdtally.js\" },\n  \"engines\": { \"node\": \">=20\" },\n  \"scripts\": {\n    \"test\": \"node --test\",\n    \"lint\": \"node --check bin/mdtally.js && node --check src/count.js\"\n  },\n  \"license\": \"MIT\"\n}"
+      },
+      "after": {
+        "label": "AGENTS.md it wrote",
+        "text": "Before finishing a change, run `npm test` and `npm run lint`; both must pass.\n\n## Conventions\n\n- Keep zero dependencies. Use Node built-ins (`node:fs`, `node:test`, `node:assert/strict`) rather than adding packages.\n- Use double quotes, semicolons, and named exports, matching existing files.\n- Add a test in `test/count.test.js` for any change to counting or reading-time behavior.\n- The default reading speed is 230 wpm, and it is set in two places: `readingMinutes` in `src/count.js` and the CLI fallback in `bin/mdtally.js`. Change both together.\n- Reading time rounds up to whole minutes, with a minimum of 1. Tests assert this."
+      }
+    }
+  },
+  "ai-cost-audit": {
+    "request": "Finance says AI is eating our margin. Here is last month of usage (usage-2026-09.csv) and context (context.md). What are we actually spending per user, and what can we cut without making the product worse? Write it up in cost-review.md.",
+    "summary": "Costed a month of AI usage per user, traced the margin loss to the free tier, and ranked four cuts by savings.",
+    "excerpt": [
+      "September AI spend comes to $13,819. That's $0.29 per monthly active user, or $4.46 per Pro subscriber if the whole bill is charged to paying users. Revenue is $24,800, so AI cost is 56% of it.",
+      "Where the margin goes: mostly the free tier. Features free users get account for $10,511 (76% of spend).",
+      "Batch the weekly digest: about $627/month. Nobody reads it before Monday 9am, so slower processing changes nothing for users.",
+      "The search-rerank caching idea doesn't hold up yet. The export's note says every call sends the same 2,400-token prompt, but the logged average input is only 1,600 tokens per call. Both can't be true."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 114,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "Prices come from the provided context and were not checked against official pricing.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "September usage",
+        "text": "feature,model,calls,input_tokens,output_tokens,cached_input_tokens,notes\nnote_summary,claude-sonnet-4-5,412000,1236000000,82400000,0,\"runs on every note save, even unchanged notes\"\nauto_tag,claude-sonnet-4-5,655000,393000000,6550000,0,\"returns 1-3 tags from a fixed list of 40\"\nsearch_rerank,claude-haiku-4-5,1840000,2944000000,18400000,0,\"same 2,400-token system prompt on every call\"\nweekly_digest,claude-sonnet-4-5,38000,304000000,22800000,0,\"sent Sunday night, nobody reads it before Monday 9am\"\nask_your_notes,claude-opus-4-1,21000,168000000,10500000,0,\"chat over notes, Pro only\""
+      },
+      "after": {
+        "label": "Cost review",
+        "text": "I've written `cost-review.md`. September AI spend comes to $13,819. That's $0.29 per monthly active user, or $4.46 per Pro subscriber if the whole bill is charged to paying users. Revenue is $24,800, so AI cost is 56% of it.\n\nWhere the margin goes: mostly the free tier. Features free users get account for $10,511 (76% of spend). An average Pro user costs about $1.29/month against $8 of revenue, so Pro is profitable. The ~44,900 free users cost about $9,800/month with no revenue behind them. If free users double while Pro stays flat, AI cost reaches about 95% of revenue. That growth risk matters more than any model choice."
+      }
+    }
+  },
+  "ai-product-development": {
+    "request": "Add a quick-add box to the Tallyroom dashboard: someone types something like \"paid 2400 for groceries, split with Maya and Kabir\" and it turns into a draft expense they confirm before it's saved. Use OpenAI (key is in .env.local).",
+    "summary": "Added a quick-add box that turns a typed note into a draft expense, checks the model's output, and saves only on confirm.",
+    "excerpt": [
+      "I've added the quick-add box to the dashboard, but I couldn't test it against OpenAI. The `OPENAI_API_KEY` in `.env.local` is a placeholder (`sk-test-…`, 28 characters), and OpenAI rejects it with a 401 even when called directly.",
+      "Names are matched against the group. Anyone who isn't a member is left out and listed in a warning.",
+      "If the amount isn't written exactly that way in the note (for example \"1.2k\"), it warns you to double-check it.",
+      "Confirmed expenses aren't saved. The app has no database, so Add expense only adds the row to the page, and it disappears on reload. There's a TODO where the save call should go."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 179,
+      "triggered": "auto",
+      "filesChanged": 9
+    },
+    "caveat": "OpenAI returned 401 for the test key, so no real model call succeeded; checks ran on a local stub.",
+    "pair": {
+      "kind": "code",
+      "before": {
+        "label": "app/dashboard/page.jsx before",
+        "text": "export default function Dashboard() {\n  const total = expenses.reduce((s, e) => s + e.amount, 0);\n  return (\n    <main className=\"page\">\n      <h1>Flat 4B — Indiranagar</h1>"
+      },
+      "after": {
+        "label": "lib/ai/quickAdd.js (new)",
+        "text": "export function toDraft(raw, { text, members, currentMember, today }) {\n  const warnings = [];\n\n  let amount = typeof raw.amount === \"number\" && Number.isFinite(raw.amount) ? Math.round(raw.amount * 100) / 100 : null;\n  if (amount !== null && (amount <= 0 || amount > MAX_AMOUNT)) amount = null;\n  if (amount === null) warnings.push(\"Couldn't find an amount — please enter it.\");\n  else if (!numbersInText(text).includes(amount)) warnings.push(\"Double-check the amount; it wasn't written exactly like that.\");\n\n  let paidBy = matchMember(raw.payer, members);\n  if (!paidBy) {\n    paidBy = currentMember;\n    if (raw.payer) warnings.push(`\"${raw.payer}\" isn't in this group, so the payer defaulted to you.`);\n  }"
+      }
+    }
+  },
+  "analytics": {
+    "request": "We launch next week and can't see anything. I want to know how many visitors reach pricing, how many click a plan, and to hear about it when the app throws errors. Set it up. PostHog and Sentry keys are in .env.local.",
+    "summary": "Set up PostHog page views, a plan_selected event and Sentry error capture, with query strings stripped from every URL.",
+    "excerpt": [
+      "PostHog and Sentry are set up and the production build passes, but nothing has reached either service yet. The values in `.env.local` are marked as fake fixture values, so no real events or errors were sent and I haven't confirmed anything in the PostHog or Sentry dashboards.",
+      "Plan clicks: a new `plan_selected` event with a `plan` property (`plus` or `household`), sent from the two \"Choose\" buttons.",
+      "Funnel: in PostHog, build a funnel of page view on `/pricing` → `plan_selected`, counting unique users.",
+      "Set up a Sentry alert rule (email or Slack) for new issues. Errors are only collected, not sent to you, until you do."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-10",
+      "durationSec": 140,
+      "triggered": "auto",
+      "filesChanged": 9
+    },
+    "caveat": "Ran with test keys; no event or error reached a real PostHog or Sentry project.",
+    "pair": {
+      "kind": "code",
+      "before": {
+        "label": "app/pricing/CheckoutButton.jsx before",
+        "text": "\"use client\";\nimport { checkoutUrl } from \"../../lib/checkout\";\n\nexport default function CheckoutButton({ plan, children }) {\n  return (\n    <a className=\"mini-btn\" href={checkoutUrl(plan)}>\n      {children}\n    </a>\n  );\n}"
+      },
+      "after": {
+        "label": "app/pricing/CheckoutButton.jsx after",
+        "text": "\"use client\";\nimport { checkoutUrl } from \"../../lib/checkout\";\nimport { trackPlanSelected } from \"../../lib/analytics\";\n\nexport default function CheckoutButton({ plan, children }) {\n  return (\n    <a className=\"mini-btn\" href={checkoutUrl(plan)} onClick={() => trackPlanSelected(plan)}>\n      {children}\n    </a>\n  );\n}"
+      }
+    }
+  },
+  "auth-implementation": {
+    "request": "Anyone can open /dashboard on Tallyroom right now. Add sign-in with Clerk (keys are in .env.local) so only signed-in people reach the dashboard and the plan checkout, and a person only sees the groups they're a member of.",
+    "summary": "Added Clerk sign-in, guarded the dashboard and checkout, limited groups to their members, and checked signed-out redirects.",
+    "excerpt": [
+      "Clerk sign-in is now in place. Signed-out visitors can't open the dashboard or start a checkout, and the dashboard only shows groups the signed-in person belongs to. The build passes and I checked the signed-out case against the running server. I haven't tested a real sign-in, because the keys in `.env.local` are fake test values, so the signed-in pages are still unchecked end to end.",
+      "Checks sit next to the data: the dashboard page and the new checkout route each check who is signed in themselves, so protection doesn't depend on `proxy.js` alone.",
+      "One security fix you didn't ask for: `lib/checkout.js` was putting the first 7 characters of `STRIPE_SECRET_KEY` into the checkout URL, and its fallback key string was bundled into code sent to the browser. I removed both, and the file is now server-only too."
+    ],
+    "table": {
+      "head": [
+        "Page",
+        "Signed out",
+        "Signed in, not a member",
+        "Signed in, member"
+      ],
+      "rows": [
+        [
+          "/, /pricing, /sign-in, /sign-up",
+          "open",
+          "open",
+          "open"
+        ],
+        [
+          "/dashboard",
+          "sent to sign-in",
+          "\"No groups yet\" message",
+          "their groups only"
+        ],
+        [
+          "/dashboard?group=<id>",
+          "sent to sign-in",
+          "404",
+          "that group"
+        ],
+        [
+          "/checkout/<plan>",
+          "sent to sign-in, then back after",
+          "continues to checkout",
+          "continues to checkout"
+        ]
+      ]
     },
     "run": {
       "agent": "Claude Code",
       "version": "2.1.295",
       "date": "2026-10-09",
-      "durationSec": 131,
+      "durationSec": 115,
       "triggered": "auto",
-      "filesChanged": 4
+      "filesChanged": 13
     },
-    "caveat": "It left the nav overflowing at 390px and listed that as out of scope.",
+    "caveat": "Ran with test Clerk keys; no real sign-in was tested, and group membership is a stub setting.",
+    "pair": {
+      "kind": "code",
+      "before": {
+        "label": "app/dashboard/page.jsx before",
+        "text": "export default function Dashboard() {\n  const total = expenses.reduce((s, e) => s + e.amount, 0);\n  return (\n    <main className=\"page\">\n      <h1>Flat 4B — Indiranagar</h1>"
+      },
+      "after": {
+        "label": "app/dashboard/page.jsx after",
+        "text": "import { auth } from \"@clerk/nextjs/server\";\nimport { notFound } from \"next/navigation\";\nimport { getGroupForUser, listGroupsForUser } from \"../../lib/groups\";\n\nexport default async function Dashboard({ searchParams }) {\n  const { userId, redirectToSignIn } = await auth();\n  if (!userId) return redirectToSignIn();\n\n  const groups = listGroupsForUser(userId);"
+      }
+    }
+  },
+  "changelog": {
+    "request": "Write up what we shipped this week for our users, something I can post on X.",
+    "summary": "Drafted a 271-character X post covering three shipped items and listed which commits it held back and why.",
+    "excerpt": [
+      "I've written a post, but most of this week's commits shouldn't be announced yet. Several of them would make the post untrue.",
+      "> This week on Tallyroom 🧾\n>\n> • A new top nav across the site, so you can get to Pricing and the FAQ from any page\n> • A first look at the product on the homepage\n> • A pricing FAQ that covers switching plans and who pays in a shared group\n>\n> More soon, with real billing next.",
+      "\"INR, USD, EUR, GBP, SGD and AED, with daily exchange rates\" in the FAQ. Nothing in `app/` or `lib/` handles currencies or exchange rates. I'd remove or soften that answer before people see it."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 27,
+      "triggered": "auto",
+      "filesChanged": 0
+    },
+    "caveat": "It wrote the post as text only and made no visual card.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "The week's git log",
+        "text": "b674c00 2026-10-08 Mention cancel-anytime on pricing\nc29bfe0 2026-10-07 Format rupee amounts with Indian digit grouping\n13bb2ae 2026-10-07 Add pricing FAQ\n2949f54 2026-10-06 Wire plan checkout buttons on pricing\nc47d313 2026-10-05 Add SupportDesk chat widget\na0ab97a 2026-10-04 Show product screenshot under the hero\n334b5e0 2026-10-03 Add top navigation to all pages\n14d98fd 2026-10-03 Add dashboard mock with expense ledger\nea9d4d9 2026-10-02 Add pricing page with plan comparison table\nb78774c 2026-10-01 Add landing hero and feature cards\n1a8cda0 2026-10-01 Scaffold Next.js app"
+      },
+      "after": {
+        "label": "Post and verdict",
+        "text": "I've written a post, but most of this week's commits shouldn't be announced yet. Several of them would make the post untrue.\n\nDraft for X (271 characters):\n\n> This week on Tallyroom 🧾\n>\n> • A new top nav across the site, so you can get to Pricing and the FAQ from any page\n> • A first look at the product on the homepage\n> • A pricing FAQ that covers switching plans and who pays in a shared group\n>\n> More soon, with real billing next."
+      }
+    }
+  },
+  "cold-outreach": {
+    "request": "I want to get Tallyroom in front of the person in prospect.md. Write the email I should send her and save it as email.md.",
+    "summary": "Wrote a short first email to a co-living ops head that opens on her own post and says plainly Tallyroom is pre-launch.",
+    "excerpt": [
+      "Opening: it starts with her Sep 29 LinkedIn post, where she said money between flatmates is Nestfold's top resident complaint and her team shouldn't be stuck sorting it out.",
+      "Being honest about where you are: it says plainly that you're pre-launch, that 31 people in 2 test flats used it in September, and that you have no co-living operator customers yet. That's also why the ask is a small pilot rather than a rollout.",
+      "Left out: I didn't use her August talk on move-out disputes. I don't know what she said, and those disputes are about deposits, not flatmate expenses."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 38,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "The prospect is a fictional test profile, so the email was never sent or answered.",
+    "pair": {
+      "kind": "text",
+      "before": {
+        "label": "Your notes on her",
+        "text": "What I know (from her public posts, saved Oct 6):\n- Posted on LinkedIn on Sep 29: \"Our #1 resident complaint this quarter isn't rent or maintenance. It's money between flatmates. Who paid for the gas cylinder, who owes for the party. We get pulled into it and we shouldn't be.\"\n- Spoke at a Bangalore proptech meetup in August about cutting move-out disputes.\n- Nestfold Living' careers page is hiring a \"Community Ops Associate\" whose duties include \"mediating resident cost-sharing disputes\"."
+      },
+      "after": {
+        "label": "The email",
+        "text": "Hi Ritika,\n\nYour Sep 29 post said Nestfold's top resident complaint this quarter is money between flatmates (the gas cylinder, the party), and that your team gets pulled in when it shouldn't. I also saw that the Community Ops Associate role includes mediating cost-sharing disputes.\n\nI'm building Tallyroom to keep those arguments between the flatmates. Each flat logs who paid for what, sees a running balance, and gets the fewest payments needed to settle up. It works in INR.\n\nTo be upfront: we're pre-launch. 31 people in 2 test flats used it in September, and we haven't worked with a co-living operator yet. That's why I'm asking about a small pilot rather than a rollout.\n\nWould you be open to a 20-minute call to see whether a pilot in one or two Nestfold properties makes sense? If someone else owns this, I'd be grateful if you could point me to them."
+      }
+    }
+  },
+  "credit-metering": {
+    "request": "Plus includes 50 receipt scans a month. Build the scan allowance: one scan uses one credit, Plus gets 50 every month, people can buy a 100-scan top-up, and a double-click or retry must never charge twice. The Postgres URL is in .env.local; the receipt OCR call itself can stay a stub.",
+    "summary": "Built a scan-credit ledger with a monthly 50, a 100-scan top-up and one charge per scan ID, tested under concurrency.",
+    "excerpt": [
+      "Scan credits are built: Plus gets 50 scans per paid billing month, one scan costs one credit, people can buy a 100-scan top-up, and a double-click or retry is charged once. The OCR call is still a stub. All 25 tests pass against a local Postgres 16, `next build` succeeds, and I ran an end-to-end check through the real routes.",
+      "30 simultaneous scans against 5 credits: exactly 5 succeed.",
+      "In the end-to-end run, 5 parallel requests with one scan ID produced one charge (one 409 \"already running\", four 200s), and a repeated webhook delivery returned `duplicate`.",
+      "There's no auth in the app. `lib/auth.js` returns the user from the `DEV_USER_ID` env var, and only outside production."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-10",
+      "durationSec": 424,
+      "triggered": "auto",
+      "filesChanged": 21
+    },
+    "caveat": "Ran with test keys on a throwaway local Postgres; no real Stripe payment or top-up went through.",
+    "pair": {
+      "kind": "code",
+      "before": {
+        "label": "app/pricing/page.jsx before",
+        "text": "const rows = [\n  [\"Groups\", \"1\", \"Unlimited\", \"Unlimited\", \"Unlimited\"],\n  [\"Members per group\", \"4\", \"20\", \"100\", \"Unlimited\"],\n  [\"Receipt scanning\", \"—\", \"50 / month\", \"Unlimited\", \"Unlimited\"],\n  [\"Multi-currency\", \"—\", \"✓\", \"✓\", \"✓\"],\n  [\"Recurring bills\", \"—\", \"✓\", \"✓\", \"✓\"],\n  [\"Export to CSV\", \"—\", \"—\", \"✓\", \"✓\"],\n  [\"Priority support\", \"—\", \"—\", \"—\", \"✓\"],\n];"
+      },
+      "after": {
+        "label": "lib/scan-credits.js (new)",
+        "text": "// Reserve one credit for a scan identified by the client's idempotency key.\n// Returns { replay: true, request } for an already-succeeded key.\nexport async function reserveScan(userId, idempotencyKey) {\n  return tx(async (c) => {\n    const acct = await lockAccount(c, userId);\n    await expireAllowanceIfDue(c, acct);\n    await releaseStale(c, acct);\n\n    const existing = (\n      await c.query(\"select * from scan_requests where user_id = $1 and idempotency_key = $2\", [userId, idempotencyKey])\n    ).rows[0];\n    if (existing?.status === \"succeeded\") return { replay: true, request: existing };\n    if (existing?.status === \"pending\") throw new ScanInProgress(\"This scan is already running\");"
+      }
+    }
+  },
+  "decision-doc": {
+    "request": "We have to pick how to do search for Driftwood. My messy notes are in search-notes.md. Write it up so Priya can make the call and the team can see why, save it under docs/.",
+    "summary": "Turned messy notes into a decision doc recommending Postgres search, with two checks that could flip the call.",
+    "excerpt": [
+      "Why Postgres: it's the only option that doesn't fail one of the team's hard constraints. Meilisearch would mean running a new service, which breaks \"no new on-call.\" Algolia's ~$1,100/month is over the $500 limit, so it needs CFO sign-off.",
+      "Sort the 41 August search tickets into typo, ingredient, filter and other. If typo complaints are the biggest group, Meilisearch becomes the better choice.",
+      "Sam's case for Meilisearch is written up fairly as the main counterargument, alongside Maya's preference for Postgres."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 63,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "Owners and due dates for the next steps are its own suggestions, flagged for checking.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "Your notes",
+        "text": "Options we talked about:\n1. Postgres full-text search (tsvector + GIN index, pg_trgm for typos). No new infra. Maya prototyped it in 2 days: p95 38ms on a prod snapshot. Typo tolerance with pg_trgm is \"okay, not great\". Faceted counts would need hand-written queries.\n2. Meilisearch self-hosted. Great typo tolerance and facets out of the box. Need to run + monitor another service and build a sync pipeline from Postgres. Sam estimates 2 weeks to production-ready.\n3. Algolia (hosted). Best relevance tooling, zero ops. Quote we got: about $1,100/month at our projected volume. Finance said anything over $500/month recurring needs CFO sign-off.\n\nConstraints: launch the new search before the January \"healthy eating\" campaign (Jan 6). Nobody wants a new on-call rotation."
+      },
+      "after": {
+        "label": "Decision record",
+        "text": "Build on Postgres full-text search (tsvector + GIN, with pg_trgm for typos), and start logging zero-result queries now. Look at it again in February with real query data. If typo misses or facet work turn out to be the bottleneck, move to Meilisearch or Algolia then.\n\nConfidence: medium. It covers the must-haves (ingredient search, filters, the deadline, no new on-call) with the least risk. It is weakest on typo tolerance, and we don't yet know how much typo tolerance matters to users."
+      }
+    }
+  },
+  "demo-video": {
+    "request": "Make a ~30-second demo video of Tallyroom that we can post with our launch announcement on X. Render it to an MP4.",
+    "summary": "Built a Remotion project and rendered a 32-second 1080p launch clip for X from the app's sample dashboard data.",
+    "excerpt": [
+      "The video is rendered: `video/out/tallyroom-launch-x-16x9.mp4`. It runs 32 seconds at 1920×1080, 30fps, H.264, and the file is 0.8 MB.",
+      "I made it to work with the sound off, since X autoplays muted. It has no audio track, and all the messaging is on-screen text.",
+      "No screen recording: the dashboard is rebuilt in Remotion using the same sample data and brand colours as `app/dashboard`. A small \"Sample group data\" label stays in the corner, so the flatmates and amounts aren't presented as a real customer.",
+      "Length: it's 2 seconds over 30. I can trim it to exactly 30 by shortening the ledger section."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-10",
+      "durationSec": 249,
+      "triggered": "auto",
+      "filesChanged": 15
+    },
+    "caveat": "It checked stills and ffprobe output but never watched the clip at normal speed.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "Your brief",
+        "text": "Make a ~30-second demo video of Tallyroom that we can post with our launch announcement on X. Render it to an MP4."
+      },
+      "after": {
+        "label": "What it rendered",
+        "text": "|---|---|\n| 0–4s | \"Four flatmates. Five shared bills. Who owes what?\" |\n| 4–13s | The Flat 4B dashboard fills in row by row: \"Every shared bill in one place — who paid, and how it splits.\" |\n| 13–19.5s | The ledger dims and \"You owe ₹1,842 / You are owed ₹710\" is highlighted: \"See exactly where you stand.\" |\n| 19.5–25s | Settled rows dim and the three unsettled ones are outlined: \"And what's still left to settle.\" |\n| 25–29s | \"Free for one group of up to four. Plus is $3/mo — one paid account covers everyone.\" |\n| 29–32s | Purple end card: \"Tallyroom — Split shared bills. Start free.\" |"
+      }
+    },
+    "still": "/proof/demo-video/frame.jpg"
+  },
+  "deploy-check": {
+    "request": "I'm about to push this to production on Vercel tonight. Is it safe to ship? Don't deploy or push anything, just tell me.",
+    "summary": "Ran the build, traced the Stripe key fallback into a browser bundle, and returned a BLOCKED verdict with three blockers.",
+    "excerpt": [
+      "Verdict: BLOCKED. Don't ship this tonight. The build passes, but the pricing page's checkout buttons don't take payment, and the code handles the Stripe secret key in a way that will leak it to the browser.",
+      "The file is imported by a client component (`app/pricing/CheckoutButton.jsx`), so the fallback string ends up in the JavaScript sent to browsers. I confirmed it's in `.next/static/chunks/2d53bce1f47f897f.js`.",
+      "Rollback: this is a static Next.js site with no database, so if something goes wrong you can promote the previous deployment in Vercel. That only helps if a previous good deployment exists; this would be the first."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 39,
+      "triggered": "auto",
+      "filesChanged": 0
+    },
+    "caveat": "It had no access to the Vercel project, so production environment variables went unchecked.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "The code it found",
+        "text": "// TODO: move to env before launch\nconst STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || \"sk_test_FAKE_FOR_FIXTURE\";\n\nexport const PLANS = {\n  plus: { price: \"price_plus_monthly\", label: \"Plus\" },\n  household: { price: \"price_household_monthly\", label: \"Household\" },\n};\n\nexport function checkoutUrl(plan) {\n  const p = PLANS[plan];\n  // Placeholder until the real Checkout session endpoint exists.\n  return `/dashboard?plan=${p.price}&k=${STRIPE_SECRET_KEY.slice(0, 7)}`;\n}"
+      },
+      "after": {
+        "label": "Verdict",
+        "text": "Verdict: BLOCKED. Don't ship this tonight. The build passes, but the pricing page's checkout buttons don't take payment, and the code handles the Stripe secret key in a way that will leak it to the browser. I didn't deploy or push anything."
+      }
+    }
+  },
+  "email-with-resend": {
+    "request": "Tallyroom needs email. When someone adds an expense, the people it's split with should get a short email, and new users should get a welcome email. Use Resend (key and sender are in .env.local).",
+    "summary": "Wrote welcome and expense-split emails behind one Resend sender with retry-safe IDs. Nothing in the app calls them yet.",
+    "excerpt": [
+      "I've written the welcome and expense-split emails, but nothing sends them yet. Tallyroom has no signup flow, no database, and no \"add expense\" action; the dashboard shows hard-coded sample rows. So I built the email code as two server-side functions, and they need to be called from those handlers once they exist.",
+      "Each email carries a fixed ID (one per user for welcome, one per expense and recipient for splits), so Resend won't send the same one twice if a call is retried.",
+      "Bounces and spam complaints aren't handled. `RESEND_WEBHOOK_SECRET` is already in `.env.local`, but without a database there's nowhere to record addresses to stop emailing."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-10",
+      "durationSec": 141,
+      "triggered": "auto",
+      "filesChanged": 6
+    },
+    "caveat": "Ran with test keys against a fake Resend server; no real email was sent.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "What was asked",
+        "text": "Tallyroom needs email. When someone adds an expense, the people it's split with should get a short email, and new users should get a welcome email. Use Resend (key and sender are in .env.local)."
+      },
+      "after": {
+        "label": "lib/email/index.js (new)",
+        "text": "/**\n * Welcome email. Call once after the user row is created.\n * user: { id, email, name? }\n */\nexport async function sendWelcomeEmail(user) {\n  const result = await sendEmail({\n    to: user.email,\n    ...welcomeEmail({ name: user.name }),\n    idempotencyKey: `welcome:${user.id}`,\n  });\n  if (!result.ok) console.error(\"[email] welcome failed\", { userId: user.id, ...result });\n  return result;\n}"
+      }
+    }
+  },
+  "fundraising": {
+    "request": "We are thinking about raising a seed round starting in January. Our one-pager is pitch-summary.md. Should we raise, and if so what should the plan look like? Save your recommendation as raise-plan.md.",
+    "summary": "Advised against a January seed raise, with a runway fix now and pass/fail tests to settle the question by March.",
+    "excerpt": [
+      "I'd hold off on the $2.5M seed in January. Fix your runway now, spend roughly November to March testing whether Harborline can grow into a venture-sized company, and decide in March.",
+      "You'd be raising with almost no cash left. At $28k/month burn you'd have about 4.5 months of money on January 1 and run out around May 2027. Rounds often take months, so you'd be negotiating against that deadline.",
+      "One open question could change the urgency. I assumed the $28k/month burn already accounts for revenue, because $210k ÷ $28k matches your 7.5 months of runway. If $28k is total spending before revenue, you're actually losing about $14k a month and have about 15 months of runway."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 92,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It checked no outside data, so the shop count and market sizes are unverified.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "Your one-pager",
+        "text": "Traction (as of Sept 2026):\n- 140 paying shops, $99/month flat. MRR $13,860.\n- MRR 6 months ago: $7,900. Growth roughly 10%/month, slowing to ~6% the last two months.\n- Logo churn: 1.8%/month.\n- Sales: mostly CEO cold-calling + 2 trade shows. ~40% of new shops come from referrals.\n- Market: ~4,000 independent bike shops in the US. Founders think Canada + UK adds ~2,500.\n\nMoney: raised $400k pre-seed from angels in 2025. $210k in the bank. Burn $28k/month. Default-alive date: not yet, ~7.5 months runway."
+      },
+      "after": {
+        "label": "Recommendation",
+        "text": "I'd hold off on the $2.5M seed in January. Fix your runway now, spend roughly November to March testing whether Harborline can grow into a venture-sized company, and decide in March. If the evidence is there, raise in Q2 from a stronger position. The full plan is in `raise-plan.md`.\n\nWhy not January:\n- The market is small at today's price. Every independent US bike shop paying $99/month adds up to about $4.75M a year in revenue. With Canada and the UK it's about $7.7M, and that assumes you sign every shop. A seed investor needs a path to a much bigger company.\n- You'd be raising with almost no cash left. At $28k/month burn you'd have about 4.5 months of money on January 1 and run out around May 2027. Rounds often take months, so you'd be negotiating against that deadline."
+      }
+    }
+  },
+  "humanize": {
+    "request": "This launch announcement in announcement.md reads like a press-release robot wrote it. Can you make it sound like an actual person on our team wrote it? Keep the facts. Edit the file in place.",
+    "summary": "Rewrote a press-release launch post in plain language and kept every fact, from the beta numbers to the price.",
+    "excerpt": [
+      "Sync also categorizes transactions for you by matching them automatically. During the beta, 212 businesses had 94% of their transactions matched with no manual work.",
+      "One caveat: some Canadian bank connections still need a manual CSV upload. We're finishing that integration now.",
+      "Canada limitation: It was hidden behind \"It's worth noting.\" It now has its own short paragraph, so it reads as a straight answer rather than a buried disclaimer.",
+      "I dropped \"saving you countless hours every month\" because the draft gives no number to back it up. If you have a real figure from the beta, add it back."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 35,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It kept the vague \"bank-grade encryption\" line because the brief said to keep the facts.",
+    "pair": {
+      "kind": "text",
+      "before": {
+        "label": "Your draft",
+        "text": "Introducing Ledgerly Sync: The Future of Small-Business Bookkeeping Is Here\n\nIn today's fast-paced business landscape, small-business owners are constantly juggling countless responsibilities. That's why we're thrilled to announce Ledgerly Sync, a powerful, seamless, and cutting-edge solution designed to revolutionize the way you manage your books."
+      },
+      "after": {
+        "label": "After /humanize",
+        "text": "Ledgerly Sync is live\n\nToday we're launching Ledgerly Sync. It connects your bank accounts, payment processors, and invoicing tools to Ledgerly, so you can see all of your finances in one place."
+      }
+    }
+  },
+  "image-editing": {
+    "request": "For our launch tweet I want a photo of this banner (banner.png) showing on a laptop screen on a wooden desk, natural light, slightly angled. Every word and number on the banner has to stay exactly as it is. Use OpenAI's image model for this; the key is set as OPENAI_API_KEY in the environment. Save it as banner-laptop.png.",
+    "summary": "Put the Tallyroom launch banner on a laptop in a desk photo with one OpenAI image edit, then checked every word and number against the original.",
+    "excerpt": [
+      "I zoomed into the screen and compared it line by line with banner.png. Every word and number matches.",
+      "Model: gpt-image-2.5-sunburst, using OpenAI's image edit endpoint with your banner attached.",
+      "A book on the right edge has made-up text on it (\"The Daily\"). The keyboard letters are blurry and not real characters.",
+      "There was no OCR tool installed, so this was a visual check only. That's my review; you should still look it over yourself before posting."
+    ],
+    "images": {
+      "before": "/proof/image-editing/before.jpg",
+      "after": "/proof/image-editing/after.jpg",
+      "caption": "Tallyroom launch banner, then the same banner on a laptop after one image edit.",
+      "wide": true,
+      "alt": {
+        "before": "Tallyroom launch banner: Tallyroom 2.0 is live, with an expense card",
+        "after": "The same Tallyroom banner on a laptop screen on a wooden desk, every word unchanged"
+      }
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.296",
+      "date": "2026-10-10",
+      "durationSec": 97,
+      "triggered": "auto",
+      "filesChanged": 2
+    },
+    "caveat": "The text check was visual. No OCR tool was installed.",
     "pair": {
       "kind": "screenshots",
       "before": {
-        "label": "Your homepage",
-        "image": "/proof/remove-ai-slop/before.jpg"
+        "label": "Your banner",
+        "image": "/proof/image-editing/before.jpg"
       },
       "after": {
-        "label": "After /remove-ai-slop",
-        "image": "/proof/remove-ai-slop/after.jpg"
+        "label": "After /image-editing",
+        "image": "/proof/image-editing/after.jpg"
       }
     }
   },
@@ -65,6 +517,35 @@
       "after": {
         "label": "After /interface-design",
         "image": "/proof/interface-design/after.jpg"
+      }
+    }
+  },
+  "landing-copy": {
+    "request": "Our landing page (index.html) isn't converting and it reads like every other SaaS site. Rewrite the page copy using the real facts in product-notes.md. Don't invent numbers.",
+    "summary": "Rewrote a vet-clinic scheduling page from product notes, swapping vague claims for sourced facts and real pricing.",
+    "excerpt": [
+      "Hero: \"Unlock the Power of Next-Generation Scheduling\" became \"Stop spending Monday morning texting people to cover sick calls.\" It now says who it's for (vet clinics) and how it works (draft rota, cover by text).",
+      "No \"saves 3 hours\" or \"67% less time\". The 4.5-hour figure is an average from 38 managers at onboarding. The 1.5-hour figure is a median from 22 managers after 8 weeks, and it's self-reported.",
+      "The quote: \"Dana R., Riverbend Animal Hospital\" is marked as a fictional sample in the notes. Replace it with a real quote you have permission to use."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 43,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It did not view the page in a browser, so the layout went unchecked.",
+    "pair": {
+      "kind": "text",
+      "before": {
+        "label": "Your hero copy",
+        "text": "Tidepool is an all-in-one AI-powered platform that streamlines your workflow and empowers your team to achieve more."
+      },
+      "after": {
+        "label": "After /landing-copy",
+        "text": "Tidepool is shift scheduling for independent veterinary clinics. It drafts your weekly rota from staff availability and your coverage rules, and when someone calls in sick, it texts eligible staff and fills the shift for you."
       }
     }
   },
@@ -171,90 +652,56 @@
       }
     }
   },
-  "social-sharing": {
-    "request": "When I paste Tallyroom links into WhatsApp or X there's no preview card, just a bare URL. Fix the share previews for the home and pricing pages. Production will be https://tallyroom.app (not launched yet).",
-    "summary": "Added site metadata, per-page canonical and OG tags, and generated 1200x630 preview images for home and pricing.",
+  "payments-with-dodo": {
+    "request": "Replace the placeholder checkout on Tallyroom's pricing page with real Dodo Payments subscriptions for Plus and Household. Test-mode keys and product IDs are in .env.local. Paid features should actually unlock when someone pays.",
+    "summary": "Asked about accounts and a database first, then built Dodo checkout, a signed webhook inbox and server-enforced plan limits.",
     "excerpt": [
-      "Why there was no card: the app set no metadata at all, so pages had no title, description, OG/Twitter tags or preview image.",
-      "I didn't use the existing hero screenshot because it's a placeholder wireframe and the wrong shape for a share card. I also kept the homepage's \"AI-driven\" and \"enterprise-grade security\" wording off the cards, since I couldn't confirm either claim from the code.",
-      "Each page has one canonical URL, and it matches `og:url` (`https://tallyroom.app` and `https://tallyroom.app/pricing`). All the `og:*` and `twitter:*` tags are there."
+      "No auth and no persistence. The app has three pages and only Next/React as dependencies. The dashboard shows a hardcoded list of expenses. When the Dodo webhook says \"subscription active\", there's no account to attach it to and nowhere to save it.",
+      "The Choose Plus and Choose Household buttons on the pricing page now start a real Dodo subscription, and paying unlocks features that the server enforces. All 30 tests pass and `next build` is clean. I haven't been able to run a real payment end to end: the Dodo values in `.env.local` are marked as fake fixtures, and there's no local Postgres here.",
+      "Two copies of one event arriving at the same instant. That relies on Postgres row locking, and the in-memory test database can't simulate two connections. Worth checking once against real Postgres."
     ],
+    "table": {
+      "head": [
+        "Plan",
+        "Groups",
+        "CSV export"
+      ],
+      "rows": [
+        [
+          "Free",
+          "1",
+          "no"
+        ],
+        [
+          "Plus",
+          "unlimited",
+          "no"
+        ],
+        [
+          "Household",
+          "unlimited",
+          "yes"
+        ]
+      ]
+    },
     "run": {
       "agent": "Claude Code",
       "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 95,
+      "date": "2026-10-10",
+      "durationSec": 1026,
       "triggered": "auto",
-      "filesChanged": 6
+      "filesChanged": 37
     },
-    "caveat": "The preview cards are plain text on the homepage's old purple gradient.",
+    "caveat": "It asked about auth and a database first and was told to go ahead with its suggestions.",
     "pair": {
       "kind": "code",
       "before": {
-        "label": "app/layout.jsx before",
-        "text": "import \"./globals.css\";\nimport Nav from \"./Nav\";\n\nexport default function RootLayout({ children }) {\n  return ("
+        "label": "lib/checkout.js before",
+        "text": "// TODO: move to env before launch\nconst STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || \"sk_test_FAKE_FOR_FIXTURE\";\n\nexport const PLANS = {\n  plus: { price: \"price_plus_monthly\", label: \"Plus\" },\n  household: { price: \"price_household_monthly\", label: \"Household\" },\n};\n\nexport function checkoutUrl(plan) {\n  const p = PLANS[plan];\n  // Placeholder until the real Checkout session endpoint exists.\n  return `/dashboard?plan=${p.price}&k=${STRIPE_SECRET_KEY.slice(0, 7)}`;"
       },
       "after": {
-        "label": "app/layout.jsx after",
-        "text": "import \"./globals.css\";\nimport Nav from \"./Nav\";\nimport { SITE_URL } from \"../lib/og-card\";\n\nexport const metadata = {\n  metadataBase: new URL(SITE_URL),\n  title: { default: \"Tallyroom — Split shared expenses\", template: \"%s · Tallyroom\" },\n  description: \"Split shared expenses with roommates and friends. Track who paid, who owes, and settle up.\",\n  openGraph: { siteName: \"Tallyroom\", type: \"website\" },\n  twitter: { card: \"summary_large_image\" },\n};\n\nexport default function RootLayout({ children }) {\n  return ("
-      }
-    }
-  },
-  "changelog": {
-    "request": "Write up what we shipped this week for our users, something I can post on X.",
-    "summary": "Drafted a 271-character X post covering three shipped items and listed which commits it held back and why.",
-    "excerpt": [
-      "I've written a post, but most of this week's commits shouldn't be announced yet. Several of them would make the post untrue.",
-      "> This week on Tallyroom 🧾\n>\n> • A new top nav across the site, so you can get to Pricing and the FAQ from any page\n> • A first look at the product on the homepage\n> • A pricing FAQ that covers switching plans and who pays in a shared group\n>\n> More soon, with real billing next.",
-      "\"INR, USD, EUR, GBP, SGD and AED, with daily exchange rates\" in the FAQ. Nothing in `app/` or `lib/` handles currencies or exchange rates. I'd remove or soften that answer before people see it."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 27,
-      "triggered": "auto",
-      "filesChanged": 0
-    },
-    "caveat": "It wrote the post as text only and made no visual card.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "The week's git log",
-        "text": "b674c00 2026-10-08 Mention cancel-anytime on pricing\nc29bfe0 2026-10-07 Format rupee amounts with Indian digit grouping\n13bb2ae 2026-10-07 Add pricing FAQ\n2949f54 2026-10-06 Wire plan checkout buttons on pricing\nc47d313 2026-10-05 Add SupportDesk chat widget\na0ab97a 2026-10-04 Show product screenshot under the hero\n334b5e0 2026-10-03 Add top navigation to all pages\n14d98fd 2026-10-03 Add dashboard mock with expense ledger\nea9d4d9 2026-10-02 Add pricing page with plan comparison table\nb78774c 2026-10-01 Add landing hero and feature cards\n1a8cda0 2026-10-01 Scaffold Next.js app"
-      },
-      "after": {
-        "label": "Post and verdict",
-        "text": "I've written a post, but most of this week's commits shouldn't be announced yet. Several of them would make the post untrue.\n\nDraft for X (271 characters):\n\n> This week on Tallyroom 🧾\n>\n> • A new top nav across the site, so you can get to Pricing and the FAQ from any page\n> • A first look at the product on the homepage\n> • A pricing FAQ that covers switching plans and who pays in a shared group\n>\n> More soon, with real billing next."
-      }
-    }
-  },
-  "deploy-check": {
-    "request": "I'm about to push this to production on Vercel tonight. Is it safe to ship? Don't deploy or push anything, just tell me.",
-    "summary": "Ran the build, traced the Stripe key fallback into a browser bundle, and returned a BLOCKED verdict with three blockers.",
-    "excerpt": [
-      "Verdict: BLOCKED. Don't ship this tonight. The build passes, but the pricing page's checkout buttons don't take payment, and the code handles the Stripe secret key in a way that will leak it to the browser.",
-      "The file is imported by a client component (`app/pricing/CheckoutButton.jsx`), so the fallback string ends up in the JavaScript sent to browsers. I confirmed it's in `.next/static/chunks/2d53bce1f47f897f.js`.",
-      "Rollback: this is a static Next.js site with no database, so if something goes wrong you can promote the previous deployment in Vercel. That only helps if a previous good deployment exists; this would be the first."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 39,
-      "triggered": "auto",
-      "filesChanged": 0
-    },
-    "caveat": "It had no access to the Vercel project, so production environment variables went unchecked.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "The code it found",
-        "text": "// TODO: move to env before launch\nconst STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || \"sk_test_FAKE_FOR_FIXTURE\";\n\nexport const PLANS = {\n  plus: { price: \"price_plus_monthly\", label: \"Plus\" },\n  household: { price: \"price_household_monthly\", label: \"Household\" },\n};\n\nexport function checkoutUrl(plan) {\n  const p = PLANS[plan];\n  // Placeholder until the real Checkout session endpoint exists.\n  return `/dashboard?plan=${p.price}&k=${STRIPE_SECRET_KEY.slice(0, 7)}`;\n}"
-      },
-      "after": {
-        "label": "Verdict",
-        "text": "Verdict: BLOCKED. Don't ship this tonight. The build passes, but the pricing page's checkout buttons don't take payment, and the code handles the Stripe secret key in a way that will leak it to the browser. I didn't deploy or push anything."
+        "label": "app/api/webhooks/dodo/route.js (new)",
+        "text": "  let event;\n  try {\n    event = getDodo().webhooks.unwrap(body, { headers });\n  } catch {\n    return new Response(\"Invalid signature\", { status: 401 });\n  }\n\n  try {\n    const outcome = await handleWebhook(getDb(), headers[\"webhook-id\"], event);\n    return Response.json({ received: true, status: outcome.status });\n  } catch (err) {\n    // Not acknowledged, so Dodo retries. The inbox row keeps the event.\n    console.error(`[billing] webhook ${headers[\"webhook-id\"]} failed:`, err?.code ?? err?.name);\n    return new Response(\"Temporary failure\", { status: 503 });"
       }
     }
   },
@@ -319,148 +766,62 @@
       }
     }
   },
-  "search-ready": {
-    "request": "We launch Tallyroom next week at https://tallyroom.app (not live yet). Get the site ready so Google can find and index it properly, and fix whatever is missing in the code.",
-    "summary": "Added titles, canonicals, robots.txt, a sitemap, noindex on the demo dashboard, and WebSite structured data.",
+  "product-experiments": {
+    "request": "We ran the onboarding checklist test for two weeks. Results and notes are in results/. The PM wants to ship Monday because the numbers look up. Can we? Put your answer in results/readout.md.",
+    "summary": "Read a two-week A/B result, found the arms were uneven by about 640 users, and advised against shipping Monday.",
     "excerpt": [
-      "`/dashboard` could have been indexed. It's linked from the menu and the homepage, but it's an app screen showing made-up demo data. It's now marked \"don't index\" in `app/dashboard/page.jsx`. I deliberately didn't block it in `robots.txt`, because that would stop Google from seeing the \"don't index\" tag.",
-      "I didn't add FAQ markup for the pricing questions, because Google no longer shows those for sites like this.",
-      "Google decides when it indexes and ranks the site. These changes remove the blockers on your side; they can't guarantee timing or position."
+      "My answer is no, don't ship Monday. The checklist arm does look better, but the test result isn't valid as it stands.",
+      "The arms are uneven. Assignment was meant to be 50/50, but control has 10,120 users and the checklist arm has 9,480. A gap that size is very unlikely to be chance (p ≈ 5×10⁻⁶). About 640 users are missing from the checklist arm.",
+      "The lift depends on those users. The primary metric (3 notes created by day 7) is up 2.0 percentage points: 37.0% vs 35.0%. If 35 or fewer of the 640 missing users would have reached 3 notes, the lift disappears."
     ],
     "run": {
       "agent": "Claude Code",
       "version": "2.1.295",
       "date": "2026-10-09",
-      "durationSec": 128,
-      "triggered": "auto",
-      "filesChanged": 9
-    },
-    "caveat": "It also edited the checkout code to drop a key prefix, a fix outside the SEO request.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "app/layout.jsx before",
-        "text": "import \"./globals.css\";\nimport Nav from \"./Nav\";\n\nexport default function RootLayout({ children }) {\n  return (\n    <html lang=\"en\">\n      <head>\n        <script src=\"/vendor/support-widget.js\"></script>\n      </head>"
-      },
-      "after": {
-        "label": "What it fixed",
-        "text": "1. No titles, descriptions or link previews on any page. Every page now has its own title, a description, and a canonical address pointing at https://tallyroom.app (the \"this is the real version of the page\" tag). Link previews for social sites use the dashboard screenshot. The address is set once in `lib/site.js`, so test or preview copies of the site still point Google at the real one.\n2. No `robots.txt` or sitemap. I added both (`app/robots.js`, `app/sitemap.js`). The sitemap lists only `/` and `/pricing`.\n3. `/dashboard` could have been indexed. It's linked from the menu and the homepage, but it's an app screen showing made-up demo data. It's now marked \"don't index\" in `app/dashboard/page.jsx`. I deliberately didn't block it in `robots.txt`, because that would stop Google from seeing the \"don't index\" tag."
-      }
-    }
-  },
-  "agent-instructions": {
-    "request": "Set up instructions for the coding agents that work in this repo. We use both Claude Code and Codex.",
-    "summary": "Wrote one AGENTS.md for Codex plus a CLAUDE.md that imports it, after running the repo's test and lint commands.",
-    "excerpt": [
-      "I've added two files: `AGENTS.md` holds all the instructions, and `CLAUDE.md` pulls them in with an import, so Codex and Claude Code read the same text. Nothing is committed yet.",
-      "The default reading speed (230 words per minute) is set in two places, `src/count.js` and `bin/mdtally.js`, so they have to change together.",
-      "The lint script names each file it checks, so any new source file has to be added to it by hand."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 56,
-      "triggered": "auto",
-      "filesChanged": 2
-    },
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "package.json",
-        "text": "{\n  \"name\": \"mdtally\",\n  \"version\": \"0.3.1\",\n  \"description\": \"Count words and estimate reading time for Markdown files\",\n  \"type\": \"module\",\n  \"bin\": { \"mdtally\": \"bin/mdtally.js\" },\n  \"engines\": { \"node\": \">=20\" },\n  \"scripts\": {\n    \"test\": \"node --test\",\n    \"lint\": \"node --check bin/mdtally.js && node --check src/count.js\"\n  },\n  \"license\": \"MIT\"\n}"
-      },
-      "after": {
-        "label": "AGENTS.md it wrote",
-        "text": "Before finishing a change, run `npm test` and `npm run lint`; both must pass.\n\n## Conventions\n\n- Keep zero dependencies. Use Node built-ins (`node:fs`, `node:test`, `node:assert/strict`) rather than adding packages.\n- Use double quotes, semicolons, and named exports, matching existing files.\n- Add a test in `test/count.test.js` for any change to counting or reading-time behavior.\n- The default reading speed is 230 wpm, and it is set in two places: `readingMinutes` in `src/count.js` and the CLI fallback in `bin/mdtally.js`. Change both together.\n- Reading time rounds up to whole minutes, with a minimum of 1. Tests assert this."
-      }
-    }
-  },
-  "decision-doc": {
-    "request": "We have to pick how to do search for Driftwood. My messy notes are in search-notes.md. Write it up so Priya can make the call and the team can see why, save it under docs/.",
-    "summary": "Turned messy notes into a decision doc recommending Postgres search, with two checks that could flip the call.",
-    "excerpt": [
-      "Why Postgres: it's the only option that doesn't fail one of the team's hard constraints. Meilisearch would mean running a new service, which breaks \"no new on-call.\" Algolia's ~$1,100/month is over the $500 limit, so it needs CFO sign-off.",
-      "Sort the 41 August search tickets into typo, ingredient, filter and other. If typo complaints are the biggest group, Meilisearch becomes the better choice.",
-      "Sam's case for Meilisearch is written up fairly as the main counterargument, alongside Maya's preference for Postgres."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 63,
+      "durationSec": 54,
       "triggered": "auto",
       "filesChanged": 1
     },
-    "caveat": "Owners and due dates for the next steps are its own suggestions, flagged for checking.",
+    "caveat": "It worked only from a two-row summary CSV, so the Sept 6 to 8 crash check is still open.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "Test results",
+        "text": "variant,assigned_users,exposed_users,created_first_note_day1,created_3_notes_day7,active_week2,support_tickets_week1,median_onboarding_seconds\ncontrol,10120,10120,6578,3542,3036,142,212\nchecklist,9480,9480,6352,3507,2939,131,248"
+      },
+      "after": {
+        "label": "Readout",
+        "text": "I wrote the readout to `results/readout.md`. My answer is no, don't ship Monday. The checklist arm does look better, but the test result isn't valid as it stands.\n\nWhy:\n\n- The arms are uneven. Assignment was meant to be 50/50, but control has 10,120 users and the checklist arm has 9,480. A gap that size is very unlikely to be chance (p ≈ 5×10⁻⁶). About 640 users are missing from the checklist arm."
+      }
+    }
+  },
+  "product-launch": {
+    "request": "We're launching Tallyroom on October 21 to flatmates in Bangalore. My notes are in launch-notes.md. Work out the launch and tell me what isn't ready. Save the plan as launch-plan.md.",
+    "summary": "Checked the launch notes against the repo, found nothing to sign up with, set a go/no-go check for Oct 17 and cut Product Hunt.",
+    "excerpt": [
+      "The plan is in `launch-plan.md`. The main problem is that the app can't yet do what your launch is meant to measure: flatmates making a group and logging 5+ expenses. There's no signup, group creation, invites or expense logging, and the dashboard shows made-up data.",
+      "The date. Oct 21 2026 is a Wednesday, not a Tuesday. Please confirm which day you mean.",
+      "Set a go/no-go check for Fri Oct 17 on the live site. Two outsiders should sign up, one joins the other's flat through the WhatsApp link, and they log 5 expenses with correct balances.",
+      "Skip Product Hunt. Its audience isn't Bangalore flatmates, and you'd be splitting a solo launch day."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-10",
+      "durationSec": 104,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "Web access was off, so it never checked r/bangalore's rules or any live channel.",
     "pair": {
       "kind": "data",
       "before": {
         "label": "Your notes",
-        "text": "Options we talked about:\n1. Postgres full-text search (tsvector + GIN index, pg_trgm for typos). No new infra. Maya prototyped it in 2 days: p95 38ms on a prod snapshot. Typo tolerance with pg_trgm is \"okay, not great\". Faceted counts would need hand-written queries.\n2. Meilisearch self-hosted. Great typo tolerance and facets out of the box. Need to run + monitor another service and build a sync pipeline from Postgres. Sam estimates 2 weeks to production-ready.\n3. Algolia (hosted). Best relevance tooling, zero ops. Quote we got: about $1,100/month at our projected volume. Finance said anything over $500/month recurring needs CFO sign-off.\n\nConstraints: launch the new search before the January \"healthy eating\" campaign (Jan 6). Nobody wants a new on-call rotation."
+        "text": "- Launch date: Tuesday Oct 21. I'm doing this alone, plus Kabir helps with code evenings.\n- Who: flatmates in Bangalore, mostly 23-30, sharing 3-4 BHKs in Indiranagar, Koramangala, HSR.\n- Why us: Splitwise works but people complain about the daily limit on the free plan and that it doesn't do UPI. We don't do UPI either yet.\n- Reach: my X account has ~1,900 followers. I'm in 3 WhatsApp groups for flat hunting in Bangalore (~2,000 people total, admins don't love promo). r/bangalore exists.\n- 31 people from our 2 test flats used the dashboard mock in September. 4 said they'd pay for Plus. Nobody has actually paid.\n- Pricing page has checkout buttons but they don't take money yet (placeholder). Signup doesn't exist yet either.\n- Was thinking Product Hunt on the same day?\n- Budget: ₹15,000 max.\n- Want to know after 2 weeks: did anyone create a group with their flatmates and log 5+ expenses."
       },
       "after": {
-        "label": "Decision record",
-        "text": "Build on Postgres full-text search (tsvector + GIN, with pg_trgm for typos), and start logging zero-result queries now. Look at it again in February with real query data. If typo misses or facet work turn out to be the bottleneck, move to Meilisearch or Algolia then.\n\nConfidence: medium. It covers the must-haves (ingredient search, filters, the deadline, no new on-call) with the least risk. It is weakest on typo tolerance, and we don't yet know how much typo tolerance matters to users."
-      }
-    }
-  },
-  "humanize": {
-    "request": "This launch announcement in announcement.md reads like a press-release robot wrote it. Can you make it sound like an actual person on our team wrote it? Keep the facts. Edit the file in place.",
-    "summary": "Rewrote a press-release launch post in plain language and kept every fact, from the beta numbers to the price.",
-    "excerpt": [
-      "Sync also categorizes transactions for you by matching them automatically. During the beta, 212 businesses had 94% of their transactions matched with no manual work.",
-      "One caveat: some Canadian bank connections still need a manual CSV upload. We're finishing that integration now.",
-      "Canada limitation: It was hidden behind \"It's worth noting.\" It now has its own short paragraph, so it reads as a straight answer rather than a buried disclaimer.",
-      "I dropped \"saving you countless hours every month\" because the draft gives no number to back it up. If you have a real figure from the beta, add it back."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 35,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "It kept the vague \"bank-grade encryption\" line because the brief said to keep the facts.",
-    "pair": {
-      "kind": "text",
-      "before": {
-        "label": "Your draft",
-        "text": "Introducing Ledgerly Sync: The Future of Small-Business Bookkeeping Is Here\n\nIn today's fast-paced business landscape, small-business owners are constantly juggling countless responsibilities. That's why we're thrilled to announce Ledgerly Sync, a powerful, seamless, and cutting-edge solution designed to revolutionize the way you manage your books."
-      },
-      "after": {
-        "label": "After /humanize",
-        "text": "Ledgerly Sync is live\n\nToday we're launching Ledgerly Sync. It connects your bank accounts, payment processors, and invoicing tools to Ledgerly, so you can see all of your finances in one place."
-      }
-    }
-  },
-  "landing-copy": {
-    "request": "Our landing page (index.html) isn't converting and it reads like every other SaaS site. Rewrite the page copy using the real facts in product-notes.md. Don't invent numbers.",
-    "summary": "Rewrote a vet-clinic scheduling page from product notes, swapping vague claims for sourced facts and real pricing.",
-    "excerpt": [
-      "Hero: \"Unlock the Power of Next-Generation Scheduling\" became \"Stop spending Monday morning texting people to cover sick calls.\" It now says who it's for (vet clinics) and how it works (draft rota, cover by text).",
-      "No \"saves 3 hours\" or \"67% less time\". The 4.5-hour figure is an average from 38 managers at onboarding. The 1.5-hour figure is a median from 22 managers after 8 weeks, and it's self-reported.",
-      "The quote: \"Dana R., Riverbend Animal Hospital\" is marked as a fictional sample in the notes. Replace it with a real quote you have permission to use."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 43,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "It did not view the page in a browser, so the layout went unchecked.",
-    "pair": {
-      "kind": "text",
-      "before": {
-        "label": "Your hero copy",
-        "text": "Tidepool is an all-in-one AI-powered platform that streamlines your workflow and empowers your team to achieve more."
-      },
-      "after": {
-        "label": "After /landing-copy",
-        "text": "Tidepool is shift scheduling for independent veterinary clinics. It drafts your weekly rota from staff availability and your coverage rules, and when someone calls in sick, it texts eligible staff and fills the shift for you."
+        "label": "Launch plan",
+        "text": "Recommendation: keep Oct 21 only if the go/no-go gate below passes on Fri Oct 17. Launch free, with no paid plans. Use your own X account, the two test flats and one carefully handled WhatsApp/Reddit post. Skip Product Hunt. If the gate fails, use Oct 21 to open a \"founding flats\" waitlist and move the open launch back about 2 weeks.\n\nDate check: Oct 21 2026 is a Wednesday, not a Tuesday. The notes probably use last year's calendar. Confirm which date you mean."
       }
     }
   },
@@ -493,6 +854,99 @@
       }
     }
   },
+  "product-teardown": {
+    "request": "Before we rewrite Tallyroom's homepage, I want to understand how Splitwise sells itself on https://www.splitwise.com: what works, what doesn't, and what we should take for our own homepage. Save it as teardown.md.",
+    "summary": "Read Splitwise's homepage, listed what works and what doesn't, and turned it into four changes for Tallyroom's homepage.",
+    "excerpt": [
+      "I've written the teardown to `teardown.md`. One limit first: I only had a text fetch of the page, never a rendered view. So I couldn't judge layout, images or mobile, and the fetch paraphrased most of Splitwise's body copy.",
+      "The headline says what it does. \"Split expenses with friends,\" and the subhead names the everyday situations: trips, housemates, a partner.",
+      "It never says why Splitwise rather than a spreadsheet or the group chat.",
+      "Currency: the dashboard and your latest commit use ₹, but the pricing page shows $."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 78,
+      "triggered": "auto",
+      "filesChanged": 1
+    },
+    "caveat": "It studied splitwise.com through one text fetch, never a rendered page, so layout went unjudged.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "Your homepage hero",
+        "text": "        <span className=\"eyebrow\">✨ Introducing Tallyroom</span>\n        <h1>Revolutionize the Way You Manage Shared Expenses</h1>\n        <p className=\"lede\">\n          Unlock the power of seamless, AI-driven expense splitting. Tallyroom is the\n          all-in-one platform that empowers you to effortlessly elevate your financial\n          harmony with friends, roommates, and beyond.\n        </p>\n        <div className=\"cta-row\">\n          <a className=\"btn btn-primary\" href=\"/pricing\">Get Started Today 🚀</a>\n          <a className=\"btn btn-ghost\" href=\"/dashboard\">Learn More</a>\n        </div>"
+      },
+      "after": {
+        "label": "What to take",
+        "text": "- Replace the hype. Cut \"Revolutionize\", \"AI-driven\", \"Enterprise-grade\", \"your team\" and the emoji. Write a headline that names the household-bills job, followed by three sections built from the Flat 4B dashboard.\n- Lead with \"one subscription covers the whole flat.\" It's already in your pricing FAQ, and Splitwise's page has nothing like it. Check it against your billing logic first.\n- Show \"from $3/mo\" on the homepage.\n- Shrink the nav. It has 7 links, and three of them (Dashboard, Groups, Activity) go to `/dashboard`. Cut it to Pricing, FAQ, Log in and the main button."
+      }
+    }
+  },
+  "rate-limit": {
+    "request": "We're adding two API routes to Tallyroom: POST /api/receipts/scan, which calls a paid OCR service, and POST /api/invites, which emails an invite link. Create them (stub the OCR and email parts) and stop people from hammering them. Upstash Redis credentials are in .env.local.",
+    "summary": "Added both stub routes with per-IP, global and per-recipient Upstash limits that reject when Redis is down. 12 tests pass.",
+    "excerpt": [
+      "I've added both routes with stubbed OCR and email, and both are rate-limited with Upstash. The tests and the production build pass. I haven't seen a request get through yet: the Upstash credentials in `.env.local` are fake test values, so every request I sent ended at the \"Redis unreachable\" path.",
+      "Why it rejects when Redis is down: both routes cost money or send email, so they reject rather than run unmetered. Upstash's library lets a request through when Redis is slow, so I treat that case as an outage too.",
+      "A client-supplied `x-forwarded-for` is ignored, so spoofing it doesn't get around the limit."
+    ],
+    "table": {
+      "head": [
+        "Route",
+        "Limited by",
+        "Limit",
+        "If Redis is down"
+      ],
+      "rows": [
+        [
+          "POST /api/receipts/scan",
+          "client IP",
+          "burst of 5, then about 1 every 2 minutes",
+          "rejects with 503 and Retry-After: 30"
+        ],
+        [
+          "",
+          "everyone combined",
+          "300 per hour, a cap on total OCR spend",
+          "rejects with 503"
+        ],
+        [
+          "POST /api/invites",
+          "client IP",
+          "10 per hour",
+          "rejects with 503"
+        ],
+        [
+          "",
+          "recipient email (stored as a hash)",
+          "3 per 24 hours, so nobody can flood one inbox",
+          "rejects with 503"
+        ]
+      ]
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-10",
+      "durationSec": 152,
+      "triggered": "auto",
+      "filesChanged": 9
+    },
+    "caveat": "Ran with test keys; never called a live Upstash database.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "What was asked",
+        "text": "We're adding two API routes to Tallyroom: POST /api/receipts/scan, which calls a paid OCR service, and POST /api/invites, which emails an invite link. Create them (stub the OCR and email parts) and stop people from hammering them. Upstash Redis credentials are in .env.local."
+      },
+      "after": {
+        "label": "lib/rate-limit.js (new)",
+        "text": "// Policy table. Each route checks its rules in order and stops at the first block.\nexport const policies = {\n  receiptScan: () => [\n    // Per client: a handful of scans in a burst, about one every 2 minutes after that.\n    { name: \"receipt-scan:ip\", limiter: limiter(\"receipt-scan:ip\", Ratelimit.tokenBucket(1, \"2 m\", 5)) },\n    // Global ceiling on paid OCR calls. Caps spend even if someone rotates IPs.\n    { name: \"receipt-scan:global\", limiter: limiter(\"receipt-scan:global\", Ratelimit.fixedWindow(300, \"1 h\")), key: \"all\" },\n  ],\n  invites: () => [\n    { name: \"invites:ip\", limiter: limiter(\"invites:ip\", Ratelimit.slidingWindow(10, \"1 h\")) },\n    // Per recipient: stops anyone from flooding one inbox with invites.\n    { name: \"invites:recipient\", limiter: limiter(\"invites:recipient\", Ratelimit.slidingWindow(3, \"24 h\")) },\n  ],\n};"
+      }
+    }
+  },
   "readme": {
     "request": "This repo has no README. Write one for it.",
     "summary": "Wrote a README for a small Node CLI and checked every example against real runs.",
@@ -520,6 +974,156 @@
       "after": {
         "label": "README it wrote",
         "text": "Limitations:\n\n- `--wpm` is not validated. A non-numeric value such as `--wpm=abc` prints `NaN min`.\n- A missing or unreadable file stops the run with a Node.js error, and no results are printed for the other files.\n- Any other argument that starts with `--` is ignored without a warning."
+      }
+    }
+  },
+  "remove-ai-slop": {
+    "request": "Our Tallyroom homepage looks and reads like every other AI-generated startup site. Go through it, strip out the generic stuff, and apply the fixes.",
+    "summary": "Rewrote the Tallyroom hero from facts already in the repo and removed the gradients, emoji tiles and placeholder image.",
+    "excerpt": [
+      "\"Revolutionize the Way You Manage Shared Expenses\" and the \"unlock… seamless… empowers… elevate your financial harmony\" paragraph never said what the product does. It also claimed \"AI-driven,\" and nothing in the repo shows AI.",
+      "\"Get Started Today 🚀\" / \"Learn More\" didn't say where they lead. They now read \"Compare plans\" (goes to /pricing) and \"See a sample group\" (goes to /dashboard).",
+      "`hero-dashboard.png` was a grey wireframe on a grainy gradient, 3 MB, with alt text calling it the Tallyroom dashboard. I replaced it with a real table of four expenses from the sample group."
+    ],
+    "images": {
+      "before": "/proof/remove-ai-slop/before.jpg",
+      "after": "/proof/remove-ai-slop/after.jpg",
+      "caption": "Tallyroom homepage at 1440px. The gradient hero and wireframe image became plain copy and a real expense table."
+    },
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 131,
+      "triggered": "auto",
+      "filesChanged": 4
+    },
+    "caveat": "It left the nav overflowing at 390px and listed that as out of scope.",
+    "pair": {
+      "kind": "screenshots",
+      "before": {
+        "label": "Your homepage",
+        "image": "/proof/remove-ai-slop/before.jpg"
+      },
+      "after": {
+        "label": "After /remove-ai-slop",
+        "image": "/proof/remove-ai-slop/after.jpg"
+      }
+    }
+  },
+  "search-ready": {
+    "request": "We launch Tallyroom next week at https://tallyroom.app (not live yet). Get the site ready so Google can find and index it properly, and fix whatever is missing in the code.",
+    "summary": "Added titles, canonicals, robots.txt, a sitemap, noindex on the demo dashboard, and WebSite structured data.",
+    "excerpt": [
+      "`/dashboard` could have been indexed. It's linked from the menu and the homepage, but it's an app screen showing made-up demo data. It's now marked \"don't index\" in `app/dashboard/page.jsx`. I deliberately didn't block it in `robots.txt`, because that would stop Google from seeing the \"don't index\" tag.",
+      "I didn't add FAQ markup for the pricing questions, because Google no longer shows those for sites like this.",
+      "Google decides when it indexes and ranks the site. These changes remove the blockers on your side; they can't guarantee timing or position."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 128,
+      "triggered": "auto",
+      "filesChanged": 9
+    },
+    "caveat": "It also edited the checkout code to drop a key prefix, a fix outside the SEO request.",
+    "pair": {
+      "kind": "data",
+      "before": {
+        "label": "app/layout.jsx before",
+        "text": "import \"./globals.css\";\nimport Nav from \"./Nav\";\n\nexport default function RootLayout({ children }) {\n  return (\n    <html lang=\"en\">\n      <head>\n        <script src=\"/vendor/support-widget.js\"></script>\n      </head>"
+      },
+      "after": {
+        "label": "What it fixed",
+        "text": "1. No titles, descriptions or link previews on any page. Every page now has its own title, a description, and a canonical address pointing at https://tallyroom.app (the \"this is the real version of the page\" tag). Link previews for social sites use the dashboard screenshot. The address is set once in `lib/site.js`, so test or preview copies of the site still point Google at the real one.\n2. No `robots.txt` or sitemap. I added both (`app/robots.js`, `app/sitemap.js`). The sitemap lists only `/` and `/pricing`.\n3. `/dashboard` could have been indexed. It's linked from the menu and the homepage, but it's an app screen showing made-up demo data. It's now marked \"don't index\" in `app/dashboard/page.jsx`. I deliberately didn't block it in `robots.txt`, because that would stop Google from seeing the \"don't index\" tag."
+      }
+    }
+  },
+  "skill-creator": {
+    "request": "I do the workflow in workflow.md by hand every Friday. Package it so my coding agent can do it for me next time. Put whatever you create under skills/ in this folder.",
+    "summary": "Packaged a manual Friday release-notes routine as a skill with a PR collection script and 12 test prompts.",
+    "excerpt": [
+      "Each of the three mistakes you listed has its own rule and check. The skill is used for requests like \"write the release notes\" or \"what did we ship to customers this week\", but not for internal summaries like standup notes.",
+      "Date range: it starts from the date of your most recent notes file rather than \"last friday\". That avoids missing or repeating PRs if a week is skipped or you run it on a different day.",
+      "Leaks: merge commits contain things like \"from alice/QN-412-acme-export\", so the final check specifically looks for names, handles and ticket or PR numbers."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 107,
+      "triggered": "auto",
+      "filesChanged": 3
+    },
+    "caveat": "Neither the skill nor its helper script was run, so both are untested.",
+    "pair": {
+      "kind": "text",
+      "before": {
+        "label": "Your workflow notes",
+        "text": "Mistakes I've made before: including a refactor because the title sounded exciting; calling something \"Fixed\" when it was really a new behavior; forgetting the platform tag."
+      },
+      "after": {
+        "label": "SKILL.md it wrote",
+        "text": "2. Filter out internal work\n\nDrop any PR labeled `internal`, `chore`, `refactor`, or `test`. Also drop it when there are no labels and the title prefix or the files show it's one of those (for example, it only touches tests, CI, or build config). Drop pure docs, dependency bumps, and other tooling work too, unless the body describes a change customers will notice.\n\nJudge by what changed, not by how exciting the title sounds. A refactor titled \"New sync engine\" is still a refactor. This exact mistake has happened before. When a PR's label and its content disagree, trust the label for exclusion and mention the conflict in your report."
+      }
+    }
+  },
+  "social-sharing": {
+    "request": "When I paste Tallyroom links into WhatsApp or X there's no preview card, just a bare URL. Fix the share previews for the home and pricing pages. Production will be https://tallyroom.app (not launched yet).",
+    "summary": "Added site metadata, per-page canonical and OG tags, and generated 1200x630 preview images for home and pricing.",
+    "excerpt": [
+      "Why there was no card: the app set no metadata at all, so pages had no title, description, OG/Twitter tags or preview image.",
+      "I didn't use the existing hero screenshot because it's a placeholder wireframe and the wrong shape for a share card. I also kept the homepage's \"AI-driven\" and \"enterprise-grade security\" wording off the cards, since I couldn't confirm either claim from the code.",
+      "Each page has one canonical URL, and it matches `og:url` (`https://tallyroom.app` and `https://tallyroom.app/pricing`). All the `og:*` and `twitter:*` tags are there."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 95,
+      "triggered": "auto",
+      "filesChanged": 6
+    },
+    "caveat": "The preview cards are plain text on the homepage's old purple gradient.",
+    "pair": {
+      "kind": "code",
+      "before": {
+        "label": "app/layout.jsx before",
+        "text": "import \"./globals.css\";\nimport Nav from \"./Nav\";\n\nexport default function RootLayout({ children }) {\n  return ("
+      },
+      "after": {
+        "label": "app/layout.jsx after",
+        "text": "import \"./globals.css\";\nimport Nav from \"./Nav\";\nimport { SITE_URL } from \"../lib/og-card\";\n\nexport const metadata = {\n  metadataBase: new URL(SITE_URL),\n  title: { default: \"Tallyroom — Split shared expenses\", template: \"%s · Tallyroom\" },\n  description: \"Split shared expenses with roommates and friends. Track who paid, who owes, and settle up.\",\n  openGraph: { siteName: \"Tallyroom\", type: \"website\" },\n  twitter: { card: \"summary_large_image\" },\n};\n\nexport default function RootLayout({ children }) {\n  return ("
+      }
+    }
+  },
+  "supabase": {
+    "request": "Tallyroom's dashboard still runs on hard-coded data. Move it onto our Supabase project (keys are in .env.local): groups, members and expenses, where people only ever see the flats they belong to. Wire the dashboard to read the real data. Don't push anything to the remote project yet.",
+    "summary": "Added four tables with RLS, magic-link sign-in and a dashboard that reads Supabase, then ran 36 access tests on local Postgres.",
+    "excerpt": [
+      "The dashboard now reads real flats, members and expenses from Supabase, and each signed-in user only sees the flats they belong to. Nothing has been pushed to the remote project, and nothing is committed.",
+      "Verification. Docker isn't installed, so I couldn't run Supabase's local stack. Instead I applied the migration to a scratch Postgres 16 with a minimal stand-in for Supabase's auth schema and roles. My 36 access-rule tests (`supabase/tests/rls_test.sql`) all pass there, the build passes, and signed-out visitors to `/dashboard` are redirected to `/login`.",
+      "Nobody can move an expense to another flat, promote themselves to owner, or pose as another user. The tests cover each of these, plus other users and people in no flat."
+    ],
+    "run": {
+      "agent": "Claude Code",
+      "version": "2.1.295",
+      "date": "2026-10-09",
+      "durationSec": 331,
+      "triggered": "auto",
+      "filesChanged": 14
+    },
+    "caveat": "Ran with test keys; the dashboard's queries never reached a real Supabase API.",
+    "pair": {
+      "kind": "code",
+      "before": {
+        "label": "app/dashboard/page.jsx before",
+        "text": "const expenses = [\n  { date: \"Oct 1\", what: \"Groceries — Nature's Basket\", paidBy: \"Arjun\", amount: 2840.5, split: \"4 ways\", status: \"Unsettled\" },\n  { date: \"Sep 30\", what: \"Electricity bill (Sept)\", paidBy: \"Maya\", amount: 3125, split: \"4 ways\", status: \"Settled\" },\n  { date: \"Sep 28\", what: \"Wi-Fi — ACT Fibernet\", paidBy: \"Kabir\", amount: 1179, split: \"4 ways\", status: \"Unsettled\" },\n  { date: \"Sep 27\", what: \"Dinner at Toit\", paidBy: \"Arjun\", amount: 4620, split: \"3 ways\", status: \"Unsettled\" },\n  { date: \"Sep 25\", what: \"Cooking gas refill\", paidBy: \"Neha\", amount: 903, split: \"4 ways\", status: \"Settled\" },\n];\n\nexport default function Dashboard() {\n  const total = expenses.reduce((s, e) => s + e.amount, 0);"
+      },
+      "after": {
+        "label": "app/dashboard/page.jsx after",
+        "text": "export default async function Dashboard({ searchParams }) {\n  const supabase = await createClient();\n  const { data: auth } = await supabase.auth.getClaims();\n  const userId = auth?.claims?.sub;\n  if (!userId) redirect(\"/login\");\n\n  // RLS limits every query below to flats this user belongs to.\n  const { data: memberships, error: membershipsError } = await supabase\n    .from(\"group_members\")\n    .select(\"id, group_id, groups(name)\")\n    .eq(\"user_id\", userId)\n    .order(\"created_at\");\n  if (membershipsError) throw new Error(`Couldn't load your flats: ${membershipsError.message}`);"
       }
     }
   },
@@ -639,607 +1243,32 @@
       }
     }
   },
-  "fundraising": {
-    "request": "We are thinking about raising a seed round starting in January. Our one-pager is pitch-summary.md. Should we raise, and if so what should the plan look like? Save your recommendation as raise-plan.md.",
-    "summary": "Advised against a January seed raise, with a runway fix now and pass/fail tests to settle the question by March.",
+  "who-to-sell-to": {
+    "request": "I pasted my last year of deals in deals.md. Figure out who I should be selling to and give me the report as a file. I can't answer questions right now, so use what's in the file and list what's missing as open questions.",
+    "summary": "Turned six deals into an ICP, a sales plan and a report with the missing facts listed as open questions.",
     "excerpt": [
-      "I'd hold off on the $2.5M seed in January. Fix your runway now, spend roughly November to March testing whether Harborline can grow into a venture-sized company, and decide in March.",
-      "You'd be raising with almost no cash left. At $28k/month burn you'd have about 4.5 months of money on January 1 and run out around May 2027. Rounds often take months, so you'd be negotiating against that deadline.",
-      "One open question could change the urgency. I assumed the $28k/month burn already accounts for revenue, because $210k ÷ $28k matches your 7.5 months of runway. If $28k is total spending before revenue, you're actually losing about $14k a month and have about 15 months of runway."
+      "Founder-led B2B SaaS companies under 10 people, seed-funded or bootstrapped, in the weeks after something breaks their trial conversion.",
+      "All 3 deals that paid were with founders. None of the 3 deals with a head of growth, a coordinator or procurement held up.",
+      "The report names clients with their prices and names lost deals. Get Dana's permission before using the Tallyroom quote in outreach."
     ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 92,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "It checked no outside data, so the shop count and market sizes are unverified.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "Your one-pager",
-        "text": "Traction (as of Sept 2026):\n- 140 paying shops, $99/month flat. MRR $13,860.\n- MRR 6 months ago: $7,900. Growth roughly 10%/month, slowing to ~6% the last two months.\n- Logo churn: 1.8%/month.\n- Sales: mostly CEO cold-calling + 2 trade shows. ~40% of new shops come from referrals.\n- Market: ~4,000 independent bike shops in the US. Founders think Canada + UK adds ~2,500.\n\nMoney: raised $400k pre-seed from angels in 2025. $210k in the bank. Burn $28k/month. Default-alive date: not yet, ~7.5 months runway."
-      },
-      "after": {
-        "label": "Recommendation",
-        "text": "I'd hold off on the $2.5M seed in January. Fix your runway now, spend roughly November to March testing whether Harborline can grow into a venture-sized company, and decide in March. If the evidence is there, raise in Q2 from a stronger position. The full plan is in `raise-plan.md`.\n\nWhy not January:\n- The market is small at today's price. Every independent US bike shop paying $99/month adds up to about $4.75M a year in revenue. With Canada and the UK it's about $7.7M, and that assumes you sign every shop. A seed investor needs a path to a much bigger company.\n- You'd be raising with almost no cash left. At $28k/month burn you'd have about 4.5 months of money on January 1 and run out around May 2027. Rounds often take months, so you'd be negotiating against that deadline."
-      }
-    }
-  },
-  "product-experiments": {
-    "request": "We ran the onboarding checklist test for two weeks. Results and notes are in results/. The PM wants to ship Monday because the numbers look up. Can we? Put your answer in results/readout.md.",
-    "summary": "Read a two-week A/B result, found the arms were uneven by about 640 users, and advised against shipping Monday.",
-    "excerpt": [
-      "My answer is no, don't ship Monday. The checklist arm does look better, but the test result isn't valid as it stands.",
-      "The arms are uneven. Assignment was meant to be 50/50, but control has 10,120 users and the checklist arm has 9,480. A gap that size is very unlikely to be chance (p ≈ 5×10⁻⁶). About 640 users are missing from the checklist arm.",
-      "The lift depends on those users. The primary metric (3 notes created by day 7) is up 2.0 percentage points: 37.0% vs 35.0%. If 35 or fewer of the 640 missing users would have reached 3 notes, the lift disappears."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 54,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "It worked only from a two-row summary CSV, so the Sept 6 to 8 crash check is still open.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "Test results",
-        "text": "variant,assigned_users,exposed_users,created_first_note_day1,created_3_notes_day7,active_week2,support_tickets_week1,median_onboarding_seconds\ncontrol,10120,10120,6578,3542,3036,142,212\nchecklist,9480,9480,6352,3507,2939,131,248"
-      },
-      "after": {
-        "label": "Readout",
-        "text": "I wrote the readout to `results/readout.md`. My answer is no, don't ship Monday. The checklist arm does look better, but the test result isn't valid as it stands.\n\nWhy:\n\n- The arms are uneven. Assignment was meant to be 50/50, but control has 10,120 users and the checklist arm has 9,480. A gap that size is very unlikely to be chance (p ≈ 5×10⁻⁶). About 640 users are missing from the checklist arm."
-      }
-    }
-  },
-  "skill-creator": {
-    "request": "I do the workflow in workflow.md by hand every Friday. Package it so my coding agent can do it for me next time. Put whatever you create under skills/ in this folder.",
-    "summary": "Packaged a manual Friday release-notes routine as a skill with a PR collection script and 12 test prompts.",
-    "excerpt": [
-      "Each of the three mistakes you listed has its own rule and check. The skill is used for requests like \"write the release notes\" or \"what did we ship to customers this week\", but not for internal summaries like standup notes.",
-      "Date range: it starts from the date of your most recent notes file rather than \"last friday\". That avoids missing or repeating PRs if a week is skipped or you run it on a different day.",
-      "Leaks: merge commits contain things like \"from alice/QN-412-acme-export\", so the final check specifically looks for names, handles and ticket or PR numbers."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 107,
-      "triggered": "auto",
-      "filesChanged": 3
-    },
-    "caveat": "Neither the skill nor its helper script was run, so both are untested.",
-    "pair": {
-      "kind": "text",
-      "before": {
-        "label": "Your workflow notes",
-        "text": "Mistakes I've made before: including a refactor because the title sounded exciting; calling something \"Fixed\" when it was really a new behavior; forgetting the platform tag."
-      },
-      "after": {
-        "label": "SKILL.md it wrote",
-        "text": "2. Filter out internal work\n\nDrop any PR labeled `internal`, `chore`, `refactor`, or `test`. Also drop it when there are no labels and the title prefix or the files show it's one of those (for example, it only touches tests, CI, or build config). Drop pure docs, dependency bumps, and other tooling work too, unless the body describes a change customers will notice.\n\nJudge by what changed, not by how exciting the title sounds. A refactor titled \"New sync engine\" is still a refactor. This exact mistake has happened before. When a PR's label and its content disagree, trust the label for exclusion and mention the conflict in your report."
-      }
-    }
-  },
-  "ai-cost-audit": {
-    "request": "Finance says AI is eating our margin. Here is last month of usage (usage-2026-09.csv) and context (context.md). What are we actually spending per user, and what can we cut without making the product worse? Write it up in cost-review.md.",
-    "summary": "Costed a month of AI usage per user, traced the margin loss to the free tier, and ranked four cuts by savings.",
-    "excerpt": [
-      "September AI spend comes to $13,819. That's $0.29 per monthly active user, or $4.46 per Pro subscriber if the whole bill is charged to paying users. Revenue is $24,800, so AI cost is 56% of it.",
-      "Where the margin goes: mostly the free tier. Features free users get account for $10,511 (76% of spend).",
-      "Batch the weekly digest: about $627/month. Nobody reads it before Monday 9am, so slower processing changes nothing for users.",
-      "The search-rerank caching idea doesn't hold up yet. The export's note says every call sends the same 2,400-token prompt, but the logged average input is only 1,600 tokens per call. Both can't be true."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 114,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "Prices come from the provided context and were not checked against official pricing.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "September usage",
-        "text": "feature,model,calls,input_tokens,output_tokens,cached_input_tokens,notes\nnote_summary,claude-sonnet-4-5,412000,1236000000,82400000,0,\"runs on every note save, even unchanged notes\"\nauto_tag,claude-sonnet-4-5,655000,393000000,6550000,0,\"returns 1-3 tags from a fixed list of 40\"\nsearch_rerank,claude-haiku-4-5,1840000,2944000000,18400000,0,\"same 2,400-token system prompt on every call\"\nweekly_digest,claude-sonnet-4-5,38000,304000000,22800000,0,\"sent Sunday night, nobody reads it before Monday 9am\"\nask_your_notes,claude-opus-4-1,21000,168000000,10500000,0,\"chat over notes, Pro only\""
-      },
-      "after": {
-        "label": "Cost review",
-        "text": "I've written `cost-review.md`. September AI spend comes to $13,819. That's $0.29 per monthly active user, or $4.46 per Pro subscriber if the whole bill is charged to paying users. Revenue is $24,800, so AI cost is 56% of it.\n\nWhere the margin goes: mostly the free tier. Features free users get account for $10,511 (76% of spend). An average Pro user costs about $1.29/month against $8 of revenue, so Pro is profitable. The ~44,900 free users cost about $9,800/month with no revenue behind them. If free users double while Pro stays flat, AI cost reaches about 95% of revenue. That growth risk matters more than any model choice."
-      }
-    }
-  },
-  "supabase": {
-    "request": "Tallyroom's dashboard still runs on hard-coded data. Move it onto our Supabase project (keys are in .env.local): groups, members and expenses, where people only ever see the flats they belong to. Wire the dashboard to read the real data. Don't push anything to the remote project yet.",
-    "summary": "Added four tables with RLS, magic-link sign-in and a dashboard that reads Supabase, then ran 36 access tests on local Postgres.",
-    "excerpt": [
-      "The dashboard now reads real flats, members and expenses from Supabase, and each signed-in user only sees the flats they belong to. Nothing has been pushed to the remote project, and nothing is committed.",
-      "Verification. Docker isn't installed, so I couldn't run Supabase's local stack. Instead I applied the migration to a scratch Postgres 16 with a minimal stand-in for Supabase's auth schema and roles. My 36 access-rule tests (`supabase/tests/rls_test.sql`) all pass there, the build passes, and signed-out visitors to `/dashboard` are redirected to `/login`.",
-      "Nobody can move an expense to another flat, promote themselves to owner, or pose as another user. The tests cover each of these, plus other users and people in no flat."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 331,
-      "triggered": "auto",
-      "filesChanged": 14
-    },
-    "caveat": "Ran with test keys; the dashboard's queries never reached a real Supabase API.",
-    "pair": {
-      "kind": "code",
-      "before": {
-        "label": "app/dashboard/page.jsx before",
-        "text": "const expenses = [\n  { date: \"Oct 1\", what: \"Groceries — Nature's Basket\", paidBy: \"Arjun\", amount: 2840.5, split: \"4 ways\", status: \"Unsettled\" },\n  { date: \"Sep 30\", what: \"Electricity bill (Sept)\", paidBy: \"Maya\", amount: 3125, split: \"4 ways\", status: \"Settled\" },\n  { date: \"Sep 28\", what: \"Wi-Fi — ACT Fibernet\", paidBy: \"Kabir\", amount: 1179, split: \"4 ways\", status: \"Unsettled\" },\n  { date: \"Sep 27\", what: \"Dinner at Toit\", paidBy: \"Arjun\", amount: 4620, split: \"3 ways\", status: \"Unsettled\" },\n  { date: \"Sep 25\", what: \"Cooking gas refill\", paidBy: \"Neha\", amount: 903, split: \"4 ways\", status: \"Settled\" },\n];\n\nexport default function Dashboard() {\n  const total = expenses.reduce((s, e) => s + e.amount, 0);"
-      },
-      "after": {
-        "label": "app/dashboard/page.jsx after",
-        "text": "export default async function Dashboard({ searchParams }) {\n  const supabase = await createClient();\n  const { data: auth } = await supabase.auth.getClaims();\n  const userId = auth?.claims?.sub;\n  if (!userId) redirect(\"/login\");\n\n  // RLS limits every query below to flats this user belongs to.\n  const { data: memberships, error: membershipsError } = await supabase\n    .from(\"group_members\")\n    .select(\"id, group_id, groups(name)\")\n    .eq(\"user_id\", userId)\n    .order(\"created_at\");\n  if (membershipsError) throw new Error(`Couldn't load your flats: ${membershipsError.message}`);"
-      }
-    }
-  },
-  "auth-implementation": {
-    "request": "Anyone can open /dashboard on Tallyroom right now. Add sign-in with Clerk (keys are in .env.local) so only signed-in people reach the dashboard and the plan checkout, and a person only sees the groups they're a member of.",
-    "summary": "Added Clerk sign-in, guarded the dashboard and checkout, limited groups to their members, and checked signed-out redirects.",
-    "excerpt": [
-      "Clerk sign-in is now in place. Signed-out visitors can't open the dashboard or start a checkout, and the dashboard only shows groups the signed-in person belongs to. The build passes and I checked the signed-out case against the running server. I haven't tested a real sign-in, because the keys in `.env.local` are fake test values, so the signed-in pages are still unchecked end to end.",
-      "Checks sit next to the data: the dashboard page and the new checkout route each check who is signed in themselves, so protection doesn't depend on `proxy.js` alone.",
-      "One security fix you didn't ask for: `lib/checkout.js` was putting the first 7 characters of `STRIPE_SECRET_KEY` into the checkout URL, and its fallback key string was bundled into code sent to the browser. I removed both, and the file is now server-only too."
-    ],
-    "table": {
-      "head": [
-        "Page",
-        "Signed out",
-        "Signed in, not a member",
-        "Signed in, member"
-      ],
-      "rows": [
-        [
-          "/, /pricing, /sign-in, /sign-up",
-          "open",
-          "open",
-          "open"
-        ],
-        [
-          "/dashboard",
-          "sent to sign-in",
-          "\"No groups yet\" message",
-          "their groups only"
-        ],
-        [
-          "/dashboard?group=<id>",
-          "sent to sign-in",
-          "404",
-          "that group"
-        ],
-        [
-          "/checkout/<plan>",
-          "sent to sign-in, then back after",
-          "continues to checkout",
-          "continues to checkout"
-        ]
-      ]
-    },
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 115,
-      "triggered": "auto",
-      "filesChanged": 13
-    },
-    "caveat": "Ran with test Clerk keys; no real sign-in was tested, and group membership is a stub setting.",
-    "pair": {
-      "kind": "code",
-      "before": {
-        "label": "app/dashboard/page.jsx before",
-        "text": "export default function Dashboard() {\n  const total = expenses.reduce((s, e) => s + e.amount, 0);\n  return (\n    <main className=\"page\">\n      <h1>Flat 4B — Indiranagar</h1>"
-      },
-      "after": {
-        "label": "app/dashboard/page.jsx after",
-        "text": "import { auth } from \"@clerk/nextjs/server\";\nimport { notFound } from \"next/navigation\";\nimport { getGroupForUser, listGroupsForUser } from \"../../lib/groups\";\n\nexport default async function Dashboard({ searchParams }) {\n  const { userId, redirectToSignIn } = await auth();\n  if (!userId) return redirectToSignIn();\n\n  const groups = listGroupsForUser(userId);"
-      }
-    }
-  },
-  "ai-product-development": {
-    "request": "Add a quick-add box to the Tallyroom dashboard: someone types something like \"paid 2400 for groceries, split with Maya and Kabir\" and it turns into a draft expense they confirm before it's saved. Use OpenAI (key is in .env.local).",
-    "summary": "Added a quick-add box that turns a typed note into a draft expense, checks the model's output, and saves only on confirm.",
-    "excerpt": [
-      "I've added the quick-add box to the dashboard, but I couldn't test it against OpenAI. The `OPENAI_API_KEY` in `.env.local` is a placeholder (`sk-test-…`, 28 characters), and OpenAI rejects it with a 401 even when called directly.",
-      "Names are matched against the group. Anyone who isn't a member is left out and listed in a warning.",
-      "If the amount isn't written exactly that way in the note (for example \"1.2k\"), it warns you to double-check it.",
-      "Confirmed expenses aren't saved. The app has no database, so Add expense only adds the row to the page, and it disappears on reload. There's a TODO where the save call should go."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 179,
-      "triggered": "auto",
-      "filesChanged": 9
-    },
-    "caveat": "OpenAI returned 401 for the test key, so no real model call succeeded; checks ran on a local stub.",
-    "pair": {
-      "kind": "code",
-      "before": {
-        "label": "app/dashboard/page.jsx before",
-        "text": "export default function Dashboard() {\n  const total = expenses.reduce((s, e) => s + e.amount, 0);\n  return (\n    <main className=\"page\">\n      <h1>Flat 4B — Indiranagar</h1>"
-      },
-      "after": {
-        "label": "lib/ai/quickAdd.js (new)",
-        "text": "export function toDraft(raw, { text, members, currentMember, today }) {\n  const warnings = [];\n\n  let amount = typeof raw.amount === \"number\" && Number.isFinite(raw.amount) ? Math.round(raw.amount * 100) / 100 : null;\n  if (amount !== null && (amount <= 0 || amount > MAX_AMOUNT)) amount = null;\n  if (amount === null) warnings.push(\"Couldn't find an amount — please enter it.\");\n  else if (!numbersInText(text).includes(amount)) warnings.push(\"Double-check the amount; it wasn't written exactly like that.\");\n\n  let paidBy = matchMember(raw.payer, members);\n  if (!paidBy) {\n    paidBy = currentMember;\n    if (raw.payer) warnings.push(`\"${raw.payer}\" isn't in this group, so the payer defaulted to you.`);\n  }"
-      }
-    }
-  },
-  "payments-with-dodo": {
-    "request": "Replace the placeholder checkout on Tallyroom's pricing page with real Dodo Payments subscriptions for Plus and Household. Test-mode keys and product IDs are in .env.local. Paid features should actually unlock when someone pays.",
-    "summary": "Asked about accounts and a database first, then built Dodo checkout, a signed webhook inbox and server-enforced plan limits.",
-    "excerpt": [
-      "No auth and no persistence. The app has three pages and only Next/React as dependencies. The dashboard shows a hardcoded list of expenses. When the Dodo webhook says \"subscription active\", there's no account to attach it to and nowhere to save it.",
-      "The Choose Plus and Choose Household buttons on the pricing page now start a real Dodo subscription, and paying unlocks features that the server enforces. All 30 tests pass and `next build` is clean. I haven't been able to run a real payment end to end: the Dodo values in `.env.local` are marked as fake fixtures, and there's no local Postgres here.",
-      "Two copies of one event arriving at the same instant. That relies on Postgres row locking, and the in-memory test database can't simulate two connections. Worth checking once against real Postgres."
-    ],
-    "table": {
-      "head": [
-        "Plan",
-        "Groups",
-        "CSV export"
-      ],
-      "rows": [
-        [
-          "Free",
-          "1",
-          "no"
-        ],
-        [
-          "Plus",
-          "unlimited",
-          "no"
-        ],
-        [
-          "Household",
-          "unlimited",
-          "yes"
-        ]
-      ]
-    },
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-10",
-      "durationSec": 1026,
-      "triggered": "auto",
-      "filesChanged": 37
-    },
-    "caveat": "It asked about auth and a database first and was told to go ahead with its suggestions.",
-    "pair": {
-      "kind": "code",
-      "before": {
-        "label": "lib/checkout.js before",
-        "text": "// TODO: move to env before launch\nconst STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || \"sk_test_FAKE_FOR_FIXTURE\";\n\nexport const PLANS = {\n  plus: { price: \"price_plus_monthly\", label: \"Plus\" },\n  household: { price: \"price_household_monthly\", label: \"Household\" },\n};\n\nexport function checkoutUrl(plan) {\n  const p = PLANS[plan];\n  // Placeholder until the real Checkout session endpoint exists.\n  return `/dashboard?plan=${p.price}&k=${STRIPE_SECRET_KEY.slice(0, 7)}`;"
-      },
-      "after": {
-        "label": "app/api/webhooks/dodo/route.js (new)",
-        "text": "  let event;\n  try {\n    event = getDodo().webhooks.unwrap(body, { headers });\n  } catch {\n    return new Response(\"Invalid signature\", { status: 401 });\n  }\n\n  try {\n    const outcome = await handleWebhook(getDb(), headers[\"webhook-id\"], event);\n    return Response.json({ received: true, status: outcome.status });\n  } catch (err) {\n    // Not acknowledged, so Dodo retries. The inbox row keeps the event.\n    console.error(`[billing] webhook ${headers[\"webhook-id\"]} failed:`, err?.code ?? err?.name);\n    return new Response(\"Temporary failure\", { status: 503 });"
-      }
-    }
-  },
-  "credit-metering": {
-    "request": "Plus includes 50 receipt scans a month. Build the scan allowance: one scan uses one credit, Plus gets 50 every month, people can buy a 100-scan top-up, and a double-click or retry must never charge twice. The Postgres URL is in .env.local; the receipt OCR call itself can stay a stub.",
-    "summary": "Built a scan-credit ledger with a monthly 50, a 100-scan top-up and one charge per scan ID, tested under concurrency.",
-    "excerpt": [
-      "Scan credits are built: Plus gets 50 scans per paid billing month, one scan costs one credit, people can buy a 100-scan top-up, and a double-click or retry is charged once. The OCR call is still a stub. All 25 tests pass against a local Postgres 16, `next build` succeeds, and I ran an end-to-end check through the real routes.",
-      "30 simultaneous scans against 5 credits: exactly 5 succeed.",
-      "In the end-to-end run, 5 parallel requests with one scan ID produced one charge (one 409 \"already running\", four 200s), and a repeated webhook delivery returned `duplicate`.",
-      "There's no auth in the app. `lib/auth.js` returns the user from the `DEV_USER_ID` env var, and only outside production."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-10",
-      "durationSec": 424,
-      "triggered": "auto",
-      "filesChanged": 21
-    },
-    "caveat": "Ran with test keys on a throwaway local Postgres; no real Stripe payment or top-up went through.",
-    "pair": {
-      "kind": "code",
-      "before": {
-        "label": "app/pricing/page.jsx before",
-        "text": "const rows = [\n  [\"Groups\", \"1\", \"Unlimited\", \"Unlimited\", \"Unlimited\"],\n  [\"Members per group\", \"4\", \"20\", \"100\", \"Unlimited\"],\n  [\"Receipt scanning\", \"—\", \"50 / month\", \"Unlimited\", \"Unlimited\"],\n  [\"Multi-currency\", \"—\", \"✓\", \"✓\", \"✓\"],\n  [\"Recurring bills\", \"—\", \"✓\", \"✓\", \"✓\"],\n  [\"Export to CSV\", \"—\", \"—\", \"✓\", \"✓\"],\n  [\"Priority support\", \"—\", \"—\", \"—\", \"✓\"],\n];"
-      },
-      "after": {
-        "label": "lib/scan-credits.js (new)",
-        "text": "// Reserve one credit for a scan identified by the client's idempotency key.\n// Returns { replay: true, request } for an already-succeeded key.\nexport async function reserveScan(userId, idempotencyKey) {\n  return tx(async (c) => {\n    const acct = await lockAccount(c, userId);\n    await expireAllowanceIfDue(c, acct);\n    await releaseStale(c, acct);\n\n    const existing = (\n      await c.query(\"select * from scan_requests where user_id = $1 and idempotency_key = $2\", [userId, idempotencyKey])\n    ).rows[0];\n    if (existing?.status === \"succeeded\") return { replay: true, request: existing };\n    if (existing?.status === \"pending\") throw new ScanInProgress(\"This scan is already running\");"
-      }
-    }
-  },
-  "rate-limit": {
-    "request": "We're adding two API routes to Tallyroom: POST /api/receipts/scan, which calls a paid OCR service, and POST /api/invites, which emails an invite link. Create them (stub the OCR and email parts) and stop people from hammering them. Upstash Redis credentials are in .env.local.",
-    "summary": "Added both stub routes with per-IP, global and per-recipient Upstash limits that reject when Redis is down. 12 tests pass.",
-    "excerpt": [
-      "I've added both routes with stubbed OCR and email, and both are rate-limited with Upstash. The tests and the production build pass. I haven't seen a request get through yet: the Upstash credentials in `.env.local` are fake test values, so every request I sent ended at the \"Redis unreachable\" path.",
-      "Why it rejects when Redis is down: both routes cost money or send email, so they reject rather than run unmetered. Upstash's library lets a request through when Redis is slow, so I treat that case as an outage too.",
-      "A client-supplied `x-forwarded-for` is ignored, so spoofing it doesn't get around the limit."
-    ],
-    "table": {
-      "head": [
-        "Route",
-        "Limited by",
-        "Limit",
-        "If Redis is down"
-      ],
-      "rows": [
-        [
-          "POST /api/receipts/scan",
-          "client IP",
-          "burst of 5, then about 1 every 2 minutes",
-          "rejects with 503 and Retry-After: 30"
-        ],
-        [
-          "",
-          "everyone combined",
-          "300 per hour, a cap on total OCR spend",
-          "rejects with 503"
-        ],
-        [
-          "POST /api/invites",
-          "client IP",
-          "10 per hour",
-          "rejects with 503"
-        ],
-        [
-          "",
-          "recipient email (stored as a hash)",
-          "3 per 24 hours, so nobody can flood one inbox",
-          "rejects with 503"
-        ]
-      ]
-    },
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-10",
-      "durationSec": 152,
-      "triggered": "auto",
-      "filesChanged": 9
-    },
-    "caveat": "Ran with test keys; never called a live Upstash database.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "What was asked",
-        "text": "We're adding two API routes to Tallyroom: POST /api/receipts/scan, which calls a paid OCR service, and POST /api/invites, which emails an invite link. Create them (stub the OCR and email parts) and stop people from hammering them. Upstash Redis credentials are in .env.local."
-      },
-      "after": {
-        "label": "lib/rate-limit.js (new)",
-        "text": "// Policy table. Each route checks its rules in order and stops at the first block.\nexport const policies = {\n  receiptScan: () => [\n    // Per client: a handful of scans in a burst, about one every 2 minutes after that.\n    { name: \"receipt-scan:ip\", limiter: limiter(\"receipt-scan:ip\", Ratelimit.tokenBucket(1, \"2 m\", 5)) },\n    // Global ceiling on paid OCR calls. Caps spend even if someone rotates IPs.\n    { name: \"receipt-scan:global\", limiter: limiter(\"receipt-scan:global\", Ratelimit.fixedWindow(300, \"1 h\")), key: \"all\" },\n  ],\n  invites: () => [\n    { name: \"invites:ip\", limiter: limiter(\"invites:ip\", Ratelimit.slidingWindow(10, \"1 h\")) },\n    // Per recipient: stops anyone from flooding one inbox with invites.\n    { name: \"invites:recipient\", limiter: limiter(\"invites:recipient\", Ratelimit.slidingWindow(3, \"24 h\")) },\n  ],\n};"
-      }
-    }
-  },
-  "email-with-resend": {
-    "request": "Tallyroom needs email. When someone adds an expense, the people it's split with should get a short email, and new users should get a welcome email. Use Resend (key and sender are in .env.local).",
-    "summary": "Wrote welcome and expense-split emails behind one Resend sender with retry-safe IDs. Nothing in the app calls them yet.",
-    "excerpt": [
-      "I've written the welcome and expense-split emails, but nothing sends them yet. Tallyroom has no signup flow, no database, and no \"add expense\" action; the dashboard shows hard-coded sample rows. So I built the email code as two server-side functions, and they need to be called from those handlers once they exist.",
-      "Each email carries a fixed ID (one per user for welcome, one per expense and recipient for splits), so Resend won't send the same one twice if a call is retried.",
-      "Bounces and spam complaints aren't handled. `RESEND_WEBHOOK_SECRET` is already in `.env.local`, but without a database there's nowhere to record addresses to stop emailing."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-10",
-      "durationSec": 141,
-      "triggered": "auto",
-      "filesChanged": 6
-    },
-    "caveat": "Ran with test keys against a fake Resend server; no real email was sent.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "What was asked",
-        "text": "Tallyroom needs email. When someone adds an expense, the people it's split with should get a short email, and new users should get a welcome email. Use Resend (key and sender are in .env.local)."
-      },
-      "after": {
-        "label": "lib/email/index.js (new)",
-        "text": "/**\n * Welcome email. Call once after the user row is created.\n * user: { id, email, name? }\n */\nexport async function sendWelcomeEmail(user) {\n  const result = await sendEmail({\n    to: user.email,\n    ...welcomeEmail({ name: user.name }),\n    idempotencyKey: `welcome:${user.id}`,\n  });\n  if (!result.ok) console.error(\"[email] welcome failed\", { userId: user.id, ...result });\n  return result;\n}"
-      }
-    }
-  },
-  "analytics": {
-    "request": "We launch next week and can't see anything. I want to know how many visitors reach pricing, how many click a plan, and to hear about it when the app throws errors. Set it up. PostHog and Sentry keys are in .env.local.",
-    "summary": "Set up PostHog page views, a plan_selected event and Sentry error capture, with query strings stripped from every URL.",
-    "excerpt": [
-      "PostHog and Sentry are set up and the production build passes, but nothing has reached either service yet. The values in `.env.local` are marked as fake fixture values, so no real events or errors were sent and I haven't confirmed anything in the PostHog or Sentry dashboards.",
-      "Plan clicks: a new `plan_selected` event with a `plan` property (`plus` or `household`), sent from the two \"Choose\" buttons.",
-      "Funnel: in PostHog, build a funnel of page view on `/pricing` → `plan_selected`, counting unique users.",
-      "Set up a Sentry alert rule (email or Slack) for new issues. Errors are only collected, not sent to you, until you do."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-10",
-      "durationSec": 140,
-      "triggered": "auto",
-      "filesChanged": 9
-    },
-    "caveat": "Ran with test keys; no event or error reached a real PostHog or Sentry project.",
-    "pair": {
-      "kind": "code",
-      "before": {
-        "label": "app/pricing/CheckoutButton.jsx before",
-        "text": "\"use client\";\nimport { checkoutUrl } from \"../../lib/checkout\";\n\nexport default function CheckoutButton({ plan, children }) {\n  return (\n    <a className=\"mini-btn\" href={checkoutUrl(plan)}>\n      {children}\n    </a>\n  );\n}"
-      },
-      "after": {
-        "label": "app/pricing/CheckoutButton.jsx after",
-        "text": "\"use client\";\nimport { checkoutUrl } from \"../../lib/checkout\";\nimport { trackPlanSelected } from \"../../lib/analytics\";\n\nexport default function CheckoutButton({ plan, children }) {\n  return (\n    <a className=\"mini-btn\" href={checkoutUrl(plan)} onClick={() => trackPlanSelected(plan)}>\n      {children}\n    </a>\n  );\n}"
-      }
-    }
-  },
-  "product-launch": {
-    "request": "We're launching Tallyroom on October 21 to flatmates in Bangalore. My notes are in launch-notes.md. Work out the launch and tell me what isn't ready. Save the plan as launch-plan.md.",
-    "summary": "Checked the launch notes against the repo, found nothing to sign up with, set a go/no-go check for Oct 17 and cut Product Hunt.",
-    "excerpt": [
-      "The plan is in `launch-plan.md`. The main problem is that the app can't yet do what your launch is meant to measure: flatmates making a group and logging 5+ expenses. There's no signup, group creation, invites or expense logging, and the dashboard shows made-up data.",
-      "The date. Oct 21 2026 is a Wednesday, not a Tuesday. Please confirm which day you mean.",
-      "Set a go/no-go check for Fri Oct 17 on the live site. Two outsiders should sign up, one joins the other's flat through the WhatsApp link, and they log 5 expenses with correct balances.",
-      "Skip Product Hunt. Its audience isn't Bangalore flatmates, and you'd be splitting a solo launch day."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-10",
-      "durationSec": 104,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "Web access was off, so it never checked r/bangalore's rules or any live channel.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "Your notes",
-        "text": "- Launch date: Tuesday Oct 21. I'm doing this alone, plus Kabir helps with code evenings.\n- Who: flatmates in Bangalore, mostly 23-30, sharing 3-4 BHKs in Indiranagar, Koramangala, HSR.\n- Why us: Splitwise works but people complain about the daily limit on the free plan and that it doesn't do UPI. We don't do UPI either yet.\n- Reach: my X account has ~1,900 followers. I'm in 3 WhatsApp groups for flat hunting in Bangalore (~2,000 people total, admins don't love promo). r/bangalore exists.\n- 31 people from our 2 test flats used the dashboard mock in September. 4 said they'd pay for Plus. Nobody has actually paid.\n- Pricing page has checkout buttons but they don't take money yet (placeholder). Signup doesn't exist yet either.\n- Was thinking Product Hunt on the same day?\n- Budget: ₹15,000 max.\n- Want to know after 2 weeks: did anyone create a group with their flatmates and log 5+ expenses."
-      },
-      "after": {
-        "label": "Launch plan",
-        "text": "Recommendation: keep Oct 21 only if the go/no-go gate below passes on Fri Oct 17. Launch free, with no paid plans. Use your own X account, the two test flats and one carefully handled WhatsApp/Reddit post. Skip Product Hunt. If the gate fails, use Oct 21 to open a \"founding flats\" waitlist and move the open launch back about 2 weeks.\n\nDate check: Oct 21 2026 is a Wednesday, not a Tuesday. The notes probably use last year's calendar. Confirm which date you mean."
-      }
-    }
-  },
-  "cold-outreach": {
-    "request": "I want to get Tallyroom in front of the person in prospect.md. Write the email I should send her and save it as email.md.",
-    "summary": "Wrote a short first email to a co-living ops head that opens on her own post and says plainly Tallyroom is pre-launch.",
-    "excerpt": [
-      "Opening: it starts with her Sep 29 LinkedIn post, where she said money between flatmates is Nestfold's top resident complaint and her team shouldn't be stuck sorting it out.",
-      "Being honest about where you are: it says plainly that you're pre-launch, that 31 people in 2 test flats used it in September, and that you have no co-living operator customers yet. That's also why the ask is a small pilot rather than a rollout.",
-      "Left out: I didn't use her August talk on move-out disputes. I don't know what she said, and those disputes are about deposits, not flatmate expenses."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 38,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "The prospect is a fictional test profile, so the email was never sent or answered.",
-    "pair": {
-      "kind": "text",
-      "before": {
-        "label": "Your notes on her",
-        "text": "What I know (from her public posts, saved Oct 6):\n- Posted on LinkedIn on Sep 29: \"Our #1 resident complaint this quarter isn't rent or maintenance. It's money between flatmates. Who paid for the gas cylinder, who owes for the party. We get pulled into it and we shouldn't be.\"\n- Spoke at a Bangalore proptech meetup in August about cutting move-out disputes.\n- Nestfold Living' careers page is hiring a \"Community Ops Associate\" whose duties include \"mediating resident cost-sharing disputes\"."
-      },
-      "after": {
-        "label": "The email",
-        "text": "Hi Ritika,\n\nYour Sep 29 post said Nestfold's top resident complaint this quarter is money between flatmates (the gas cylinder, the party), and that your team gets pulled in when it shouldn't. I also saw that the Community Ops Associate role includes mediating cost-sharing disputes.\n\nI'm building Tallyroom to keep those arguments between the flatmates. Each flat logs who paid for what, sees a running balance, and gets the fewest payments needed to settle up. It works in INR.\n\nTo be upfront: we're pre-launch. 31 people in 2 test flats used it in September, and we haven't worked with a co-living operator yet. That's why I'm asking about a small pilot rather than a rollout.\n\nWould you be open to a 20-minute call to see whether a pilot in one or two Nestfold properties makes sense? If someone else owns this, I'd be grateful if you could point me to them."
-      }
-    }
-  },
-  "product-teardown": {
-    "request": "Before we rewrite Tallyroom's homepage, I want to understand how Splitwise sells itself on https://www.splitwise.com: what works, what doesn't, and what we should take for our own homepage. Save it as teardown.md.",
-    "summary": "Read Splitwise's homepage, listed what works and what doesn't, and turned it into four changes for Tallyroom's homepage.",
-    "excerpt": [
-      "I've written the teardown to `teardown.md`. One limit first: I only had a text fetch of the page, never a rendered view. So I couldn't judge layout, images or mobile, and the fetch paraphrased most of Splitwise's body copy.",
-      "The headline says what it does. \"Split expenses with friends,\" and the subhead names the everyday situations: trips, housemates, a partner.",
-      "It never says why Splitwise rather than a spreadsheet or the group chat.",
-      "Currency: the dashboard and your latest commit use ₹, but the pricing page shows $."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-09",
-      "durationSec": 78,
-      "triggered": "auto",
-      "filesChanged": 1
-    },
-    "caveat": "It studied splitwise.com through one text fetch, never a rendered page, so layout went unjudged.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "Your homepage hero",
-        "text": "        <span className=\"eyebrow\">✨ Introducing Tallyroom</span>\n        <h1>Revolutionize the Way You Manage Shared Expenses</h1>\n        <p className=\"lede\">\n          Unlock the power of seamless, AI-driven expense splitting. Tallyroom is the\n          all-in-one platform that empowers you to effortlessly elevate your financial\n          harmony with friends, roommates, and beyond.\n        </p>\n        <div className=\"cta-row\">\n          <a className=\"btn btn-primary\" href=\"/pricing\">Get Started Today 🚀</a>\n          <a className=\"btn btn-ghost\" href=\"/dashboard\">Learn More</a>\n        </div>"
-      },
-      "after": {
-        "label": "What to take",
-        "text": "- Replace the hype. Cut \"Revolutionize\", \"AI-driven\", \"Enterprise-grade\", \"your team\" and the emoji. Write a headline that names the household-bills job, followed by three sections built from the Flat 4B dashboard.\n- Lead with \"one subscription covers the whole flat.\" It's already in your pricing FAQ, and Splitwise's page has nothing like it. Check it against your billing logic first.\n- Show \"from $3/mo\" on the homepage.\n- Shrink the nav. It has 7 links, and three of them (Dashboard, Groups, Activity) go to `/dashboard`. Cut it to Pricing, FAQ, Log in and the main button."
-      }
-    }
-  },
-  "demo-video": {
-    "request": "Make a ~30-second demo video of Tallyroom that we can post with our launch announcement on X. Render it to an MP4.",
-    "summary": "Built a Remotion project and rendered a 32-second 1080p launch clip for X from the app's sample dashboard data.",
-    "excerpt": [
-      "The video is rendered: `video/out/tallyroom-launch-x-16x9.mp4`. It runs 32 seconds at 1920×1080, 30fps, H.264, and the file is 0.8 MB.",
-      "I made it to work with the sound off, since X autoplays muted. It has no audio track, and all the messaging is on-screen text.",
-      "No screen recording: the dashboard is rebuilt in Remotion using the same sample data and brand colours as `app/dashboard`. A small \"Sample group data\" label stays in the corner, so the flatmates and amounts aren't presented as a real customer.",
-      "Length: it's 2 seconds over 30. I can trim it to exactly 30 by shortening the ledger section."
-    ],
-    "run": {
-      "agent": "Claude Code",
-      "version": "2.1.295",
-      "date": "2026-10-10",
-      "durationSec": 249,
-      "triggered": "auto",
-      "filesChanged": 15
-    },
-    "caveat": "It checked stills and ffprobe output but never watched the clip at normal speed.",
-    "pair": {
-      "kind": "data",
-      "before": {
-        "label": "Your brief",
-        "text": "Make a ~30-second demo video of Tallyroom that we can post with our launch announcement on X. Render it to an MP4."
-      },
-      "after": {
-        "label": "What it rendered",
-        "text": "|---|---|\n| 0–4s | \"Four flatmates. Five shared bills. Who owes what?\" |\n| 4–13s | The Flat 4B dashboard fills in row by row: \"Every shared bill in one place — who paid, and how it splits.\" |\n| 13–19.5s | The ledger dims and \"You owe ₹1,842 / You are owed ₹710\" is highlighted: \"See exactly where you stand.\" |\n| 19.5–25s | Settled rows dim and the three unsettled ones are outlined: \"And what's still left to settle.\" |\n| 25–29s | \"Free for one group of up to four. Plus is $3/mo — one paid account covers everyone.\" |\n| 29–32s | Purple end card: \"Tallyroom — Split shared bills. Start free.\" |"
-      }
-    },
-    "still": "/proof/demo-video/frame.jpg"
-  },
-  "image-editing": {
-    "request": "For our launch tweet I want a photo of this banner (banner.png) showing on a laptop screen on a wooden desk, natural light, slightly angled. Every word and number on the banner has to stay exactly as it is. Use OpenAI's image model for this; the key is set as OPENAI_API_KEY in the environment. Save it as banner-laptop.png.",
-    "summary": "Put the Tallyroom launch banner on a laptop in a desk photo with one OpenAI image edit, then checked every word and number against the original.",
-    "excerpt": [
-      "I zoomed into the screen and compared it line by line with banner.png. Every word and number matches.",
-      "Model: gpt-image-2.5-sunburst, using OpenAI's image edit endpoint with your banner attached.",
-      "A book on the right edge has made-up text on it (\"The Daily\"). The keyboard letters are blurry and not real characters.",
-      "There was no OCR tool installed, so this was a visual check only. That's my review; you should still look it over yourself before posting."
-    ],
-    "images": {
-      "before": "/proof/image-editing/before.jpg",
-      "after": "/proof/image-editing/after.jpg",
-      "caption": "Tallyroom launch banner, then the same banner on a laptop after one image edit.",
-      "wide": true,
-      "alt": {
-        "before": "Tallyroom launch banner: Tallyroom 2.0 is live, with an expense card",
-        "after": "The same Tallyroom banner on a laptop screen on a wooden desk, every word unchanged"
-      }
-    },
     "run": {
       "agent": "Claude Code",
       "version": "2.1.296",
-      "date": "2026-10-10",
-      "durationSec": 97,
+      "date": "2026-10-13",
+      "durationSec": 145,
       "triggered": "auto",
-      "filesChanged": 2
+      "filesChanged": 1
     },
-    "caveat": "The text check was visual. No OCR tool was installed.",
+    "caveat": "It used only the file you gave it, so the reply rate in the sales plan is a guess until you have cold outreach data.",
     "pair": {
-      "kind": "screenshots",
+      "kind": "data",
       "before": {
-        "label": "Your banner",
-        "image": "/proof/image-editing/before.jpg"
+        "label": "deals.md",
+        "text": "# Brightleaf Studio: deals, last 12 months\nWe build and run email onboarding sequences for B2B SaaS companies. Two people. $1.2K to $3K a month.\n\n- Tallyroom (expense app, 6 staff, seed). Spoke to the founder, Dana. Hired us right after a pricing change confused trial users. $2.2K/month, 7 months, renewed twice. Said \"best thing we did this year\", introduced us to two other founders.\n- Pocketledger (invoicing, 14 staff, Series A). Spoke to the head of growth, Ravi. Wanted a \"refresh\" with no deadline. $1.4K/month for 2 months, then paused: budget freeze.\n- Orbit CRM (30 staff). Spoke to a marketing coordinator. Three calls, asked for a proposal, never replied.\n- Fernhill (scheduling tool, 4 staff, bootstrapped). Founder came from a Twitter thread I wrote. $1.2K/month, 10 months, still active.\n- Kiln Analytics (enterprise, 120 staff). Procurement asked for a security questionnaire; we dropped out.\n- One-off: a $900 onboarding audit for Loomsy, a 9-person startup, founder had just lost 40% of trial users in a week. No follow-on work.\n\nGoal: 3 more retainers in 90 days. 25 hours a week available."
       },
       "after": {
-        "label": "After /image-editing",
-        "image": "/proof/image-editing/after.jpg"
+        "label": "What to sell, and to whom",
+        "text": "I wrote the report to **`icp-report.html`** in your project folder. It's a single self-contained page that prints cleanly to PDF. I couldn't open it in a browser here, so I haven't checked how it looks. It's built only from deals.md: I didn't look anything up online, and every gap is listed as an open question.\n\n**Who to sell to:** founders of B2B SaaS companies with fewer than 10 people, seed-funded or bootstrapped, in the weeks after something breaks their trial conversion.\n\n- **Talk to the founder.** All 3 deals that paid were with founders (Tallyroom, Fernhill, Loomsy). None of the 3 deals with a head of growth, a coordinator or procurement held up.\n- **Stay small.** Every win was at a company of 4 to 9 people. Every company of 14 or more stalled, paused or dropped out.\n- **Look for a trial problem.** Tallyroom hired you right after a pricing change confused trial users. Loomsy bought within a week of losing 40% of trial users. Pocketledger wanted a \"refresh\" with no deadline and was cut first in a budget freeze.\n- **Skip these:** companies past Series A, contacts below the founder, projects with no deadline, and anything that needs procurement or a security questionnaire.\n\n**What the report also covers:**\n- **Sales plan:** to get 3 retainers, aim for about 9 founder calls from about 60 founders contacted. The reply rate in that math is a guess, because you have no cold outreach data.\n- **Where leads come from:** referrals have already worked (Dana sent 2 founders), and Twitter brought in Fernhill. Cold outreach to founders who just changed pricing is untested.\n- **Offer:** the $900 audit should end with a retainer proposal, since Loomsy's audit stopped there.\n- **Outreach draft:** it names Tallyroom and quotes Dana.\n\n**Most important open questions:**\n- Is Tallyroom still paying? That decides whether you're at $1.2K or $3.4K a month today.\n- Why did Loomsy stop after the audit?\n- What did Dana's two referrals turn into?\n- What would clients have done without you?\n- Is the 25 hours a week each or combined, and how many hours does one retainer take? That decides whether 3 more fit."
       }
     }
   }

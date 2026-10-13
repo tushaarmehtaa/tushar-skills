@@ -283,6 +283,14 @@ export const CATALOG = {
     capabilities: ["user-files"],
     support: { "claude-code": "untested", codex: "untested", cursor: "untested" },
   },
+  "who-to-sell-to": {
+    category: "marketing",
+    tags: ["icp", "customers", "sales", "positioning", "interview"],
+    author: "tushaarmehtaa",
+    surfaces: ["coding-agent", "claude-app"],
+    capabilities: ["network", "user-files"],
+    support: { "claude-code": "tested", codex: "untested", cursor: "untested" },
+  },
   "user-insights": {
     category: "analytics",
     tags: ["users", "segmentation", "retention", "churn", "cohorts", "analytics"],

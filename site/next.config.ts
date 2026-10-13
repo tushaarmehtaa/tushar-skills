@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: repositoryRoot,
   },
+  async redirects() {
+    return [
+      { source: "/icp-interview", destination: "/who-to-sell-to", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -80,8 +80,8 @@ test("search typing, group filter and return path", async ({ page }) => {
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await expect(search).toHaveValue("");
   await expect(page.locator(".row")).toHaveCount(10);
-  await page.getByRole("button", { name: /^All\s*34$/ }).click();
-  await expect(page.locator(".row")).toHaveCount(34);
+  await page.getByRole("button", { name: /^All\s*35$/ }).click();
+  await expect(page.locator(".row")).toHaveCount(35);
   await expect(page).not.toHaveURL(/group=/);
 });
 test("commands for all runtimes and scopes; exact raw source copy", async ({
@@ -121,7 +121,7 @@ test("commands for all runtimes and scopes; exact raw source copy", async ({
 test("discovery uses one consistent treatment for every skill", async ({ page }) => {
   await page.goto("/");
   const rows = page.locator(".row");
-  await expect(rows).toHaveCount(34);
+  await expect(rows).toHaveCount(35);
   const names = await rows.locator(".row-name").allTextContents();
   for (const [i, name] of names.entries()) {
     expect(name, `row ${i}`).toMatch(/^\/[a-z0-9-]+$/);
@@ -137,7 +137,7 @@ test("all catalog routes, guides, archives, metadata and recovery", async ({
   request,
 }) => {
   const catalog = await (await request.get("/skills.json")).json();
-  expect(catalog.skills).toHaveLength(34);
+  expect(catalog.skills).toHaveLength(35);
   for (const skill of catalog.skills) {
     const path = new URL(skill.url).pathname;
     const response = await request.get(path);

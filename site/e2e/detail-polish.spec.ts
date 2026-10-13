@@ -19,8 +19,8 @@ test("long queries reflow and empty search has a working recovery", async ({
     "true",
   );
   await expect(page.locator(".row")).toHaveCount(11);
-  await page.getByRole("button", { name: /^All\s*34$/ }).click();
-  await expect(page.locator(".row")).toHaveCount(34);
+  await page.getByRole("button", { name: /^All\s*35$/ }).click();
+  await expect(page.locator(".row")).toHaveCount(35);
 });
 test("search results and the first row stay in the first screen", async ({
   page,

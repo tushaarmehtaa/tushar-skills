@@ -35,6 +35,15 @@
       "smokeTest": "Re-verified after the 10 Oct fix that forbids printing secret values even when they look fake and requires a rollback section. Install via documented command with SKILL.md byte-identical to the repository (sha256 e7f23332ab31); automatic discovery 15/15 across three phrasings including one without the skill's keywords; explicit /deploy-check 5/5; workflow 1.00 with vs 0.63 without (delta +0.37, n=3 per arm, blind grading against the rubric written 9 Oct). The fixture's fake Stripe key appeared in none of the 8 complete skill-arm reports, in full or in part (without the skill it was printed in 2 of 3); every report had a rollback section. Removal emptied the lockfile and left no residue. The update step is recorded but not counted: npx skills update 1.7.2 leaves any edited copy unchanged for every skill, and re-running npx skills add restores it. Nothing was pushed or deployed and the fixture's uncommitted changes survived every run.",
       "verifiedBy": "workspace/redesign/v2/verification-2026-10-10.md",
       "result": "passed"
+    },
+    {
+      "skill": "who-to-sell-to",
+      "runtime": "claude-code",
+      "verifiedAt": "2026-10-13",
+      "environment": "Claude Code 2.1.296 (model claude-opus-5-5), macOS 27.0 (darwin 27.0.0), npx skills 1.7.2, project-scope install at ./.claude/skills/who-to-sell-to; headless claude -p --setting-sources project,local; synthetic fixture deals.md; WebFetch and WebSearch not used",
+      "smokeTest": "Install via the documented command from the pushed repository; installed SKILL.md byte-identical to the repository (sha256 f7d2de031648). Automatic discovery 2/2 on phrasings that avoid the skill's keywords ('I don't know who I should be pitching to anymore', 'why do some clients stay while others ghost me'). Explicit /who-to-sell-to 1/1, which read the bundled references. Full workflow 1/1 in fast-path mode from a pasted deals file: ICP card, 8 collapsible sections, no example content left, researched-vs-told labelled, gaps listed as open questions, confidentiality warning raised. The run's Bash calls were denied under acceptEdits and the agent fell back to writing the file. Removal emptied the lockfile and the skills folder. Counts are small and there is no without-skill baseline. Interactive multi-turn interviews were not exercised in headless mode.",
+      "verifiedBy": "workspace/redesign/v2/verification-2026-10-13-who-to-sell-to.md",
+      "result": "passed"
     }
   ]
 }

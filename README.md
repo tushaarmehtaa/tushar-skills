@@ -4,7 +4,7 @@
 
 Reusable SKILL.md workflows from real projects. Install them in Codex, Claude Code, or Cursor; see what each skill needs before installing.
 
-The directory contains 34 focused skills. Each one owns a meaningful outcome rather than a single code snippet.
+The directory contains 35 focused skills. Each one owns a meaningful outcome rather than a single code snippet.
 
 **[Browse the directory →](https://www.slashskills.xyz)**
 
@@ -95,6 +95,7 @@ This table is generated from the same catalog and frontmatter used by the site. 
 | [`supabase`](./supabase/SKILL.md) | devops | Set up, extend, or audit Supabase schema, grants, RLS, migrations, typed clients, storage, and external auth. Use when integrating Supabase or repairing data access and tenant isolation. |
 | [`ui-copy`](./ui-copy/SKILL.md) | workflow | Audit, write, and implement interface language across actions, forms, states, errors, progress, and notifications. Use when product copy must match system behavior and voice. |
 | [`user-insights`](./user-insights/SKILL.md) | analytics | Analyze behavioral segments, retention, activation, funnels, adoption, churn, and monetization. Use when product, event, billing, or qualitative data must inform a product decision. |
+| [`who-to-sell-to`](./who-to-sell-to/SKILL.md) | marketing | Find your ideal customer profile from real paid and lost deals, with a report of triggers, disqualifiers and a 90-day plan. Use when deciding who to sell to, or why deals stall or don't renew. |
 <!-- END GENERATED SKILL CATALOG -->
 
 ## Contributing

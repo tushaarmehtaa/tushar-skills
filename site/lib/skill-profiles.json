@@ -36,6 +36,7 @@
       "demo-video",
       "analytics",
       "product-launch",
+      "who-to-sell-to",
       "cold-outreach",
       "humanize",
       "product-experiments",
@@ -620,6 +621,23 @@
         "Round amount, use of funds, runway, and milestones agree",
         "Investor-fit claims never imply investor interest",
         "Unsupported pitch claims are labeled as hypotheses"
+      ]
+    },
+    "who-to-sell-to": {
+      "group": "grow",
+      "outcome": "An ICP card, triggers, disqualifiers and a 90-day plan, each line tied to a real deal.",
+      "useWhen": "Use when you need to decide who to sell to, or understand why deals stall or don't renew.",
+      "skipWhen": "Skip it if you have no customers or lost deals yet; it won't invent evidence. Use cold-outreach to start conversations first.",
+      "why": "Most ICPs describe who the founder wishes would buy. This one starts from who paid, who renewed and who walked, one question at a time, and ends with a report you can sell against.",
+      "next": "cold-outreach",
+      "outputContract": "Return a self-contained report:\n\n- ICP card: who, when, buyer, replaces, not a fit, each traced to evidence or marked to test;\n- goals and the deals evidence table;\n- patterns, offer ladder and sales plan with pipeline math;\n- second ICP and content plan when the interview supports them;\n- weekly scorecard, this week's tasks and open questions.",
+      "outputSource": "Output contract",
+      "proofTier": "run",
+      "checks": [
+        "Every ICP line traces to a deal or is marked to test",
+        "Company and customer facts are researched or labeled as told",
+        "Hypotheses are never presented as evidence",
+        "No example content remains in the report"
       ]
     }
   }

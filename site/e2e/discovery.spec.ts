@@ -35,7 +35,7 @@ for (const [width, height] of [
     await page.getByRole("button", { name: /^Ship\s*9$/ }).click();
     await expect(page).toHaveURL(/group=ship/);
     await expect(page.locator(".row")).toHaveCount(9);
-    await page.getByRole("button", { name: /^All\s*34$/ }).click();
+    await page.getByRole("button", { name: /^All\s*35$/ }).click();
     await page.getByRole("heading", { level: 1 }).click();
     await page.keyboard.press("/");
     await expect(search).toBeFocused();

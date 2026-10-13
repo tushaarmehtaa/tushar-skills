@@ -48,8 +48,8 @@ test.describe("slashskills platform", () => {
     expect(chat.has("decision-doc")).toBe(true);
     await page.goto("/");
     const rows = page.locator(".row");
-    await expect(rows).toHaveCount(34);
-    for (let i = 0; i < 34; i++) {
+    await expect(rows).toHaveCount(35);
+    for (let i = 0; i < 35; i++) {
       const row = rows.nth(i);
       const slug = (await row.locator(".row-name").textContent())!.slice(1);
       await expect(row.getByText("Chat too", { exact: true }), slug).toHaveCount(chat.has(slug) ? 1 : 0);

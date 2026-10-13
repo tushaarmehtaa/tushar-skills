@@ -6,6 +6,7 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- added `who-to-sell-to`: a one-question-at-a-time interview that builds your ideal customer profile from real paid and lost deals, researches the company when web access exists, and delivers a self-contained HTML report with the ICP card open and the plan in collapsible sections; verified in Claude Code, Codex and Cursor untested, with a real run on its page and a permanent redirect from the old `/icp-interview` name
 - rebuilt the site around skill names: every row and page leads with its /name, grouped into shape, build, ship and grow, with one taxonomy shared with skills.sh.json
 - added real Claude Code runs on sample projects for all 34 skills, each shown on its page as a result card; `image-editing` ran once against OpenAI's image edit endpoint and kept every word on the banner exact
 - `deploy-check` no longer prints secret values that look fake or test-only, and always includes a rollback section; re-verified in Claude Code (15/15 discovery, 5/5 explicit, 1.00 vs 0.63 without the skill)
