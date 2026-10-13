@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FooterScene } from "./brand/footer-scene";
 import { CmdBar } from "./brand/copy-button";
-import { GitHubMark } from "./brand/logos";
+import { GitHubMark, XMark } from "./brand/logos";
 import { CountUp } from "./brand/count-up";
 import { SKILL_DISPLAY } from "@/lib/canvas";
 import { GROUP_IDS, GROUP_ORDER } from "@/lib/profiles";
@@ -18,7 +18,10 @@ export async function Footer() {
         <div className="fcols">
           <div className="fbrand">
             <b>slashskills</b>
-            <small>MIT licensed. Built by Tushar.</small>
+            <small>
+              MIT licensed. Made by <a href="https://www.tushaarmehtaa.xyz" target="_blank" rel="noopener">Tushar</a>. Every skill here started as
+              something typed twice.
+            </small>
           </div>
           <div className="fcol">
             <h4>Resources</h4>
@@ -31,6 +34,10 @@ export async function Footer() {
             <a href="https://github.com/tushaarmehtaa/tushar-skills" target="_blank" rel="noopener noreferrer">
               <GitHubMark />
               GitHub
+            </a>
+            <a href="https://x.com/tushaarmehtaa" target="_blank" rel="noopener noreferrer">
+              <XMark />
+              Tushar on X
             </a>
             <a href="https://www.skills.sh/tushaarmehtaa/tushar-skills" target="_blank" rel="noopener noreferrer">
               {/* eslint-disable-next-line @next/next/no-img-element */}

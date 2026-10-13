@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 const PAGES = ["/", "/who-to-sell-to", "/changelog", "/compatibility", "/guides", "/guides/chatgpt", "/guides/claude-app", "/guides/codex", "/guides/astra-skill-instructions"];
 
 test("every page shares its own brand card", async ({ page, request }) => {
+  test.setTimeout(90_000); // renders nine cards
   for (const path of PAGES) {
     await page.goto(path);
     const og = await page.locator('meta[property="og:image"]').getAttribute("content");

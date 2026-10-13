@@ -23,7 +23,8 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   applicationName: siteName,
-  authors: [{ name: "Tushar Mehta" }],
+  authors: [{ name: "Tushar Mehta", url: "https://www.tushaarmehtaa.xyz" }],
+  creator: "Tushar Mehta",
   keywords: ["Agent Skills", "SKILL.md", "Codex", "Claude Code", "Cursor", "AI workflows", "developer tools"],
   openGraph: {
     type: "website",
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
   // Card type only: X falls back to each page's og:title, og:description and og:image.
   twitter: {
     card: "summary_large_image",
+    creator: "@tushaarmehtaa",
   },
   manifest: "/site.webmanifest",
   alternates: {
@@ -62,6 +64,8 @@ const jsonLd = {
   publisher: {
     "@type": "Person",
     name: "Tushar Mehta",
+    url: "https://www.tushaarmehtaa.xyz",
+    sameAs: ["https://x.com/tushaarmehtaa", "https://github.com/tushaarmehtaa"],
   },
 };
 

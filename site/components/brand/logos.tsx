@@ -14,6 +14,9 @@ export const OpenAIMark = ({ className, fill = "currentColor" }: Props) => (
 export const GitHubMark = ({ className, fill = "#0A0A0A" }: Props) => (
   <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill={fill} d={logos.gh} /></svg>
 );
+export const XMark = ({ className, fill = "#0A0A0A" }: Props) => (
+  <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill={fill} d={logos.x} /></svg>
+);
 
 export function AgentMark({ agent, className }: { agent: "claude-code" | "codex" | "cursor"; className?: string }) {
   if (agent === "claude-code") return <ClaudeCodeMark className={className} />;

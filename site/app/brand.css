@@ -199,7 +199,9 @@
 .fcols{display:flex;gap:56px;padding:64px 0 28px;align-items:flex-start;flex-wrap:wrap}
 .fbrand{width:260px}
 .fbrand b{display:block;font:400 32px var(--mono)}
-.fbrand small{color:var(--muted);font-size:13px}
+.fbrand small{display:block;max-width:240px;color:var(--muted);font-size:13px;line-height:1.5}
+.fbrand small a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line);transition:text-decoration-color 160ms ease}
+.fbrand small a:hover{text-decoration-color:var(--amber)}
 .fcol{display:flex;flex-direction:column;gap:14px;font-size:18px;min-width:170px}
 .fcol h4{font:400 12px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .fcol a{display:flex;align-items:center;gap:10px;width:max-content;transition:transform 180ms var(--ease-out)}

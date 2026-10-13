@@ -28,12 +28,15 @@ const GROUP_LABELS: Record<string, string> = { shape: "Shape", build: "Build", s
 
 function Brand() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-      <svg width="44" height="44" viewBox="0 0 32 32">
-        <rect width="32" height="32" rx="7" fill={INK} />
-        <path d="M10.5 24.5 L21.5 7.5" stroke={AMBER} strokeWidth="2.8" strokeLinecap="round" />
-      </svg>
-      <span style={{ fontFamily: "Cal Sans", fontSize: 32, color: INK }}>slashskills</span>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <rect width="32" height="32" rx="7" fill={INK} />
+          <path d="M10.5 24.5 L21.5 7.5" stroke={AMBER} strokeWidth="2.8" strokeLinecap="round" />
+        </svg>
+        <span style={{ fontFamily: "Cal Sans", fontSize: 32, color: INK }}>slashskills</span>
+      </div>
+      <span style={{ fontFamily: "Geist Mono", fontSize: 20, color: MUTED }}>by @tushaarmehtaa</span>
     </div>
   );
 }
