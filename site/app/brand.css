@@ -491,10 +491,13 @@
   .dir .wrap{grid-template-columns:minmax(0,1fr);gap:18px}
   .rail p{font-size:16px;margin-top:10px}
   .rail h2{font-size:34px}
-  .bar2{height:48px;gap:18px;overflow-x:auto;scrollbar-width:none}
-  .bar2::-webkit-scrollbar{display:none}
-  .ftabs{gap:20px}
-  .srch{flex:none}
+  .bar2{flex-wrap:wrap;height:auto}
+  .ftabs{flex:1 1 100%;height:48px;justify-content:space-between;gap:0}
+  .srch{order:-1;flex:1 1 100%;height:46px;padding:0 14px;margin-bottom:6px;border:1.5px solid var(--ink);color:var(--ink)}
+  .srch b{display:none}
+  .srch input,.srch.open input{flex:1;width:auto;min-width:0;opacity:1;font-size:16px}
+  .srch input:focus-visible{outline:none}
+  .srch:focus-within{border-color:var(--amber)}
   .v-row{grid-template-columns:40px minmax(0,1fr);grid-template-rows:auto auto;gap:3px 14px;padding:18px 0}
   .v-row .ix,.v-row .fl,.v-row .cp{display:none}
   .v-row .ico{grid-column:1;grid-row:1/3;width:40px;height:40px;border-radius:11px;align-self:start}

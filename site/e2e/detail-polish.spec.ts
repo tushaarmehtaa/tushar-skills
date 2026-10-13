@@ -121,3 +121,19 @@ test("previous and next skill links walk the library", async ({ page }) => {
   await page.locator(".nextrow a").first().click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("/interface-design");
 });
+test("search and every group are on screen at 390px without scrolling sideways", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const search = page.getByRole("searchbox", { name: "Search skills" });
+  await search.scrollIntoViewIfNeeded();
+  const box = await search.boundingBox();
+  expect(box!.width).toBeGreaterThan(200);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(390);
+  for (const tab of await page.getByRole("tab", { name: /^(all|shape|build|ship|grow)\s*\d+$/i }).all()) {
+    await expect(tab).toBeInViewport({ ratio: 1 });
+  }
+  await search.fill("deploy");
+  await expect(page.locator(".v-row").first()).toContainText("deploy-check");
+});
