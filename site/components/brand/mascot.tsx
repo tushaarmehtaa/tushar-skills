@@ -3,26 +3,34 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 // /brand/mascot-sheet.png: 16 poses in 4 columns of 32x36 cells. Source and generator: workspace/redesign/mascot.
-const F = { idle: 0, blink: 1, stepL: 2, stepR: 3, waveHigh: 5, waveOut: 6, handsUp: 7, armsOut: 8, disco: 9, grooveL: 10, grooveR: 11, squat: 12, jump: 13, land: 14, look: 15 };
+const F = { idle: 0, blink: 1, stepL: 2, stepR: 3, waveHigh: 5, waveOut: 6, handsUp: 7, armsOut: 8, disco: 9, grooveL: 10, grooveR: 11, squat: 12, jump: 13, land: 14, look: 15, fly: 16, flyFlicker: 17, swimReach: 18, swimPull: 19, swimGlide: 20, laptop: 21, laptopType: 22, turnRight: 23, back: 24, turnLeft: 25 };
 type Seq = [frame: number, ms: number][];
 const IDLE: Seq = [[F.idle, 1400], [F.blink, 140], [F.idle, 900], [F.look, 700]];
 const WALK: Seq = [[F.stepL, 140], [F.idle, 110], [F.stepR, 140], [F.idle, 110]];
 const DANCE: Seq = [[F.armsOut, 260], [F.disco, 260], [F.grooveL, 220], [F.grooveR, 220], [F.grooveL, 220], [F.grooveR, 220], [F.squat, 200], [F.handsUp, 320], [F.disco, 260], [F.armsOut, 260]];
 const WAVE: Seq = [[F.waveHigh, 260], [F.waveOut, 260]];
 const CHEER: Seq = [[F.squat, 120], [F.jump, 360], [F.land, 140], [F.handsUp, 700]];
+const FLY: Seq = [[F.fly, 90], [F.flyFlicker, 90]];
+const SWIM: Seq = [[F.swimReach, 240], [F.swimPull, 240], [F.swimGlide, 320]];
+const LAPTOP: Seq = [[F.laptop, 220], [F.laptopType, 220]];
+const TURN: Seq = [[F.idle, 110], [F.turnRight, 110], [F.back, 110], [F.turnLeft, 110]];
+const SPIN: Seq = [...TURN, ...TURN, [F.idle, 200]];
 const SCALE = 2;
 const W = 32 * SCALE;
 const H = 36 * SCALE;
 const FOOT = W / 2; // the feet sit in the middle of the cell
 const SPEED = 80; // px per second
 const HOP_MS = 420;
+const FLY_LIFT = 12; // px above the higher level while flying
+const SWIM_LIFT = 10;
 const START_X = 16;
 
 const sum = (s: Seq) => s.reduce((t, [, ms]) => t + ms, 0);
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 /**
- * The pixel astronaut living on top of an install bar: walks, dances, waves on hover, cheers on copy.
+ * The pixel astronaut living on top of an install bar: walks, flies, swims, types, spins and dances,
+ * waves on hover and cheers on copy.
  * With `upper` and `lower`, it walks on the `upper` pieces (the install tabs) and hops down onto
  * `lower` (the command bar) where the upper pieces end, so it never walks on air.
  */
@@ -47,6 +55,7 @@ export function MascotBar({ children, className = "", upper, lower }: { children
     let busy = false; // hover or cheer owns the mascot
     let waving = false;
     let airborne = false;
+    let landing: [number, number] = [x, y]; // where an airborne move comes down
     let gen = 0; // bumps whenever the current plan is abandoned
     const alive = (g: number) => g === gen && running && !busy;
 
@@ -110,6 +119,7 @@ export function MascotBar({ children, className = "", upper, lower }: { children
       play([[F.squat, 140]], false);
       await wait(140);
       if (!alive(g)) return;
+      landing = [to, toY];
       airborne = true;
       setFrame(F.jump);
       await glide(to, toY, HOP_MS, "ease-in-out", [(x + to) / 2, Math.min(y, toY) - 4]);
@@ -118,10 +128,39 @@ export function MascotBar({ children, className = "", upper, lower }: { children
       play([[F.land, 160]], false);
       await wait(160);
     };
+    const fly = async (to: number, toY: number, g: number) => {
+      if (!alive(g)) return;
+      const sky = Math.min(y, toY) - FLY_LIFT;
+      landing = [to, toY];
+      airborne = true;
+      play(FLY, true);
+      await glide(x, sky, 280, "ease-out");
+      if (alive(g)) await glide(to, sky, Math.max(300, (Math.abs(to - x) / (SPEED * 2.5)) * 1000), "ease-in-out");
+      if (alive(g)) await glide(to, toY, 320, "ease-in");
+      airborne = false;
+      if (!alive(g)) return;
+      play([[F.land, 160]], false);
+      await wait(160);
+    };
+    const swim = async (g: number) => {
+      if (!alive(g)) return;
+      landing = [x, y];
+      airborne = true;
+      play(SWIM, true);
+      await glide(x, y - SWIM_LIFT, 500, "ease-out");
+      if (alive(g)) await wait(sum(SWIM) * 2);
+      if (alive(g)) await glide(...landing, 500, "ease-in");
+      airborne = false;
+      if (!alive(g)) return;
+      play([[F.land, 160]], false);
+      await wait(160);
+    };
     const travel = async (to: number, g: number) => {
       const { edge, drop } = ground();
       const levelOf = (px: number) => (px + FOOT <= edge ? 0 : drop);
-      if (Math.abs(levelOf(to) - y) < 1) return walk(to, g);
+      const r = Math.random();
+      if (Math.abs(levelOf(to) - y) < 1) return Math.abs(to - x) > 150 && r < 0.2 ? fly(to, y, g) : walk(to, g);
+      if (r < 0.5) return fly(to, levelOf(to), g);
       const top = edge - FOOT - 6; // feet just inside the last tab
       const bottom = edge - FOOT + 30; // feet clear of the tab edge, down on the bar
       if (y < drop / 2) {
@@ -144,9 +183,18 @@ export function MascotBar({ children, className = "", upper, lower }: { children
         if (Math.abs(to - x) < 60) to = x > max / 2 ? rand(0, max / 3) : rand((max * 2) / 3, max);
         await travel(to, g);
         if (!alive(g)) return;
-        if (Math.random() < 0.45) {
+        const r = Math.random();
+        if (r < 0.25) {
           play(DANCE, false);
           await wait(sum(DANCE));
+        } else if (r < 0.4) {
+          play(SPIN, false);
+          await wait(sum(SPIN));
+        } else if (r < 0.55) {
+          play(LAPTOP, true);
+          await wait(3600);
+        } else if (r < 0.7) {
+          await swim(g);
         }
       }
     };
@@ -166,9 +214,11 @@ export function MascotBar({ children, className = "", upper, lower }: { children
       window.clearTimeout(brainTimer);
       window.clearTimeout(frameTimer);
       if (airborne) {
-        // Land where the hop was heading instead of freezing in the air.
+        // Land where the hop, flight or swim was heading instead of freezing in the air.
         anim?.cancel();
         airborne = false;
+        [x, y] = landing;
+        bd.style.transform = at(x, y);
       } else hold();
     };
 

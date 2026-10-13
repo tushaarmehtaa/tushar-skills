@@ -210,10 +210,10 @@
 .finstall p{font-size:15px;color:var(--soft)}
 .finstall .cmdbar{padding:14px 14px 14px 18px}
 .finstall .cmd{font-size:12px}
-/* Pixel astronaut on the homepage install panel. Feet sit on row 33 of a 36-row cell at 2x, so the sprite hangs 8px above the lane. */
-.mascot-lane{position:relative;padding-top:58px}
-.mascot{position:absolute;left:0;top:-8px;width:64px;height:72px;z-index:2;will-change:transform;pointer-events:none}
-.mascot-sprite{width:100%;height:100%;background:url(/brand/mascot-sheet.png) 0 0/256px 288px no-repeat;image-rendering:pixelated;pointer-events:auto}
+/* Pixel astronaut on the homepage install panel. Feet sit on row 33 of a 36-row cell at 2x, so the sprite starts 6px into a 72px lane. */
+.mascot-lane{position:relative;padding-top:72px}
+.mascot{position:absolute;left:0;top:6px;width:64px;height:72px;z-index:2;will-change:transform;pointer-events:none}
+.mascot-sprite{width:100%;height:100%;background:url(/brand/mascot-sheet.png) 0 0/256px 504px no-repeat;image-rendering:pixelated;pointer-events:auto}
 .hero-mascot{margin-top:6px;width:min(860px,100%)}
 .hero-mascot .install{margin-top:0;width:100%}
 .scene{position:relative;width:100%;max-width:1440px;height:660px;margin:0 auto;overflow:hidden}

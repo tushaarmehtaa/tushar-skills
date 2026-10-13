@@ -22,15 +22,8 @@ def blob(cv, cx, cy, color=INK):
             cv[(cx + dx, cy + dy)] = color
 
 
-def draw(p):
-    cv = {}
-    dy = p.get("dy", 0)
-    lean = p.get("lean", 0)
-    rx, ry = p.get("rx", 8.5), p.get("ry", 8)
-    hx, hy = HELMET_C[0], HELMET_C[1] + dy
-    bx, by = BODY_C[0], BODY_C[1] + dy
-
-    # helmet: white fill, ink outline, cream glint top-left
+def disc(cv, hx, hy):
+    """Helmet: white fill, ink outline, cream glint top-left."""
     for y in range(H):
         for x in range(W):
             d = math.hypot(x + 0.5 - hx, y + 0.5 - hy)
@@ -42,37 +35,69 @@ def draw(p):
                 ang = math.degrees(math.atan2(y + 0.5 - hy, x + 0.5 - hx))
                 if -150 <= ang <= -105:
                     cv[(x, y)] = CREAM
-    # headphones
-    for side in (-1, 1):
-        x0 = hx - 12 if side < 0 else hx + 9
-        for x in range(x0, x0 + 3):
-            for y in range(hy - 3, hy + 3):
-                edge = x in (x0, x0 + 2) or y in (hy - 3, hy + 2)
-                cv[(x, y)] = INK if edge else AMBER
+
+
+def cup(cv, x0, hy):
+    for x in range(x0, x0 + 3):
+        for y in range(hy - 3, hy + 3):
+            cv[(x, y)] = INK if x in (x0, x0 + 2) or y in (hy - 3, hy + 2) else AMBER
+
+
+def draw(p):
+    cv = {}
+    dy = p.get("dy", 0)
+    lean = p.get("lean", 0)
+    view = p.get("view", "front")  # front, back, right, left
+    face = {"right": 1, "left": -1}.get(view, 0)
+    rx, ry = p.get("rx", 6.5 if face else 8.5), p.get("ry", 8)
+    hx, hy = HELMET_C[0], HELMET_C[1] + dy
+    bx, by = BODY_C[0], BODY_C[1] + dy
+
+    disc(cv, hx, hy)
+    if view == "front":
+        cup(cv, hx - 12, hy)
+        cup(cv, hx + 9, hy)
     # body bean
+    cx = bx + face
     for y in range(H):
         for x in range(W):
-            if ((x + 0.5 - bx) / rx) ** 2 + ((y + 0.5 - by) / ry) ** 2 <= 1:
+            if ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - by) / ry) ** 2 <= 1:
                 cv[(x, y)] = INK
+    if view == "back":
+        # From behind the helmet hides the face: redraw it over the body, cups on both sides.
+        disc(cv, hx, hy)
+        cup(cv, hx - 12, hy)
+        cup(cv, hx + 9, hy)
+    elif face:
+        # Side view: the near earcup sits on the side of the head.
+        cup(cv, hx - 3 if face > 0 else hx, hy - 1)
+
     # eyes
-    eyes = p.get("eyes", "open")
-    ex = p.get("look", 0)
-    for x0 in (bx - 4 + ex, bx + 2 + ex):
-        ey = by - 5
-        if eyes == "open":
-            for x in (x0, x0 + 1):
-                for y in (ey, ey + 1, ey + 2):
-                    cv[(x, y)] = WHITE
-        elif eyes == "blink":
-            cv[(x0, ey + 2)] = cv[(x0 + 1, ey + 2)] = WHITE
-        elif eyes == "happy":
-            cv[(x0 - 1, ey + 2)] = cv[(x0, ey + 1)] = cv[(x0 + 1, ey + 1)] = cv[(x0 + 2, ey + 2)] = WHITE
-    # amber slash, two pixels thick
-    for i in range(8):
-        x = bx - 4 + i
-        y = by + 5 - round(i * 6 / 7)
-        cv[(x, y)] = AMBER
-        cv[(x + 1, y)] = AMBER
+    if view != "back":
+        eyes = p.get("eyes", "open")
+        ex = p.get("look", 0)
+        xs = [bx + 3] if face > 0 else [bx - 5] if face < 0 else [bx - 4 + ex, bx + 2 + ex]
+        for x0 in xs:
+            ey = by - 5
+            if eyes == "open":
+                for x in (x0, x0 + 1):
+                    for y in (ey, ey + 1, ey + 2):
+                        cv[(x, y)] = WHITE
+            elif eyes == "down":
+                for x in (x0, x0 + 1):
+                    for y in (ey + 2, ey + 3):
+                        cv[(x, y)] = WHITE
+            elif eyes == "blink":
+                cv[(x0, ey + 2)] = cv[(x0 + 1, ey + 2)] = WHITE
+            elif eyes == "happy":
+                cv[(x0 - 1, ey + 2)] = cv[(x0, ey + 1)] = cv[(x0 + 1, ey + 1)] = cv[(x0 + 2, ey + 2)] = WHITE
+        # amber slash, two pixels thick; shorter in profile, always leaning like /
+        steps, x_start = (5, bx - 2 + face) if face else (8, bx - 4)
+        for i in range(0 if "laptop" in p else steps):
+            x = x_start + i
+            y = by + 5 - round(i * 6 / 7)
+            cv[(x, y)] = AMBER
+            cv[(x + 1, y)] = AMBER
 
     # lean: shift everything above the body centre sideways
     if lean:
@@ -84,12 +109,32 @@ def draw(p):
 
     # The grid centre sits between columns 15 and 16, so right-side parts step one column in to mirror the left.
     mirror = lambda x: x if x < bx else x - 1
-    # arms: offsets from the body centre
-    for ax, ay in p.get("arms", [(-10, 1), (10, 1)]):
+    default_arms = [(-face * 8, 2)] if face else [(-10, 1), (10, 1)]
+    for ax, ay in p.get("arms", default_arms):
         blob(cv, mirror(bx + ax), by + ay)
-    # feet: absolute x, lift in rows
-    for fx, lift in p.get("feet", [(12, 0), (20, 0)]):
+    default_feet = [(14, 0), (18, 0)] if face else [(12, 0), (20, 0)]
+    feet = p.get("feet", default_feet)
+    for fx, lift in feet:
         blob(cv, mirror(fx), FEET_Y - lift)
+    # jetpack flame under each foot
+    if p.get("flame"):
+        widths = [3, 3, 3, 1, 1, 1] if p["flame"] == "long" else [3, 3, 1, 1]
+        for fx, lift in feet:
+            fx, fy = mirror(fx), FEET_Y - lift
+            for k, width in enumerate(widths):
+                for x in range(fx - width // 2, fx + width // 2 + 1):
+                    cv[(x, fy + 2 + k)] = CREAM if k == len(widths) - 1 else AMBER
+    # laptop on the lap, anchored to the ground so typing reads as the head bobbing over it
+    if "laptop" in p:
+        LID = "#D9D4C5"
+        top, bottom = FEET_Y - 5, FEET_Y
+        for x in range(bx - 6, bx + 6):
+            for y in range(top, bottom + 1):
+                edge = x in (bx - 6, bx + 5) or y in (top, bottom)
+                cv[(x, y)] = INK if edge else LID
+        cv[(bx - 1, top + 3)] = cv[(bx, top + 2)] = AMBER
+        for x in range(bx - 8, bx + 8):
+            cv[(x, bottom + 1)] = INK
     return cv
 
 
@@ -111,6 +156,16 @@ POSES = [
     ("jump", "Jump", "copy cheer, top of the jump", {"dy": -6, "arms": [(-13, -11), (13, -11)], "feet": [(13, 5), (19, 5)], "eyes": "happy"}),
     ("land", "Land", "squash on landing", {"dy": 1, "rx": 9.5, "ry": 7.5, "arms": [(-12, 3), (12, 3)], "feet": [(10, 0), (22, 0)]}),
     ("look", "Look", "eyes follow the cursor", {"look": 1}),
+    ("fly", "Fly", "jetpack on, long flame", {"dy": -4, "arms": [(-11, 4), (11, 4)], "feet": [(14, 4), (18, 4)], "flame": "long", "eyes": "happy"}),
+    ("fly-flicker", "Fly flicker", "short flame, the flicker frame", {"dy": -4, "arms": [(-11, 3), (11, 3)], "feet": [(14, 4), (18, 4)], "flame": "short", "eyes": "happy"}),
+    ("swim-reach", "Swim reach", "space swim, arms forward", {"dy": -2, "arms": [(-12, -8), (12, -8)], "feet": [(14, 1), (18, 1)]}),
+    ("swim-pull", "Swim pull", "arms sweep wide, legs kick", {"dy": -2, "arms": [(-14, -1), (14, -1)], "feet": [(10, 2), (22, 2)]}),
+    ("swim-glide", "Swim glide", "arms back, drifting", {"dy": -2, "arms": [(-11, 6), (11, 6)], "feet": [(14, 0), (18, 0)], "eyes": "happy"}),
+    ("laptop", "Laptop", "sitting on the bar, typing", {"dy": 3, "feet": [(9, 0), (23, 0)], "arms": [(-11, 4), (11, 4)], "laptop": 0, "eyes": "down"}),
+    ("laptop-type", "Laptop type", "head bobs while it types", {"dy": 4, "feet": [(9, 0), (23, 0)], "arms": [(-11, 3), (11, 3)], "laptop": 1, "eyes": "down"}),
+    ("turn-right", "Turn right", "spin, side view", {"view": "right"}),
+    ("back", "Back", "spin, helmet from behind", {"view": "back"}),
+    ("turn-left", "Turn left", "spin, other side", {"view": "left"}),
 ]
 
 

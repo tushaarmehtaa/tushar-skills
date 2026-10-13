@@ -60,3 +60,23 @@ test("the pixel astronaut never walks on air: it hops down past the last tab", a
   expect(seen.tabs).toBeGreaterThan(0);
   expect(seen.bar).toBeGreaterThan(0);
 });
+
+for (const [seed, move, frames] of [
+  [0.45, "flies past Cursor, then opens the laptop", [16, 17, 21, 22]],
+  [0.3, "spins all the way round", [23, 24, 25]],
+  [0.6, "goes for a space swim", [18, 19, 20]],
+] as const) {
+  test(`the pixel astronaut ${move}`, async ({ page }) => {
+    await page.addInitScript((r) => (Math.random = () => r), seed);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const sprite = page.locator(".hero-mascot .mascot-sprite");
+    const seen = new Set<number>();
+    const t0 = Date.now();
+    while (Date.now() - t0 < 14000 && !frames.every((f) => seen.has(f))) {
+      seen.add(frameOf(await sprite.evaluate((n) => getComputedStyle(n).backgroundPosition)));
+      await page.waitForTimeout(40);
+    }
+    for (const f of frames) expect(seen, `pose ${f}`).toContain(f);
+  });
+}

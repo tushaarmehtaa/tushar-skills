@@ -164,6 +164,106 @@
     3,
     3
    ]
+  },
+  {
+   "index": 16,
+   "slug": "fly",
+   "name": "Fly",
+   "note": "jetpack on, long flame",
+   "frame": [
+    0,
+    4
+   ]
+  },
+  {
+   "index": 17,
+   "slug": "fly-flicker",
+   "name": "Fly flicker",
+   "note": "short flame, the flicker frame",
+   "frame": [
+    1,
+    4
+   ]
+  },
+  {
+   "index": 18,
+   "slug": "swim-reach",
+   "name": "Swim reach",
+   "note": "space swim, arms forward",
+   "frame": [
+    2,
+    4
+   ]
+  },
+  {
+   "index": 19,
+   "slug": "swim-pull",
+   "name": "Swim pull",
+   "note": "arms sweep wide, legs kick",
+   "frame": [
+    3,
+    4
+   ]
+  },
+  {
+   "index": 20,
+   "slug": "swim-glide",
+   "name": "Swim glide",
+   "note": "arms back, drifting",
+   "frame": [
+    0,
+    5
+   ]
+  },
+  {
+   "index": 21,
+   "slug": "laptop",
+   "name": "Laptop",
+   "note": "sitting on the bar, typing",
+   "frame": [
+    1,
+    5
+   ]
+  },
+  {
+   "index": 22,
+   "slug": "laptop-type",
+   "name": "Laptop type",
+   "note": "head bobs while it types",
+   "frame": [
+    2,
+    5
+   ]
+  },
+  {
+   "index": 23,
+   "slug": "turn-right",
+   "name": "Turn right",
+   "note": "spin, side view",
+   "frame": [
+    3,
+    5
+   ]
+  },
+  {
+   "index": 24,
+   "slug": "back",
+   "name": "Back",
+   "note": "spin, helmet from behind",
+   "frame": [
+    0,
+    6
+   ]
+  },
+  {
+   "index": 25,
+   "slug": "turn-left",
+   "name": "Turn left",
+   "note": "spin, other side",
+   "frame": [
+    1,
+    6
+   ]
   }
  ]
 }
