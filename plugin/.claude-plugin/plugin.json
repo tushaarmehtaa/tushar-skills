@@ -1,0 +1,21 @@
+{
+  "name": "slashskills",
+  "displayName": "Slashskills",
+  "version": "1.0.0",
+  "description": "Tested skills for shipping and selling: release preflight, changelogs from a real git range, Upstash rate limits, AI-slop audits of an interface, and an ICP built from paid and lost deals.",
+  "author": {
+    "name": "Tushar Mehta",
+    "url": "https://github.com/tushaarmehtaa"
+  },
+  "homepage": "https://www.slashskills.xyz",
+  "repository": "https://github.com/tushaarmehtaa/tushar-skills",
+  "license": "MIT",
+  "keywords": [
+    "release",
+    "changelog",
+    "rate-limiting",
+    "design-review",
+    "icp",
+    "agent-skills"
+  ]
+}

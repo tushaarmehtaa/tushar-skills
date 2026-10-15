@@ -48,6 +48,16 @@ Omit `--skill <slug>` to install every skill. See the runtime guides for project
 - [Cursor guide](https://www.slashskills.xyz/guides/cursor)
 - [Compatibility matrix](https://www.slashskills.xyz/compatibility)
 
+Claude Code can also install them as plugins. `slashskills` holds the skills tested in Claude Code. `slashskills-labs` holds the rest.
+
+```text
+/plugin marketplace add tushaarmehtaa/tushar-skills
+/plugin install slashskills@slashskills
+/plugin install slashskills-labs@slashskills
+```
+
+Plugin skills run with the plugin name as a prefix, such as `/slashskills:deploy-check`. Details in the [Claude Code plugin guide](docs/claude-plugin.md).
+
 ## Claude app
 
 Only chat-capable skills expose Claude app upload instructions. Skills that need a repository, shell, or local browser show **local coding agent required** instead. Their ZIP files remain available for inspection, but uploading one does not provide execution equivalent to a local coding agent.

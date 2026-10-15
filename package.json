@@ -6,6 +6,7 @@
     "test": "node --test scripts/*.test.mjs",
     "catalog:sync": "node scripts/sync-readme-catalog.mjs --write",
     "catalog:check": "node scripts/sync-readme-catalog.mjs --check",
+    "plugin:build": "node scripts/build-plugin.mjs",
     "zips:build": "node site/scripts/build-zips.mjs",
     "validate": "node scripts/validate.mjs",
     "check": "npm test && npm run zips:build && npm run validate",

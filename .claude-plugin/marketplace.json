@@ -1,21 +1,26 @@
 {
   "name": "slashskills",
   "owner": {
-    "name": "Tushar Mehta"
+    "name": "Tushar Mehta",
+    "url": "https://github.com/tushaarmehtaa"
   },
   "metadata": {
-    "description": "Software workflow skills maintained by Tushar Mehta."
+    "description": "Agent skills for shipping and selling software, maintained by Tushar Mehta."
   },
   "plugins": [
     {
       "name": "slashskills",
-      "source": "./",
-      "description": "Review software releases, record decisions, and write changelogs with explicit evidence and tool requirements.",
+      "source": "./plugin",
+      "description": "Tested skills for shipping and selling: release preflight, changelogs from a real git range, Upstash rate limits, AI-slop audits of an interface, and an ICP built from paid and lost deals.",
       "category": "productivity",
-      "tags": [
-        "release-review",
-        "documentation"
-      ]
+      "tags": ["release", "changelog", "design-review", "sales"]
+    },
+    {
+      "name": "slashskills-labs",
+      "source": "./plugins-labs",
+      "description": "Slashskills that are not yet tested in Claude Code: product specs, decision docs, READMEs, auth, payments, analytics, launch and outreach.",
+      "category": "productivity",
+      "tags": ["product", "launch"]
     }
   ]
 }

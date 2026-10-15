@@ -1,0 +1,41 @@
+{
+  "plugin": [
+    "changelog",
+    "deploy-check",
+    "rate-limit",
+    "remove-ai-slop",
+    "who-to-sell-to"
+  ],
+  "plugins-labs": [
+    "agent-instructions",
+    "ai-cost-audit",
+    "ai-product-development",
+    "analytics",
+    "auth-implementation",
+    "cold-outreach",
+    "credit-metering",
+    "decision-doc",
+    "demo-video",
+    "email-with-resend",
+    "fundraising",
+    "humanize",
+    "image-editing",
+    "interface-design",
+    "landing-copy",
+    "landing-page",
+    "mobile-first",
+    "payments-with-dodo",
+    "performance-diagnosis",
+    "product-experiments",
+    "product-launch",
+    "product-spec",
+    "product-teardown",
+    "readme",
+    "search-ready",
+    "skill-creator",
+    "social-sharing",
+    "supabase",
+    "ui-copy",
+    "user-insights"
+  ]
+}
