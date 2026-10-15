@@ -41,7 +41,9 @@ The skill folders at the repository root are the source of truth, and `npx skill
 npm run plugin:build
 ```
 
-The build replaces each plugin's `skills/` folder and refuses images, fonts, archives and binaries. Each plugin's `.claude-plugin/plugin.json` is edited by hand.
+The build replaces each plugin's `skills/` folder and refuses images, fonts, archives and binaries in skills. Each plugin's `.claude-plugin/` folder (manifest, and the directory icon for `slashskills`) is edited by hand and never touched by the build.
+
+`npm run plugin:build -- --check` fails when a copy is missing, extra or different from its root skill. `npm run check` runs it.
 
 ## Validation
 

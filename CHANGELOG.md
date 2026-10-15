@@ -6,6 +6,8 @@ All notable changes to tushar-skills.
 
 ## [Unreleased]
 
+- split the Claude Code plugin in two: `slashskills` (`plugin/`) holds the 5 skills tested in Claude Code and is the one submitted to Anthropic's plugin directory; `slashskills-labs` (`plugins-labs/`) holds the other 30. `decision-doc` and `readme` moved to `slashskills-labs`, so existing installs get them back with `/plugin install slashskills-labs@slashskills`. `npm run plugin:build` copies the root skills into both plugins, and `npm run check` now fails when a copy drifts
+- the `who-to-sell-to` report template no longer links to slashskills.xyz in its footer
 - added `who-to-sell-to`: a one-question-at-a-time interview that builds your ideal customer profile from real paid and lost deals, researches the company when web access exists, and delivers a self-contained HTML report with the ICP card open and the plan in collapsible sections; verified in Claude Code, Codex and Cursor untested, with a real run on its page and a permanent redirect from the old `/icp-interview` name
 - rebuilt the site around skill names: every row and page leads with its /name, grouped into shape, build, ship and grow, with one taxonomy shared with skills.sh.json
 - added real Claude Code runs on sample projects for all 34 skills, each shown on its page as a result card; `image-editing` ran once against OpenAI's image edit endpoint and kept every word on the banner exact

@@ -22,7 +22,7 @@ The public catalog shows required access and supported surfaces.
 
 ## Developer tools
 
-- [Claude Code plugin](docs/claude-plugin.md): a focused release-review and documentation bundle.
+- [Claude Code plugins](docs/claude-plugin.md): `slashskills` holds the 5 skills tested in Claude Code and is the one submitted to Anthropic's plugin directory. `slashskills-labs` holds the other 30.
 - [Skill package checker](docs/skill-check.md): inspect your own SKILL.md packages locally.
 - [Machine-readable catalog](https://www.slashskills.xyz/skills.json) and [agent-readable index](https://www.slashskills.xyz/llms.txt).
 

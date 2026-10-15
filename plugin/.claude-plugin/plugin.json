@@ -10,6 +10,7 @@
   "homepage": "https://www.slashskills.xyz",
   "repository": "https://github.com/tushaarmehtaa/tushar-skills",
   "license": "MIT",
+  "icon": "./.claude-plugin/icon.png",
   "keywords": [
     "release",
     "changelog",
