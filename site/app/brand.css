@@ -289,18 +289,19 @@
 .fold .hero-inner{padding-top:22px}
 .hero-h1 .dot{display:inline-block;width:.15em;height:.15em;margin-left:.05em;background:var(--amber);vertical-align:baseline}
 .strip-wrap{margin-top:auto;padding-top:44px;padding-bottom:18px;position:relative;z-index:2}
-.strip{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;font:400 13px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.strip{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;font:400 14px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--soft)}
 .stab{position:relative;padding:8px 0 11px;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;transition:color 150ms ease}
-.stab b{font-weight:400;color:#B3B0A4;margin-right:7px;transition:color 150ms ease}
+.stab b{font-weight:400;color:var(--muted);margin-right:7px;transition:color 150ms ease,background-color 150ms ease,box-shadow 150ms ease}
 .stab[aria-selected=true]{color:var(--ink)}
-.stab[aria-selected=true] b{color:var(--amber)}
+.stab[aria-selected=true] b{color:var(--amber);background:var(--ink);box-shadow:0 0 0 3px var(--ink)}
+@media (min-width:721px) and (max-width:1099px){.strip{font-size:13px}}
 @media (hover:hover) and (pointer:fine){.stab:not([aria-selected=true]):hover{color:var(--ink)}}
-.stab .bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left}
+.stab .bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--ink);transform:scaleX(0);transform-origin:left}
 .stab[aria-selected=true] .bar{transform:scaleX(1)}
 .stab[aria-selected=true] .bar.run{animation:fillbar 13s linear forwards}
 @keyframes fillbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .stage-wrap.paused .stab .bar.run{animation-play-state:paused}
-.shint{margin-left:auto;text-transform:none;color:#A8A596;font-size:12px;padding-bottom:11px}
+.shint{margin-left:auto;text-transform:none;color:var(--muted);font-size:12px;padding-bottom:11px}
 .demo{padding:0 0 100px}
 
 /* generic wipe (before / after) */
@@ -473,8 +474,9 @@
   .v-proof .n b{font-size:38px}
   .rt{gap:16px;font-size:14px}.rt svg{width:20px;height:20px}
   .strip-wrap{padding-top:114px;padding-bottom:6px}
-  .strip{flex-wrap:nowrap;overflow-x:auto;gap:22px;scroll-snap-type:x proximity;scrollbar-width:none;margin-inline:-20px;padding-inline:20px}
+  .strip{flex-wrap:nowrap;overflow-x:auto;gap:22px;scroll-snap-type:x proximity;scroll-padding-inline:20px;scrollbar-width:none;margin-inline:-20px;padding-inline:20px}
   .strip::-webkit-scrollbar{display:none}
+  .strip:not(.end){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent)}
   .stab{flex:none;padding:12px 0 14px;scroll-snap-align:start}
   .shint{display:none}
   .demo{padding-bottom:64px}

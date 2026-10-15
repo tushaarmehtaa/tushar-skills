@@ -71,6 +71,30 @@ test("demo strip: number keys switch the run and update the install", async ({ p
   await expect(page.locator(".pane.on .stamp")).toHaveText("BLOCKED");
 });
 
+test("demo strip on a phone keeps the active tab in view without moving the page", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const strip = page.getByRole("tablist", { name: "Examples" });
+  const fullyInStrip = (name: RegExp) =>
+    strip.evaluate((el, source) => {
+      const tab = [...el.querySelectorAll<HTMLElement>(".stab")].find((t) => new RegExp(source).test(t.textContent ?? ""));
+      const box = el.getBoundingClientRect();
+      const t = tab!.getBoundingClientRect();
+      return t.left >= box.left && t.right <= box.right;
+    }, name.source);
+
+  await expect.poll(() => strip.evaluate((el) => el.scrollLeft)).toBe(0);
+  await page.getByRole("heading", { level: 1 }).click();
+  const pageY = await page.evaluate(() => scrollY);
+  await page.keyboard.press("5");
+  await expect.poll(() => fullyInStrip(/interface-design/)).toBe(true);
+  await expect(strip).toHaveClass(/\bend\b/);
+  await page.keyboard.press("1");
+  await expect.poll(() => fullyInStrip(/remove-ai-slop/)).toBe(true);
+  await expect(strip).not.toHaveClass(/\bend\b/);
+  expect(await page.evaluate(() => scrollY)).toBe(pageY);
+});
+
 test("installer tabs work from the keyboard", async ({ page }) => {
   await page.goto("/interface-design");
   const installer = page.getByRole("region", { name: "Install /interface-design" });

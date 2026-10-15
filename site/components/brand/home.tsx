@@ -14,6 +14,8 @@ import type { BrandSkill } from "@/lib/brand-shared";
 /** Homepage: texture fold with the install, five runs you can switch between, then the directory. */
 export function Home({ skills, installs }: { skills: BrandSkill[]; installs: number }) {
   const foldRef = useRef<HTMLElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const [stripEnd, setStripEnd] = useState(false);
   const [mode, setMode] = useState<Mode>("claude-code");
   const [cur, setCur] = useState(0);
   const [auto, setAuto] = useState(true);
@@ -72,6 +74,32 @@ export function Home({ skills, installs }: { skills: BrandSkill[]; installs: num
     return () => window.removeEventListener(KEY_EVENT, onKey);
   }, [show]);
 
+  // On narrow screens the strip scrolls sideways: keep the active tab fully in view
+  // (moving only the strip, never the page) and drop the edge fade at the end.
+  const syncStripEnd = useCallback(() => {
+    const el = stripRef.current;
+    if (el) setStripEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
+  }, []);
+  useEffect(() => {
+    const el = stripRef.current;
+    const tab = el?.querySelectorAll<HTMLElement>(".stab")[cur];
+    if (!el || !tab || el.scrollWidth <= el.clientWidth) {
+      syncStripEnd();
+      return;
+    }
+    // Next frame: the pane swap re-lays out the page and cancels a smooth scroll started in the same frame.
+    const r = requestAnimationFrame(() => {
+      const pad = parseFloat(getComputedStyle(el).paddingLeft) || 0;
+      const box = el.getBoundingClientRect();
+      const t = tab.getBoundingClientRect();
+      if (t.left < box.left + pad || t.right > box.right - 56) {
+        el.scrollBy({ left: t.left - box.left - pad, behavior: calm ? "auto" : "smooth" });
+      }
+      syncStripEnd();
+    });
+    return () => cancelAnimationFrame(r);
+  }, [cur, calm, syncStripEnd]);
+
   const ctlFor = (i: number) => ({ active: i === cur, onPick: pick, viaKey: () => performance.now() - lastKey.current < 400 });
 
   return (
@@ -97,7 +125,13 @@ export function Home({ skills, installs }: { skills: BrandSkill[]; installs: num
             onPointerEnter={() => setPaused(true)}
             onPointerLeave={() => setPaused(false)}
           >
-            <div className="strip" role="tablist" aria-label="Examples">
+            <div
+              className={`strip ${stripEnd ? "end" : ""}`}
+              role="tablist"
+              aria-label="Examples"
+              ref={stripRef}
+              onScroll={syncStripEnd}
+            >
               {HOME_DEMOS.map((d, i) => (
                 <button
                   key={d.slug}
